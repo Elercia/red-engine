@@ -1,6 +1,5 @@
 #pragma once
 
-#include <OgreRoot.h>
 #include <RedEngine/EngineConfig.hpp>
 #include <RedEngine/memory/MemoryManager.hpp>
 #include <memory>

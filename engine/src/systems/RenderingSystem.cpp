@@ -3,9 +3,7 @@
 
 namespace red
 {
-RenderingSystem::RenderingSystem(ComponentManager* componentManager) : System(componentManager)
-{}
+RenderingSystem::RenderingSystem(ComponentManager* componentManager) : System(componentManager) {}
 
-void RenderingSystem::Update(float deltaTime)
-{}
+void RenderingSystem::Update(float deltaTime) {}
 } // namespace red

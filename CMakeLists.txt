@@ -31,12 +31,13 @@ include(cmake/HunterLibs.cmake)
 #Legacy External dependencies
 add_subdirectory(external)
 
-#Main project
-add_subdirectory(engine)
+set(BUILDSYSTEM_PROJECTS_DIR
+        engine #Main project
+        templates #template projects
+    )
 
-#template projects
-add_subdirectory(templates)
-
-#CPack
-include(cmake/Install.cmake)
-include(CPack)
+include(${PROJECT_SOURCE_DIR}/cmake/BuildSystem.cmake) # This perfom the add_subdirectory on BUILDSYSTEM_PROJECTS_DIR var
+#
+##CPack
+#include(cmake/Install.cmake)
+#include(CPack)

@@ -22,7 +22,8 @@ set(SOURCES
     ${SOURCE_FOLDER}/memory/MemoryManager.cpp
       ${SOURCE_FOLDER}/memory/MemoryProfiler.cpp
     ${SOURCE_FOLDER}/memory/PoolAllocator.cpp
-    ${SOURCE_FOLDER}/systems/RenderingSystem.cpp)
+    ${SOURCE_FOLDER}/systems/RenderingSystem.cpp
+    ${SOURCE_FOLDER}/systems/rendering/RenderingEngine.cpp)
 
 # Headers files
 set(HEADERS
@@ -46,29 +47,41 @@ set(HEADERS
     ${INCLUDE_FOLDER_INTERN}/memory/MemoryManager.hpp
     ${INCLUDE_FOLDER_INTERN}/memory/PoolAllocator.hpp
     ${INCLUDE_FOLDER_INTERN}/systems/RenderingSystem.hpp
+    ${INCLUDE_FOLDER_INTERN}/systems/rendering/RenderingEngine.hpp
     ${INCLUDE_FOLDER_INTERN}/Utils.hpp)
 
 # red_engine_lib
 add_library(red_engine_lib ${SOURCES} ${HEADERS})
-target_include_directories(red_engine_lib SYSTEM INTERFACE ${INCLUDE_FOLDER} PRIVATE "DiligentCore")
-target_link_libraries(red_engine_lib 
-  PRIVATE
-      Diligent-GraphicsEngineD3D11-shared
-      Diligent-GraphicsEngineOpenGL-shared
-      Diligent-GraphicsEngineD3D12-shared
-      Diligent-GraphicsEngineVk-shared)
 
-target_compile_options(
-  red_engine_lib
-  PRIVATE -DUNICODE -DENGINE_DLL
-          -Wall
-          -Wextra
-          -Wshadow
-          -Wnon-virtual-dtor
-          -Wold-style-cast
-          -Wcast-align
-          -Wunused
-          -Woverloaded-virtual
-          -Wconversion
-          -fno-exceptions
-          -O0)
+# Diligent engine linking 
+target_include_directories(red_engine_lib PRIVATE "../external/DiligentCore" ${INCLUDE_FOLDER_INTERN} PUBLIC ${INCLUDE_FOLDER})
+
+target_compile_definitions(red_engine_lib 
+PRIVATE 
+    UNICODE
+    D3D11_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
+    D3D12_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
+    OPENGL_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
+    VULKAN_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
+)
+
+set_target_properties(red_engine_lib PROPERTIES
+    FOLDER ../ressources
+)
+
+target_compile_definitions(red_engine_lib PRIVATE ENGINE_DLL=1)
+
+if(D3D11_SUPPORTED)
+    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineD3D11-shared)
+endif()
+if(D3D12_SUPPORTED)
+    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineD3D12-shared)
+endif()
+if(GL_SUPPORTED)
+    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineOpenGL-shared)
+endif()
+if(VULKAN_SUPPORTED)
+    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineVk-shared)
+endif()
+
+copy_required_dlls(red_engine_lib)

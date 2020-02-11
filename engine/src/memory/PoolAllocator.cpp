@@ -10,12 +10,9 @@ PoolAllocator::PoolAllocator(void* basePtr, std::size_t size, std::size_t blockS
     RED_ASSERT(size % blockSize == 0, "The pool size must be a multiple of the block size");
 }
 
-PoolAllocator::~PoolAllocator()
-{}
+PoolAllocator::~PoolAllocator() {}
 
-void* PoolAllocator::Allocate(std::size_t size)
-{}
+void* PoolAllocator::Allocate(std::size_t size) { return nullptr; }
 
-void PoolAllocator::Free(void* ptr)
-{}
+void PoolAllocator::Free(void* ptr) {}
 } // namespace red

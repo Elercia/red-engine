@@ -1,0 +1,10 @@
+[submodule "external/DiligentCore"]
+	path = external/DiligentCore
+	url = https://github.com/DiligentGraphics/DiligentCore.git
+	branch = v2.1
+[submodule "external/DiligentFX"]
+	path = external/DiligentFX
+	url = https://github.com/DiligentGraphics/DiligentFX.git
+[submodule "external/DiligentTools"]
+	path = external/DiligentTools
+	url = https://github.com/DiligentGraphics/DiligentTools.git
