@@ -1,4 +1,5 @@
 #include <RedEngine/Application.hpp>
+#include <RedEngine/Engine.hpp>
 #include <RedEngine/debug/Debug.hpp>
 #include <RedEngine/ecs/World.hpp>
 #include <RedEngine/systems/RenderingSystem.hpp>
@@ -13,13 +14,18 @@
 namespace red
 {
 
-Application::Application(int argc, char** argv) : m_config(), m_world(nullptr), m_window(nullptr)
+Application::Application() : m_config(), m_world(nullptr), m_window(nullptr) {}
+
+Application::~Application() {}
+
+void Application::InitFromCommandLine(int argc, char* argv[])
 {
     m_config.InitFromCommandLine(argc, argv);
 }
 
-Application::~Application()
-{}
+void Application::InitFromCommandLine(char* /*cmdLine*/)
+{ /* TODO */
+}
 
 bool Application::Run()
 {
@@ -56,10 +62,7 @@ bool Application::Run()
 
         // let the program run for 10 seconds
         std::chrono::duration<float> loopDuration = currentTime - startTime;
-        if (loopDuration.count() > 10.f)
-        {
-            break;
-        }
+        if (loopDuration.count() > 10.f) { break; }
     }
 
     return true;
@@ -71,21 +74,22 @@ std::shared_ptr<World> red::Application::CreateWorld(bool registerConfiguredSyst
 
     m_world = std::make_shared<World>();
 
-    if (registerConfiguredSystems)
-    {
-        m_world->AddSystem<RenderingSystem>();
-    }
+    if (registerConfiguredSystems) { m_world->AddSystem<RenderingSystem>(); }
 
     return m_world;
 }
 
-std::shared_ptr<Window> Application::CreateWindow()
+Window& Application::InitWindow(std::wstring title)
 {
     RED_ASSERT(m_window == nullptr, "Only one window is allowed");
 
-    m_window = std::make_shared<Window>();
+    m_window = std::make_unique<Window>(title);
 
-    return m_window;
+    RenderingEngine& renderingEngine = GetRedInstance().GetRenderingEngine();
+
+    renderingEngine.InitializeEngine(m_window.get());
+
+    return *m_window;
 }
 
 } // namespace red

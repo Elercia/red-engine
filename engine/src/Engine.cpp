@@ -10,13 +10,9 @@ Engine& Engine::GetInstance()
     return s_instance;
 }
 
-Engine::Engine() : m_memoryManager()
-{}
+Engine::Engine() : m_memoryManager(), m_renderingEngine() {}
 
-MemoryManager& Engine::GetMemoryManager()
-{
-    return m_memoryManager;
-}
+MemoryManager& Engine::GetMemoryManager() { return m_memoryManager; }
 
 Engine::~Engine()
 {
@@ -24,9 +20,8 @@ Engine::~Engine()
     GetRedInstance().GetMemoryManager().DumpMemory();
 #endif //  RED_ENABLE_MEMORY_PROFILING
 }
+
+RenderingEngine& Engine::GetRenderingEngine() { return m_renderingEngine; }
 } // namespace red
 
-red::Engine& GetRedInstance()
-{
-    return red::Engine::GetInstance();
-}
+red::Engine& GetRedInstance() { return red::Engine::GetInstance(); }

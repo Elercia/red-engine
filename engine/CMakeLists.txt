@@ -11,6 +11,7 @@ include_directories(${INCLUDE_FOLDER})
 set(SOURCES
     # cmake-format: sortable
     ${SOURCE_FOLDER}/Application.cpp
+    ${SOURCE_FOLDER}/Window.cpp
     ${SOURCE_FOLDER}/Configuration.cpp
     ${SOURCE_FOLDER}/ecs/Component.cpp
       ${SOURCE_FOLDER}/ecs/ComponentManager.cpp
@@ -23,12 +24,13 @@ set(SOURCES
       ${SOURCE_FOLDER}/memory/MemoryProfiler.cpp
     ${SOURCE_FOLDER}/memory/PoolAllocator.cpp
     ${SOURCE_FOLDER}/systems/RenderingSystem.cpp
-    ${SOURCE_FOLDER}/systems/rendering/RenderingEngine.cpp)
+    ${SOURCE_FOLDER}/engine/RenderingEngine.cpp)
 
 # Headers files
 set(HEADERS
     # cmake-format: sortable
     ${INCLUDE_FOLDER_INTERN}/Application.hpp
+    ${INCLUDE_FOLDER_INTERN}/Window.hpp
     ${INCLUDE_FOLDER_INTERN}/Configuration.hpp
     ${INCLUDE_FOLDER_INTERN}/debug/Debug.hpp
     ${INCLUDE_FOLDER_INTERN}/debug/DebugBreak.hpp
@@ -47,29 +49,33 @@ set(HEADERS
     ${INCLUDE_FOLDER_INTERN}/memory/MemoryManager.hpp
     ${INCLUDE_FOLDER_INTERN}/memory/PoolAllocator.hpp
     ${INCLUDE_FOLDER_INTERN}/systems/RenderingSystem.hpp
-    ${INCLUDE_FOLDER_INTERN}/systems/rendering/RenderingEngine.hpp
-    ${INCLUDE_FOLDER_INTERN}/Utils.hpp)
+    ${INCLUDE_FOLDER_INTERN}/engine/RenderingEngine.hpp
+    ${INCLUDE_FOLDER_INTERN}/Utils.hpp
+    ${INCLUDE_FOLDER_INTERN}/Platform.hpp)
 
 # red_engine_lib
 add_library(red_engine_lib ${SOURCES} ${HEADERS})
 
 # Diligent engine linking 
-target_include_directories(red_engine_lib PRIVATE "../external/DiligentCore" ${INCLUDE_FOLDER_INTERN} PUBLIC ${INCLUDE_FOLDER})
+target_include_directories(red_engine_lib PUBLIC  "../external/" ${INCLUDE_FOLDER_INTERN}  ${INCLUDE_FOLDER})
 
 target_compile_definitions(red_engine_lib 
-PRIVATE 
+PUBLIC 
     UNICODE
+    ENGINE_DLL=1
     D3D11_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
-    D3D12_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
-    OPENGL_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
-    VULKAN_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
+    D3D12_SUPPORTED=$<BOOL:${D3D12_SUPPORTED}>
+    GL_SUPPORTED=$<BOOL:${GL_SUPPORTED}>
+    VULKAN_SUPPORTED=$<BOOL:${VULKAN_SUPPORTED}>
 )
 
-set_target_properties(red_engine_lib PROPERTIES
-    FOLDER ../ressources
-)
+if(1WIN32)
+    message(FATAL_ERROR "Only Win32 is supported now")
+endif()
 
-target_compile_definitions(red_engine_lib PRIVATE ENGINE_DLL=1)
+target_compile_definitions(red_engine_lib 
+    PUBLIC
+        PLATFORM_WIN32=1)
 
 if(D3D11_SUPPORTED)
     target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineD3D11-shared)
@@ -83,5 +89,3 @@ endif()
 if(VULKAN_SUPPORTED)
     target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineVk-shared)
 endif()
-
-copy_required_dlls(red_engine_lib)

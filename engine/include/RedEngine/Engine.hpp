@@ -1,8 +1,10 @@
 #pragma once
 
-#include <RedEngine/EngineConfig.hpp>
-#include <RedEngine/memory/MemoryManager.hpp>
 #include <memory>
+
+#include <RedEngine/EngineConfig.hpp>
+#include <RedEngine/engine/RenderingEngine.hpp>
+#include <RedEngine/memory/MemoryManager.hpp>
 
 namespace red
 {
@@ -21,10 +23,13 @@ public:
 
     MemoryManager& GetMemoryManager();
 
+    RenderingEngine& GetRenderingEngine();
+
     static Engine& GetInstance();
 
 private:
     MemoryManager m_memoryManager;
+    RenderingEngine m_renderingEngine;
 };
 
 } // namespace red

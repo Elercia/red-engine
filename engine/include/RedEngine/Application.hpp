@@ -14,18 +14,21 @@ class World;
 class Application
 {
 public:
-    Application(int argc = 0, char* argv[] = nullptr);
+    Application();
     ~Application();
+
+    void InitFromCommandLine(int argc, char* argv[]);
+    void InitFromCommandLine(char* cmdLine);
 
     std::shared_ptr<World> CreateWorld(bool registerConfiguredSystems = true);
 
-    std::shared_ptr<Window> CreateWindow();
+    Window& InitWindow(std::wstring title);
 
     bool Run();
 
 private:
     Configuration m_config;
     std::shared_ptr<World> m_world;
-    std::shared_ptr<Window> m_window;
+    std::unique_ptr<Window> m_window;
 };
 } // namespace red
