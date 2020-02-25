@@ -5,7 +5,6 @@
 
 namespace red
 {
-
 struct AllocatedMemory
 {
     friend class MemoryProfiler;
@@ -28,4 +27,4 @@ public:
 private:
     std::array<AllocatedMemory, 2048> m_allocatedMemory;
 };
-} // namespace red
+}  // namespace red

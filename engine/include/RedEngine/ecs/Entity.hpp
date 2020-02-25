@@ -1,14 +1,15 @@
 #pragma once
 
-#include <RedEngine/ecs/Component.hpp>
-
 #include <memory>
 #include <optional>
-#include <set> // TODO change for better performance
+#include <set>  // TODO change for better performance
+
+#include <RedEngine/EngineConfig.hpp>
 
 namespace red
 {
 class World;
+class Component;
 
 class Entity
 {
@@ -46,6 +47,6 @@ protected:
     EntityId_t m_id;
 };
 
-} // namespace red
+}  // namespace red
 
 #include "inl/Entity.inl"

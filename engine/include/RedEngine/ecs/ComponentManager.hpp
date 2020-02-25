@@ -28,6 +28,6 @@ public:
 private:
     std::map<ComponentName_t, ComponentPool_t> m_components;
 };
-} // namespace red
+}  // namespace red
 
 #include "inl/ComponentManager.inl"

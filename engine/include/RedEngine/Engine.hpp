@@ -32,6 +32,6 @@ private:
     RenderingEngine m_renderingEngine;
 };
 
-} // namespace red
+}  // namespace red
 
 red::Engine& GetRedInstance();

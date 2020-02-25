@@ -8,7 +8,6 @@
 
 namespace red
 {
-
 class World;
 
 class Application
@@ -31,4 +30,4 @@ private:
     std::shared_ptr<World> m_world;
     std::unique_ptr<Window> m_window;
 };
-} // namespace red
+}  // namespace red

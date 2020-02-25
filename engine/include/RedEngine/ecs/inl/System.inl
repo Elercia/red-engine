@@ -1,14 +1,26 @@
-#include "../Component.hpp"
+
+#include <algorithm>
 
 namespace red
 {
-
-template <typename T>
-void System::RequireComponentType()
+template <class... ComponentTypes>
+std::vector<std::shared_ptr<Entity>> System::GetComponents()
 {
-    static_assert(std::is_base_of<Component, T>::value, "System require a valid component");
+    std::vector<std::shared_ptr<Entity>> selectedEntities;
 
-    auto [insertedComponent, inserted] = m_requiredComponents.insert(T::ComponentName);
+    for (auto& entityPtr : m_world->GetEntities())
+    {
+        auto list = {entityPtr->HasComponent<ComponentTypes>()...};
+
+        auto v = std::find(list.begin(), list.end(), false);
+
+        if (v == list.end())
+        {
+            selectedEntities.push_back(entityPtr);
+        }
+    }
+
+    return selectedEntities;
 }
 
-} // namespace red
+}  // namespace red

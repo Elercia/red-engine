@@ -1,4 +1,4 @@
-BasedOnStyle:Google
+BasedOnStyle: Google
 
 ColumnLimit: 100
 UseTab: Never
@@ -7,12 +7,12 @@ AccessModifierOffset: -4
 NamespaceIndentation: Inner
 BreakBeforeBraces: Allman
 
-AlwaysBreakTemplateDeclarations: true
+AlwaysBreakTemplateDeclarations: Yes
 BreakConstructorInitializersBeforeComma: true
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 AllowShortBlocksOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 
 PointerAlignment: Left

@@ -9,16 +9,13 @@ namespace red
 class Entity;
 
 // RED_COMPONENT
-#define RED_COMPONENT(NAME)                                                                        \
-public:                                                                                            \
-    enum : red::ComponentName_t                                                                    \
-    {                                                                                              \
-        ComponentName = NAME                                                                       \
-    };                                                                                             \
-    virtual red::ComponentName_t (GetComponentName)() const                                          \
-    {                                                                                              \
-        return ComponentName;                                                                      \
-    };
+#define RED_COMPONENT(NAME)     \
+public:                         \
+    enum : red::ComponentName_t \
+    {                           \
+        ComponentName = NAME    \
+    };                          \
+    virtual red::ComponentName_t(GetComponentName)() const { return ComponentName; };
 // RED_COMPONENT
 
 class Component
@@ -35,11 +32,11 @@ public:
 
     ComponentName_t GetComponentId() const;
 
-	[[nodiscard]] Entity* GetOwner() const;
+    [[nodiscard]] Entity* GetOwner() const;
 
 protected:
     ComponentId_t m_componentId;
     Entity* m_owner;
 };
 
-} // namespace red
+}  // namespace red

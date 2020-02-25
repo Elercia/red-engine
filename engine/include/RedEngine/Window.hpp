@@ -24,4 +24,4 @@ private:
     HWND m_nativeWindowHandle;
 };
 
-} // namespace red
+}  // namespace red

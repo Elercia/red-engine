@@ -16,4 +16,4 @@ public:
 private:
     std::size_t m_blockSize;
 };
-} // namespace red
+}  // namespace red

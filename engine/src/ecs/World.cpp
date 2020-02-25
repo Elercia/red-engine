@@ -1,5 +1,6 @@
 #include <RedEngine/debug/Debug.hpp>
 #include <RedEngine/ecs/ComponentManager.hpp>
+#include <RedEngine/ecs/System.hpp>
 #include <RedEngine/ecs/Entity.hpp>
 #include <RedEngine/ecs/World.hpp>
 #include <algorithm>
@@ -7,14 +8,9 @@
 
 namespace red
 {
+std::vector<std::shared_ptr<System>>& World::GetSystems() { return m_systems; }
 
-std::vector<std::shared_ptr<System>>& World::GetSystems()
-{
-    return m_systems;
-}
-
-World::World() : m_componentManager(new ComponentManager()), m_nextEntityId(0)
-{}
+World::World() : m_componentManager(new ComponentManager()), m_nextEntityId(0) {}
 
 World::~World()
 {
@@ -43,8 +39,7 @@ void World::Update(float deltaTime)
     }
 }
 
-ComponentManager* World::GetComponentManager()
-{
-    return m_componentManager;
-}
-} // namespace red
+ComponentManager* World::GetComponentManager() { return m_componentManager; }
+
+std::vector<std::shared_ptr<Entity>>& World::GetEntities() { return m_entities; }
+}  // namespace red

@@ -1,8 +1,9 @@
 #include <RedEngine/ecs/System.hpp>
+
 namespace red
 {
 
-System::System(ComponentManager* componentManager) : m_componentManager(componentManager)
+System::System(World* world) : m_world(world)
 {}
 
 } // namespace red

@@ -4,13 +4,12 @@
 
 namespace red
 {
-
 class RenderingSystem : public System
 {
 public:
-    RenderingSystem(ComponentManager* componentManager);
+    RenderingSystem(World* world);
 
     void Update(float deltaTime) override;
 };
 
-} // namespace red
+}  // namespace red

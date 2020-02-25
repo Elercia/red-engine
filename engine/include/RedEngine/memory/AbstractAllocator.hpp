@@ -14,4 +14,4 @@ public:
     virtual void* Allocate(std::size_t size) = 0;
     virtual void Free(void* ptr) = 0;
 };
-} // namespace red
+}  // namespace red

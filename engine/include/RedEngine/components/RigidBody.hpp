@@ -7,7 +7,6 @@ class RigidBody : public Component
 {
 public:
     RED_COMPONENT('RIGB')
-    RigidBody(Entity* entity) : Component(entity)
-    {}
+    RigidBody(Entity* entity) : Component(entity) {}
 };
-} // namespace red
+}  // namespace red

@@ -24,7 +24,7 @@ public:
 private:
     MemoryProfiler m_memoryProfiler;
 };
-} // namespace red
+}  // namespace red
 
 #ifdef RED_ENABLE_MEMORY_PROFILING
 void* operator new(std::size_t count);
@@ -32,4 +32,4 @@ void* operator new[](std::size_t count);
 
 void operator delete(void* ptr) noexcept;
 void operator delete[](void* ptr) noexcept;
-#endif // RED_ENABLE_MEMORY_PROFILING
+#endif  // RED_ENABLE_MEMORY_PROFILING

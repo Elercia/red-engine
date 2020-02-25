@@ -1,14 +1,13 @@
 
-#include "../World.hpp"
-#include "../../debug/Debug.hpp"
-#include "../ComponentManager.hpp"
 #include <algorithm>
 #include <cassert>
 #include <string>
+#include "../../debug/Debug.hpp"
+#include "../ComponentManager.hpp"
+#include "../World.hpp"
 
 namespace red
 {
-
 template <typename T, typename... Args>
 std::shared_ptr<T> Entity::AddComponent(Args&&... args)
 {
@@ -70,4 +69,4 @@ bool Entity::HasComponent()
 
     return true;
 }
-} // namespace red
+}  // namespace red

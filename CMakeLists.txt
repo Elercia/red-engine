@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.12)
 include("cmake/HunterGate.cmake")
 
 HunterGate(
-        URL "https://github.com/ruslo/hunter/archive/v0.23.214.tar.gz"
-        SHA1 "e14bc153a7f16d6a5eeec845fb0283c8fad8c358"
+        URL "https://github.com/cpp-pm/hunter/archive/v0.23.249.tar.gz"
+        SHA1 "d45d77d8bba9da13e9290a180e0477e90accd89b"
 )
 
 project(red-engine
@@ -31,13 +31,11 @@ include(cmake/HunterLibs.cmake)
 #Legacy External dependencies
 add_subdirectory(external)
 
-set(BUILDSYSTEM_PROJECTS_DIR
-        engine #Main project
-        templates #template projects
-    )
+# Engine main directory
+add_subdirectory(engine)
 
-include(${PROJECT_SOURCE_DIR}/cmake/BuildSystem.cmake) # This perfom the add_subdirectory on BUILDSYSTEM_PROJECTS_DIR var
-#
-##CPack
-#include(cmake/Install.cmake)
-#include(CPack)
+# Engine templates directory
+add_subdirectory(templates)
+
+## Engine tests
+add_subdirectory(test)

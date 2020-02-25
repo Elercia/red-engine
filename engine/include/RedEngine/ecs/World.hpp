@@ -2,7 +2,6 @@
 
 #include "../EngineConfig.hpp"
 #include "../Utils.hpp"
-#include "System.hpp"
 
 #include <memory>
 #include <vector>
@@ -12,6 +11,7 @@ namespace red
 class Entity;
 class ComponentManager;
 class Component;
+class System;
 
 class World
 {
@@ -34,7 +34,9 @@ public:
     std::shared_ptr<T> AddSystem(...);
 
     std::vector<std::shared_ptr<System>>& GetSystems();
+    std::vector<std::shared_ptr<Entity>>& GetEntities();
     ComponentManager* GetComponentManager();
+
 
     void Update(float deltaTime);
 
@@ -46,6 +48,6 @@ private:
     EntityId_t m_nextEntityId;
 };
 
-} // namespace red
+}  // namespace red
 
 #include "inl/World.inl"

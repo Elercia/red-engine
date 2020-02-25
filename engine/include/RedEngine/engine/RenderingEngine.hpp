@@ -13,6 +13,8 @@
 #include <DiligentCore/Graphics/GraphicsEngine/interface/RenderDevice.h>
 #include <DiligentCore/Graphics/GraphicsEngine/interface/SwapChain.h>
 
+#undef GetObject
+
 #include <DiligentCore/Common/interface/RefCntAutoPtr.h>
 
 namespace red
@@ -39,4 +41,4 @@ private:
     Diligent::DeviceType m_DeviceType = Diligent::DeviceType::OpenGL;
 };
 
-} // namespace red
+}  // namespace red

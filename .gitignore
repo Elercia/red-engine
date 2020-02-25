@@ -125,7 +125,7 @@ CMakeSettings.json
 
 ### Clion ###
 .idea/
-cmake-build-debug/
+cmake-build-*/
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files

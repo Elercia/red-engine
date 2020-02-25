@@ -6,3 +6,5 @@
 #define NOGDI
 
 #include <Windows.h>
+
+#undef GetObject

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "../EngineConfig.hpp"
-#include <set>
+#include <memory>
+#include <vector>
+#include "Entity.hpp"
 
 namespace red
 {
-class Entity;
-class ComponentManager;
+class World;
 
 class System
 {
 public:
-    System(ComponentManager* componentManager);
+    System(World* world);
     System(System&&) = default;
     System(const System&) = delete;
     virtual ~System() = default;
@@ -21,15 +21,12 @@ public:
 
     virtual void Update(float deltaTime) = 0;
 
-    template <typename T>
-    void RequireComponentType();
+    template <class ... ComponentTypes>
+    std::vector<std::shared_ptr<Entity>> GetComponents();
 
-    void GetComponents();
-
-private:
-    std::set<ComponentName_t> m_requiredComponents;
-    ComponentManager* m_componentManager;
+protected:
+    World* m_world;
 };
-} // namespace red
+}  // namespace red
 
 #include "inl/System.inl"

@@ -1,9 +1,16 @@
-#include <RedEngine/ecs/ComponentManager.hpp>
+#include <RedEngine/components/Mesh.hpp>
+#include <RedEngine/ecs/World.hpp>
 #include <RedEngine/systems/RenderingSystem.hpp>
 
 namespace red
 {
-RenderingSystem::RenderingSystem(ComponentManager* componentManager) : System(componentManager) {}
+RenderingSystem::RenderingSystem(World* world) : System(world) {}
 
-void RenderingSystem::Update(float deltaTime) {}
+void RenderingSystem::Update(float deltaTime)
+{
+    for(auto& entity : GetComponents<Mesh>())
+    {
+
+    }
+}
 } // namespace red

@@ -1,13 +1,11 @@
 #pragma once
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace red
 {
-
-using ConfigurationValue = union
-{
+using ConfigurationValue = union {
     bool dataBool;
     std::string dataString;
     float dataFloat;
@@ -33,6 +31,6 @@ private:
     std::map<std::string, std::string> m_configs;
 };
 
-} // namespace red
+}  // namespace red
 
 #include "inl/Configuration.inl"
