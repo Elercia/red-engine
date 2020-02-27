@@ -20,6 +20,8 @@ std::shared_ptr<T> Entity::AddComponent(Args&&... args)
 
     auto componentPtr = m_world->GetComponentManager()->CreateComponent<T>(this);
 
+    m_components.insert(componentPtr);
+
     return componentPtr;
 }
 

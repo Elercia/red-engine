@@ -8,11 +8,16 @@ project(red_engine_test
 enable_testing()
 
 set(SOURCES src/main.cpp
-            src/ecs.cpp)
+        src/world_test.cpp
+        src/system_test.cpp)
 
-add_executable(red_engine_test ${SOURCES})
+set(HEADERS include/system_test.hpp)
+
+add_executable(red_engine_test ${SOURCES} ${HEADERS})
 
 target_link_libraries(red_engine_test PRIVATE Catch2::Catch2 red_engine_lib)
+target_include_directories(red_engine_test PRIVATE "include")
+
 
 include(CTest)
 include(Catch)
