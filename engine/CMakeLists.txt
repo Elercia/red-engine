@@ -70,7 +70,7 @@ target_compile_definitions(red_engine_lib
         VULKAN_SUPPORTED=$<BOOL:${VULKAN_SUPPORTED}>
         )
 
-if (1WIN32)
+if (!WIN32)
     message(FATAL_ERROR "Only Win32 is supported now")
 endif ()
 
