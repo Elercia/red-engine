@@ -1,27 +1,45 @@
 #pragma once
 
-#include <string>
+#include <SDL.h>
+#include <SDL_syswm.h>
 
-#include <RedEngine/Platform.hpp>
+#include <string>
 
 namespace red
 {
-LRESULT CALLBACK MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam);
+namespace internal
+{
+    class SDL2Initializer
+    {
+    public:
+        SDL2Initializer();
+        ~SDL2Initializer();
+
+    private:
+        static SDL2Initializer ms_instance;
+    };
+}  // namespace internal
 
 class Window
 {
 public:
-    Window(std::wstring title);
+    Window(std::string title);
     ~Window();
 
+#ifdef PLATFORM_WIN32
     HWND GetNativeHandle();
+#endif
+
+#ifdef PLATFORM_LINUX
+    ::Window GetNativeHandle();
+    Display* GetNativeDisplay();
+#endif
 
 private:
-    std::wstring m_title;
-    long m_windowWidth;
-    long m_windowHeight;
+    SDL_SysWMinfo GetSDLSysInfo();
 
-    HWND m_nativeWindowHandle;
+    std::string m_title;
+    SDL_Window* m_window;
 };
 
 }  // namespace red

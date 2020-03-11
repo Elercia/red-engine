@@ -21,7 +21,7 @@ public:
 
     std::shared_ptr<World> CreateWorld(bool registerConfiguredSystems = true);
 
-    Window& InitWindow(std::wstring title);
+    Window& InitWindow(const std::string& title);
 
     bool Run();
 
