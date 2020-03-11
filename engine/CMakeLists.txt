@@ -51,42 +51,56 @@ set(HEADERS
         ${INCLUDE_FOLDER_INTERN}/systems/RenderingSystem.hpp
         ${INCLUDE_FOLDER_INTERN}/engine/RenderingEngine.hpp
         ${INCLUDE_FOLDER_INTERN}/Utils.hpp
-        ${INCLUDE_FOLDER_INTERN}/Platform.hpp
         ${INCLUDE_FOLDER_INTERN}/components/Mesh.hpp)
 
 # red_engine_lib
-add_library(red_engine_lib ${SOURCES} ${HEADERS})
-
-# Diligent engine linking 
-target_include_directories(red_engine_lib PUBLIC "../external/" ${INCLUDE_FOLDER_INTERN} ${INCLUDE_FOLDER})
-
-target_compile_definitions(red_engine_lib
-        PUBLIC
-        UNICODE
-        ENGINE_DLL=1
-        D3D11_SUPPORTED=$<BOOL:${D3D11_SUPPORTED}>
-        D3D12_SUPPORTED=$<BOOL:${D3D12_SUPPORTED}>
-        GL_SUPPORTED=$<BOOL:${GL_SUPPORTED}>
-        VULKAN_SUPPORTED=$<BOOL:${VULKAN_SUPPORTED}>
+add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS})
+set_common_target_properties(red_engine_lib)
+set_target_properties(red_engine_lib PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
         )
 
-if (!WIN32)
-    message(FATAL_ERROR "Only Win32 is supported now")
-endif ()
+# SLD2
+target_link_libraries(red_engine_lib PUBLIC SDL2::SDL2 SDL2::SDL2main)
 
-target_compile_definitions(red_engine_lib
+# Diligent engine linking
+target_include_directories(red_engine_lib
         PUBLIC
-        PLATFORM_WIN32=1)
+        ${INCLUDE_FOLDER_INTERN}
+        ${INCLUDE_FOLDER}
+        "../external/" )
 
-if (D3D11_SUPPORTED)
-    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineD3D11-shared)
-endif ()
-if (D3D12_SUPPORTED)
-    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineD3D12-shared)
-endif ()
-if (GL_SUPPORTED)
-    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineOpenGL-shared)
-endif ()
-if (VULKAN_SUPPORTED)
-    target_link_libraries(red_engine_lib PRIVATE Diligent-GraphicsEngineVk-shared)
-endif ()
+if(MSVC)
+target_compile_options(red_engine_lib PRIVATE -DUNICODE)
+
+if(PLATFORM_UNIVERSAL_WINDOWS)
+    # Disable w4189: local variable is initialized but not referenced
+    # Disable w4063: case is not a valid value for switch of enum
+    # Consume the windows runtime extensions (/ZW)
+    target_compile_options(red_engine_lib INTERFACE /wd4189 /wd4063 /ZW)
+endif(PLATFORM_UNIVERSAL_WINDOWS)
+endif(MSVC)
+
+get_supported_backends(DILIGENT_ENGINE_LIBRARIES)
+
+target_link_libraries(red_engine_lib
+    PRIVATE
+        Diligent-BuildSettings
+    PUBLIC
+        Diligent-Common
+        Diligent-GraphicsTools
+        Diligent-TargetPlatform
+        ${DILIGENT_ENGINE_LIBRARIES}
+    )
+
+if(PLATFORM_UNIVERSAL_WINDOWS)
+    target_link_libraries(red_engine_lib PRIVATE dxguid.lib)
+elseif(PLATFORM_ANDROID)
+    target_link_libraries(red_engine_lib PRIVATE GLESv3 PUBLIC native_app_glue)
+elseif(PLATFORM_LINUX)
+    target_link_libraries(red_engine_lib PRIVATE GL X11)
+elseif(PLATFORM_MACOS OR PLATFORM_IOS)
+endif()
+
+

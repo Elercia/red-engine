@@ -10,6 +10,7 @@
 #include <iostream>
 #include <numeric>
 #include <thread>
+#include <memory>
 
 namespace red
 {
@@ -48,7 +49,7 @@ bool Application::Run()
         frameStartTime = currentTime;
 
         float deltaTime =
-            std::accumulate(frameTimes.begin(), frameTimes.end(), 1.f, std::plus<>()) /
+            std::accumulate(frameTimes.begin(), frameTimes.end(), 1.f, std::plus<float>()) /
             10.f; // calculate the mean of delta times (this return at least 1.f)
 
         //
@@ -79,11 +80,11 @@ std::shared_ptr<World> red::Application::CreateWorld(bool registerConfiguredSyst
     return m_world;
 }
 
-Window& Application::InitWindow(std::wstring title)
+Window& Application::InitWindow(const std::string& title)
 {
     RED_ASSERT(m_window == nullptr, "Only one window is allowed");
 
-    m_window = std::make_unique<Window>(title);
+    m_window = std::make_unique<red::Window>(title);
 
     RenderingEngine& renderingEngine = GetRedInstance().GetRenderingEngine();
 

@@ -2,14 +2,15 @@
 
 #include <memory>
 #include <optional>
-#include <set>  // TODO change for better performance
+#include <set>
 
 #include <RedEngine/EngineConfig.hpp>
+#include <RedEngine/ecs/Component.hpp>
+
 
 namespace red
 {
 class World;
-class Component;
 
 class Entity
 {

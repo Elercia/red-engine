@@ -1,79 +1,71 @@
+
 #include <RedEngine/Engine.hpp>
 #include <RedEngine/Window.hpp>
 #include <RedEngine/debug/Debug.hpp>
 
 namespace red
 {
-LRESULT CALLBACK MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam)
+namespace internal
 {
-    switch (message)
+    SDL2Initializer::SDL2Initializer()
     {
-    case WM_PAINT: {
-        PAINTSTRUCT ps;
-        BeginPaint(wnd, &ps);
-        EndPaint(wnd, &ps);
-        return 0;
+        if (SDL_Init(SDL_INIT_VIDEO) != 0)
+        {
+            std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+            SDL_Quit();
+            RED_ABORT("Error")
+        }
     }
-    case WM_SIZE: {
-        // Window size has been changed
-        RenderingEngine& renderinEngine = GetRedInstance().GetRenderingEngine();
-        renderinEngine.WindowResizeCallBack(LOWORD(lParam), HIWORD(lParam));
-        return 0;
-    }
-    case WM_DESTROY: {
-        PostQuitMessage(0);
-        return 0;
-    }
-    case WM_GETMINMAXINFO: {
-        LPMINMAXINFO lpMMI = (LPMINMAXINFO) lParam;
+    SDL2Initializer::~SDL2Initializer() { SDL_Quit(); }
+}  // namespace internal
 
-        lpMMI->ptMinTrackSize.x = 320;
-        lpMMI->ptMinTrackSize.y = 240;
-        return 0;
-    }
-    default:
-        return DefWindowProc(wnd, message, wParam, lParam);
+Window::Window(std::string title) : m_title(std::move(title))
+{
+    m_window = SDL_CreateWindow(m_title.c_str(), 100, 100, 800, 600, SDL_WINDOW_SHOWN);
+
+    if (m_window == nullptr)
+    {
+        std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+        RED_ABORT("Error")
     }
 }
 
-Window::Window(std::wstring title) : m_title(title), m_windowHeight(600), m_windowWidth(800)
+Window::~Window() { SDL_DestroyWindow(m_window); }
+
+#ifdef PLATFORM_WIN32
+HWND Window::GetNativeHandle()
 {
-    LPCWSTR windowClass = L"Window class";
+    SDL_SysWMinfo sysInfo = GetSDLSysInfo();
 
-    WNDCLASSEX wcex = {sizeof(WNDCLASSEX),
-                       CS_HREDRAW | CS_VREDRAW,
-                       MessageProc,
-                       0L,
-                       0L,
-                       GetModuleHandle(NULL),
-                       NULL,
-                       NULL,
-                       NULL,
-                       NULL,
-                       windowClass,
-                       NULL};
-    RegisterClassEx(&wcex);
+    return sysInfo.info.win.window;
+}
+#endif
 
-    // Create a window using the Windows API
-    RECT rc = {0, 0, m_windowWidth, m_windowHeight};
+#ifdef PLATFORM_LINUX
+::Window Window::GetNativeHandle()
+{
+    SDL_SysWMinfo sysInfo = GetSDLSysInfo();
 
-    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+    return sysInfo.info.x11.window;
+}
+Display* Window::GetNativeDisplay()
+{
+    SDL_SysWMinfo sysInfo = GetSDLSysInfo();
 
-    m_nativeWindowHandle = CreateWindow(
-        windowClass, m_title.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-        rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, GetModuleHandle(NULL), NULL);
+    return sysInfo.info.x11.display;
+}
+#endif
 
-    if (!m_nativeWindowHandle)
+SDL_SysWMinfo Window::GetSDLSysInfo()
+{
+    SDL_SysWMinfo sysInfo;
+    SDL_VERSION(&sysInfo.version);
+
+    if (!SDL_GetWindowWMInfo(m_window, &sysInfo))
     {
-        MessageBox(NULL, L"Cannot create window", L"Error", MB_OK | MB_ICONERROR);
-        RED_ABORT("Win32 Window cannot be created");
+        RED_ERROR("Cant get native window handle on windows")
     }
 
-    ShowWindow(m_nativeWindowHandle, true);
-    UpdateWindow(m_nativeWindowHandle);
+    return sysInfo;
 }
-
-Window::~Window() {}
-
-HWND Window::GetNativeHandle() { return m_nativeWindowHandle; }
-} // namespace red
+}  // namespace red
