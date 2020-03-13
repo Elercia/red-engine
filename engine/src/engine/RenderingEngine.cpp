@@ -96,7 +96,10 @@ void RenderingEngine::InitializeEngine(Window* window)
             // Declare function pointer
             GetEngineFactoryOpenGLType GetEngineFactoryOpenGL = nullptr;
             // Load the dll and import GetEngineFactoryOpenGL() function
-            LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL);
+            if(!LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL))
+            {
+                RED_ERROR("Cannot load LoadGraphicsEngineOpenGL")
+            }
 #endif
             auto* pFactoryOpenGL = GetEngineFactoryOpenGL();
             EngineGLCreateInfo EngineCI;
