@@ -51,13 +51,16 @@ set(HEADERS
         ${INCLUDE_FOLDER_INTERN}/systems/RenderingSystem.hpp
         ${INCLUDE_FOLDER_INTERN}/engine/RenderingEngine.hpp
         ${INCLUDE_FOLDER_INTERN}/Utils.hpp
-        ${INCLUDE_FOLDER_INTERN}/components/Mesh.hpp)
+        ${INCLUDE_FOLDER_INTERN}/components/Mesh.hpp ${INCLUDE_FOLDER_INTERN}/log/Logger.hpp ${INCLUDE_FOLDER_INTERN}/log/inl/Logger.inl)
 
 # red_engine_lib
 add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS})
 
 # SLD2
 target_link_libraries(red_engine_lib PUBLIC SDL2::SDL2 SDL2::SDL2main)
+
+# FMT
+target_link_libraries(red_engine_lib PUBLIC fmt-header-only)
 
 # Diligent engine linking
 set_common_target_properties(red_engine_lib)
