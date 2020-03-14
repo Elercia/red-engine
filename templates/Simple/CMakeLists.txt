@@ -16,7 +16,3 @@ set_target_properties(TemplateSimple PROPERTIES
 )
 
 target_link_libraries(TemplateSimple PUBLIC red_engine_lib)
-
-if(WIN32)
-copy_required_dlls(TemplateSimple)
-endif()

@@ -1,5 +1,4 @@
 #pragma once
-#define FMT_HEADER_ONLY
 #include <fmt/format.h>
 
 #include <RedEngine/Engine.hpp>
@@ -7,7 +6,6 @@
 
 namespace red
 {
-void SetLogLevel(LogLevel level) { GetRedInstance().GetLogger().SetLogLevel(level); }
 
 template <typename... Args>
 void LogTrace(std::string format, Args... args)
@@ -39,10 +37,6 @@ void LogFatal(std::string format, Args... args)
     GetRedInstance().GetLogger().LogInternal(LogLevel::FATAL, format, std::forward<Args>(args)...);
 }
 
-Logger::Logger() : m_logLevel(LogLevel::INFO) {}
-
-void Logger::SetLogLevel(LogLevel level) { m_logLevel = level; }
-
 template <typename... Args>
 void Logger::LogInternal(LogLevel level, std::string format, Args... args)
 {
@@ -56,6 +50,5 @@ void Logger::LogInternal(LogLevel level, std::string format, Args... args)
     }
 }
 
-void Logger::Out(const std::string& data) { std::cout << data; }
 
 }  // namespace red

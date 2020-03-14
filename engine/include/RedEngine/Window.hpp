@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <SDL_syswm.h>
 
 #include <string>
@@ -23,7 +23,7 @@ namespace internal
 class Window
 {
 public:
-    Window(std::string title);
+    explicit Window(std::string title);
     ~Window();
 
 #ifdef PLATFORM_WIN32

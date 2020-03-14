@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
+# Hunter dependencies
 include("cmake/HunterGate.cmake")
 
 HunterGate(
@@ -15,7 +16,7 @@ project(red-engine
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
+set(CMAKE_VERBOSE_MAKEFILE ON)
 # Have cmake create a compile database
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -23,19 +24,36 @@ set(${PROJECT_NAME}_BASE_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/output)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
+set(COMPILE_PDB_OUTPUT_DIRECTORY   ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
+set(PDB_OUTPUT_DIRECTORY    ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/bin)
+set(CMAKE_INSTALL_PREFIX  ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/install)
 
-#Hunter dependencies
+# Hunter libs
 include(cmake/HunterLibs.cmake)
 
-#Legacy External dependencies
+# Build Utils
+include(cmake/BuildUtils.cmake)
+
+# Project options
+include(cmake/ProjectOptions.cmake)
+
+# Legacy External dependencies
 add_subdirectory(external)
 
 # Engine main directory
 add_subdirectory(engine)
 
 # Engine templates directory
-add_subdirectory(templates)
+option(RED_BUILD_TEMPLATES "Enable compilation of templates" ON)
+if (RED_BUILD_TEMPLATES)
+    message(STATUS "Building templates")
+    add_subdirectory(templates)
+endif ()
 
 ## Engine tests
-add_subdirectory(test)
+option(RED_ENABLE_TESTING "Enable Test Builds" ON)
+if (RED_ENABLE_TESTING)
+    message(STATUS "Building tests")
+    add_subdirectory(test)
+endif ()
