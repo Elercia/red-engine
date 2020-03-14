@@ -1,3 +1,3 @@
 #include "CustomSystem.hpp"
 
-void CustomSystem::Update(float deltaTime) {}
+void CustomSystem::Update(float /* deltaTime */) {}

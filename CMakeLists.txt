@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
+# Hunter dependencies
 include("cmake/HunterGate.cmake")
 
 HunterGate(
@@ -25,17 +26,29 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/bin)
 
-#Hunter dependencies
+# Hunter libs
 include(cmake/HunterLibs.cmake)
 
-#Legacy External dependencies
+# Build Utils
+include(cmake/BuildUtils.cmake)
+
+# Project options
+include(cmake/ProjectOptions.cmake)
+
+# Legacy External dependencies
 add_subdirectory(external)
 
 # Engine main directory
 add_subdirectory(engine)
 
 # Engine templates directory
-add_subdirectory(templates)
+option(RED_BUILD_TEMPLATES "Enable compilation of templates" ON)
+if (RED_BUILD_TEMPLATES)
+    add_subdirectory(templates)
+endif ()
 
 ## Engine tests
-add_subdirectory(test)
+option(RED_ENABLE_TESTING "Enable Test Builds" ON)
+if (ENABLE_TESTING)
+    add_subdirectory(test)
+endif ()
