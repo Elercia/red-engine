@@ -25,6 +25,8 @@ RenderingEngine::~RenderingEngine() {}
 
 void RenderingEngine::InitializeEngine(Window* window)
 {
+<<<<<<< HEAD
+=======
     using namespace Diligent;
 
 #ifdef PLATFORM_WIN32
@@ -96,7 +98,10 @@ void RenderingEngine::InitializeEngine(Window* window)
             // Declare function pointer
             GetEngineFactoryOpenGLType GetEngineFactoryOpenGL = nullptr;
             // Load the dll and import GetEngineFactoryOpenGL() function
-            LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL);
+            if(!LoadGraphicsEngineOpenGL(GetEngineFactoryOpenGL))
+            {
+                RED_ERROR("Cannot load LoadGraphicsEngineOpenGL")
+            }
 #endif
             auto* pFactoryOpenGL = GetEngineFactoryOpenGL();
             EngineGLCreateInfo EngineCI;
@@ -145,12 +150,11 @@ void RenderingEngine::InitializeEngine(Window* window)
             break;
         }
     }
+>>>>>>> refactor_cmake_branch
 }
 
 void RenderingEngine::WindowResizeCallBack(uint32_t width, uint32_t height)
 {
-    if (m_swapChain)
-        m_swapChain->Resize(width, height);
 }
 
 }  // namespace red
