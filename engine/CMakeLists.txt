@@ -15,7 +15,7 @@ file(GLOB_RECURSE HEADERS
         )
 
 # red_engine_lib
-add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS} src/logger/Logger.cpp)
+add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS})
 
 target_include_directories(red_engine_lib
         PUBLIC
