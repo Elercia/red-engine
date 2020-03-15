@@ -38,11 +38,11 @@ void LogFatal(std::string format, Args... args)
 }
 
 template <typename... Args>
-void Logger::LogInternal(LogLevel level, std::string format, Args... args)
+void Logger::LogInternal(LogLevel level, const std::string& format, Args... args)
 {
     if (level >= m_logLevel)
     {
-        std::string logString = fmt::format(FMT_STRING("{}"), format, std::forward<Args>(args)...);
+        std::string logString = fmt::format(format, std::forward<Args>(args)...);
         std::string levelAsString = g_logLevelAsString.at(level);
         std::string levelFormat = fmt::format(FMT_STRING("[{:<7}] "), levelAsString);
 

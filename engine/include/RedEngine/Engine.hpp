@@ -3,12 +3,12 @@
 #include <memory>
 
 #include <RedEngine/EngineConfig.hpp>
-#include <RedEngine/engine/RenderingEngine.hpp>
 #include <RedEngine/memory/MemoryManager.hpp>
 
 namespace red
 {
 class Entity;
+class RenderingEngine;
 class Logger;
 
 class Engine final
@@ -31,9 +31,12 @@ public:
     static Engine& GetInstance();
 
 private:
+    void Init();
+    bool m_isInitialized;
+
     MemoryManager m_memoryManager;
-    RenderingEngine m_renderingEngine;
-    Logger* m_logger;
+    RenderingEngine *m_renderingEngine;
+    Logger *m_logger;
 };
 
 }  // namespace red

@@ -1,7 +1,6 @@
-
-#include <RedEngine/Engine.hpp>
 #include <RedEngine/Window.hpp>
 #include <RedEngine/debug/Debug.hpp>
+#include <iostream>
 
 namespace red
 {
@@ -21,7 +20,7 @@ namespace internal
 
 Window::Window(std::string title) : m_title(std::move(title))
 {
-    m_window = SDL_CreateWindow(m_title.c_str(), 100, 100, 800, 600, SDL_WINDOW_SHOWN);
+    m_window = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
 
     if (m_window == nullptr)
     {
@@ -30,9 +29,16 @@ Window::Window(std::string title) : m_title(std::move(title))
     }
 }
 
-Window::~Window() { SDL_DestroyWindow(m_window); }
+Window::~Window()
+{
+    if (m_window != nullptr)
+    {
+        SDL_DestroyWindow(m_window);
+        m_window = nullptr;
+    }
+}
 
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WINDOWS
 HWND Window::GetNativeHandle()
 {
     SDL_SysWMinfo sysInfo = GetSDLSysInfo();

@@ -3,6 +3,7 @@
 #include <RedEngine/debug/Debug.hpp>
 #include <RedEngine/ecs/World.hpp>
 #include <RedEngine/systems/RenderingSystem.hpp>
+#include <RedEngine/engine/RenderingEngine.hpp>
 
 #include <array>
 #include <cassert>
@@ -53,8 +54,8 @@ bool Application::Run()
             10.f; // calculate the mean of delta times (this return at least 1.f)
 
         //
-        // std::cout << "Game FPS : " << 1000 / deltaTime << " delta is : " << deltaTime <<
-        // std::endl;
+         std::cout << "Game FPS : " << 1000 / deltaTime << " delta is : " << deltaTime <<
+         std::endl;
 
         // Update the inputs
 
