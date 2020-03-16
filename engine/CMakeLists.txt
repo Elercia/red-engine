@@ -23,7 +23,6 @@ target_include_directories(red_engine_lib
         ${INCLUDE_FOLDER}
         "../external/")
 
-
 # SLD2
 target_link_libraries(red_engine_lib
         PUBLIC
@@ -35,3 +34,4 @@ target_link_libraries(red_engine_lib
         PUBLIC
         fmt::fmt)
 
+red_set_compile_definition(red_engine_lib)

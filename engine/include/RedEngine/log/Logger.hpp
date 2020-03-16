@@ -48,7 +48,7 @@ public:
     void SetLogLevel(LogLevel level);
 
     template <typename... Args>
-    void LogInternal(LogLevel level, std::string format, Args... args);
+    void LogInternal(LogLevel level, const std::string& format, Args... args);
 
 protected:
     virtual void Out(const std::string& data);
