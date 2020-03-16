@@ -26,7 +26,7 @@ public:
     explicit Window(std::string title);
     ~Window();
 
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WINDOWS
     HWND GetNativeHandle();
 #endif
 
