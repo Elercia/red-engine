@@ -9,6 +9,7 @@
 namespace red
 {
 class Entity;
+class Logger;
 
 class Engine final
 {
@@ -25,11 +26,14 @@ public:
 
     RenderingEngine& GetRenderingEngine();
 
+    Logger& GetLogger();
+
     static Engine& GetInstance();
 
 private:
     MemoryManager m_memoryManager;
     RenderingEngine m_renderingEngine;
+    Logger* m_logger;
 };
 
 }  // namespace red

@@ -7,11 +7,15 @@ project(red_engine_test
 
 enable_testing()
 
-set(SOURCES src/main.cpp
+set(SOURCES
+        src/main.cpp
         src/world_test.cpp
-        src/system_test.cpp)
+        src/system_test.cpp
+        src/logger_test.cpp)
 
-set(HEADERS include/system_test.hpp)
+set(HEADERS
+        include/system_test.hpp
+        include/logger_test.hpp )
 
 add_executable(red_engine_test ${SOURCES} ${HEADERS})
 

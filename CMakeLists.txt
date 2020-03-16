@@ -24,7 +24,10 @@ set(${PROJECT_NAME}_BASE_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/output)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
+set(COMPILE_PDB_OUTPUT_DIRECTORY   ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
+set(PDB_OUTPUT_DIRECTORY    ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/bin)
+set(CMAKE_INSTALL_PREFIX  ${${PROJECT_NAME}_BASE_OUTPUT_DIR}/install)
 
 # Hunter libs
 include(cmake/HunterLibs.cmake)
@@ -44,11 +47,13 @@ add_subdirectory(engine)
 # Engine templates directory
 option(RED_BUILD_TEMPLATES "Enable compilation of templates" ON)
 if (RED_BUILD_TEMPLATES)
+    message(STATUS "Building templates")
     add_subdirectory(templates)
 endif ()
 
 ## Engine tests
 option(RED_ENABLE_TESTING "Enable Test Builds" ON)
-if (ENABLE_TESTING)
+if (RED_ENABLE_TESTING)
+    message(STATUS "Building tests")
     add_subdirectory(test)
 endif ()

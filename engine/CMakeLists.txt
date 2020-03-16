@@ -17,14 +17,21 @@ file(GLOB_RECURSE HEADERS
 # red_engine_lib
 add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS})
 
+target_include_directories(red_engine_lib
+        PUBLIC
+        ${INCLUDE_FOLDER_INTERN}
+        ${INCLUDE_FOLDER}
+        "../external/")
+
+
 # SLD2
 target_link_libraries(red_engine_lib
         PUBLIC
         SDL2::SDL2
         SDL2::SDL2main)
 
-target_include_directories(red_engine_lib
+# FMT
+target_link_libraries(red_engine_lib
         PUBLIC
-        ${INCLUDE_FOLDER_INTERN}
-        ${INCLUDE_FOLDER}
-        "../external/")
+        fmt::fmt)
+
