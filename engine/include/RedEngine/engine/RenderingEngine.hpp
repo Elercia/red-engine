@@ -14,7 +14,7 @@ public:
     RenderingEngine();
     ~RenderingEngine();
 
-    void InitializeEngine(Window* window);
+    void InitializeWindow(Window* window);
 
     void WindowResizeCallBack(uint32_t width, uint32_t height);
 

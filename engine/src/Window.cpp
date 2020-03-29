@@ -12,13 +12,6 @@ namespace internal
 
 Window::Window(std::string title) : m_title(std::move(title))
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
-        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        RED_ABORT("Error")
-    }
-
     m_window = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                 800, 600, SDL_WINDOW_SHOWN);
 
@@ -36,8 +29,6 @@ Window::~Window()
         SDL_DestroyWindow(m_window);
         m_window = nullptr;
     }
-
-    SDL_Quit();
 }
 
 #ifdef PLATFORM_WINDOWS

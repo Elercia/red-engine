@@ -89,7 +89,7 @@ Window& Application::InitWindow(const std::string& title)
 
     RenderingEngine& renderingEngine = GetRedInstance().GetRenderingEngine();
 
-    renderingEngine.InitializeEngine(m_window.get());
+    renderingEngine.InitializeWindow(m_window.get());
 
     return *m_window;
 }
