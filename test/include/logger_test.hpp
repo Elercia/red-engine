@@ -1,11 +1,11 @@
 #pragma once
 
-#include <RedEngine/log/Logger.hpp>
+#include <RedEngine/Debug/Logger/Logger.hpp>
 
 class LoggerTest : public red::Logger
 {
 protected:
-    virtual void Out(const std::string& data) override { lastLog = data; }
+    virtual void Out(const std::string& data) override { lastLog = std::string(data.c_str()); }
 
 public:
     std::string lastLog;

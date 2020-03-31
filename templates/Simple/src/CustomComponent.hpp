@@ -1,12 +1,11 @@
 #pragma once
 
-#include <RedEngine/ecs/Component.hpp>
+#include <RedEngine/Core/Components/Component.hpp>
 
 class CustomComponent : public red::Component
 {
 public:
-    RED_COMPONENT('CUST')
+    RED_COMPONENT("CUST")
 
-    CustomComponent(red::Entity* entity) : Component(entity)
-    {}
+    CustomComponent(red::Entity* entity) : Component(entity) {}
 };

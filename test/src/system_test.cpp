@@ -7,7 +7,7 @@ TEST_CASE( "System", "[System]" ) {
 
     red::World world;
     size_t baseSystemCount = world.GetSystems().size();
-    std::shared_ptr<MockSystem> mockSystemPtr = world.AddSystem<MockSystem>();
+    MockSystem* mockSystemPtr = world.AddSystem<MockSystem>();
 
     SECTION( "Adding mock system" ) {
 
@@ -15,7 +15,7 @@ TEST_CASE( "System", "[System]" ) {
         REQUIRE(mockSystemPtr != nullptr);
     }
 
-    SECTION("Update world update systems") {
+    SECTION("Update world update Systems") {
 
         world.Update(0.f);
 

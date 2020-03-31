@@ -1,19 +1,19 @@
 #pragma once
 
-#include <RedEngine/ecs/Component.hpp>
-#include <RedEngine/ecs/System.hpp>
-#include <RedEngine/ecs/World.hpp>
+#include <RedEngine/Core/Components/Component.hpp>
+#include <RedEngine/Core/Entity/System.hpp>
+#include <RedEngine/Core/Entity/World.hpp>
 
 class MockComponent1 : public red::Component
 {
-    RED_COMPONENT('MOC2')
+    RED_COMPONENT("MOC2")
 public:
     MockComponent1(red::Entity* entity) : red::Component(entity) {}
 };
 
 class MockComponent2 : public red::Component
 {
-    RED_COMPONENT('MOC1')
+    RED_COMPONENT("MOC1")
 public:
     MockComponent2(red::Entity* entity) : red::Component(entity) {}
 };
