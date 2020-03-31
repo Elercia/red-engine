@@ -39,14 +39,13 @@ private:
 
 }  // namespace red
 
-#define RED_LOG(LEVEL, MSG, ...)                                         \
-    GetRedInstance().GetLogger()->LogInternal(LEVEL, __LINE__, __FILE__, \
-                                              MSG __VA_OPT__(, ) __VA_ARGS__)
+#define RED_LOG(LEVEL, MSG, ...) \
+    GetRedInstance().GetLogger()->LogInternal(LEVEL, __LINE__, __FILE__, MSG, ##__VA_ARGS__)
 
-#define RED_LOG_TRACE(MSG, ...) RED_LOG(LogLevel::LEVEL_TRACE, MSG __VA_OPT__(, ) __VA_ARGS__)
-#define RED_LOG_INFO(MSG, ...) RED_LOG(LogLevel::LEVEL_INFO, MSG __VA_OPT__(, ) __VA_ARGS__)
-#define RED_LOG_WARNING(MSG, ...) RED_LOG(LogLevel::LEVEL_WARNING __VA_OPT__(, ) MSG, __VA_ARGS__)
-#define RED_LOG_ERROR(MSG, ...) RED_LOG(LogLevel::LEVEL_ERROR, MSG __VA_OPT__(, ) __VA_ARGS__)
-#define RED_LOG_FATAL(MSG, ...) RED_LOG(LogLevel::LEVEL_FATAL, MSG __VA_OPT__(, ) __VA_ARGS__)
+#define RED_LOG_TRACE(MSG, ...) RED_LOG(LogLevel::LEVEL_TRACE, MSG, ##__VA_ARGS__)
+#define RED_LOG_INFO(MSG, ...) RED_LOG(LogLevel::LEVEL_INFO, MSG, ##__VA_ARGS__)
+#define RED_LOG_WARNING(MSG, ...) RED_LOG(LogLevel::LEVEL_WARNING, MSG, ##__VA_ARGS__)
+#define RED_LOG_ERROR(MSG, ...) RED_LOG(LogLevel::LEVEL_ERROR, MSG, ##__VA_ARGS__)
+#define RED_LOG_FATAL(MSG, ...) RED_LOG(LogLevel::LEVEL_FATAL, MSG, ##__VA_ARGS__)
 
 #include "inl/Logger.inl"
