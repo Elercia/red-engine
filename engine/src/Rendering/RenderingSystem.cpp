@@ -13,7 +13,7 @@ namespace red
 RenderingSystem::RenderingSystem(World* world)
     : System(world), m_renderingEngine(GetRedInstance().GetRenderingEngine())
 {
-    //    RED_LOG_INFO("Adding Rendering system");
+    RED_LOG_INFO("Adding Rendering system");
 }
 
 void RenderingSystem::Update(float deltaTime)
