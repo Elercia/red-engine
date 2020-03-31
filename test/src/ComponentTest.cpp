@@ -23,7 +23,7 @@ TEST_CASE("Component", "[ECS]")
         REQUIRE(entity != nullptr);
     }
 
-    SECTION("Adding component")
+    SECTION("Add/Remove components")
     {
         for (auto entity : entitiesWithMock1)
         {
@@ -53,6 +53,21 @@ TEST_CASE("Component", "[ECS]")
             // Check that entity don't have mock1 or mock2
             REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
             REQUIRE_FALSE(entity->HasComponent<MockComponent2>());
+        }
+    }
+
+    SECTION("Component management")
+    {
+        for (auto& entity : entitiesWithMock1)
+        {
+            entity->AddComponent<MockComponent1>();
+            REQUIRE(entity->HasComponent<MockComponent1>());
+
+            entity->RemoveComponent<MockComponent1>();
+            REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
+
+            entity->AddComponent<MockComponent1>();
+            REQUIRE(entity->HasComponent<MockComponent1>());
         }
     }
 }
