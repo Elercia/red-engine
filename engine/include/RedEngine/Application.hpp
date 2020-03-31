@@ -1,10 +1,9 @@
 #pragma once
 
-#include <RedEngine/Configuration.hpp>
-#include <RedEngine/Engine.hpp>
-#include <RedEngine/Window.hpp>
-
 #include <memory>
+
+#include "Core/Engine.hpp"
+#include "Rendering/Window.hpp"
 
 namespace red
 {
@@ -19,15 +18,11 @@ public:
     void InitFromCommandLine(int argc, char* argv[]);
     void InitFromCommandLine(char* cmdLine);
 
-    std::shared_ptr<World> CreateWorld(bool registerConfiguredSystems = true);
-
-    Window& InitWindow(const std::string& title);
+    World& CreateWorld(bool registerConfiguredSystems = true);
 
     bool Run();
 
 private:
-    Configuration m_config;
-    std::shared_ptr<World> m_world;
-    std::unique_ptr<Window> m_window;
+    std::unique_ptr<World> m_world;
 };
 }  // namespace red

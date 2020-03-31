@@ -19,9 +19,7 @@ add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS})
 
 target_include_directories(red_engine_lib
         PUBLIC
-        ${INCLUDE_FOLDER_INTERN}
-        ${INCLUDE_FOLDER}
-        "../external/")
+        ${INCLUDE_FOLDER})
 
 
 # SLD2
@@ -35,3 +33,9 @@ target_link_libraries(red_engine_lib
         PUBLIC
         fmt::fmt)
 
+# Debug Break
+target_link_libraries(red_engine_lib
+        PUBLIC
+        debug_break)
+
+red_set_compile_definition(red_engine_lib)

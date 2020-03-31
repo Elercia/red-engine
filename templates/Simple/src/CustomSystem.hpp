@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RedEngine/ecs/System.hpp>
+#include <RedEngine/Core/Entity/System.hpp>
 
 class CustomSystem : public red::System
 {

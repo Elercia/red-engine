@@ -1,28 +1,27 @@
-#include <RedEngine/Application.hpp>
-#include <RedEngine/Engine.hpp>
-#include <RedEngine/debug/Debug.hpp>
-#include <RedEngine/ecs/World.hpp>
-#include <RedEngine/systems/RenderingSystem.hpp>
+#include "RedEngine/Application.hpp"
 
 #include <array>
 #include <cassert>
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <numeric>
 #include <thread>
-#include <memory>
+
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Debug/Debug.hpp"
+#include "RedEngine/Debug/Logger/Logger.hpp"
+#include "RedEngine/Rendering/RenderingEngine.hpp"
+#include "RedEngine/Rendering/RenderingSystem.hpp"
 
 namespace red
 {
-
-Application::Application() : m_config(), m_world(nullptr), m_window(nullptr) {}
+Application::Application() : m_world(nullptr) { SetLogLevel(LogLevel::LEVEL_INFO); }
 
 Application::~Application() {}
 
-void Application::InitFromCommandLine(int argc, char* argv[])
-{
-    m_config.InitFromCommandLine(argc, argv);
-}
+void Application::InitFromCommandLine(int argc, char* argv[]) {}
 
 void Application::InitFromCommandLine(char* /*cmdLine*/)
 { /* TODO */
@@ -38,7 +37,8 @@ bool Application::Run()
     const auto startTime = std::chrono::system_clock::now();
 
     // Main loop
-    while (true)
+    bool quit = false;
+    while (!quit)
     {
         // Compute the delta time
         auto currentTime = std::chrono::system_clock::now();
@@ -50,47 +50,59 @@ bool Application::Run()
 
         float deltaTime =
             std::accumulate(frameTimes.begin(), frameTimes.end(), 1.f, std::plus<float>()) /
-            10.f; // calculate the mean of delta times (this return at least 1.f)
+            10.f;  // calculate the mean of delta times (this return at least 1.f)
 
-        //
-        // std::cout << "Game FPS : " << 1000 / deltaTime << " delta is : " << deltaTime <<
-        // std::endl;
+        RED_LOG_TRACE("Game FPS : {} delta is : {}", 1000 / deltaTime, deltaTime);
 
         // Update the inputs
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            /* handle your event here */
+            switch (event.type)
+            {
+                case SDL_WINDOWEVENT:
+                {
+                    switch (event.window.event)
+                    {
+                        case SDL_WINDOWEVENT_CLOSE:
+                            quit = true;
+                            break;
+                    }
+                }
+                break;
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+            }
+        }
 
         // update the world
         m_world->Update(deltaTime);
 
         // let the program run for 10 seconds
         std::chrono::duration<float> loopDuration = currentTime - startTime;
-        if (loopDuration.count() > 10.f) { break; }
+        if (loopDuration.count() > 10.f)
+        {
+            quit = true;
+        }
     }
 
     return true;
 }
 
-std::shared_ptr<World> red::Application::CreateWorld(bool registerConfiguredSystems)
+World& Application::CreateWorld(bool registerConfiguredSystems)
 {
     RED_ASSERT(m_world == nullptr, "Only one world is allowed");
 
-    m_world = std::make_shared<World>();
+    m_world = std::make_unique<World>();
 
-    if (registerConfiguredSystems) { m_world->AddSystem<RenderingSystem>(); }
+    if (registerConfiguredSystems)
+    {
+        m_world->AddSystem<RenderingSystem>();
+    }
 
-    return m_world;
+    return *m_world;
 }
 
-Window& Application::InitWindow(const std::string& title)
-{
-    RED_ASSERT(m_window == nullptr, "Only one window is allowed");
-
-    m_window = std::make_unique<red::Window>(title);
-
-    RenderingEngine& renderingEngine = GetRedInstance().GetRenderingEngine();
-
-    renderingEngine.InitializeEngine(m_window.get());
-
-    return *m_window;
-}
-
-} // namespace red
+}  // namespace red

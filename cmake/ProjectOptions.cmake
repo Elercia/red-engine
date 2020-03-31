@@ -73,6 +73,19 @@ function(set_project_warnings project_name)
 
 endfunction()
 
+function(red_set_compile_definition pTARGET)
+
+    if (MSVC OR MSYS OR MINGW) # Windows Platform
+        set(PLATFORM PLATFORM_WINDOWS)
+    elseif (APPLE) # Apple platform
+        set(PLATFORM PLATFORM_APPLE)
+    elseif(UNIX AND NOT APPLE) # Linux
+        set(PLATFORM PLATFORM_LINUX)
+    endif ()
+
+    target_compile_definitions(${pTARGET} PUBLIC ${PLATFORM})
+endfunction()
+
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(red_project_options INTERFACE)
 target_compile_features(red_project_options INTERFACE cxx_std_17)

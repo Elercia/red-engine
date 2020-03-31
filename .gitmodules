@@ -1,3 +1,6 @@
-[submodule "external/bgfx"]
-	path = external/bgfx
-	url = https://github.com/JoshuaBrookover/bgfx.cmake.git
+[submodule "external/Horde3D"]
+	path = external/Horde3D
+	url = https://github.com/horde3d/Horde3D.git
+[submodule "external/DebugBreak"]
+	path = external/DebugBreak
+	url = https://github.com/scottt/debugbreak.git
