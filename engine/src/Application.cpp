@@ -1,4 +1,3 @@
-#include "RedEngine/Application.hpp"
 
 #include <array>
 #include <cassert>
@@ -8,6 +7,9 @@
 #include <numeric>
 #include <thread>
 
+#include <optick.h>
+
+#include "RedEngine/Application.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Debug/Debug.hpp"
@@ -17,15 +19,15 @@
 
 namespace red
 {
-Application::Application() : m_world(nullptr) { SetLogLevel(LogLevel::LEVEL_INFO); }
+Application::Application() : m_world(nullptr)
+{
+    OPTICK_APP("Main Application")
+    SetLogLevel(LogLevel::LEVEL_INFO);
+}
 
-Application::~Application() {}
+Application::~Application() { OPTICK_SHUTDOWN(); }
 
 void Application::InitFromCommandLine(int argc, char* argv[]) {}
-
-void Application::InitFromCommandLine(char* /*cmdLine*/)
-{ /* TODO */
-}
 
 bool Application::Run()
 {
@@ -40,6 +42,8 @@ bool Application::Run()
     bool quit = false;
     while (!quit)
     {
+        OPTICK_FRAME("MainThread")
+
         // Compute the delta time
         auto currentTime = std::chrono::system_clock::now();
         std::chrono::duration<float, std::milli> diff = currentTime - frameStartTime;
@@ -79,13 +83,6 @@ bool Application::Run()
 
         // update the world
         m_world->Update(deltaTime);
-
-        // let the program run for 10 seconds
-        std::chrono::duration<float> loopDuration = currentTime - startTime;
-        if (loopDuration.count() > 10.f)
-        {
-            quit = true;
-        }
     }
 
     return true;

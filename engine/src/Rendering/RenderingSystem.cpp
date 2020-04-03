@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "RedEngine/Rendering/RenderingSystem.hpp"
 
 #include "RedEngine/Core/Components/Mesh.hpp"
@@ -13,11 +14,13 @@ namespace red
 RenderingSystem::RenderingSystem(World* world)
     : System(world), m_renderingEngine(GetRedInstance().GetRenderingEngine())
 {
-    //    RED_LOG_INFO("Adding Rendering system");
+    RED_LOG_INFO("Adding Rendering system");
 }
 
 void RenderingSystem::Update(float deltaTime)
 {
+    OPTICK_CATEGORY("Rendering", Optick::Category::Rendering);
+
     auto& window = m_renderingEngine->GetWindow();
     auto windowInfo = window.GetWindowInfo();
 

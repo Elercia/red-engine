@@ -38,4 +38,9 @@ target_link_libraries(red_engine_lib
         PUBLIC
         debug_break)
 
+# Optick Profiler
+target_link_libraries(red_engine_lib
+        PRIVATE
+        OptickCore)
+
 red_set_compile_definition(red_engine_lib)

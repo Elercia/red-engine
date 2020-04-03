@@ -1,3 +1,6 @@
+
+#include <RedEngine/Core/Components/ComponentManager.hpp>
+
 #include "../../../Debug/Debug.hpp"
 
 namespace red
@@ -8,55 +11,34 @@ ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args
     static_assert(std::is_base_of<Component, ComponentType_t>::value,
                   "ComponentType is not a Component type");
 
-    auto sharedComponent = new ComponentType_t(owner, std::forward<Args>(args)...);
+    auto component = new ComponentType_t(owner, std::forward<Args>(args)...);
 
-    auto foundComponentPoolIt = m_components.find(ComponentType_t::ComponentName);
+    StoreComponent(owner, component);
 
-    if (foundComponentPoolIt != m_components.end())
-    {
-        foundComponentPoolIt->second.push_back(sharedComponent);
-    }
-    else
-    {
-        auto componentPool = ComponentPool_t();
-        componentPool.push_back(sharedComponent);
-
-        m_components.insert(std::pair<ComponentName_t, ComponentPool_t>(
-            sharedComponent->GetComponentName(), componentPool));
-    }
-
-    return sharedComponent;
+    return component;
 }
 
-template <typename ComponentType>
+template <typename ComponentType_t>
 void ComponentManager::RemoveComponent(Entity* owner)
 {
-    auto componentTypePool = m_components.find(ComponentType::ComponentName);
+    auto pool = GetComponentPool(ComponentType_t::ComponentName);
 
-    if (componentTypePool == m_components.end())
-    {
-        RED_ABORT("No matching component type to remove");
-        return;
-    }
-
-    for (auto& component : componentTypePool->second)
-    {
-        if (component->GetOwner() == owner)
-        {
-            componentTypePool->second.erase(component);
-        }
-    }
+    RemoveComponent(owner, pool);
 }
 
 template <class ComponentType_t>
 bool ComponentManager::HasComponent(Entity* entity)
 {
-    return false;
+    return HasComponent(entity, ComponentType_t::ComponentName);
 }
 
 template <typename ComponentType_t>
 ComponentType_t* ComponentManager::GetComponent(Entity* entity)
 {
-    return nullptr;
+    auto componentPtr = GetComponent(entity, ComponentType_t::ComponentName);
+    return reinterpret_cast<ComponentType_t*>(componentPtr);
 }
+
+
+
 }  // namespace red

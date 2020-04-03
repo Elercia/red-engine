@@ -15,8 +15,12 @@ public:
     Application();
     ~Application();
 
+    Application(const Application&) = delete;
+    Application(Application&&) = default;
+    Application& operator=(const Application&) = delete;
+    Application& operator=(Application&&) = default;
+
     void InitFromCommandLine(int argc, char* argv[]);
-    void InitFromCommandLine(char* cmdLine);
 
     World& CreateWorld(bool registerConfiguredSystems = true);
 

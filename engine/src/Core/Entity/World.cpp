@@ -19,6 +19,11 @@ World::~World()
         DestroyEntity(entity);
     }
 
+    for (auto& system : m_systems)
+    {
+        delete system;
+    }
+
     delete m_componentManager;
 }
 
@@ -45,5 +50,5 @@ const std::vector<Entity*>& World::GetEntities() { return m_entities; }
 
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
-void World::DestroyEntity(Entity* entity) {}
+void World::DestroyEntity(Entity* entity) { delete entity; }
 }  // namespace red
