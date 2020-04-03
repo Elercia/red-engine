@@ -3,6 +3,7 @@
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Core/Configuration/Configuration.hpp"
 
 namespace red
 {

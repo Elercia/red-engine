@@ -1,16 +1,11 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <string>
 
 namespace red
 {
-using ConfigurationValue = union {
-    bool dataBool;
-    std::string dataString;
-    float dataFloat;
-    int dataInt;
-};
+class ICVar;
 
 class Configuration
 {
@@ -18,18 +13,31 @@ public:
     Configuration();
     ~Configuration();
 
-    void InitFromCommandLine(int argc, char* argv[]);
+    void ParseCommandLine(int argc, char* argv[]);
+
+    void RegisterNewConfigVariable(ICVar* configVariable);
 
     template <typename T>
-    T Get(std::string name, T defaultValue);
+    void ChangeVar(std::string name, std::string category, T value)
+    {
+        auto it = m_configVariable.find(category + "_" + name);
 
-    template <typename T>
-    void Set(std::string name, T value);
+        if (it == m_configVariable.end())
+        {
+            return;
+        }
+
+        auto casted = static_cast<CVar<T>*>(it->second);
+
+        casted->ChangeValue(value);
+    }
+
+    static void NewCVar(ICVar* configVariable);
+
+    static Configuration& GetInstance();
 
 private:
-    std::map<std::string, std::string> m_configs;
+    std::unordered_map<std::string, ICVar*> m_configVariable;
 };
 
 }  // namespace red
-
-#include "inl/Configuration.inl"

@@ -14,6 +14,32 @@ Window::Window(std::string title) : m_title(std::move(title))
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         RED_ABORT("Error")
     }
+
+    m_height.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
+        SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
+    });
+
+    m_width.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
+        SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
+    });
+
+    m_fullscreen.RegisterChangeCallback([&](CVar<FullScreenMode::Enum>* elem) {
+        int flag = 0;
+        switch (elem->GetValue())
+        {
+            case FullScreenMode::FULLSCREEN:
+                flag = SDL_WINDOW_FULLSCREEN;
+                break;
+            case FullScreenMode::BORDER_LESS:
+                flag = SDL_WINDOW_FULLSCREEN;
+                break;
+            case FullScreenMode::WINDOWED:
+                flag = 0;
+                break;
+        }
+
+        SDL_SetWindowFullscreen(this->m_window, flag);
+    });
 }
 
 Window::~Window()

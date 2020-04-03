@@ -11,6 +11,7 @@ class Entity;
 class RenderingEngine;
 class ResourceEngine;
 class Logger;
+class Configuration;
 
 class Engine final
 {
