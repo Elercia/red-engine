@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "RedEngine/Rendering/RenderingSystem.hpp"
 
 #include "RedEngine/Core/Components/Mesh.hpp"
@@ -18,6 +19,8 @@ RenderingSystem::RenderingSystem(World* world)
 
 void RenderingSystem::Update(float deltaTime)
 {
+    OPTICK_CATEGORY("Rendering", Optick::Category::Rendering);
+
     auto& window = m_renderingEngine->GetWindow();
     auto windowInfo = window.GetWindowInfo();
 

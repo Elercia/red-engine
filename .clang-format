@@ -19,5 +19,7 @@ PointerAlignment: Left
 AlignConsecutiveAssignments: false
 AlignTrailingComments: true
 
+SortIncludes  : false
+
 SpaceAfterCStyleCast: true
 CommentPragmas: '^ NO-FORMAT:'

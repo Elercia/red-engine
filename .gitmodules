@@ -4,3 +4,6 @@
 [submodule "external/DebugBreak"]
 	path = external/DebugBreak
 	url = https://github.com/scottt/debugbreak.git
+[submodule "external/optick"]
+	path = external/optick
+	url = https://github.com/bombomby/optick

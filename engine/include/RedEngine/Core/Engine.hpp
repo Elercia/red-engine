@@ -36,6 +36,8 @@ private:
     RenderingEngine* m_renderingEngine;
     ResourceEngine* m_resourceEngine;
     Logger* m_logger;
+
+    static Engine* s_instance;
 };
 
 }  // namespace red

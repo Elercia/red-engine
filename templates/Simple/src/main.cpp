@@ -6,5 +6,7 @@ int main(int argc, char* argv[])
 
     app.InitFromCommandLine(argc, argv);
 
+    app.CreateWorld();
+
     return app.Run() ? EXIT_SUCCESS : EXIT_FAILURE;
 }

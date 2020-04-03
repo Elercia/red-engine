@@ -6,31 +6,31 @@
 
 namespace red
 {
+Engine* Engine::s_instance;
+
 Engine& Engine::GetInstance()
 {
-    static Engine s_instance;
-
-    return s_instance;
+    if (s_instance == nullptr)
+    {
+        s_instance = new Engine;
+    }
+    return *s_instance;
 }
 
 Engine::Engine() : m_memoryManager()
 {
-    auto renderingEngineMemory = m_memoryManager.Allocate(sizeof(RenderingEngine));  // FIXME
-    m_renderingEngine = new (renderingEngineMemory) RenderingEngine;                 // FIXME
-
-    auto resourceEngineMemory = m_memoryManager.Allocate(sizeof(ResourceEngine));  // FIXME
-    m_resourceEngine = new (resourceEngineMemory) ResourceEngine;                  // FIXME
-
-    auto loggerMemory = m_memoryManager.Allocate(sizeof(Logger));  // FIXME
-    m_logger = new (loggerMemory) Logger;                          // FIXME
+    m_logger = new Logger;
+    m_renderingEngine = new RenderingEngine;
+    m_resourceEngine = new ResourceEngine;
 }
 
 const MemoryManager& Engine::GetMemoryManager() { return m_memoryManager; }
 
 Engine::~Engine()
 {
-    m_renderingEngine->~RenderingEngine();
-    m_logger->~Logger();
+    delete m_resourceEngine;
+    delete m_renderingEngine;
+    delete m_logger;
 
 #ifdef RED_ENABLE_MEMORY_PROFILING
     GetRedInstance().GetMemoryManager().DumpMemory();

@@ -160,4 +160,5 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/visualstudiocode,windows,c,c++,cmake,linux
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
-
+# Optick Files
+*.opt

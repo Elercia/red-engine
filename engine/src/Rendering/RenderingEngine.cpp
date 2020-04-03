@@ -1,3 +1,4 @@
+#include <RedEngine/Debug/Debug.hpp>
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 
 #include "RedEngine/Debug/Logger/Logger.hpp"
@@ -9,8 +10,10 @@ RenderingEngine::RenderingEngine()
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
-        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
+        //        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
+        std::cout << "Error initializing SDL with error " << SDL_GetError() << std::endl;
         SDL_Quit();
+        RED_ABORT("Cannot initialize SDL2");
     }
 
     CreateNewWindow("Temp name");
