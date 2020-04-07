@@ -1,15 +1,17 @@
-
 namespace red
 {
 template <typename T>
-T red::Configuration::Get(std::string name, T defaultValue)
+void Configuration::ChangeVar(std::string name, std::string category, T value)
 {
-    return nullptr;
-}
+    auto it = m_configVariable.find(category + "_" + name);
 
-template <typename T>
-void red::Configuration::Set(std::string name, T value)
-{
-}
+    if (it == m_configVariable.end())
+    {
+        return;
+    }
 
+    auto casted = static_cast<CVar<T>*>(it->second);
+
+    casted->ChangeValue(value);
 }
+}  // namespace red

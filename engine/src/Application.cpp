@@ -16,6 +16,7 @@
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/RenderingSystem.hpp"
+#include "RedEngine/Core/Configuration/Configuration.hpp"
 
 namespace red
 {
@@ -27,8 +28,6 @@ Application::Application() : m_world(nullptr)
 
 Application::~Application() { OPTICK_SHUTDOWN(); }
 
-void Application::InitFromCommandLine(int argc, char* argv[]) {}
-
 bool Application::Run()
 {
     RED_ASSERT(m_world != nullptr, "At least one world is required");
@@ -37,6 +36,8 @@ bool Application::Run()
     uint8_t frameIndex = 0;
     auto frameStartTime = std::chrono::system_clock::now();
     const auto startTime = std::chrono::system_clock::now();
+
+    bool isFullScreen = false;
 
     // Main loop
     bool quit = false;
@@ -77,6 +78,18 @@ bool Application::Run()
                 break;
                 case SDL_QUIT:
                     quit = true;
+                    break;
+                case SDL_KEYDOWN:
+                    switch (event.key.keysym.sym)
+                    {
+                        case SDLK_f:
+                            isFullScreen = !isFullScreen;
+                            Configuration::GetInstance().ChangeVar<FullScreenMode::Enum>(
+                                "fullscreen", "window",
+                                isFullScreen ? FullScreenMode::FULLSCREEN
+                                             : FullScreenMode::WINDOWED);
+                            break;
+                    }
                     break;
             }
         }

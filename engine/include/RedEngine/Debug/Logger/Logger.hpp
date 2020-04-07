@@ -39,8 +39,10 @@ private:
 
 }  // namespace red
 
+red::Logger* GetRedLogger();
+
 #define RED_LOG(LEVEL, MSG, ...) \
-    GetRedInstance().GetLogger()->LogInternal(LEVEL, __LINE__, __FILE__, MSG, ##__VA_ARGS__)
+    GetRedLogger()->LogInternal(LEVEL, __LINE__, __FILE__, MSG, ##__VA_ARGS__)
 
 #define RED_LOG_TRACE(MSG, ...) RED_LOG(LogLevel::LEVEL_TRACE, MSG, ##__VA_ARGS__)
 #define RED_LOG_INFO(MSG, ...) RED_LOG(LogLevel::LEVEL_INFO, MSG, ##__VA_ARGS__)
