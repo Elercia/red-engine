@@ -1,10 +1,12 @@
 #include <RedEngine/Application.hpp>
+#include <RedEngine/Core/Configuration/Configuration.hpp>
 
 int main(int argc, char* argv[])
 {
-    red::Application app;
+    red::Configuration::GetInstance().LoadConfigFile("Resources/config.ini");
+    red::Configuration::GetInstance().ParseCommandLine(argc, argv);
 
-    app.InitFromCommandLine(argc, argv);
+    red::Application app;
 
     app.CreateWorld();
 

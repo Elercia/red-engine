@@ -1,9 +1,7 @@
 #include "RedEngine/Core/Engine.hpp"
 
-#include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
-#include "RedEngine/Core/Configuration/Configuration.hpp"
 
 namespace red
 {
@@ -20,7 +18,6 @@ Engine& Engine::GetInstance()
 
 Engine::Engine() : m_memoryManager()
 {
-    m_logger = new Logger;
     m_renderingEngine = new RenderingEngine;
     m_resourceEngine = new ResourceEngine;
 }
@@ -31,7 +28,6 @@ Engine::~Engine()
 {
     delete m_resourceEngine;
     delete m_renderingEngine;
-    delete m_logger;
 
 #ifdef RED_ENABLE_MEMORY_PROFILING
     GetRedInstance().GetMemoryManager().DumpMemory();
@@ -39,8 +35,6 @@ Engine::~Engine()
 }
 
 RenderingEngine* Engine::GetRenderingEngine() { return m_renderingEngine; }
-
-Logger* Engine::GetLogger() { return m_logger; }
 
 ResourceEngine* Engine::GetResourceEngine() { return m_resourceEngine; }
 }  // namespace red

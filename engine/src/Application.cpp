@@ -28,8 +28,6 @@ Application::Application() : m_world(nullptr)
 
 Application::~Application() { OPTICK_SHUTDOWN(); }
 
-void Application::InitFromCommandLine(int argc, char* argv[]) {}
-
 bool Application::Run()
 {
     RED_ASSERT(m_world != nullptr, "At least one world is required");

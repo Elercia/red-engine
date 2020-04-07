@@ -16,6 +16,8 @@ public:
     std::string GetCategory() const;
     std::string GetLongName() const;
 
+    virtual void ChangeValue(std::string newValueStr) = 0;
+
 protected:
     std::string m_name;
     std::string m_category;
@@ -33,6 +35,7 @@ public:
 
     Type GetValue();
 
+    void ChangeValue(std::string newValueStr) override;
     void ChangeValue(Type newValue);
     void Reset();
 

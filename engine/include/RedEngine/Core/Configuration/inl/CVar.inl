@@ -1,3 +1,6 @@
+
+#include <sstream>
+
 namespace red
 {
 template <typename Type>
@@ -35,5 +38,12 @@ template <typename Type>
 void CVar<Type>::RegisterChangeCallback(std::function<void(CVar<Type>* variable)> callback)
 {
     m_valueChangeCallback = callback;
+}
+
+template <typename Type>
+void CVar<Type>::ChangeValue(std::string newValueStr)
+{
+    std::istringstream iss(newValueStr);
+    iss >> m_currentValue;
 }
 }  // namespace red

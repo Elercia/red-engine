@@ -28,7 +28,6 @@ public:
 
     RenderingEngine* GetRenderingEngine();
     ResourceEngine* GetResourceEngine();
-    Logger* GetLogger();
 
     static Engine& GetInstance();
 
@@ -36,7 +35,6 @@ private:
     MemoryManager m_memoryManager;
     RenderingEngine* m_renderingEngine;
     ResourceEngine* m_resourceEngine;
-    Logger* m_logger;
 
     static Engine* s_instance;
 };
