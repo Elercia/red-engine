@@ -13,13 +13,13 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - george-edison55-precise-backports
+            - jonathonf/gcc-9.0
           packages:
             - cmake-data
             - cmake
-            - g++-7
+            - g++-9
       env:
-         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
     # Linux Clang
     - os: linux
       dist: bionic
@@ -27,9 +27,8 @@ matrix:
         apt:
           sources:
             - llvm-toolchain-trusty-5.0
-            - george-edison55-precise-backports
           packages:
-            - clang-5.0
+            - clang-9.0
             - cmake-data
             - cmake
       env:
