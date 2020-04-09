@@ -1,4 +1,3 @@
-language: cpp
 branches:
   only:
   - master
@@ -21,17 +20,14 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
 
-before_install:
-  - eval "${MATRIX_EVAL}"
-
-install:
-  - mkdir build
-  - cd build
-  - cmake ..
-script:
-  - cmake --build .
-
 jobs:
   include:
+    - stage: build
+      script:
+        - eval "${MATRIX_EVAL}"
+        - mkdir build
+        - cd build
+        - cmake ..
+        - cmake --build .
     - stage: test
       script: ./output/bin/tests/red_engine_test -r xml -d yes --order lex
