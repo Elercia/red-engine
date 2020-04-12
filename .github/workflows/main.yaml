@@ -25,15 +25,15 @@ jobs:
       matrix:
         config:
         - {
-            name: "Windows Latest MSVC", artifact: "Windows-MSVC.tar.xz",
-            os: windows-latest,
+            name: "Windows MSVC 2019", artifact: "Windows-MSVC.tar.xz",
+            os: windows-2019,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           }
         - {
-            name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
-            os: ubuntu-18.04-gcc-9,
-            cc: "gcc", cxx: "g++"
+            name: "Ubuntu GCC 9", artifact: "Linux.tar.xz",
+            os: ubuntu-16.04,
+            cc: "gcc-9", cxx: "g++-9"
           }
 
     steps:
