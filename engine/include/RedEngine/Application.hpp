@@ -20,8 +20,6 @@ public:
     Application& operator=(const Application&) = delete;
     Application& operator=(Application&&) = default;
 
-    void InitFromCommandLine(int argc, char* argv[]);
-
     World& CreateWorld(bool registerConfiguredSystems = true);
 
     bool Run();

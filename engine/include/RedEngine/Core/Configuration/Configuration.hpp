@@ -1,16 +1,14 @@
 #pragma once
 
-#include <map>
+#include <filesystem>
+#include <unordered_map>
 #include <string>
+
+#include "CVar.hpp"
 
 namespace red
 {
-using ConfigurationValue = union {
-    bool dataBool;
-    std::string dataString;
-    float dataFloat;
-    int dataInt;
-};
+class ICVar;
 
 class Configuration
 {
@@ -18,16 +16,21 @@ public:
     Configuration();
     ~Configuration();
 
-    void InitFromCommandLine(int argc, char* argv[]);
+    void LoadConfigFile(std::filesystem::path path);
+
+    void ParseCommandLine(int argc, char* argv[]);
+
+    void RegisterNewConfigVariable(ICVar* configVariable);
 
     template <typename T>
-    T Get(std::string name, T defaultValue);
+    void ChangeVar(std::string name, std::string category, T value);
 
-    template <typename T>
-    void Set(std::string name, T value);
+    static void NewCVar(ICVar* configVariable);
+
+    static Configuration& GetInstance();
 
 private:
-    std::map<std::string, std::string> m_configs;
+    std::unordered_map<std::string, ICVar*> m_configVariable;
 };
 
 }  // namespace red

@@ -22,7 +22,19 @@ add_executable(red_engine_test ${SOURCES} ${HEADERS})
 target_link_libraries(red_engine_test PRIVATE Catch2::Catch2 red_engine_lib)
 target_include_directories(red_engine_test PRIVATE "include")
 
+set_target_properties(red_engine_test
+        PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/tests/"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/tests/"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests/"
+        )
+
+add_custom_command(TARGET red_engine_test POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources $<TARGET_FILE_DIR:red_engine_test>/resources)
+
+add_optick(red_engine_test)
 
 include(CTest)
 include(Catch)
-catch_discover_tests(red_engine_test)
+include(ParseAndAddCatchTests)
+catch_discover_tests(red_engine_test WORKING_DIRECTORY $<TARGET_FILE_DIR:red_engine_test>)
