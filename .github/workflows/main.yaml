@@ -32,7 +32,7 @@ jobs:
           }
         - {
             name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-18.04-gcc-9,
             cc: "gcc", cxx: "g++"
           }
 
