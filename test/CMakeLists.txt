@@ -36,4 +36,5 @@ add_optick(red_engine_test)
 
 include(CTest)
 include(Catch)
-catch_discover_tests(red_engine_test)
+include(ParseAndAddCatchTests)
+catch_discover_tests(red_engine_test WORKING_DIRECTORY $<TARGET_FILE_DIR:red_engine_test>)
