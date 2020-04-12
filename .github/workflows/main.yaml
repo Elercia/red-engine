@@ -1,6 +1,12 @@
 name: CMake Build Matrix
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - [master, develop, devops_branch]
+  pull_request:
+    branches:
+      - [master, develop]
 
 env:
   CMAKE_VERSION: 3.16.2
