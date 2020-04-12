@@ -1,3 +1,4 @@
+![CMake Build Matrix](https://github.com/Elercia/red-engine/workflows/CMake%20Build%20Matrix/badge.svg?branch=master)
 # Red Engine
 
 Welcome to RedEngine my hobby-projet to learn and experiment things around C++ and game developement. This project has no time limit and is only made on my personal time.
