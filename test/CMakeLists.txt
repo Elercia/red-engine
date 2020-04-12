@@ -36,4 +36,5 @@ add_optick(red_engine_test)
 
 include(CTest)
 include(Catch)
-catch_discover_tests(red_engine_test)
+include(ParseAndAddCatchTests)
+ParseAndAddCatchTests(red_engine_test)
