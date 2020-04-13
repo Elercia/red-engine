@@ -4,3 +4,6 @@
 [submodule "external/optick"]
 	path = external/optick
 	url = https://github.com/bombomby/optick
+[submodule "external/Bgfx"]
+	path = external/Bgfx
+	url = https://github.com/JoshuaBrookover/bgfx.cmake.git

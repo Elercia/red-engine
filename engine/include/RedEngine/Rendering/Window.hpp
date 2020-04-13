@@ -68,6 +68,6 @@ struct enum_traits
         return r;
     }
 };
-template class enum_traits<red::FullScreenMode::Enum>;
+template struct enum_traits<red::FullScreenMode::Enum>;
 
 std::istream &operator>>(std::istream &, red::FullScreenMode::Enum &);

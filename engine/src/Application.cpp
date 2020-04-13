@@ -1,13 +1,8 @@
-
 #include <array>
-#include <cassert>
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <numeric>
 #include <thread>
-
-#include <optick.h>
 
 #include "RedEngine/Application.hpp"
 #include "RedEngine/Core/Engine.hpp"
@@ -17,6 +12,8 @@
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/RenderingSystem.hpp"
 #include "RedEngine/Core/Configuration/Configuration.hpp"
+
+#include <optick.h>
 
 namespace red
 {

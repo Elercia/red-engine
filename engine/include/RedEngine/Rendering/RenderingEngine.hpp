@@ -19,6 +19,8 @@ private:
     std::unique_ptr<Window> m_window;
 
     void CreateNewWindow(std::string title);
+
+    void InitRenderingLibrary();
 };
 
 }  // namespace red
