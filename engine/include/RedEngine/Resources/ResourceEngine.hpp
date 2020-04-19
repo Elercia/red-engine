@@ -9,6 +9,9 @@ class Mesh;
 
 class ResourceEngine
 {
+
+    friend Mesh;
+
 public:
     ResourceEngine();
     ~ResourceEngine();
@@ -17,6 +20,6 @@ public:
     void FreeMesh(Mesh* mesh);
 
 private:
-    std::vector<Mesh*> m_meshes;
+
 };
 }  // namespace red

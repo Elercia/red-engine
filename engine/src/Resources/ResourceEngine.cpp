@@ -1,10 +1,10 @@
 #include <RedEngine/Core/Components/Mesh.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
+#include <RedEngine/Debug/Debug.hpp>
 
 namespace red
 {
-ResourceEngine::ResourceEngine() : m_meshes() {}
+ResourceEngine::ResourceEngine() {}
 ResourceEngine::~ResourceEngine() {}
 
 bool ResourceEngine::ImportMesh(Mesh* mesh)

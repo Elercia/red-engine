@@ -43,9 +43,4 @@ target_link_libraries(red_engine_lib
         PRIVATE
         OptickCore)
 
-# BGFX rendering library
-target_link_libraries(red_engine_lib
-        PUBLIC
-        bgfx)
-
 red_set_compile_definition(red_engine_lib)

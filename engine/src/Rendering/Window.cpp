@@ -1,7 +1,6 @@
 #include <RedEngine/Debug/Debug.hpp>
 #include <RedEngine/Rendering/Window.hpp>
 #include <iostream>
-#include <bgfx/bgfx.h>
 
 namespace red
 {
@@ -18,12 +17,10 @@ Window::Window(std::string title) : m_title(std::move(title))
 
     m_height.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
         SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
-        bgfx::reset(m_width.GetValue(), m_height.GetValue(), BGFX_RESET_VSYNC);
     });
 
     m_width.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
         SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
-        bgfx::reset(m_width.GetValue(), m_height.GetValue(), BGFX_RESET_VSYNC);
     });
 
     m_fullscreen.RegisterChangeCallback([&](CVar<FullScreenMode::Enum>* elem) {
