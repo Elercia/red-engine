@@ -19,4 +19,4 @@ set_target_properties(TemplateSimple PROPERTIES
         )
 
 target_link_libraries(TemplateSimple PUBLIC red_engine_lib)
-red_add_template(TemplateSimple resources OPENGLES)
+red_add_template(TemplateSimple resources)

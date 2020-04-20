@@ -14,14 +14,15 @@ World::World() : m_componentManager(new ComponentManager()), m_nextEntityId(0) {
 
 World::~World()
 {
+    for (auto& system : m_systems)
+    {
+        system->Finalise();
+        delete system;
+    }
+
     for (auto& entity : m_entities)
     {
         DestroyEntity(entity);
-    }
-
-    for (auto& system : m_systems)
-    {
-        delete system;
     }
 
     delete m_componentManager;
@@ -40,7 +41,17 @@ void World::Update(float deltaTime)
 {
     for (auto& system : m_systems)
     {
+        system->PreUpdate(deltaTime);
+    }
+
+    for (auto& system : m_systems)
+    {
         system->Update(deltaTime);
+    }
+
+    for (auto& system : m_systems)
+    {
+        system->LateUpdate(deltaTime);
     }
 }
 

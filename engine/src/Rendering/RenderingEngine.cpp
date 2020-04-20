@@ -2,6 +2,9 @@
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Rendering/Components/Sprite.hpp"
+
+#include <SDL2/SDL_render.h>
 
 namespace red
 {
@@ -9,35 +12,70 @@ RenderingEngine::RenderingEngine()
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        //        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
-        std::cout << "Error initializing SDL with error " << SDL_GetError() << std::endl;
+        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
         SDL_Quit();
         RED_ABORT("Cannot initialize SDL2");
     }
 
-    CreateNewWindow("Temp name");
+    CreateNewWindow();
 
-    InitRenderingLibrary();
+    InitRenderer();
 }
 
 RenderingEngine::~RenderingEngine()
 {
+    SDL_DestroyRenderer(m_renderer);
+
     m_window.reset(nullptr);
 
     SDL_Quit();
 }
 
-void RenderingEngine::CreateNewWindow(std::string title)
-{
-    m_window = std::make_unique<Window>(std::move(title));
-}
+void RenderingEngine::CreateNewWindow() { m_window = std::make_unique<Window>(); }
 
 Window& RenderingEngine::GetWindow() { return *m_window; }
 
-void RenderingEngine::InitRenderingLibrary()
+void RenderingEngine::InitRenderer()
 {
+    m_renderer = SDL_CreateRenderer(m_window->GetSDLWindow(), -1, SDL_RENDERER_ACCELERATED);
+
+    if (m_renderer == nullptr)
+    {
+        RED_LOG_ERROR("Error initializing renderer with error {}", SDL_GetError());
+        SDL_Quit();
+        RED_ABORT("Cannot initialize Renderer");
+    }
+
+    RED_LOG_INFO("Init Renderer");
+}
+
+void RenderingEngine::BeginRenderFrame()
+{
+    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(m_renderer);
+}
+void RenderingEngine::EndRenderFrame() { SDL_RenderPresent(m_renderer); }
+
+void RenderingEngine::DebugDrawRect()
+{
+    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
     auto windowInfo = m_window->GetWindowInfo();
 
+    SDL_Rect rect;
+    rect.h = 100;
+    rect.w = 200;
+    rect.x = (windowInfo.width / 2) - rect.w;
+    rect.y = (windowInfo.height / 2) - rect.h;
+    SDL_RenderDrawRect(m_renderer, &rect);
+}
+
+SDL_Renderer* RenderingEngine::GetRenderer() { return m_renderer; }
+
+void RenderingEngine::Render(Sprite* sprite)
+{
+    if (sprite->m_isLoaded == LoadState::STATE_LOADED)
+        SDL_RenderCopy(m_renderer, sprite->m_texture, nullptr, &(sprite->m_sdlPos));
 }
 
 }  // namespace red

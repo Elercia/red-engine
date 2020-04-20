@@ -1,19 +1,23 @@
 #include <RedEngine/Debug/Debug.hpp>
 #include <RedEngine/Rendering/Window.hpp>
 #include <iostream>
+#include <RedEngine/Debug/Logger/Logger.hpp>
 
 namespace red
 {
-Window::Window(std::string title) : m_title(std::move(title))
+Window::Window() : m_title("Hello Red-Engine")
 {
     m_window = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                800, 600, SDL_WINDOW_SHOWN);
+                                m_width.GetValue(), m_height.GetValue(),
+                                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     if (m_window == nullptr)
     {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         RED_ABORT("Error")
     }
+
+    RED_LOG_INFO("Create new window");
 
     m_height.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
         SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
@@ -95,4 +99,5 @@ WindowInfo Window::GetWindowInfo()
 
     return info;
 }
+SDL_Window* Window::GetSDLWindow() { return m_window; }
 }  // namespace red

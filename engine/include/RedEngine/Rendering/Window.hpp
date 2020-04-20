@@ -28,7 +28,7 @@ struct WindowInfo
 class Window
 {
 public:
-    explicit Window(std::string title);
+    explicit Window();
     ~Window();
 
 #ifdef PLATFORM_WINDOWS
@@ -42,14 +42,16 @@ public:
 
     WindowInfo GetWindowInfo();
 
+    SDL_Window *GetSDLWindow();
+
 private:
     SDL_SysWMinfo GetSDLSysInfo();
 
-    std::string m_title;
+    std::string m_title{"Hello Red-Engine"};
     SDL_Window *m_window;
 
-    CVar<int> m_height{"height", 800, "window"};
-    CVar<int> m_width{"width", 600, "window"};
+    CVar<int> m_height{"height", 600, "window"};
+    CVar<int> m_width{"width", 800, "window"};
     CVar<FullScreenMode::Enum> m_fullscreen{"fullscreen", FullScreenMode::WINDOWED, "window"};
 };
 

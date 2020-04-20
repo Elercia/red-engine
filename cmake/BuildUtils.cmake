@@ -1,6 +1,6 @@
 function(red_add_optick _TARGET)
     # Optick files
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND WIN32)
+    if (${RED_USE_PROFILER})
 
         set(OPTICK_CORE_BASE $<TARGET_FILE_DIR:OptickCore>)
 
@@ -17,19 +17,14 @@ function(red_add_optick _TARGET)
     endif ()
 endfunction(red_add_optick)
 
-function(red_add_template _TARGET _RESOURCE_FOLDER _RENDERER_TYPE)
+function(red_add_template _TARGET _RESOURCE_FOLDER)
 
     set_target_properties(${_TARGET}
             PROPERTIES
             ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/template-${_TARGET}/"
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/template-${_TARGET}/"
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template-${_TARGET}/"
-            RED_RENDERER ${_RENDERER_TYPE}
             )
-
-    target_compile_definitions(red_engine_lib
-            PUBLIC
-            RED_RENDERER_BACKEND_${_RENDERER_TYPE})
 
     add_custom_command(TARGET ${_TARGET} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${_RESOURCE_FOLDER} $<TARGET_FILE_DIR:${_TARGET}>/${_RESOURCE_FOLDER})

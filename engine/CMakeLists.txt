@@ -38,9 +38,24 @@ target_link_libraries(red_engine_lib
         PUBLIC
         debug_break)
 
-# Optick Profiler
-target_link_libraries(red_engine_lib
-        PRIVATE
-        OptickCore)
+option(RED_USE_PROFILER "Enable application profiler usage" ON)
+
+if (MINGW OR UNIX)
+    set(RED_USE_PROFILER FALSE CACHE INTERNAL "Use the red engine profiler" FORCE)
+else ()
+    set(RED_USE_PROFILER ${RED_USE_PROFILER} CACHE INTERNAL "Use the red engine profiler" FORCE)
+endif ()
+
+message(STATUS "Use red-engine profiler : ${RED_USE_PROFILER}")
+if (RED_USE_PROFILER)
+    # Optick Profiler
+    target_link_libraries(red_engine_lib
+            PRIVATE
+            OptickCore)
+
+    target_compile_definitions(red_engine_lib
+            PUBLIC
+            RED_USE_PROFILER)
+endif ()
 
 red_set_compile_definition(red_engine_lib)

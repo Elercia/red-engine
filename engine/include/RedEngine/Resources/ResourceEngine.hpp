@@ -5,21 +5,18 @@
 
 namespace red
 {
-class Mesh;
+class RenderingEngine;
+class Sprite;
 
 class ResourceEngine
 {
-
-    friend Mesh;
-
 public:
     ResourceEngine();
     ~ResourceEngine();
 
-    bool ImportMesh(Mesh* mesh);
-    void FreeMesh(Mesh* mesh);
+    bool ImportSprite(Sprite* sprite);
+    void FreeSprite(Sprite* mesh);
 
 private:
-
 };
 }  // namespace red

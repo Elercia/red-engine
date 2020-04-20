@@ -5,6 +5,7 @@
 namespace red
 {
 class RenderingEngine;
+class ResourceEngine;
 
 class RenderingSystem : public System
 {
@@ -13,8 +14,11 @@ public:
 
     void Update(float deltaTime) override;
 
+    void Finalise() override;
+
 private:
     RenderingEngine* m_renderingEngine;
+    ResourceEngine* m_resourceEngine;
 };
 
 }  // namespace red

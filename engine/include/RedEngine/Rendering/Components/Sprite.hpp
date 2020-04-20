@@ -2,9 +2,10 @@
 
 #include <string>
 #include <vector>
+#include <SDL2/SDL_render.h>
 
 #include "../../Math/Vector.hpp"
-#include "Component.hpp"
+#include "../../Core/Components/Component.hpp"
 
 namespace red
 {
@@ -12,28 +13,32 @@ struct LoadState
 {
     enum Enum
     {
-        NOT_LOADED,
-        LOADED,
-        ERROR
+        STATE_NOT_LOADED,
+        STATE_LOADED,
+        STATE_ERROR
     };
 };
 
-class Mesh : public Component
+class Sprite : public Component
 {
-    RED_COMPONENT("MESH")
+    RED_COMPONENT("SPRITE")
 
     friend class ResourceEngine;
+    friend class RenderingEngine;
 
 public:
-    Mesh(Entity* entity, std::string path);
+    Sprite(Entity* entity, std::string path);
 
     std::string GetPath() { return m_path; };
 
-    void SetLoadedState(LoadState::Enum state) { m_isLoaded = state; }
     LoadState::Enum GetLoadedState() { return m_isLoaded; }
 
 private:
     LoadState::Enum m_isLoaded;
     std::string m_path;
+
+    SDL_Texture* m_texture;
+    SDL_Rect m_sdlPos{0, 0, 0, 0};
+    SDL_Rect m_sdlSize{0, 0, 0, 0};
 };
 }  // namespace red
