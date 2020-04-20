@@ -9,7 +9,7 @@ std::string& Trim(std::string& str)
         return str;
 
     int start = 0;
-    int end = str.length();
+    auto end = str.length();
 
     while (start < end && std::isspace(str[start]) != 0)
     {

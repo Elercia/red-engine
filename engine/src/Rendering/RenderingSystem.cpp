@@ -1,10 +1,8 @@
-#include <optick.h>
 #include "RedEngine/Rendering/RenderingSystem.hpp"
-
-#include "RedEngine/Core/Components/Mesh.hpp"
+#include "RedEngine/Rendering/Components/Sprite.hpp"
 #include "RedEngine/Core/Engine.hpp"
-#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Debug/Logger/Logger.hpp"
+#include "RedEngine/Debug/Profiler.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
@@ -12,26 +10,47 @@
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world)
-    : System(world), m_renderingEngine(GetRedInstance().GetRenderingEngine())
+    : System(world)
+    , m_renderingEngine(GetRedInstance().GetRenderingEngine())
+    , m_resourceEngine(GetRedInstance().GetResourceEngine())
 {
     RED_LOG_INFO("Adding Rendering system");
 }
 
 void RenderingSystem::Update(float deltaTime)
 {
-    OPTICK_CATEGORY("Rendering", Optick::Category::Rendering);
+    PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
 
     auto& window = m_renderingEngine->GetWindow();
     auto windowInfo = window.GetWindowInfo();
 
-    for (auto& entity : GetComponents<Mesh>())
+    m_renderingEngine->BeginRenderFrame();
+
+    for (auto& entity : GetComponents<Sprite>())
     {
-        auto mesh = entity->GetComponent<Mesh>();
-        if (mesh->GetLoadedState() == LoadState::NOT_LOADED)
+        auto* sprite = entity->GetComponent<Sprite>();
+        if (sprite->GetLoadedState() == LoadState::STATE_NOT_LOADED)
         {
-            auto& engine = GetRedInstance();
-            engine.GetResourceEngine()->ImportMesh(mesh);
+            m_resourceEngine->ImportSprite(sprite);
+        }
+
+        m_renderingEngine->Render(sprite);
+    }
+
+    m_renderingEngine->DebugDrawRect();
+
+    m_renderingEngine->EndRenderFrame();
+}
+void RenderingSystem::Finalise()
+{
+    for (auto& entity : GetComponents<Sprite>())
+    {
+        auto* sprite = entity->GetComponent<Sprite>();
+        if (sprite->GetLoadedState() == LoadState::STATE_LOADED)
+        {
+            m_resourceEngine->FreeSprite(sprite);
         }
     }
 }
+
 }  // namespace red

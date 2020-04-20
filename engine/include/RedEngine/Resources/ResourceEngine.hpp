@@ -5,7 +5,8 @@
 
 namespace red
 {
-class Mesh;
+class RenderingEngine;
+class Sprite;
 
 class ResourceEngine
 {
@@ -13,10 +14,9 @@ public:
     ResourceEngine();
     ~ResourceEngine();
 
-    bool ImportMesh(Mesh* mesh);
-    void FreeMesh(Mesh* mesh);
+    bool ImportSprite(Sprite* sprite);
+    void FreeSprite(Sprite* mesh);
 
 private:
-    std::vector<Mesh*> m_meshes;
 };
 }  // namespace red

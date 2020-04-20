@@ -1,13 +1,8 @@
-
 #include <array>
-#include <cassert>
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <numeric>
 #include <thread>
-
-#include <optick.h>
 
 #include "RedEngine/Application.hpp"
 #include "RedEngine/Core/Engine.hpp"
@@ -17,16 +12,17 @@
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/RenderingSystem.hpp"
 #include "RedEngine/Core/Configuration/Configuration.hpp"
+#include "RedEngine/Debug/Profiler.hpp"
 
 namespace red
 {
 Application::Application() : m_world(nullptr)
 {
-    OPTICK_APP("Main Application")
+    PROFILER_APP("Main Application")
     SetLogLevel(LogLevel::LEVEL_INFO);
 }
 
-Application::~Application() { OPTICK_SHUTDOWN(); }
+Application::~Application() { PROFILER_SHUTDOWN(); }
 
 bool Application::Run()
 {
@@ -43,7 +39,7 @@ bool Application::Run()
     bool quit = false;
     while (!quit)
     {
-        OPTICK_FRAME("MainThread")
+        PROFILER_FRAME("MainThread");
 
         // Compute the delta time
         auto currentTime = std::chrono::system_clock::now();
