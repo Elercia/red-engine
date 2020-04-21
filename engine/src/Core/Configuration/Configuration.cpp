@@ -1,5 +1,6 @@
 
 #include <RedEngine/Core/Configuration/IniReader.hpp>
+#include <RedEngine/Debug/Logger/Logger.hpp>
 #include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/Configuration.hpp"
 
@@ -46,9 +47,11 @@ void Configuration::LoadConfigFile(std::filesystem::path path)
         else
         {
             // CVar already doesn't exist in memory (inserting)
-            // FIXME Need to add handle in the CVar to be able to keep the current arch
+            // TODO Need to add handle in the CVar to be able to keep the current arch
             //  Currently all the "m_configVariable" are const* because I passed "this" as a pointer
             //  Need to add a level of indirection to it
+
+            RED_LOG_WARNING("Ini config line set but not used {}::{} = {}", cat, key, value);
         }
     }
 }

@@ -14,8 +14,13 @@ file(GLOB_RECURSE HEADERS
         ${INCLUDE_FOLDER_INTERN}/*.hpp
         )
 
+# Headers files
+file(GLOB_RECURSE INLINE_HEADERS
+        ${INCLUDE_FOLDER_INTERN}/*.inl
+        )
+
 # red_engine_lib
-add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS})
+add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS} ${INLINE_HEADERS})
 
 target_include_directories(red_engine_lib
         PUBLIC

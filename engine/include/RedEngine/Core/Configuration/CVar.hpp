@@ -4,6 +4,8 @@
 #include <type_traits>
 #include <functional>
 
+#include "../../Memory/ObjectHandle.hpp"
+
 namespace red
 {
 class ICVar
