@@ -8,7 +8,7 @@ double Time::s_deltaTime = 0.F;
 
 double Time::TimeScale() { return s_timeScale; }
 
-void Time::TimeScale(double newTimeScale) { s_timeScale = Mathf::Clamp01(newTimeScale); }
+void Time::TimeScale(double newTimeScale) { s_timeScale = Math::Clamp01(newTimeScale); }
 
 double Time::DeltaTime(bool scaled) { return scaled ? ScaledDeltaTime() : UnscaledDeltaTime(); }
 

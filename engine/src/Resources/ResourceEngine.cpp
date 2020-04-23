@@ -10,9 +10,10 @@ namespace red
 ResourceEngine::ResourceEngine() {}
 ResourceEngine::~ResourceEngine()
 {
-    for (auto& resourcePair : m_loadedResources)
+    for (auto& resourceListPair : m_loadedResources)
     {
-        delete resourcePair.second;
+        for (auto& resourceItem : resourceListPair.second)
+            delete resourceItem;
     }
 }
 
@@ -28,7 +29,7 @@ Texture* ResourceEngine::LoadTextureInternal(const std::string& path)
                                                     // loaded or not (if an error occurred)
 
     // Keep a reference to the created texture
-    m_loadedResources.insert({ResourceType::TEXTURE, texture});
+    AddResourceToLoadedResources(ResourceType::TEXTURE, texture);
 
     SDL_Surface* tempSurface = SDL_LoadBMP(path.c_str());
 
@@ -69,5 +70,17 @@ void ResourceEngine::ReleaseTexture(Texture* texture)
 {
     SDL_DestroyTexture(texture->m_sdlTexture);
     texture->m_loadState = LoadState::STATE_NOT_LOADED;
+}
+void ResourceEngine::AddResourceToLoadedResources(ResourceType::Enum type, Resource* resource)
+{
+    auto it = m_loadedResources.find(type);
+    if (it != m_loadedResources.end())
+    {
+        it->second.push_back(resource);
+    }
+    else
+    {
+        m_loadedResources.insert({type, {resource}});
+    }
 }
 }  // namespace red

@@ -22,7 +22,8 @@ public:
 
 private:
     Texture* LoadTextureInternal(const std::string& path);
+    void AddResourceToLoadedResources(ResourceType::Enum type, Resource* resource);
 
-    std::map<ResourceType::Enum, Resource*> m_loadedResources;
+    std::map<ResourceType::Enum, std::vector<Resource*>> m_loadedResources;
 };
 }  // namespace red
