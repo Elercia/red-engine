@@ -2,19 +2,20 @@
 
 namespace red
 {
-class Mathf
+class Math
 {
 private:
-    Mathf() = default;
+    Math() = default;
 
 public:
-    static constexpr double Min(double l, double r);
-    static constexpr float Min(float l, float r);
-    static constexpr double Max(double l, double r);
-    static constexpr float Max(float l, float r);
+    template <typename T>
+    static constexpr T Min(T l, T r);
 
-    static constexpr double Clamp(double value, double min, double max);
-    static constexpr float Clamp(float value, float min, float max);
+    template <typename T>
+    static constexpr T Max(T l, T r);
+
+    template <typename T>
+    static constexpr T Clamp(T value, T min, T max);
 
     static constexpr float Clamp01(float value);
     static constexpr double Clamp01(double value);
