@@ -1,12 +1,14 @@
 #pragma once
 
-#include <memory>
-#include <vector>
+#include <map>
+
+#include <RedEngine/Resources/Resource.hpp>
+#include <RedEngine/Core/Components/Sprite.hpp>
+#include <RedEngine/Core/Components/Transform.hpp>
 
 namespace red
 {
-class RenderingEngine;
-class Sprite;
+class Texture;
 
 class ResourceEngine
 {
@@ -14,9 +16,13 @@ public:
     ResourceEngine();
     ~ResourceEngine();
 
-    bool ImportSprite(Sprite* sprite);
-    void FreeSprite(Sprite* mesh);
+    static Texture* LoadTexture(const std::string& path);
+
+    void ReleaseTexture(Texture* texture);
 
 private:
+    Texture* LoadTextureInternal(const std::string& path);
+
+    std::map<ResourceType::Enum, Resource*> m_loadedResources;
 };
 }  // namespace red

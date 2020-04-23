@@ -37,7 +37,7 @@ public:
     const std::vector<Entity*>& GetEntities();
     ComponentManager* GetComponentManager();
 
-    void Update(float deltaTime);
+    void Update();
 
 private:
     std::vector<Entity*> m_entities;

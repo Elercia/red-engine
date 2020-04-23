@@ -1,57 +1,73 @@
-#include <RedEngine/Rendering/Components/Sprite.hpp>
+#include <RedEngine/Core/Components/Sprite.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
 #include <RedEngine/Rendering/RenderingEngine.hpp>
 #include <RedEngine/Debug/Debug.hpp>
 #include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Rendering/Texture.hpp>
 
 namespace red
 {
 ResourceEngine::ResourceEngine() {}
-ResourceEngine::~ResourceEngine() {}
-
-bool ResourceEngine::ImportSprite(Sprite* sprite)
+ResourceEngine::~ResourceEngine()
 {
-    SDL_Surface* tempSurface = SDL_LoadBMP(sprite->m_path.c_str());
+    for (auto& resourcePair : m_loadedResources)
+    {
+        delete resourcePair.second;
+    }
+}
+
+Texture* ResourceEngine::LoadTexture(const std::string& path)
+{
+    return GetRedInstance().GetResourceEngine()->LoadTextureInternal(path);
+}
+
+Texture* ResourceEngine::LoadTextureInternal(const std::string& path)
+{
+    auto* texture = new Texture(Texture::GetNextResourceId());
+    texture->m_loadState = LoadState::STATE_ERROR;  // At the end, the texture should either be
+                                                    // loaded or not (if an error occurred)
+
+    // Keep a reference to the created texture
+    m_loadedResources.insert({ResourceType::TEXTURE, texture});
+
+    SDL_Surface* tempSurface = SDL_LoadBMP(path.c_str());
 
     if (tempSurface == nullptr)
     {
-        RED_LOG_WARNING("Error creating surface from sprite path {} with error {}", sprite->m_path,
+        RED_LOG_WARNING("Error creating surface from texture path {} with error {}", path,
                         SDL_GetError());
-        sprite->m_isLoaded = LoadState::STATE_ERROR;
-        return false;
+
+        return texture;
     }
 
-    sprite->m_texture = SDL_CreateTextureFromSurface(
+    texture->m_sdlTexture = SDL_CreateTextureFromSurface(
         GetRedInstance().GetRenderingEngine()->GetRenderer(), tempSurface);
 
     SDL_FreeSurface(tempSurface);
 
-    if (sprite->m_texture == nullptr)
+    if (texture->m_sdlTexture == nullptr)
     {
-        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", sprite->m_path,
+        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", path,
                         SDL_GetError());
-        sprite->m_isLoaded = LoadState::STATE_ERROR;
-        return false;
+
+        return texture;
     }
 
     int h;
     int w;
-    SDL_QueryTexture(sprite->m_texture, nullptr, nullptr, &w, &h);
+    SDL_QueryTexture(texture->m_sdlTexture, nullptr, nullptr, &w, &h);
 
-    sprite->m_sdlSize.h = h;
-    sprite->m_sdlSize.w = w;
+    texture->m_textureSize.h = h;
+    texture->m_textureSize.w = w;
 
-    sprite->m_sdlPos.h = h;
-    sprite->m_sdlPos.w = w;
+    texture->m_loadState = LoadState::STATE_LOADED;
 
-    sprite->m_isLoaded = LoadState::STATE_LOADED;
-
-    return true;
+    return texture;
 }
-void ResourceEngine::FreeSprite(Sprite* mesh)
+
+void ResourceEngine::ReleaseTexture(Texture* texture)
 {
-    SDL_DestroyTexture(mesh->m_texture);
-    mesh->m_texture = nullptr;
-    mesh->m_isLoaded = LoadState::STATE_NOT_LOADED;
+    SDL_DestroyTexture(texture->m_sdlTexture);
+    texture->m_loadState = LoadState::STATE_NOT_LOADED;
 }
 }  // namespace red

@@ -1,11 +1,12 @@
-#include "RedEngine/Rendering/RenderingSystem.hpp"
-#include "RedEngine/Rendering/Components/Sprite.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Debug/Profiler.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Rendering/Texture.hpp"
 
 namespace red
 {
@@ -17,7 +18,7 @@ RenderingSystem::RenderingSystem(World* world)
     RED_LOG_INFO("Adding Rendering system");
 }
 
-void RenderingSystem::Update(float deltaTime)
+void RenderingSystem::Update()
 {
     PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
 
@@ -26,31 +27,19 @@ void RenderingSystem::Update(float deltaTime)
 
     m_renderingEngine->BeginRenderFrame();
 
-    for (auto& entity : GetComponents<Sprite>())
+    for (auto& entity : GetComponents<Transform, Sprite>())
     {
         auto* sprite = entity->GetComponent<Sprite>();
-        if (sprite->GetLoadedState() == LoadState::STATE_NOT_LOADED)
-        {
-            m_resourceEngine->ImportSprite(sprite);
-        }
+        auto* transform = entity->GetComponent<Transform>();
 
-        m_renderingEngine->Render(sprite);
+        m_renderingEngine->Render(sprite, *transform);
     }
 
     m_renderingEngine->DebugDrawRect();
 
     m_renderingEngine->EndRenderFrame();
 }
-void RenderingSystem::Finalise()
-{
-    for (auto& entity : GetComponents<Sprite>())
-    {
-        auto* sprite = entity->GetComponent<Sprite>();
-        if (sprite->GetLoadedState() == LoadState::STATE_LOADED)
-        {
-            m_resourceEngine->FreeSprite(sprite);
-        }
-    }
-}
+
+void RenderingSystem::Finalise() {}
 
 }  // namespace red
