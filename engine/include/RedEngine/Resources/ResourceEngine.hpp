@@ -2,13 +2,13 @@
 
 #include <memory>
 #include <vector>
+#include <RedEngine/Core/SubEngine.hpp>
 
 namespace red
 {
-class RenderingEngine;
 class Sprite;
 
-class ResourceEngine
+class ResourceEngine : public SubEngine
 {
 public:
     ResourceEngine();

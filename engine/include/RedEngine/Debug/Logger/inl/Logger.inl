@@ -6,7 +6,6 @@
 #include <map>
 #include <filesystem>
 
-#include "../../../Core/Engine.hpp"
 
 namespace red
 {
