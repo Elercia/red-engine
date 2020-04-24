@@ -3,6 +3,7 @@
 #include <RedEngine/Rendering/RenderingEngine.hpp>
 #include <RedEngine/Debug/Debug.hpp>
 #include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Engine.hpp>
 
 namespace red
 {
@@ -22,7 +23,7 @@ bool ResourceEngine::ImportSprite(Sprite* sprite)
     }
 
     sprite->m_texture = SDL_CreateTextureFromSurface(
-        GetRedInstance().GetRenderingEngine()->GetRenderer(), tempSurface);
+        GetRedSubEngine<RenderingEngine>()->GetRenderer(), tempSurface);
 
     SDL_FreeSurface(tempSurface);
 

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <RedEngine/Core/SubEngine.hpp>
 
 struct SDL_Renderer;
 
@@ -10,7 +11,7 @@ namespace red
 class Window;
 class Sprite;
 
-class RenderingEngine
+class RenderingEngine : public SubEngine
 {
 public:
     RenderingEngine();

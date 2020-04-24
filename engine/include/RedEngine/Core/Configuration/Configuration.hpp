@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <unordered_map>
 #include <string>
+#include <RedEngine/Core/SubEngine.hpp>
 
 #include "CVar.hpp"
 
@@ -10,7 +11,7 @@ namespace red
 {
 class ICVar;
 
-class Configuration
+class Configuration : public SubEngine
 {
 public:
     Configuration();

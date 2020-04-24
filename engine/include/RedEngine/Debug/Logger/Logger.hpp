@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <RedEngine/Core/SubEngine.hpp>
 
 namespace red
 {
@@ -18,7 +19,7 @@ struct LogLevel
 
 void SetLogLevel(LogLevel::Enum level);
 
-class Logger
+class Logger : public SubEngine
 {
 public:
     Logger();

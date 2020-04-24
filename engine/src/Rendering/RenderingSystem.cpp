@@ -3,16 +3,14 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Debug/Profiler.hpp"
-#include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
-#include "RedEngine/Resources/ResourceEngine.hpp"
 
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world)
     : System(world)
-    , m_renderingEngine(GetRedInstance().GetRenderingEngine())
-    , m_resourceEngine(GetRedInstance().GetResourceEngine())
+    , m_renderingEngine(GetRedSubEngine<RenderingEngine>())
+    , m_resourceEngine(GetRedSubEngine<ResourceEngine>())
 {
     RED_LOG_INFO("Adding Rendering system");
 }
