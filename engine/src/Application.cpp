@@ -4,7 +4,7 @@
 #include <numeric>
 #include <thread>
 
-#include "RedEngine/Application.hpp"
+#include "RedEngine/Application/Application.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Debug/Debug.hpp"
@@ -110,5 +110,7 @@ World& Application::CreateWorld(bool registerConfiguredSystems)
 
     return *m_world;
 }
+
+void Application::LoadLevel(std::string_view name) {}
 
 }  // namespace red

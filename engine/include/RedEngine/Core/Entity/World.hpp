@@ -30,6 +30,8 @@ public:
     Entity* CreateEntity();
     void DestroyEntity(Entity* entity);
 
+    void SetEntityPersistency(Entity* entity, bool persistent);
+
     template <class T, class... Args>
     T* AddSystem(Args... args);
 
@@ -45,6 +47,7 @@ private:
     ComponentManager* m_componentManager;
 
     EntityId_t m_nextEntityId;
+    EntityId_t m_nextPersistentEntityId;
 };
 
 }  // namespace red

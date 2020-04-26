@@ -4,6 +4,7 @@
 #include <tuple>
 #include <type_traits>
 
+#include "../Level/LevelManager.hpp"
 #include "../Memory/MemoryManager.hpp"
 #include "../Core/Configuration/Configuration.hpp"
 #include "../Debug/Logger/Logger.hpp"
@@ -27,7 +28,7 @@ public:
     static void Init();
 
 private:
-    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine>
+    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, LevelManager>
         m_subEngines{};
 
     void InitAllSubEngines();

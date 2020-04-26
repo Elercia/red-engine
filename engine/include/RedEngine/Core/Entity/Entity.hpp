@@ -37,8 +37,11 @@ public:
     bool HasComponent();
 
     [[nodiscard]] EntityId_t GetId() const;
+    void SetId(EntityId_t id);
 
     void Destroy();
+
+    void SetPersistent(bool persistent);
 
 protected:
     World* m_world;

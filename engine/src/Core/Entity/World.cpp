@@ -62,4 +62,22 @@ const std::vector<Entity*>& World::GetEntities() { return m_entities; }
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
 void World::DestroyEntity(Entity* entity) { delete entity; }
+
+void World::SetEntityPersistency(Entity* entity, bool persistent)
+{
+    if (persistent)
+    {
+        auto entityId = m_nextPersistentEntityId;
+        m_nextPersistentEntityId++;
+        entity->SetId(entityId);
+        // TODO move components
+    }
+    else
+    {
+        auto entityId = m_nextEntityId;
+        m_nextEntityId++;
+        entity->SetId(entityId);
+        // TODO move components
+    }
+}
 }  // namespace red

@@ -15,5 +15,6 @@ std::set<Component*> Entity::GetComponents()
 }
 
 EntityId_t Entity::GetId() const { return m_id; }
+void Entity::SetId(EntityId_t id) { m_id = id; }
 
 }  // namespace red

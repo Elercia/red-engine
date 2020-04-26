@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(HEADERS src/CustomSystem.hpp
-        src/CustomComponent.hpp)
 
-set(SOURCES src/main.cpp
-        src/CustomSystem.cpp)
-
+file(GLOB HEADERS src/*.hpp)
+file(GLOB SOURCES src/*.cpp)
 file(GLOB SHADERS resources/*.sc)
 
 set(PROJECT_SOURCES ${HEADERS} ${SOURCES})
