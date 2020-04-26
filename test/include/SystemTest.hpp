@@ -8,22 +8,22 @@ class MockComponent1 : public red::Component
 {
     RED_COMPONENT("MOC2")
 public:
-    MockComponent1(red::Entity* entity) : red::Component(entity) {}
+    explicit MockComponent1(red::Entity* entity) : red::Component(entity) {}
 };
 
 class MockComponent2 : public red::Component
 {
     RED_COMPONENT("MOC1")
 public:
-    MockComponent2(red::Entity* entity) : red::Component(entity) {}
+    explicit MockComponent2(red::Entity* entity) : red::Component(entity) {}
 };
 
 class MockSystem : public red::System
 {
 public:
-    MockSystem(red::World* world) : System(world) {}
+    explicit MockSystem(red::World* world) : System(world) {}
 
-    virtual void Update(float deltaTime)
+    void Update() override
     {
         m_hasBeenUpdated = true;
 

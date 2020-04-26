@@ -37,21 +37,21 @@ Entity* World::CreateEntity()
     return entityPtr;
 }
 
-void World::Update(float deltaTime)
+void World::Update()
 {
     for (auto& system : m_systems)
     {
-        system->PreUpdate(deltaTime);
+        system->PreUpdate();
     }
 
     for (auto& system : m_systems)
     {
-        system->Update(deltaTime);
+        system->Update();
     }
 
     for (auto& system : m_systems)
     {
-        system->LateUpdate(deltaTime);
+        system->LateUpdate();
     }
 }
 

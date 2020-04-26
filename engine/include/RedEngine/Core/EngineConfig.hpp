@@ -6,7 +6,6 @@
 #define RED_ENABLE_MEMORY_PROFILING
 #endif
 
-
 namespace red
 {
 using ComponentName_t = const char*;
