@@ -47,7 +47,7 @@ void Configuration::LoadConfigFile(std::filesystem::path path)
         else
         {
             // CVar already doesn't exist in memory (inserting)
-            // TODO Need to add handle in the CVar to be able to keep the current arch
+            // FIXME Need to add handle in the CVar to be able to keep the current arch
             //  Currently all the "m_configVariable" are const* because I passed "this" as a pointer
             //  Need to add a level of indirection to it
 
