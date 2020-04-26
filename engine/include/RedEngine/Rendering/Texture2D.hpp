@@ -13,11 +13,13 @@ class Texture2D : public Resource
 
 public:
     explicit Texture2D(ResourceId_t resourceId);
-    ~Texture2D() override;
+    ~Texture2D() override = default;
 
     [[nodiscard]] SDL_Rect GetTextureSize() const;
 
     static ResourceId_t GetNextResourceId();
+
+    void Release() override;
 
 private:
     static ResourceId_t s_nextResourceId;

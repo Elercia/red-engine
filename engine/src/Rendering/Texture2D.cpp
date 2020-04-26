@@ -10,6 +10,7 @@ ResourceId_t Texture2D::s_nextResourceId = 0;
 
 ResourceId_t Texture2D::GetNextResourceId() { return s_nextResourceId++; }
 
-Texture2D::~Texture2D() { GetRedInstance().GetResourceEngine()->ReleaseTexture(this, true); }
-SDL_Rect Texture2D::GetTextureSize() const { return m_textureSize; };
+SDL_Rect Texture2D::GetTextureSize() const { return m_textureSize; }
+
+void Texture2D::Release() { GetRedSubEngine<ResourceEngine>()->ReleaseTexture(this, false); };
 }  // namespace red

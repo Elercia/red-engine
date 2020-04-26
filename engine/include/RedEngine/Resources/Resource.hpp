@@ -35,6 +35,8 @@ public:
     [[nodiscard]] ResourceType::Enum GetResourceType() const;
     [[nodiscard]] LoadState::Enum GetLoadState() const;
 
+    virtual void Release() = 0;
+
 protected:
     const ResourceId_t m_resourceId;
     const ResourceType::Enum m_resourceType;

@@ -22,7 +22,7 @@ public:
 
     static std::shared_ptr<Texture2D> LoadTexture(const std::string& path);
 
-    void ReleaseTexture(Texture2D* texture, bool force = false);
+    void ReleaseTexture(Texture2D* texture, bool erase = true);
 
 private:
     std::shared_ptr<Texture2D> LoadTextureInternal(const std::string& path);

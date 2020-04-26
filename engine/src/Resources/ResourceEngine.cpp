@@ -14,13 +14,18 @@ ResourceEngine::~ResourceEngine()
     for (auto& resourceListPair : m_loadedResources)
     {
         for (auto& resourceItem : resourceListPair.second)
+        {
+            resourceItem->Release();
             resourceItem.reset();
+        }
+
+        resourceListPair.second.clear();
     }
 }
 
 std::shared_ptr<Texture2D> ResourceEngine::LoadTexture(const std::string& path)
 {
-    return GetRedInstance().GetResourceEngine()->LoadTextureInternal(path);
+    return GetRedSubEngine<ResourceEngine>()->LoadTextureInternal(path);
 }
 
 std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string& path)
@@ -42,10 +47,8 @@ std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string
         return texture;
     }
 
-    sprite->m_texture = SDL_CreateTextureFromSurface(
-        GetRedSubEngine<RenderingEngine>()->GetRenderer(), tempSurface);
     texture->m_sdlTexture = SDL_CreateTextureFromSurface(
-        GetRedInstance().GetRenderingEngine()->GetRenderer(), tempSurface);
+        GetRedSubEngine<RenderingEngine>()->GetRenderer(), tempSurface);
 
     SDL_FreeSurface(tempSurface);
 
@@ -66,18 +69,26 @@ std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string
 
     texture->m_loadState = LoadState::STATE_LOADED;
 
+    RED_LOG_INFO("Creating texture ID : {} from path {}", texture->GetResourceId(), path);
+
     return texture;
 }
 
-void ResourceEngine::ReleaseTexture(Texture2D* texture, bool force)
+void ResourceEngine::ReleaseTexture(Texture2D* texture, bool erase)
 {
-    SDL_DestroyTexture(texture->m_sdlTexture);
+    if (texture->GetLoadState() == LoadState::STATE_LOADED)
+    {
+        SDL_DestroyTexture(texture->m_sdlTexture);
+    }
+
     texture->m_loadState = LoadState::STATE_NOT_LOADED;
 
     auto it = m_loadedResources.find(ResourceType::TEXTURE2D);
     auto& vect = it->second;
 
     auto foundIt = std::find_if(vect.begin(), vect.end(), [texture](const auto& value) {
+        if (value == nullptr)
+            return false;
         return texture->GetResourceId() == value->GetResourceId();
     });
 
@@ -95,11 +106,13 @@ void ResourceEngine::ReleaseTexture(Texture2D* texture, bool force)
             "Attempted to release a texture2D resource that is used elsewhere (id:{}, use_count:)",
             texture->m_resourceId, smartPtr.use_count());
 
-        if (!force)
-            return;
+        return;
     }
 
-    vect.erase(foundIt);
+    RED_LOG_INFO("Release texture ID : {}", texture->GetResourceId());
+
+    if (erase)
+        vect.erase(foundIt);
 }
 void ResourceEngine::AddResourceToLoadedResources(ResourceType::Enum type,
                                                   const std::shared_ptr<Texture2D>& resource)

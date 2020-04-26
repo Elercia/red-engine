@@ -52,7 +52,7 @@ private:
 
     CVar<int> m_height{"height", 600, "window"};
     CVar<int> m_width{"width", 800, "window"};
-    CVar<FullScreenMode::Enum> m_fullscreen{"fullscreen", FullScreenMode::WINDOWED, "window"};
+    CVar<FullScreenMode::Enum> m_fullscreen{"fullscreen_mode", FullScreenMode::WINDOWED, "window"};
 };
 
 }  // namespace red
