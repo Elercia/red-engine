@@ -17,4 +17,6 @@ std::set<Component*> Entity::GetComponents()
 EntityId_t Entity::GetId() const { return m_id; }
 void Entity::SetId(EntityId_t id) { m_id = id; }
 
+void Entity::SetPersistent(bool persistent) { m_world->SetEntityPersistency(this, persistent); }
+
 }  // namespace red

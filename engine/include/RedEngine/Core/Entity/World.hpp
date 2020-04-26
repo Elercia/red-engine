@@ -28,7 +28,6 @@ public:
     World& operator=(World&& world) = delete;
 
     Entity* CreateEntity();
-    void DestroyEntity(Entity* entity);
 
     void SetEntityPersistency(Entity* entity, bool persistent);
 
@@ -42,6 +41,8 @@ public:
     void Update();
 
 private:
+    void DestroyEntity(Entity* entity);
+
     std::vector<Entity*> m_entities;
     std::vector<System*> m_systems;
     ComponentManager* m_componentManager;
