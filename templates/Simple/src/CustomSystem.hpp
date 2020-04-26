@@ -5,5 +5,5 @@
 class CustomSystem : public red::System
 {
 public:
-    void Update(float deltaTime) override;
+    void Update() override;
 };

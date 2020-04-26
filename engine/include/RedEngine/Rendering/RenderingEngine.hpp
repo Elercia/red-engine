@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <string>
+#include <RedEngine/Math/Vector.hpp>
+#include <RedEngine/Core/Components/Transform.hpp>
 #include <RedEngine/Core/SubEngine.hpp>
 
 struct SDL_Renderer;
@@ -24,7 +26,7 @@ public:
     void EndRenderFrame();
 
     void DebugDrawRect();
-    void Render(Sprite* sprite);
+    void Render(Sprite* sprite, const Transform& transform);
 
 private:
     std::unique_ptr<Window> m_window;

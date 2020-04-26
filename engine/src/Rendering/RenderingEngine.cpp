@@ -2,9 +2,11 @@
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
-#include "RedEngine/Rendering/Components/Sprite.hpp"
+#include "RedEngine/Rendering/Texture2D.hpp"
+#include "RedEngine/Core/Components/Sprite.hpp"
 
 #include <SDL2/SDL_render.h>
+#include <RedEngine/Resources/Resource.hpp>
 
 namespace red
 {
@@ -72,10 +74,16 @@ void RenderingEngine::DebugDrawRect()
 
 SDL_Renderer* RenderingEngine::GetRenderer() { return m_renderer; }
 
-void RenderingEngine::Render(Sprite* sprite)
+void RenderingEngine::Render(Sprite* sprite, const Transform& transform)
 {
-    if (sprite->m_isLoaded == LoadState::STATE_LOADED)
-        SDL_RenderCopy(m_renderer, sprite->m_texture, nullptr, &(sprite->m_sdlPos));
+    if (sprite->m_texture->GetLoadState() == LoadState::STATE_LOADED)
+    {
+        auto position = transform.GetPosition();
+        SDL_Rect dest{position.m_x, position.m_y, sprite->m_texture->m_textureSize.h,
+                      sprite->m_texture->m_textureSize.w};
+
+        SDL_RenderCopy(m_renderer, sprite->m_texture->m_sdlTexture, nullptr, &dest);
+    }
 }
 
 }  // namespace red

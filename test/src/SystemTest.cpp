@@ -6,7 +6,7 @@ TEST_CASE("System", "[ECS]")
 {
     red::World world;
     size_t baseSystemCount = world.GetSystems().size();
-    MockSystem* mockSystemPtr = world.AddSystem<MockSystem>();
+    auto* mockSystemPtr = world.AddSystem<MockSystem>();
 
     SECTION("Adding mock system")
     {
@@ -16,7 +16,7 @@ TEST_CASE("System", "[ECS]")
 
     SECTION("Update world update Systems")
     {
-        world.Update(0.F);
+        world.Update();
 
         REQUIRE(mockSystemPtr->m_hasBeenUpdated);
     }
@@ -33,7 +33,7 @@ TEST_CASE("System", "[ECS]")
         e2->AddComponent<MockComponent2>();
         e3->AddComponent<MockComponent2>();
 
-        world.Update(0.F);
+        world.Update();
 
         REQUIRE(mockSystemPtr->m_hasBeenUpdated);
         REQUIRE(mockSystemPtr->m_entityCount == 1);  // only e2 has the right components types
