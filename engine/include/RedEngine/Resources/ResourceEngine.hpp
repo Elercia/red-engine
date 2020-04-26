@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 
 #include <RedEngine/Resources/Resource.hpp>
 #include <RedEngine/Core/Components/Sprite.hpp>
@@ -8,7 +9,7 @@
 
 namespace red
 {
-class Texture;
+class Texture2D;
 
 class ResourceEngine
 {
@@ -16,14 +17,16 @@ public:
     ResourceEngine();
     ~ResourceEngine();
 
-    static Texture* LoadTexture(const std::string& path);
+    static std::shared_ptr<Texture2D> LoadTexture(const std::string& path);
 
-    void ReleaseTexture(Texture* texture);
+    void ReleaseTexture(Texture2D* texture, bool force = false);
 
 private:
-    Texture* LoadTextureInternal(const std::string& path);
-    void AddResourceToLoadedResources(ResourceType::Enum type, Resource* resource);
+    std::shared_ptr<Texture2D> LoadTextureInternal(const std::string& path);
 
-    std::map<ResourceType::Enum, std::vector<Resource*>> m_loadedResources;
+    void AddResourceToLoadedResources(ResourceType::Enum type,
+                                      const std::shared_ptr<Texture2D>& resource);
+
+    std::map<ResourceType::Enum, std::vector<std::shared_ptr<Resource>>> m_loadedResources;
 };
 }  // namespace red

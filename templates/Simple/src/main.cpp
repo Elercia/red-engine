@@ -12,8 +12,8 @@ int main(int argc, char* argv[])
 
     red::Application app;
 
-    auto* famtomTexture = red::ResourceEngine::LoadTexture("resources/fantom.bmp");
-    auto* pacManTexture = red::ResourceEngine::LoadTexture("resources/pacman.bmp");
+    auto& famtomTexture = red::ResourceEngine::LoadTexture("resources/fantom.bmp");
+    auto& pacManTexture = red::ResourceEngine::LoadTexture("resources/pacman.bmp");
 
     auto& world = app.CreateWorld();
     auto* fantom1 = world.CreateEntity();

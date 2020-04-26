@@ -2,7 +2,7 @@
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
-#include "RedEngine/Rendering/Texture.hpp"
+#include "RedEngine/Rendering/Texture2D.hpp"
 #include "RedEngine/Core/Components/Sprite.hpp"
 
 #include <SDL2/SDL_render.h>

@@ -6,7 +6,7 @@
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
-#include "RedEngine/Rendering/Texture.hpp"
+#include "RedEngine/Rendering/Texture2D.hpp"
 
 namespace red
 {

@@ -4,7 +4,7 @@
 
 namespace red
 {
-using ResourceId = uint16_t;
+using ResourceId_t = uint16_t;
 
 struct LoadState
 {
@@ -20,7 +20,7 @@ struct ResourceType
 {
     enum Enum
     {
-        TEXTURE,
+        TEXTURE2D,
         AUDIO,
     };
 };
@@ -28,15 +28,15 @@ struct ResourceType
 class Resource
 {
 public:
-    Resource(ResourceId resourceId, ResourceType::Enum m_resourceType);
+    Resource(ResourceId_t resourceId, ResourceType::Enum m_resourceType);
     virtual ~Resource();
 
-    [[nodiscard]] ResourceId GetResourceId() const;
+    [[nodiscard]] ResourceId_t GetResourceId() const;
     [[nodiscard]] ResourceType::Enum GetResourceType() const;
     [[nodiscard]] LoadState::Enum GetLoadState() const;
 
 protected:
-    const ResourceId m_resourceId;
+    const ResourceId_t m_resourceId;
     const ResourceType::Enum m_resourceType;
     LoadState::Enum m_loadState;
 };

@@ -2,7 +2,7 @@
 
 namespace red
 {
-Resource::Resource(red::ResourceId resourceId, red::ResourceType::Enum m_resourceType)
+Resource::Resource(red::ResourceId_t resourceId, red::ResourceType::Enum m_resourceType)
     : m_resourceId(resourceId)
     , m_resourceType(m_resourceType)
     , m_loadState(LoadState::STATE_NOT_LOADED)
@@ -11,7 +11,7 @@ Resource::Resource(red::ResourceId resourceId, red::ResourceType::Enum m_resourc
 
 Resource::~Resource() = default;
 
-ResourceId Resource::GetResourceId() const { return m_resourceId; }
+ResourceId_t Resource::GetResourceId() const { return m_resourceId; }
 
 ResourceType::Enum Resource::GetResourceType() const { return m_resourceType; }
 

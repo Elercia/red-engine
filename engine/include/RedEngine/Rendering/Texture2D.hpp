@@ -6,21 +6,21 @@
 
 namespace red
 {
-class Texture : public Resource
+class Texture2D : public Resource
 {
     friend class ResourceEngine;
     friend class RenderingEngine;
 
 public:
-    explicit Texture(ResourceId resourceId);
-    ~Texture() override;
+    explicit Texture2D(ResourceId_t resourceId);
+    ~Texture2D() override;
 
     [[nodiscard]] SDL_Rect GetTextureSize() const;
 
-    static ResourceId GetNextResourceId();
+    static ResourceId_t GetNextResourceId();
 
 private:
-    static ResourceId s_nextResourceId;
+    static ResourceId_t s_nextResourceId;
 
     SDL_Texture* m_sdlTexture{nullptr};
     SDL_Rect m_textureSize{0, 0, 0, 0};

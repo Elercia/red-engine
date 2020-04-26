@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <SDL2/SDL_render.h>
 
 #include "../../Math/Vector.hpp"
@@ -9,18 +10,18 @@
 
 namespace red
 {
-class Texture;
+class Texture2D;
 
 class Sprite : public Component
 {
     RED_COMPONENT("SPRITE")
 
 public:
-    Sprite(Entity* entity, Texture* texture);
+    Sprite(Entity* entity, std::shared_ptr<Texture2D> texture);
 
-    [[nodiscard]] Texture* GetTexture() const;
+    [[nodiscard]] std::shared_ptr<Texture2D> GetTexture() const;
 
 private:
-    Texture* m_texture;
+    std::shared_ptr<Texture2D> m_texture;
 };
 }  // namespace red
