@@ -12,7 +12,7 @@ std::set<Component*> ComponentManager::GetComponents(Entity* entity) { return {}
 void ComponentManager::StoreComponent(Entity* owner, Component* component)
 {
     auto& componentPool = GetComponentPool(component->GetComponentName());
-    componentPool[owner->GetId()] = component;  // FIXME
+    componentPool[owner->GetId()] = component;
 }
 
 ComponentPool_t& ComponentManager::GetComponentPool(ComponentName_t componentName)
@@ -50,7 +50,6 @@ Component* ComponentManager::GetComponent(Entity* entity, ComponentName_t name)
 
 ComponentManager::~ComponentManager()
 {
-    // TODO do this in a better way maybe ?
     for (auto componentPoolPair : m_components)
     {
         auto* pool = componentPoolPair.second;
