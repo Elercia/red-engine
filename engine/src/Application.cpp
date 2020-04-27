@@ -17,7 +17,7 @@
 
 namespace red
 {
-Application::Application() : m_level(nullptr)
+Application::Application()
 {
     PROFILER_APP("Main Application")
     SetLogLevel(LogLevel::LEVEL_INFO);
@@ -27,7 +27,7 @@ Application::~Application() { PROFILER_SHUTDOWN(); }
 
 bool Application::Run()
 {
-    RED_ASSERT(m_level != nullptr, "The application need a level to start");
+    RED_ASSERT(m_world != nullptr, "The application need a level to start");
 
     std::array<double, 10> frameTimes{};
     uint8_t frameIndex = 0;
@@ -99,10 +99,39 @@ bool Application::Run()
         }
 
         // update the world
-        m_level->Update();
+        m_world->Update();
     }
 
     return true;
 }
+
+void Application::CreateWorld()
+{
+    RED_ASSERT(m_world == nullptr, "Only one world is allowed");
+
+    m_world = std::make_unique<World>();
+}
+
+void Application::LoadLevel(Level* level)
+{
+    if (m_currentLevel != nullptr)
+    {
+        m_currentLevel->Finalize();
+    }
+
+    // reset the old level
+    m_currentLevel.reset(level);
+
+    if (m_world == nullptr)
+    {
+        CreateWorld();
+    }
+
+    m_world->UnloadSystems();
+    m_world->UnloadTransientEntities();
+
+    m_currentLevel->Init(*m_world);
+}
+World& Application::GetWorld() { return *m_world; }
 
 }  // namespace red

@@ -99,3 +99,21 @@ TEST_CASE("Component", "[ECS]")
         REQUIRE(componentGettedB == componentAddedB);
     }
 }
+
+TEST_CASE("Persistent entity", "[ECS]")
+{
+    red::World world;
+
+    auto* entityA = world.CreateEntity();
+    REQUIRE(entityA != nullptr);
+    REQUIRE(entityA->GetId() == red::MaxPersistentEntities);
+
+    auto* componentAddedA = entityA->AddComponent<MockComponent1>();
+    REQUIRE(componentAddedA != nullptr);
+
+    entityA->SetPersistent(true);
+    REQUIRE(entityA->GetId() <= red::MaxPersistentEntities);
+
+    auto* componentGettedA = entityA->GetComponent<MockComponent1>();
+    REQUIRE(componentAddedA == componentGettedA);
+}

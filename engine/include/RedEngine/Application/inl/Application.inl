@@ -1,15 +1,14 @@
+#include <type_traits>
+
 namespace red
 {
 template <class LevelType>
 void Application::LoadLevel()
 {
-    if (m_level != nullptr)
-    {
-        m_level->Finalize();
-    }
+    static_assert(std::is_base_of_v<Level, LevelType>, "Load level must be a Level type");
 
-    m_level.reset(new LevelType());
+    auto* newLevel = new LevelType();
 
-    m_level->Init();
+    LoadLevel(newLevel);
 }
 }  // namespace red

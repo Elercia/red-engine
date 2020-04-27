@@ -38,5 +38,4 @@ ComponentType_t* ComponentManager::GetComponent(Entity* entity)
     auto componentPtr = GetComponent(entity, ComponentType_t::ComponentName);
     return reinterpret_cast<ComponentType_t*>(componentPtr);
 }
-
 }  // namespace red
