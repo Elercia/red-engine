@@ -28,7 +28,8 @@ public:
     World& operator=(World&& world) = delete;
 
     Entity* CreateEntity();
-    void DestroyEntity(Entity* entity);
+
+    void SetEntityPersistency(Entity* entity, bool persistent);
 
     template <class T, class... Args>
     T* AddSystem(Args... args);
@@ -40,11 +41,14 @@ public:
     void Update();
 
 private:
+    void DestroyEntity(Entity* entity);
+
     std::vector<Entity*> m_entities;
     std::vector<System*> m_systems;
     ComponentManager* m_componentManager;
 
     EntityId_t m_nextEntityId;
+    EntityId_t m_nextPersistentEntityId;
 };
 
 }  // namespace red

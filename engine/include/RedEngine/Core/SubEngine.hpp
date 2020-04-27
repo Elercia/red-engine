@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+
 #include "../Utils/Uncopyable.hpp"
 
 class SubEngine : public Uncopyable

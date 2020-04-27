@@ -5,7 +5,7 @@
 #include <thread>
 #include <RedEngine/Core/Time/Time.hpp>
 
-#include "RedEngine/Application.hpp"
+#include "RedEngine/Application/Application.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Debug/Debug.hpp"
@@ -17,7 +17,7 @@
 
 namespace red
 {
-Application::Application() : m_world(nullptr)
+Application::Application() : m_level(nullptr)
 {
     PROFILER_APP("Main Application")
     SetLogLevel(LogLevel::LEVEL_INFO);
@@ -27,7 +27,7 @@ Application::~Application() { PROFILER_SHUTDOWN(); }
 
 bool Application::Run()
 {
-    RED_ASSERT(m_world != nullptr, "At least one world is required");
+    RED_ASSERT(m_level != nullptr, "The application need a level to start");
 
     std::array<double, 10> frameTimes{};
     uint8_t frameIndex = 0;
@@ -99,24 +99,10 @@ bool Application::Run()
         }
 
         // update the world
-        m_world->Update();
+        m_level->Update();
     }
 
     return true;
-}
-
-World& Application::CreateWorld(bool registerConfiguredSystems)
-{
-    RED_ASSERT(m_world == nullptr, "Only one world is allowed");
-
-    m_world = std::make_unique<World>();
-
-    if (registerConfiguredSystems)
-    {
-        m_world->AddSystem<RenderingSystem>();
-    }
-
-    return *m_world;
 }
 
 }  // namespace red
