@@ -1,14 +1,14 @@
 #pragma once
 
 #include <memory>
+#include <stack>
+
 #include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
 
 namespace red
 {
-class World;
-
 class Application : public Uncopyable
 {
 public:
@@ -17,11 +17,18 @@ public:
 
     bool Run();
 
+    void CreateWorld();
+
     template <class LevelType>
     void LoadLevel();
 
+    World& GetWorld();
+
 private:
-    std::unique_ptr<Level> m_level;
+    void LoadLevel(Level* level);
+
+    std::unique_ptr<World> m_world{nullptr};
+    std::unique_ptr<Level> m_currentLevel{nullptr};
 };
 }  // namespace red
 

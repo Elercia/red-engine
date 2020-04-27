@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <RedEngine/Utils/Uncopyable.hpp>
 
 #include "../EngineConfig.hpp"
 
@@ -12,7 +13,7 @@ class ComponentManager;
 class Component;
 class System;
 
-class World
+class World : Uncopyable
 {
     friend Entity;
     friend Component;
@@ -21,10 +22,7 @@ public:
     World();
     ~World();
 
-    World(World&) = delete;
     World(World&&) = delete;
-
-    World& operator=(const World& world) = delete;
     World& operator=(World&& world) = delete;
 
     Entity* CreateEntity();
@@ -39,6 +37,9 @@ public:
     ComponentManager* GetComponentManager();
 
     void Update();
+
+    void UnloadTransientEntities();
+    void UnloadSystems();
 
 private:
     void DestroyEntity(Entity* entity);

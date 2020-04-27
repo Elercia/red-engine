@@ -10,7 +10,12 @@
 
 namespace red
 {
-World::World() : m_componentManager(new ComponentManager()), m_nextEntityId(0) {}
+World::World()
+    : m_componentManager(new ComponentManager())
+    , m_nextEntityId(MaxPersistentEntities)
+    , m_nextPersistentEntityId(0)
+{
+}
 
 World::~World()
 {
@@ -65,19 +70,42 @@ void World::DestroyEntity(Entity* entity) { delete entity; }
 
 void World::SetEntityPersistency(Entity* entity, bool persistent)
 {
+    EntityId_t entityId;
     if (persistent)
     {
-        auto entityId = m_nextPersistentEntityId;
+        if (m_nextPersistentEntityId + 1 >= MaxPersistentEntities)
+            RED_ABORT("Cant set the entity persistence because we've reached the limit");
+
+        entityId = m_nextPersistentEntityId;
         m_nextPersistentEntityId++;
-        entity->SetId(entityId);
-        // TODO move components
     }
     else
     {
-        auto entityId = m_nextEntityId;
+        entityId = m_nextEntityId;
         m_nextEntityId++;
-        entity->SetId(entityId);
-        // TODO move components
     }
+
+    auto oldEntityId = entity->GetId();
+    entity->SetId(entityId);
+    m_componentManager->MoveComponents(oldEntityId, entityId);
+}
+
+void World::UnloadTransientEntities()
+{
+    m_componentManager->UnloadTransientComponents();
+
+    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(),
+                                    [](Entity* e) { return e->GetId() >= MaxPersistentEntities; }),
+                     m_entities.end());
+}
+
+void World::UnloadSystems()
+{
+    for (auto& system : m_systems)
+    {
+        system->Finalise();
+    }
+
+    m_systems.clear();
 }
 }  // namespace red
