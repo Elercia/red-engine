@@ -33,7 +33,7 @@ namespace utils
         {
             utils::Trim(lineBuffer);
 
-            if (lineBuffer[0] == '#' || lineBuffer[0] == ';')
+            if (lineBuffer[0] == '#' || lineBuffer[0] == ';' || lineBuffer.empty())
                 continue;
 
             if (lineBuffer[0] == '[')

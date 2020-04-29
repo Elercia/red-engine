@@ -5,11 +5,14 @@
 #include <string>
 #include <RedEngine/Core/SubEngine.hpp>
 
-#include "CVar.hpp"
-
 namespace red
 {
-class ICVar;
+class ICVarValue;
+
+template <class Type>
+class CVar;
+template <class Type>
+class CVarValue;
 
 class Configuration : public SubEngine
 {
@@ -21,17 +24,25 @@ public:
 
     void ParseCommandLine(int argc, char* argv[]);
 
-    void RegisterNewConfigVariable(ICVar* configVariable);
-
     template <typename T>
     void ChangeVar(std::string name, std::string category, T value);
 
-    static void NewCVar(ICVar* configVariable);
+    template <class Type>
+    static void NewCVar(CVar<Type>* cvar, std::string name, Type defaultValue,
+                        std::string category);
 
     static Configuration& GetInstance();
 
 private:
-    std::unordered_map<std::string, ICVar*> m_configVariable;
+    void RegisterNewConfigVariableFromString(const std::string& name,
+                                             const std::string& defaultValue,
+                                             const std::string& category);
+
+    template <class Type>
+    CVarValue<Type>* RegisterNewConfigVariable(const std::string& name, Type defaultValue,
+                                               const std::string& category);
+
+    std::unordered_map<std::string, ICVarValue*> m_configVariable;
 };
 
 }  // namespace red

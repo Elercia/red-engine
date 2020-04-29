@@ -19,15 +19,15 @@ Window::Window() : m_title("Hello Red-Engine")
 
     RED_LOG_INFO("Create new window");
 
-    m_height.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
+    m_height.RegisterChangeCallback([&](CVarValue<int>* /*elem*/) {
         SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
     });
 
-    m_width.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
+    m_width.RegisterChangeCallback([&](CVarValue<int>* /*elem*/) {
         SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
     });
 
-    m_fullscreen.RegisterChangeCallback([&](CVar<FullScreenMode::Enum>* elem) {
+    m_fullscreen.RegisterChangeCallback([&](CVarValue<FullScreenMode::Enum>* elem) {
         int flag = 0;
         switch (elem->GetValue())
         {

@@ -1,6 +1,8 @@
 
 #include <RedEngine/Core/Configuration/IniReader.hpp>
 #include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Configuration/ConfigurationUtils.hpp>
+#include <utility>
 #include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/Configuration.hpp"
 
@@ -8,19 +10,15 @@ namespace red
 {
 Configuration::Configuration() {}
 
-Configuration::~Configuration() {}
+Configuration::~Configuration()
+{
+    for (auto& pair : m_configVariable)
+    {
+        delete pair.second;
+    }
+}
 
 void Configuration::ParseCommandLine(int argc, char** argv) {}
-
-void Configuration::RegisterNewConfigVariable(ICVar* configVariable)
-{
-    m_configVariable.insert({configVariable->GetLongName(), configVariable});
-}
-
-void Configuration::NewCVar(ICVar* configVariable)
-{
-    GetInstance().RegisterNewConfigVariable(configVariable);
-}
 
 Configuration& Configuration::GetInstance()
 {
@@ -30,7 +28,7 @@ Configuration& Configuration::GetInstance()
 
 void Configuration::LoadConfigFile(std::filesystem::path path)
 {
-    auto iniCatKeyValues = utils::IniReader::ReadFromFile(path);
+    auto iniCatKeyValues = utils::IniReader::ReadFromFile(std::move(path));
 
     for (auto& iniCatKeyValue : iniCatKeyValues)
     {
@@ -38,21 +36,50 @@ void Configuration::LoadConfigFile(std::filesystem::path path)
         auto& key = std::get<1>(iniCatKeyValue);
         auto& value = std::get<2>(iniCatKeyValue);
 
-        auto foundVar = m_configVariable.find(cat + "_" + key);
+        auto foundVar = m_configVariable.find(ConfigurationUtils::GetLongName(cat, key));
         if (foundVar != m_configVariable.end())
         {
             // CVar already exist in memory (overriding)
-            foundVar->second->ChangeValue(value);
+            foundVar->second->ChangeValueString(value);
         }
         else
         {
             // CVar already doesn't exist in memory (inserting)
-            // FIXME Need to add handle in the CVar to be able to keep the current arch
-            //  Currently all the "m_configVariable" are const* because I passed "this" as a pointer
-            //  Need to add a level of indirection to it
-
-            RED_LOG_WARNING("Ini config line set but not used {}::{} = {}", cat, key, value);
+            RegisterNewConfigVariableFromString(key, value, cat);
         }
     }
+}
+
+void Configuration::RegisterNewConfigVariableFromString(const std::string& name,
+                                                        const std::string& defaultValue,
+                                                        const std::string& category)
+{
+    // Get the type from defaultValue string
+    // Bool
+    bool boolValue;
+    if (ConfigurationUtils::IsBool(defaultValue, boolValue))
+    {
+        RegisterNewConfigVariable(name, boolValue, category);
+        return;
+    }
+
+    // Int
+    int intValue;
+    if (ConfigurationUtils::IsInt(defaultValue, intValue))
+    {
+        RegisterNewConfigVariable(name, intValue, category);
+        return;
+    }
+
+    // Double
+    double doubleValue;
+    if (ConfigurationUtils::IsDouble(defaultValue, doubleValue))
+    {
+        RegisterNewConfigVariable(name, doubleValue, category);
+        return;
+    }
+
+    // Fall back to string value
+    RegisterNewConfigVariable(name, defaultValue, category);
 }
 }  // namespace red
