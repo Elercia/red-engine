@@ -1,36 +1,34 @@
 
-#include <RedEngine/Core/Configuration/IniReader.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
-#include "RedEngine/Core/Configuration/CVar.hpp"
+
 #include "RedEngine/Core/Configuration/Configuration.hpp"
+#include <RedEngine/Core/Configuration/IniReader.hpp>
+#include <RedEngine/Core/Engine.hpp>
+#include "RedEngine/Core/Configuration/CVar.hpp"
+
+#include <utility>
 
 namespace red
 {
 Configuration::Configuration() {}
 
-Configuration::~Configuration() {}
+Configuration::~Configuration()
+{
+    for (auto& pair : m_configVariable)
+    {
+        delete pair.second;
+    }
+}
 
 void Configuration::ParseCommandLine(int argc, char** argv) {}
 
-void Configuration::RegisterNewConfigVariable(ICVar* configVariable)
-{
-    m_configVariable.insert({configVariable->GetLongName(), configVariable});
-}
-
-void Configuration::NewCVar(ICVar* configVariable)
-{
-    GetInstance().RegisterNewConfigVariable(configVariable);
-}
-
-Configuration& Configuration::GetInstance()
-{
-    static Configuration instance;
-    return instance;
-}
-
 void Configuration::LoadConfigFile(std::filesystem::path path)
 {
-    auto iniCatKeyValues = utils::IniReader::ReadFromFile(path);
+    GetRedSubEngine<Configuration>()->LoadConfigFileInternal(std::move(path));
+}
+
+void Configuration::LoadConfigFileInternal(std::filesystem::path path)
+{
+    auto iniCatKeyValues = utils::IniReader::ReadFromFile(std::move(path));
 
     for (auto& iniCatKeyValue : iniCatKeyValues)
     {
@@ -38,7 +36,7 @@ void Configuration::LoadConfigFile(std::filesystem::path path)
         auto& key = std::get<1>(iniCatKeyValue);
         auto& value = std::get<2>(iniCatKeyValue);
 
-        auto foundVar = m_configVariable.find(cat + "_" + key);
+        auto foundVar = m_configVariable.find(ConfigurationUtils::GetLongName(cat, key));
         if (foundVar != m_configVariable.end())
         {
             // CVar already exist in memory (overriding)
@@ -47,12 +45,34 @@ void Configuration::LoadConfigFile(std::filesystem::path path)
         else
         {
             // CVar already doesn't exist in memory (inserting)
-            // FIXME Need to add handle in the CVar to be able to keep the current arch
-            //  Currently all the "m_configVariable" are const* because I passed "this" as a pointer
-            //  Need to add a level of indirection to it
-
-            RED_LOG_WARNING("Ini config line set but not used {}::{} = {}", cat, key, value);
+            auto* cVarValue = new CVarValue(key, cat, value);
+            m_configVariable.insert({ConfigurationUtils::GetLongName(cat, key), cVarValue});
         }
     }
+}
+
+CVarValue* Configuration::NewConsoleVariableDeclaration(const std::string& name,
+                                                        const std::string& category,
+                                                        const std::string& defaultValue)
+{
+    return GetRedSubEngine<Configuration>()->NewConsoleVariableDeclarationInternal(name, category,
+                                                                                   defaultValue);
+}
+
+CVarValue* Configuration::NewConsoleVariableDeclarationInternal(const std::string& name,
+                                                                const std::string& category,
+                                                                const std::string& defaultValue)
+{
+    auto configName = ConfigurationUtils::GetLongName(category, name);
+    auto foundConfigValue = m_configVariable.find(configName);
+    if (foundConfigValue != m_configVariable.end())
+    {
+        return foundConfigValue->second;
+    }
+
+    auto* cVarValue = new CVarValue(name, category, defaultValue);
+    m_configVariable.insert({configName, cVarValue});
+
+    return cVarValue;
 }
 }  // namespace red

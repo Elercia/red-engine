@@ -1,49 +1,37 @@
 
-#include <sstream>
-
 namespace red
 {
-template <typename Type>
-CVar<Type>::CVar(std::string name, Type defaultValue, std::string category)
-    : ICVar(name, category)
-    , m_defaultValue(defaultValue)
-    , m_currentValue(defaultValue)
-    , m_valueChangeCallback()
+template <class Type>
+CVar<Type>::CVar(std::string name, std::string category, Type defaultValue)
 {
+    Configuration::NewConsoleVariableDeclaration(this, name, category, defaultValue);
 }
 
-template <typename Type>
-void CVar<Type>::ChangeValue(Type newValue)
-{
-    m_currentValue = newValue;
-
-    m_valueChangeCallback(this);
-}
-
-template <typename Type>
-void CVar<Type>::Reset()
-{
-    m_currentValue = m_defaultValue;
-
-    m_valueChangeCallback(this);
-}
-
-template <typename Type>
+template <class Type>
 Type CVar<Type>::GetValue()
 {
-    return m_currentValue;
+    static_assert(has_deserialization_overload<Type>::value,
+                  "No deserialization function provided for console type T");
+
+    Type e;
+    red_deserialize_configuration_type(m_value->m_currentValue, e);
+
+    return e;
 }
 
-template <typename Type>
-void CVar<Type>::RegisterChangeCallback(std::function<void(CVar<Type>* variable)> callback)
+template <class Type>
+CVarValue* CVar<Type>::operator->()
 {
-    m_valueChangeCallback = callback;
+    return m_value;
 }
 
-template <typename Type>
-void CVar<Type>::ChangeValue(std::string newValueStr)
+template <class Type>
+void CVar<Type>::ChangeValue(Type value)
 {
-    std::istringstream iss(newValueStr);
-    iss >> m_currentValue;
+    static_assert(has_serialization_overload<Type>::value,
+                  "No serialization function provided for console type T");
+
+    std::string stringValue = red_serialize_configuration_type(value);
+    m_value->ChangeValue(stringValue);
 }
 }  // namespace red

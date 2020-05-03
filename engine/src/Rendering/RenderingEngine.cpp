@@ -10,23 +10,12 @@
 
 namespace red
 {
-RenderingEngine::RenderingEngine()
-{
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-    {
-        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
-        SDL_Quit();
-        RED_ABORT("Cannot initialize SDL2");
-    }
-
-    CreateNewWindow();
-
-    InitRenderer();
-}
+RenderingEngine::RenderingEngine() {}
 
 RenderingEngine::~RenderingEngine()
 {
-    SDL_DestroyRenderer(m_renderer);
+    if (m_renderer != nullptr)
+        SDL_DestroyRenderer(m_renderer);
 
     m_window.reset(nullptr);
 
@@ -84,6 +73,19 @@ void RenderingEngine::Render(Sprite* sprite, const Transform& transform)
 
         SDL_RenderCopy(m_renderer, sprite->m_texture->m_sdlTexture, nullptr, &dest);
     }
+}
+void RenderingEngine::Init()
+{
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    {
+        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
+        SDL_Quit();
+        RED_ABORT("Cannot initialize SDL2");
+    }
+
+    CreateNewWindow();
+
+    InitRenderer();
 }
 
 }  // namespace red

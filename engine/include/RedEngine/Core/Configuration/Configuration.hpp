@@ -4,12 +4,13 @@
 #include <unordered_map>
 #include <string>
 #include <RedEngine/Core/SubEngine.hpp>
-
-#include "CVar.hpp"
+#include <RedEngine/Core/Configuration/ConfigurationSerializator.hpp>
 
 namespace red
 {
-class ICVar;
+template <typename Type>
+class CVar;
+class CVarValue;
 
 class Configuration : public SubEngine
 {
@@ -17,21 +18,23 @@ public:
     Configuration();
     ~Configuration();
 
-    void LoadConfigFile(std::filesystem::path path);
-
     void ParseCommandLine(int argc, char* argv[]);
 
-    void RegisterNewConfigVariable(ICVar* configVariable);
-
     template <typename T>
-    void ChangeVar(std::string name, std::string category, T value);
+    static void NewConsoleVariableDeclaration(CVar<T>* cvar, std::string name, std::string category,
+                                              T defaultValue);
 
-    static void NewCVar(ICVar* configVariable);
-
-    static Configuration& GetInstance();
+    static void LoadConfigFile(std::filesystem::path path);
 
 private:
-    std::unordered_map<std::string, ICVar*> m_configVariable;
+    void LoadConfigFileInternal(std::filesystem::path path);
+    static CVarValue* NewConsoleVariableDeclaration(const std::string& name,
+                                                    const std::string& category,
+                                                    const std::string& defaultValue);
+    CVarValue* NewConsoleVariableDeclarationInternal(const std::string& name,
+                                                     const std::string& category,
+                                                     const std::string& defaultValue);
+    std::unordered_map<std::string, CVarValue*> m_configVariable;
 };
 
 }  // namespace red
