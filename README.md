@@ -1,10 +1,15 @@
 ![CMake Build Matrix](https://github.com/Elercia/red-engine/workflows/CMake%20Build%20Matrix/badge.svg?branch=master)
 # Red Engine
 
-Welcome to RedEngine my hobby-projet to learn and experiment things around C++ and game developement. This project has no time limit and is only made on my personal time.
+Welcome to RedEngine my hobby-projet to learn and experiment things 
+around C++ and game developement. 
+This project has no time limit and is only made on my personal time.
 
 ## Goals
-The main goal of this projet is to learn modern C++ and game engine development. This is my first try at making something around this, so forgive me if this is not an AAA project. My goal here is to make something usable for small 3D games.
+The main goal of this projet is to learn modern C++ and game engine development. 
+This is my first try at making something around this, 
+so forgive me if this is not an AAA project. 
+My goal here is to make something usable for small 2D games.
 
 ### Goal features
 
