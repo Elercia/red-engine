@@ -1,13 +1,15 @@
 #include <RedEngine/Debug/Debug.hpp>
 #include <RedEngine/Rendering/Window.hpp>
 #include <iostream>
+#include <RedEngine/Debug/Logger/Logger.hpp>
 
 namespace red
 {
-Window::Window(std::string title) : m_title(std::move(title))
+Window::Window() : m_title("Hello Red-Engine")
 {
     m_window = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                800, 600, SDL_WINDOW_SHOWN);
+                                m_width.GetValue(), m_height.GetValue(),
+                                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     if (m_window == nullptr)
     {
@@ -15,21 +17,21 @@ Window::Window(std::string title) : m_title(std::move(title))
         RED_ABORT("Error")
     }
 
-    m_height.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
+    RED_LOG_INFO("Create new window");
+
+    m_height->OnValueChange([&](CVarValue* /*elem*/) {
         SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
     });
 
-    m_width.RegisterChangeCallback([&](CVar<int>* /*elem*/) {
+    m_width->OnValueChange([&](CVarValue* /*elem*/) {
         SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
     });
 
-    m_fullscreen.RegisterChangeCallback([&](CVar<FullScreenMode::Enum>* elem) {
+    m_fullscreen->OnValueChange([&](CVarValue* /*elem*/) {
         int flag = 0;
-        switch (elem->GetValue())
+        switch (m_fullscreen.GetValue())
         {
             case FullScreenMode::FULLSCREEN:
-                flag = SDL_WINDOW_FULLSCREEN;
-                break;
             case FullScreenMode::BORDER_LESS:
                 flag = SDL_WINDOW_FULLSCREEN;
                 break;
@@ -95,4 +97,5 @@ WindowInfo Window::GetWindowInfo()
 
     return info;
 }
+SDL_Window* Window::GetSDLWindow() { return m_window; }
 }  // namespace red

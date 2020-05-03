@@ -1,41 +1,37 @@
-
 #include <array>
-#include <cassert>
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <numeric>
 #include <thread>
+#include <RedEngine/Core/Time/Time.hpp>
 
-#include <optick.h>
-
-#include "RedEngine/Application.hpp"
+#include "RedEngine/Application/Application.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Debug/Debug.hpp"
 #include "RedEngine/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/RenderingEngine.hpp"
-#include "RedEngine/Rendering/RenderingSystem.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Core/Configuration/Configuration.hpp"
+#include "RedEngine/Debug/Profiler.hpp"
 
 namespace red
 {
-Application::Application() : m_world(nullptr)
+Application::Application()
 {
-    OPTICK_APP("Main Application")
+    PROFILER_APP("Main Application")
     SetLogLevel(LogLevel::LEVEL_INFO);
 }
 
-Application::~Application() { OPTICK_SHUTDOWN(); }
+Application::~Application() { PROFILER_SHUTDOWN(); }
 
 bool Application::Run()
 {
-    RED_ASSERT(m_world != nullptr, "At least one world is required");
+    RED_ASSERT(m_world != nullptr, "The application need a level to start");
 
-    std::array<float, 10> frameTimes{};
+    std::array<double, 10> frameTimes{};
     uint8_t frameIndex = 0;
     auto frameStartTime = std::chrono::system_clock::now();
-    const auto startTime = std::chrono::system_clock::now();
 
     bool isFullScreen = false;
 
@@ -43,21 +39,23 @@ bool Application::Run()
     bool quit = false;
     while (!quit)
     {
-        OPTICK_FRAME("MainThread")
+        PROFILER_FRAME("MainThread");
 
         // Compute the delta time
         auto currentTime = std::chrono::system_clock::now();
-        std::chrono::duration<float, std::milli> diff = currentTime - frameStartTime;
+        std::chrono::duration<double, std::milli> diff = currentTime - frameStartTime;
 
         frameTimes[frameIndex] = diff.count();
         frameIndex = (frameIndex + 1u) % frameTimes.size();
         frameStartTime = currentTime;
 
-        float deltaTime =
-            std::accumulate(frameTimes.begin(), frameTimes.end(), 1.f, std::plus<float>()) /
-            10.f;  // calculate the mean of delta times (this return at least 1.f)
+        double deltaTime =
+            std::accumulate(frameTimes.begin(), frameTimes.end(), 1., std::plus<double>()) /
+            10.;  // calculate the mean of delta times (this return at least 1.f)
 
         RED_LOG_TRACE("Game FPS : {} delta is : {}", 1000 / deltaTime, deltaTime);
+
+        Time::DeltaTime(deltaTime);
 
         // Update the inputs
         SDL_Event event;
@@ -82,12 +80,20 @@ bool Application::Run()
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym)
                     {
-                        case SDLK_f:
+                        case SDLK_f:  // Toggle fullscreen
+                        {
                             isFullScreen = !isFullScreen;
-                            Configuration::GetInstance().ChangeVar<FullScreenMode::Enum>(
-                                "fullscreen", "window",
-                                isFullScreen ? FullScreenMode::FULLSCREEN
-                                             : FullScreenMode::WINDOWED);
+                            CVar<FullScreenMode::Enum> fullScreenMode{"fullscreen_mode", "window",
+                                                                      FullScreenMode::FULLSCREEN};
+                            fullScreenMode.ChangeValue(isFullScreen ? FullScreenMode::FULLSCREEN
+                                                                    : FullScreenMode::WINDOWED);
+                        }
+                        break;
+                        case SDLK_PLUS:  // Scale the time
+                            Time::TimeScale(Time::TimeScale() + 0.1);
+                            break;
+                        case SDLK_MINUS:  // Scale the time
+                            Time::TimeScale(Time::TimeScale() - 0.1);
                             break;
                     }
                     break;
@@ -95,24 +101,39 @@ bool Application::Run()
         }
 
         // update the world
-        m_world->Update(deltaTime);
+        m_world->Update();
     }
 
     return true;
 }
 
-World& Application::CreateWorld(bool registerConfiguredSystems)
+void Application::CreateWorld()
 {
     RED_ASSERT(m_world == nullptr, "Only one world is allowed");
 
     m_world = std::make_unique<World>();
+}
 
-    if (registerConfiguredSystems)
+void Application::LoadLevel(Level* level)
+{
+    if (m_currentLevel != nullptr)
     {
-        m_world->AddSystem<RenderingSystem>();
+        m_currentLevel->Finalize();
     }
 
-    return *m_world;
+    // reset the old level
+    m_currentLevel.reset(level);
+
+    if (m_world == nullptr)
+    {
+        CreateWorld();
+    }
+
+    m_world->UnloadSystems();
+    m_world->UnloadTransientEntities();
+
+    m_currentLevel->Init(*m_world);
 }
+World& Application::GetWorld() { return *m_world; }
 
 }  // namespace red

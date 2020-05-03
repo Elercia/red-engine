@@ -34,6 +34,10 @@ public:
     template <typename ComponentType_t>
     ComponentType_t* GetComponent(Entity* entity);
 
+    void MoveComponents(EntityId_t from, EntityId_t to);
+
+    void UnloadTransientComponents();
+
 private:
     ComponentPool_t& GetComponentPool(ComponentName_t componentName);
     void StoreComponent(Entity* owner, Component* component);

@@ -1,22 +1,35 @@
 #pragma once
 
+#include <map>
 #include <memory>
 #include <vector>
+#include <RedEngine/Core/SubEngine.hpp>
+
+#include <RedEngine/Resources/Resource.hpp>
+#include <RedEngine/Core/Components/Sprite.hpp>
+#include <RedEngine/Core/Components/Transform.hpp>
 
 namespace red
 {
-class Mesh;
+class Sprite;
+class Texture2D;
 
-class ResourceEngine
+class ResourceEngine : public SubEngine
 {
 public:
     ResourceEngine();
     ~ResourceEngine();
 
-    bool ImportMesh(Mesh* mesh);
-    void FreeMesh(Mesh* mesh);
+    static std::shared_ptr<Texture2D> LoadTexture(const std::string& path);
+
+    void ReleaseTexture(Texture2D* texture, bool erase = true);
 
 private:
-    std::vector<Mesh*> m_meshes;
+    std::shared_ptr<Texture2D> LoadTextureInternal(const std::string& path);
+
+    void AddResourceToLoadedResources(ResourceType::Enum type,
+                                      const std::shared_ptr<Texture2D>& resource);
+
+    std::map<ResourceType::Enum, std::vector<std::shared_ptr<Resource>>> m_loadedResources;
 };
 }  // namespace red

@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include <map>
+#include <filesystem>
 
-#include "../../../Core/Engine.hpp"
 
 namespace red
 {
@@ -22,8 +22,11 @@ void Logger::LogInternal(LogLevel::Enum level, int line, const char* file,
     if (level >= m_logLevel)
     {
         std::string levelAsString = logLevelAsString.at(level);
+        std::string fileFormat = std::string(file);
+        fileFormat = fileFormat.substr(
+            fileFormat.find_last_of(std::filesystem::path::preferred_separator) + 1);
         std::string levelFormat =
-            fmt::format(FMT_STRING("[FILE:{}][LINE:{}] [{:<7}] "), file, line, levelAsString);
+            fmt::format(FMT_STRING("[FILE:{}][LINE:{}] [{:<7}] "), fileFormat, line, levelAsString);
 
         std::string logString = fmt::format(format, std::forward<Args>(args)...);
 

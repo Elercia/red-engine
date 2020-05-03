@@ -9,18 +9,21 @@ namespace red
 class Entity;
 
 // RED_COMPONENT
-#define RED_COMPONENT(NAME)                                                          \
-public:                                                                              \
-    constexpr static red::ComponentName_t ComponentName = NAME;                                \
-    virtual red::ComponentName_t GetComponentName() const { return ComponentName; }; \
-                                                                                     \
+#define RED_COMPONENT(NAME)                                                                   \
+    friend class RenderingEngine;                                                             \
+    friend class ResourceEngine;                                                              \
+                                                                                              \
+public:                                                                                       \
+    constexpr static red::ComponentName_t ComponentName = NAME;                               \
+    virtual red::ComponentName_t GetComponentName() const override { return ComponentName; }; \
+                                                                                              \
 private:
 // RED_COMPONENT
 
 class Component
 {
 public:
-    Component(Entity* entity);
+    explicit Component(Entity* entity);
     Component(Component&&) = default;
     Component(const Component&) = delete;
     Component& operator=(const Component&) = delete;
@@ -28,11 +31,11 @@ public:
 
     virtual ~Component() = default;
 
-    ComponentId_t GetComponentId() const;
+    [[nodiscard]] ComponentId_t GetComponentId() const;
 
     [[nodiscard]] Entity* GetOwner() const;
 
-    virtual red::ComponentName_t GetComponentName() const = 0;
+    [[nodiscard]] virtual red::ComponentName_t GetComponentName() const = 0;
 
 protected:
     ComponentId_t m_componentId;

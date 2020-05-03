@@ -1,44 +1,44 @@
 #pragma once
 
 #include <memory>
+#include <tuple>
+#include <type_traits>
 
 #include "../Memory/MemoryManager.hpp"
+#include "../Core/Configuration/Configuration.hpp"
+#include "../Debug/Logger/Logger.hpp"
+#include "../Resources/ResourceEngine.hpp"
+#include "../Rendering/RenderingEngine.hpp"
 #include "EngineConfig.hpp"
 
 namespace red
 {
-class Entity;
-class RenderingEngine;
-class ResourceEngine;
-class Logger;
-class Configuration;
-
-class Engine final
+/// The engine regroup all the singletons class that are needed by the engine
+/// The placement order in the struct define the creation order, and so the dependencies
+class Engine
 {
 public:
-    Engine();
-    Engine(const Engine&) = delete;
-    Engine(Engine&&) = default;
-    ~Engine();
+    template <class SubEngineType>
+    SubEngineType* Get()
+    {
+        return &(std::get<SubEngineType>(m_subEngines));
+    }
 
-    Engine& operator=(const Engine&) = delete;
-    Engine& operator=(Engine&&) = default;
-
-    const MemoryManager& GetMemoryManager();
-
-    RenderingEngine* GetRenderingEngine();
-    ResourceEngine* GetResourceEngine();
-
-    static Engine& GetInstance();
+    static void Init();
 
 private:
-    MemoryManager m_memoryManager;
-    RenderingEngine* m_renderingEngine;
-    ResourceEngine* m_resourceEngine;
+    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine>
+        m_subEngines{};
 
-    static Engine* s_instance;
+    void InitAllSubEngines();
 };
 
-}  // namespace red
+Engine& GetRedInstance();
 
-red::Engine& GetRedInstance();
+template <class SubEngineType>
+SubEngineType* GetRedSubEngine()
+{
+    return GetRedInstance().Get<SubEngineType>();
+}
+
+}  // namespace red

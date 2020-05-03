@@ -3,10 +3,11 @@
 #include <cstddef>
 
 #include "MemoryProfiler.hpp"
+#include <RedEngine/Core/SubEngine.hpp>
 
 namespace red
 {
-class MemoryManager
+class MemoryManager : public SubEngine
 {
 public:
     MemoryManager();

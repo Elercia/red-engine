@@ -14,8 +14,13 @@ file(GLOB_RECURSE HEADERS
         ${INCLUDE_FOLDER_INTERN}/*.hpp
         )
 
+# Headers files
+file(GLOB_RECURSE INLINE_HEADERS
+        ${INCLUDE_FOLDER_INTERN}/*.inl
+        )
+
 # red_engine_lib
-add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS})
+add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS} ${INLINE_HEADERS})
 
 target_include_directories(red_engine_lib
         PUBLIC
@@ -38,9 +43,24 @@ target_link_libraries(red_engine_lib
         PUBLIC
         debug_break)
 
-# Optick Profiler
-target_link_libraries(red_engine_lib
-        PRIVATE
-        OptickCore)
+option(RED_USE_PROFILER "Enable application profiler usage" ON)
+
+if (MINGW OR UNIX)
+    set(RED_USE_PROFILER FALSE CACHE INTERNAL "Use the red engine profiler" FORCE)
+else ()
+    set(RED_USE_PROFILER ${RED_USE_PROFILER} CACHE INTERNAL "Use the red engine profiler" FORCE)
+endif ()
+
+message(STATUS "Use red-engine profiler : ${RED_USE_PROFILER}")
+if (RED_USE_PROFILER)
+    # Optick Profiler
+    target_link_libraries(red_engine_lib
+            PRIVATE
+            OptickCore)
+
+    target_compile_definitions(red_engine_lib
+            PUBLIC
+            RED_USE_PROFILER)
+endif ()
 
 red_set_compile_definition(red_engine_lib)

@@ -32,7 +32,7 @@ set_target_properties(red_engine_test
 add_custom_command(TARGET red_engine_test POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources $<TARGET_FILE_DIR:red_engine_test>/resources)
 
-add_optick(red_engine_test)
+red_add_optick(red_engine_test)
 
 include(CTest)
 include(Catch)
