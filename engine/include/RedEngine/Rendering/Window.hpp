@@ -19,8 +19,33 @@ struct FullScreenMode
     };
 };
 
-RED_NEW_CONFIG_TYPE_SERIALIZATOR(FullScreenMode::Enum) { return ""; }
-RED_NEW_CONFIG_TYPE_DESERIALIZATOR(FullScreenMode::Enum) { typeValue = FullScreenMode::FULLSCREEN; }
+RED_NEW_CONFIG_TYPE_SERIALIZATOR(FullScreenMode::Enum)
+{
+    switch (typeValue)
+    {
+        case FullScreenMode::FULLSCREEN:
+            return "0";
+        case FullScreenMode::BORDER_LESS:
+            return "1";
+        default:
+            return "2";
+    }
+}
+RED_NEW_CONFIG_TYPE_DESERIALIZATOR(FullScreenMode::Enum)
+{
+    if (stringValue == "0")
+    {
+        typeValue = FullScreenMode::FULLSCREEN;
+    }
+    else if (stringValue == "1")
+    {
+        typeValue = FullScreenMode::BORDER_LESS;
+    }
+    else
+    {
+        typeValue = FullScreenMode::WINDOWED;
+    }
+}
 
 struct WindowInfo
 {

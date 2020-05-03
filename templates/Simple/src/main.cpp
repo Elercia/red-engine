@@ -5,10 +5,10 @@
 
 int main(int argc, char* argv[])
 {
-    red::Engine::Init();
+    red::Configuration::LoadConfigFile("resources/config.ini");
+    red::GetRedSubEngine<red::Configuration>()->ParseCommandLine(argc, argv);
 
-    red::Configuration::GetInstance().LoadConfigFile("resources/config.ini");
-    red::Configuration::GetInstance().ParseCommandLine(argc, argv);
+    red::Engine::Init();
 
     red::Application app;
 

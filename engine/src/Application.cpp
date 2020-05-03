@@ -81,15 +81,14 @@ bool Application::Run()
                     switch (event.key.keysym.sym)
                     {
                         case SDLK_f:  // Toggle fullscreen
+                        {
                             isFullScreen = !isFullScreen;
-                            // TODO change this to match the configuration changes
-                            //                            Configuration::GetInstance().ChangeVar<FullScreenMode::Enum>(
-                            //                                "fullscreen", "window",
-                            //                                isFullScreen ?
-                            //                                FullScreenMode::FULLSCREEN
-                            //                                             :
-                            //                                             FullScreenMode::WINDOWED);
-                            break;
+                            CVar<FullScreenMode::Enum> fullScreenMode{"fullscreen_mode", "window",
+                                                                      FullScreenMode::FULLSCREEN};
+                            fullScreenMode.ChangeValue(isFullScreen ? FullScreenMode::FULLSCREEN
+                                                                    : FullScreenMode::WINDOWED);
+                        }
+                        break;
                         case SDLK_PLUS:  // Scale the time
                             Time::TimeScale(Time::TimeScale() + 0.1);
                             break;

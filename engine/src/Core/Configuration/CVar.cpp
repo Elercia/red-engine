@@ -14,9 +14,16 @@ CVarValue::CVarValue(std::string name, std::string category, std::string default
 {
 }
 
-void CVarValue::ChangeValue(std::string newValue) { m_currentValue = std::move(newValue); }
+void CVarValue::ChangeValue(std::string newValue)
+{
+    m_currentValue = std::move(newValue);
+    for (auto& func : m_valueChangeCallback)
+    {
+        func(this);
+    }
+}
 
-void CVarValue::Reset() { m_currentValue = m_defaultValue; }
+void CVarValue::Reset() { ChangeValue(m_defaultValue); }
 
 std::string CVarValue::GetName() const { return m_name; }
 
@@ -26,7 +33,7 @@ std::string CVarValue::GetLongName() const
 {
     return ConfigurationUtils::GetLongName(m_category, m_name);
 }
-size_t CVarValue::OnValueChange(std::function<void(CVarValue *)> callback)
+size_t CVarValue::OnValueChange(std::function<void(CVarValue*)> callback)
 {
     auto index = m_valueChangeCallback.size();
     m_valueChangeCallback.push_back(std::move(callback));

@@ -49,6 +49,7 @@ public:
     ~CVar() = default;
 
     [[nodiscard]] inline Type GetValue();
+    void ChangeValue(Type value);
 
     CVarValue* operator->();
 
