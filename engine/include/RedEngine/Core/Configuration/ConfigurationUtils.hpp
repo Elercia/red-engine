@@ -4,7 +4,8 @@
 
 namespace red
 {
-class ICVarValue;
+class CVarValue;
+
 class ConfigurationUtils
 {
 public:
@@ -16,6 +17,6 @@ public:
     ~ConfigurationUtils() = delete;
 
     static std::string GetLongName(const std::string& category, const std::string& key);
-    static std::string GetLongName(const ICVarValue* cVar);
+    static std::string GetLongName(const CVarValue* cVar);
 };
 }  // namespace red

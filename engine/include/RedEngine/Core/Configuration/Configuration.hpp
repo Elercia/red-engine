@@ -4,14 +4,15 @@
 #include <unordered_map>
 #include <string>
 #include <RedEngine/Core/SubEngine.hpp>
+#include <RedEngine/Core/Configuration/ConfigurationSerializator.hpp>
+
+template <class T>
+T GetRedSubEngine();
 
 namespace red
 {
-class ICVarValue;
-
-template <class Type>
+template <typename Type>
 class CVar;
-template <class Type>
 class CVarValue;
 
 class Configuration : public SubEngine
@@ -20,29 +21,23 @@ public:
     Configuration();
     ~Configuration();
 
-    void LoadConfigFile(std::filesystem::path path);
-
     void ParseCommandLine(int argc, char* argv[]);
 
     template <typename T>
-    void ChangeVar(std::string name, std::string category, T value);
+    static void NewConsoleVariableDeclaration(CVar<T>* cvar, std::string name, std::string category,
+                                              T defaultValue);
 
-    template <class Type>
-    static void NewCVar(CVar<Type>* cvar, std::string name, Type defaultValue,
-                        std::string category);
-
-    static Configuration& GetInstance();
+    static void LoadConfigFile(std::filesystem::path path);
 
 private:
-    void RegisterNewConfigVariableFromString(const std::string& name,
-                                             const std::string& defaultValue,
-                                             const std::string& category);
-
-    template <class Type>
-    CVarValue<Type>* RegisterNewConfigVariable(const std::string& name, Type defaultValue,
-                                               const std::string& category);
-
-    std::unordered_map<std::string, ICVarValue*> m_configVariable;
+    void LoadConfigFileInternal(std::filesystem::path path);
+    static CVarValue* NewConsoleVariableDeclaration(const std::string& name,
+                                                    const std::string& category,
+                                                    const std::string& defaultValue);
+    CVarValue* NewConsoleVariableDeclarationInternal(const std::string& name,
+                                                     const std::string& category,
+                                                     const std::string& defaultValue);
+    std::unordered_map<std::string, CVarValue*> m_configVariable;
 };
 
 }  // namespace red

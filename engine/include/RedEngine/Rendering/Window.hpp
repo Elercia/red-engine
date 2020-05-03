@@ -19,6 +19,9 @@ struct FullScreenMode
     };
 };
 
+RED_NEW_CONFIG_TYPE_SERIALIZATOR(FullScreenMode::Enum) { return ""; }
+RED_NEW_CONFIG_TYPE_DESERIALIZATOR(FullScreenMode::Enum) { typeValue = FullScreenMode::FULLSCREEN; }
+
 struct WindowInfo
 {
     int width;
@@ -50,26 +53,9 @@ private:
     std::string m_title{"Hello Red-Engine"};
     SDL_Window *m_window;
 
-    CVar<int> m_height{"height", 600, "window"};
-    CVar<int> m_width{"width", 800, "window"};
-    CVar<FullScreenMode::Enum> m_fullscreen{"fullscreen_mode", FullScreenMode::WINDOWED, "window"};
+    CVar<int> m_height{"height", "window", 600};
+    CVar<int> m_width{"width", "window", 800};
+    CVar<FullScreenMode::Enum> m_fullscreen{"fullscreen_mode", "window", FullScreenMode::WINDOWED};
 };
 
 }  // namespace red
-
-// Fixme Maybe add this into a macro
-//  This is used to be able to add a Enum into a CVar
-template <class E>
-struct enum_traits
-{
-    friend std::istream &operator>>(std::istream &is, E &e)
-    {
-        long i;  // or intmax_t, whatever
-        std::istream &r = is >> i;
-        e = E(i);
-        return r;
-    }
-};
-template struct enum_traits<red::FullScreenMode::Enum>;
-
-std::istream &operator>>(std::istream &, red::FullScreenMode::Enum &);

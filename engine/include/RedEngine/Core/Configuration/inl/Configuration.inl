@@ -3,44 +3,15 @@
 namespace red
 {
 template <typename T>
-void Configuration::ChangeVar(std::string name, std::string category, T value)
+void Configuration::NewConsoleVariableDeclaration(CVar<T>* cvar, std::string name,
+                                                  std::string category, T defaultValue)
 {
-    auto it = m_configVariable.find(category + "_" + name);
+    static_assert(has_serialization_overload<T>::value,
+                  "No serialization function provided for console type T");
 
-    if (it == m_configVariable.end())
-    {
-        return;
-    }
+    std::string stringValue = red_serialize_configuration_type(defaultValue);
 
-    auto casted = static_cast<CVarValue<T>*>(it->second);
-
-    casted->ChangeValue(value);
-}
-
-template <class Type>
-void Configuration::NewCVar(CVar<Type>* cvar, std::string name, Type defaultValue,
-                            std::string category)
-{
-    auto* cVarValue = GetInstance().RegisterNewConfigVariable(name, defaultValue, category);
-
+    auto* cVarValue = Configuration::NewConsoleVariableDeclaration(name, category, stringValue);
     cvar->m_value = cVarValue;
-}
-
-template <class Type>
-CVarValue<Type>* Configuration::RegisterNewConfigVariable(const std::string& name,
-                                                          Type defaultValue,
-                                                          const std::string& category)
-{
-    auto it = m_configVariable.find(ConfigurationUtils::GetLongName(category, name));
-    if (it == m_configVariable.end())
-    {
-        auto* cVarValue = new CVarValue<Type>{name, defaultValue, category};
-        m_configVariable.insert({ConfigurationUtils::GetLongName(category, name), cVarValue});
-        return cVarValue;
-    }
-    else
-    {
-        return static_cast<CVarValue<Type>*>(it->second);
-    }
 }
 }  // namespace red

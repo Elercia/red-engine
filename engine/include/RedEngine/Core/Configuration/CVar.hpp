@@ -3,73 +3,57 @@
 #include <string>
 #include <type_traits>
 #include <functional>
+#include <vector>
 
-#include "../../Memory/ObjectHandle.hpp"
 #include "Configuration.hpp"
 
 namespace red
 {
-class ICVarValue
+class CVarValue
 {
+    template <class Type>
+    friend class CVar;
+    friend Configuration;
+
 public:
-    ICVarValue(std::string name, std::string category);
-    virtual ~ICVarValue() = default;
+    CVarValue(std::string name, std::string category, std::string defaultValue);
+    ~CVarValue() = default;
+
+    void ChangeValue(std::string newValue);
+    void Reset();
 
     [[nodiscard]] std::string GetName() const;
     [[nodiscard]] std::string GetCategory() const;
     [[nodiscard]] std::string GetLongName() const;
 
-    virtual void ChangeValueString(std::string newValueStr) = 0;
-
-protected:
-    std::string m_name;
-    std::string m_category;
-};
-
-template <typename Type>
-class CVarValue : public ICVarValue
-{
-    static_assert(std::is_copy_assignable<Type>::value);
-    static_assert(std::is_copy_constructible<Type>::value);
-
-public:
-    CVarValue(std::string name, Type defaultValue, std::string category = "default");
-    ~CVarValue() override = default;
-
-    Type GetValue();
-
-    void ChangeValueString(std::string newValueStr) override;
-    void ChangeValue(Type newValue);
-    void Reset();
-
-    void RegisterChangeCallback(std::function<void(CVarValue<Type>* variable)> callback);
+    size_t OnValueChange(std::function<void(CVarValue* variableValue)> callback);
 
 private:
-    Type m_defaultValue;
-    Type m_currentValue;
+    std::string m_defaultValue;
+    std::string m_currentValue;
 
-    std::function<void(CVarValue<Type>* variable)> m_valueChangeCallback;
+    std::string m_name;
+    std::string m_category;
+
+    std::vector<std::function<void(CVarValue* variable)>> m_valueChangeCallback;
 };
 
 template <class Type>
 class CVar
 {
-    friend class Configuration;
+    friend CVarValue;
+    friend Configuration;
 
 public:
-    CVar(std::string name, Type defaultValue, std::string category);
+    CVar(std::string name, std::string category, Type defaultValue);
     ~CVar() = default;
 
-    inline Type GetValue();
+    [[nodiscard]] inline Type GetValue();
 
-    inline void ChangeValueString(std::string newValueStr);
-    inline void ChangeValue(Type newValue);
-    inline void Reset();
-
-    inline void RegisterChangeCallback(std::function<void(CVarValue<Type>* variable)> callback);
+    CVarValue* operator->();
 
 private:
-    CVarValue<Type>* m_value;
+    CVarValue* m_value;
 };
 
 }  // namespace red

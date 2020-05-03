@@ -28,6 +28,8 @@ public:
     void DebugDrawRect();
     void Render(Sprite* sprite, const Transform& transform);
 
+    void Init() override;
+
 private:
     std::unique_ptr<Window> m_window;
     SDL_Renderer* m_renderer;

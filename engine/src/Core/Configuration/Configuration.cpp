@@ -1,10 +1,11 @@
 
-#include <RedEngine/Core/Configuration/IniReader.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
-#include <RedEngine/Core/Configuration/ConfigurationUtils.hpp>
-#include <utility>
-#include "RedEngine/Core/Configuration/CVar.hpp"
+
 #include "RedEngine/Core/Configuration/Configuration.hpp"
+#include <RedEngine/Core/Configuration/IniReader.hpp>
+#include <RedEngine/Core/Engine.hpp>
+#include "RedEngine/Core/Configuration/CVar.hpp"
+
+#include <utility>
 
 namespace red
 {
@@ -20,13 +21,12 @@ Configuration::~Configuration()
 
 void Configuration::ParseCommandLine(int argc, char** argv) {}
 
-Configuration& Configuration::GetInstance()
+void Configuration::LoadConfigFile(std::filesystem::path path)
 {
-    static Configuration instance;
-    return instance;
+    GetRedSubEngine<Configuration>()->LoadConfigFileInternal(std::move(path));
 }
 
-void Configuration::LoadConfigFile(std::filesystem::path path)
+void Configuration::LoadConfigFileInternal(std::filesystem::path path)
 {
     auto iniCatKeyValues = utils::IniReader::ReadFromFile(std::move(path));
 
@@ -40,46 +40,39 @@ void Configuration::LoadConfigFile(std::filesystem::path path)
         if (foundVar != m_configVariable.end())
         {
             // CVar already exist in memory (overriding)
-            foundVar->second->ChangeValueString(value);
+            foundVar->second->ChangeValue(value);
         }
         else
         {
             // CVar already doesn't exist in memory (inserting)
-            RegisterNewConfigVariableFromString(key, value, cat);
+            auto* cVarValue = new CVarValue(key, cat, value);
+            m_configVariable.insert({ConfigurationUtils::GetLongName(cat, key), cVarValue});
         }
     }
 }
 
-void Configuration::RegisterNewConfigVariableFromString(const std::string& name,
-                                                        const std::string& defaultValue,
-                                                        const std::string& category)
+CVarValue* Configuration::NewConsoleVariableDeclaration(const std::string& name,
+                                                        const std::string& category,
+                                                        const std::string& defaultValue)
 {
-    // Get the type from defaultValue string
-    // Bool
-    bool boolValue;
-    if (ConfigurationUtils::IsBool(defaultValue, boolValue))
+    return GetRedSubEngine<Configuration>()->NewConsoleVariableDeclarationInternal(name, category,
+                                                                                   defaultValue);
+}
+
+CVarValue* Configuration::NewConsoleVariableDeclarationInternal(const std::string& name,
+                                                                const std::string& category,
+                                                                const std::string& defaultValue)
+{
+    auto configName = ConfigurationUtils::GetLongName(category, name);
+    auto foundConfigValue = m_configVariable.find(configName);
+    if (foundConfigValue != m_configVariable.end())
     {
-        RegisterNewConfigVariable(name, boolValue, category);
-        return;
+        return foundConfigValue->second;
     }
 
-    // Int
-    int intValue;
-    if (ConfigurationUtils::IsInt(defaultValue, intValue))
-    {
-        RegisterNewConfigVariable(name, intValue, category);
-        return;
-    }
+    auto* cVarValue = new CVarValue(name, category, defaultValue);
+    m_configVariable.insert({configName, cVarValue});
 
-    // Double
-    double doubleValue;
-    if (ConfigurationUtils::IsDouble(defaultValue, doubleValue))
-    {
-        RegisterNewConfigVariable(name, doubleValue, category);
-        return;
-    }
-
-    // Fall back to string value
-    RegisterNewConfigVariable(name, defaultValue, category);
+    return cVarValue;
 }
 }  // namespace red

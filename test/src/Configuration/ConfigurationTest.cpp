@@ -23,39 +23,36 @@ TEST_CASE("INI file parsing", "[Configuration]")
     }
 }
 
-TEST_CASE("Cvar", "[Configuration]")
+TEST_CASE("Config variable are loaded when declared before", "[Configuration]")
 {
-    SECTION("Config variable are loaded when declared before")
-    {
-        red::CVar<bool> testBool1{"bool1", false, "cat1"};
-        red::CVar<bool> testBool2{"bool2", false, "cat1"};
-        red::CVar<double> double1{"double1", 0.0, "cat1"};
-        red::CVar<int> intVar{"int", 1, "cat1"};
-        red::CVar<std::string> str{"str", "non", "cat1"};
+    red::CVar<bool> testBool1{"bool1", "cat1", false};
+    red::CVar<bool> testBool2{"bool2", "cat1", false};
+    red::CVar<double> double1{"double1", "cat1", 0.0};
+    red::CVar<int> intVar{"int", "cat1", 1};
+    red::CVar<std::string> str{"str", "cat1", "non"};
 
-        red::Configuration::GetInstance().LoadConfigFile("resources/config.ini");
+    red::Configuration::LoadConfigFile("resources/config.ini");
 
-        REQUIRE(testBool1.GetValue() == true);
-        REQUIRE(testBool2.GetValue() == false);
-        REQUIRE(std::abs(double1.GetValue() - 0.5) < 0.001);
-        REQUIRE(intVar.GetValue() == 1000);
-        REQUIRE(str.GetValue() == "je suis un string");
-    }
+    REQUIRE(testBool1.GetValue() == true);
+    REQUIRE(testBool2.GetValue() == false);
+    REQUIRE(std::abs(double1.GetValue() - 0.5) < 0.001);
+    REQUIRE(intVar.GetValue() == 1000);
+    REQUIRE(str.GetValue() == "je suis un string");
+}
 
-    SECTION("Config variable are loaded when declared after")
-    {
-        red::Configuration::GetInstance().LoadConfigFile("resources/config.ini");
+TEST_CASE("Config variable are loaded when declared after", "[Configuration]")
+{
+    red::Configuration::LoadConfigFile("resources/config.ini");
 
-        red::CVar<bool> testBool1{"bool1", false, "cat1"};
-        red::CVar<bool> testBool2{"bool2", true, "cat1"};
-        red::CVar<double> double1{"double1", 0.0, "cat1"};
-        red::CVar<int> intVar{"int", 1, "cat1"};
-        red::CVar<std::string> str{"str", "non", "cat1"};
+    red::CVar<bool> testBool1{"bool1", "cat1", false};
+    red::CVar<bool> testBool2{"bool2", "cat1", true};
+    red::CVar<double> double1{"double1", "cat1", 0.0};
+    red::CVar<int> intVar{"int", "cat1", 1};
+    red::CVar<std::string> str{"str", "cat1", "non"};
 
-        REQUIRE(testBool1.GetValue() == true);
-        REQUIRE(testBool2.GetValue() == false);
-        REQUIRE(std::abs(double1.GetValue() - 0.5) < 0.001);
-        REQUIRE(intVar.GetValue() == 1000);
-        REQUIRE(str.GetValue() == "je suis un string");
-    }
+    REQUIRE(testBool1.GetValue() == true);
+    REQUIRE(testBool2.GetValue() == false);
+    REQUIRE(std::abs(double1.GetValue() - 0.5) < 0.001);
+    REQUIRE(intVar.GetValue() == 1000);
+    REQUIRE(str.GetValue() == "je suis un string");
 }
