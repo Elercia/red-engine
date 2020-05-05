@@ -10,6 +10,7 @@ struct LogLevel
     enum Enum
     {
         LEVEL_TRACE,
+        LEVEL_DEBUG,
         LEVEL_INFO,
         LEVEL_WARNING,
         LEVEL_ERROR,
@@ -46,6 +47,7 @@ red::Logger* GetRedLogger();
     GetRedLogger()->LogInternal(LEVEL, __LINE__, __FILE__, MSG, ##__VA_ARGS__)
 
 #define RED_LOG_TRACE(MSG, ...) RED_LOG(LogLevel::LEVEL_TRACE, MSG, ##__VA_ARGS__)
+#define RED_LOG_DEBUG(MSG, ...) RED_LOG(LogLevel::LEVEL_DEBUG, MSG, ##__VA_ARGS__)
 #define RED_LOG_INFO(MSG, ...) RED_LOG(LogLevel::LEVEL_INFO, MSG, ##__VA_ARGS__)
 #define RED_LOG_WARNING(MSG, ...) RED_LOG(LogLevel::LEVEL_WARNING, MSG, ##__VA_ARGS__)
 #define RED_LOG_ERROR(MSG, ...) RED_LOG(LogLevel::LEVEL_ERROR, MSG, ##__VA_ARGS__)
