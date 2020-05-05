@@ -3,16 +3,11 @@
 #include <memory>
 #include <numeric>
 #include <thread>
-#include <RedEngine/Core/Time/Time.hpp>
 
+#include <RedEngine/Core/Time/Time.hpp>
 #include "RedEngine/Application/Application.hpp"
-#include "RedEngine/Core/Engine.hpp"
-#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Debug/Debug.hpp"
-#include "RedEngine/Debug/Logger/Logger.hpp"
-#include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
-#include "RedEngine/Core/Configuration/Configuration.hpp"
 #include "RedEngine/Debug/Profiler.hpp"
 
 namespace red
@@ -20,7 +15,7 @@ namespace red
 Application::Application()
 {
     PROFILER_APP("Main Application")
-    SetLogLevel(LogLevel::LEVEL_INFO);
+    SetLogLevel(LogLevel::LEVEL_DEBUG);
 }
 
 Application::~Application() { PROFILER_SHUTDOWN(); }
@@ -28,6 +23,7 @@ Application::~Application() { PROFILER_SHUTDOWN(); }
 bool Application::Run()
 {
     RED_ASSERT(m_world != nullptr, "The application need a level to start");
+    auto* inputManager = GetRedSubEngine<InputManager>();
 
     std::array<double, 10> frameTimes{};
     uint8_t frameIndex = 0;
@@ -36,8 +32,7 @@ bool Application::Run()
     bool isFullScreen = false;
 
     // Main loop
-    bool quit = false;
-    while (!quit)
+    while (true)
     {
         PROFILER_FRAME("MainThread");
 
@@ -57,47 +52,20 @@ bool Application::Run()
 
         Time::DeltaTime(deltaTime);
 
-        // Update the inputs
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
+        inputManager->Update();
+
+        if (inputManager->QuitRequested())
         {
-            /* handle your event here */
-            switch (event.type)
-            {
-                case SDL_WINDOWEVENT:
-                {
-                    switch (event.window.event)
-                    {
-                        case SDL_WINDOWEVENT_CLOSE:
-                            quit = true;
-                            break;
-                    }
-                }
-                break;
-                case SDL_QUIT:
-                    quit = true;
-                    break;
-                case SDL_KEYDOWN:
-                    switch (event.key.keysym.sym)
-                    {
-                        case SDLK_f:  // Toggle fullscreen
-                        {
-                            isFullScreen = !isFullScreen;
-                            CVar<FullScreenMode::Enum> fullScreenMode{"fullscreen_mode", "window",
-                                                                      FullScreenMode::FULLSCREEN};
-                            fullScreenMode.ChangeValue(isFullScreen ? FullScreenMode::FULLSCREEN
-                                                                    : FullScreenMode::WINDOWED);
-                        }
-                        break;
-                        case SDLK_PLUS:  // Scale the time
-                            Time::TimeScale(Time::TimeScale() + 0.1);
-                            break;
-                        case SDLK_MINUS:  // Scale the time
-                            Time::TimeScale(Time::TimeScale() - 0.1);
-                            break;
-                    }
-                    break;
-            }
+            break;
+        }
+
+        if (inputManager->GetKeyDown(KeyCodes::KEY_F))
+        {
+            isFullScreen = !isFullScreen;
+            CVar<FullScreenMode::Enum> fullscreen{"fullscreen_mode", "window",
+                                                  FullScreenMode::WINDOWED};
+            fullscreen.ChangeValue(isFullScreen ? FullScreenMode::FULLSCREEN
+                                                : FullScreenMode::WINDOWED);
         }
 
         // update the world

@@ -3,6 +3,7 @@
 #include <memory>
 #include <tuple>
 #include <type_traits>
+#include <RedEngine/Input/InputManager.hpp>
 
 #include "../Memory/MemoryManager.hpp"
 #include "../Core/Configuration/Configuration.hpp"
@@ -27,7 +28,7 @@ public:
     static void Init();
 
 private:
-    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine>
+    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, InputManager>
         m_subEngines{};
 
     void InitAllSubEngines();
