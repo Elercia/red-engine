@@ -54,6 +54,7 @@ void InputManager::Update()
                         RED_LOG_DEBUG("Window event mooved");
                         break;
                     case SDL_WINDOWEVENT_RESIZED:
+                        m_windowResizeEvent(Vector2(event.window.data1, event.window.data2));
                         RED_LOG_DEBUG("Window event resized");
                         break;
                 }
@@ -91,7 +92,7 @@ void InputManager::Update()
             case SDL_MOUSEMOTION:
             {
                 m_mousePosition = Vector2({event.motion.x, event.motion.y});
-                RED_LOG_DEBUG("Mouse motion {} {}", event.motion.x, event.motion.y);
+                RED_LOG_TRACE("Mouse motion {} {}", event.motion.x, event.motion.y);
             }
             break;
             case SDL_MOUSEBUTTONDOWN:
