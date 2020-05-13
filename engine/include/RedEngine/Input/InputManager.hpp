@@ -5,6 +5,8 @@
 #include <RedEngine/Input/InputDefinition.hpp>
 #include <RedEngine/Math/Vector.hpp>
 #include <RedEngine/Event/Delegate.hpp>
+#include "../Event/Signal.hpp"
+#include "../Core/Configuration/CVar.hpp"
 
 namespace red
 {
@@ -43,6 +45,6 @@ private:
     std::array<KeyState, KeyCodes::MAX_KEYS> m_keyStates;
     std::array<KeyState, MouseButtons::MAX_BUTTONS> m_mouseButtonState;
 
-    Delegate<Vector2> m_windowResizeEvent;
+    Signal<Vector2> m_windowResizeSignal;
 };
 }  // namespace red

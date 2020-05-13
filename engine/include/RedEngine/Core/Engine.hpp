@@ -25,7 +25,7 @@ public:
         return &(std::get<SubEngineType>(m_subEngines));
     }
 
-    static void Init();
+    static void Init(const std::string_view& resourceFolder, int argc, char** argv);
 
 private:
     std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, InputManager>

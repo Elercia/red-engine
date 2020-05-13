@@ -54,7 +54,13 @@ void InputManager::Update()
                         RED_LOG_DEBUG("Window event mooved");
                         break;
                     case SDL_WINDOWEVENT_RESIZED:
-                        m_windowResizeEvent(Vector2(event.window.data1, event.window.data2));
+
+                        CVar<int> windowHeight{"height", "window", 600};
+                        CVar<int> windowWidth{"width", "window", 800};
+
+                        windowHeight.ChangeValue(event.window.data2);
+                        windowWidth.ChangeValue(event.window.data1);
+                        m_windowResizeSignal(Vector2(event.window.data1, event.window.data2));
                         RED_LOG_DEBUG("Window event resized");
                         break;
                 }

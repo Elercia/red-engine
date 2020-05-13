@@ -5,10 +5,7 @@
 
 int main(int argc, char* argv[])
 {
-    red::Configuration::LoadConfigFile("resources/config.ini");
-    red::GetRedSubEngine<red::Configuration>()->ParseCommandLine(argc, argv);
-
-    red::Engine::Init();
+    red::Engine::Init("resources", argc, argv);
 
     red::Application app;
 

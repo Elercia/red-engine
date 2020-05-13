@@ -59,8 +59,6 @@ private:
     int m_nextSlotId{0};
 };
 
-
-
 }  // namespace red
 
 #include "inl/Signal.inl"
