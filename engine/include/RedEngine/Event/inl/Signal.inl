@@ -1,5 +1,6 @@
 
 #include <RedEngine/Event/Signal.hpp>
+#include <RedEngine/Debug/Logger/Logger.hpp>
 
 namespace red
 {
@@ -8,9 +9,13 @@ template <typename... SignalArgs>
 typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Connect(
     Signal<SignalArgs...>::Func function)
 {
-    m_connections.emplace_back(this, function);
+    int id = m_nextSlotId;
+    m_nextSlotId++;
 
-    return m_connections[m_connections.size() - 1];
+    auto slot = Slot(this, function, id);
+    m_connections.push_back(std::move(slot));
+
+    return m_connections.at(m_connections.size() - 1);
 }
 
 template <typename... SignalArgs>
@@ -66,24 +71,17 @@ void Signal<SignalArgs...>::emit(SignalArgs... args)
     }
 }
 
-template <typename... SignalArgs>
-void Signal<SignalArgs...>::Disconnect(Signal::Slot& connection)
-{
-    //    m_connections.erase(m_connections.find(connection));
-    // TODO
-}
-
 // --------------- CONNECTION ---------------
 template <typename... SignalArgs>
-Signal<SignalArgs...>::Slot::Slot(Signal<SignalArgs...>* ref, Func func)
-    : m_signalRef(ref), m_isActive(true), m_func(func)
+Signal<SignalArgs...>::Slot::Slot(Signal<SignalArgs...>* ref, Func func, int slotId)
+    : m_signalRef(ref), m_isActive(true), m_func(func), m_slotId(slotId)
 {
 }
 
 template <typename... SignalArgs>
 Signal<SignalArgs...>::Slot::~Slot()
 {
-    m_signalRef->Disconnect(*this);
+    m_isActive = false;
 }
 
 template <typename... SignalArgs>

@@ -27,4 +27,31 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
 
         REQUIRE(mc.m_a == 10);
     }
+
+    SECTION("Activate / Deactivate slot & signal")
+    {
+        MyClass mc;
+
+        red::Signal<int> signal;
+        auto& slot = signal.Connect(&MyClass::op, &mc);
+
+        slot.Deactivate();
+
+        int a = 10;
+        signal.emit(a);
+
+        REQUIRE(mc.m_a == -1);
+
+        slot.Activate();
+
+        signal.Deactivate();
+
+        signal.emit(a);
+
+        REQUIRE(mc.m_a == -1);
+
+        signal.Activate();
+        signal.emit(a);
+        REQUIRE(mc.m_a == 10);
+    }
 }
