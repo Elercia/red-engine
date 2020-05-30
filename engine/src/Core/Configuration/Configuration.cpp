@@ -21,7 +21,7 @@ Configuration::~Configuration()
 
 void Configuration::Init()
 {
-    auto& path = std::filesystem::current_path();
+    const auto& path = std::filesystem::current_path();
     RED_LOG_INFO("Started application in {}", path.u8string());
 
     CVar<std::string> userDataPath{"user_data_path", "common", m_resourceFolder};
