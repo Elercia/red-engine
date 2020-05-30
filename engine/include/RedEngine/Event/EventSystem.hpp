@@ -10,27 +10,17 @@
 
 namespace red
 {
-struct KeyState
+class EventSystem : public SubEngine
 {
 public:
-    bool isPressed{false};
-    bool isUp{false};
-    bool isDown{false};
-};
-
-class InputManager : public SubEngine
-{
-public:
-    InputManager();
-    ~InputManager() = default;
+    EventSystem();
+    ~EventSystem() = default;
 
     [[nodiscard]] bool GetKey(KeyCodes::Enum key) const;
     [[nodiscard]] bool GetKeyUp(KeyCodes::Enum key) const;
     [[nodiscard]] bool GetKeyDown(KeyCodes::Enum key) const;
 
-    [[nodiscard]] bool GetMouseButton(MouseButtons::Enum button) const;
-    [[nodiscard]] bool GetMouseButtonUp(MouseButtons::Enum button) const;
-    [[nodiscard]] bool GetMouseButtonDown(MouseButtons::Enum button) const;
+    [[nodiscard]] KeyState GetKeyState(KeyCodes::Enum key) const;
 
     [[nodiscard]] const Vector2& GetMousePosition() const;
 
@@ -38,12 +28,13 @@ public:
 
     void Update();
 
+    void SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type);
+
 private:
     bool m_quitRequested;
     Vector2 m_mousePosition;
 
-    std::array<KeyState, KeyCodes::MAX_KEYS> m_keyStates;
-    std::array<KeyState, MouseButtons::MAX_BUTTONS> m_mouseButtonState;
+    std::array<KeyState, KeyCodes::MAX> m_keyStates;
 
     Signal<Vector2> m_windowResizeSignal;
 };

@@ -1,11 +1,11 @@
-
-
 #include "RedEngine/Core/Configuration/Configuration.hpp"
 #include <RedEngine/Core/Configuration/IniReader.hpp>
 #include <RedEngine/Core/Engine.hpp>
 #include "RedEngine/Core/Configuration/CVar.hpp"
 
+#include <string>
 #include <utility>
+#include <filesystem>
 
 namespace red
 {
@@ -19,7 +19,26 @@ Configuration::~Configuration()
     }
 }
 
+void Configuration::Init()
+{
+    auto& path = std::filesystem::current_path();
+    RED_LOG_INFO("Started application in {}", path.u8string());
+
+    CVar<std::string> userDataPath{"user_data_path", "common", m_resourceFolder};
+
+    m_userDataFolder = userDataPath.GetValue();
+}
+
 void Configuration::ParseCommandLine(int argc, char** argv) {}
+
+void Configuration::SetResourceFolder(std::string_view resourceFolder)
+{
+    m_resourceFolder = resourceFolder;
+}
+
+const std::string& Configuration::GetResourceFolder() const { return m_resourceFolder; }
+
+const std::string& Configuration::GetUserDataFolder() const { return m_userDataFolder; }
 
 void Configuration::LoadConfigFile(std::filesystem::path path)
 {

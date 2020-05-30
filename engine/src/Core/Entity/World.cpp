@@ -11,7 +11,8 @@
 namespace red
 {
 World::World()
-    : m_componentManager(new ComponentManager())
+    : m_singletonEntity(nullptr)
+    , m_componentManager(new ComponentManager())
     , m_nextEntityId(MaxPersistentEntities)
     , m_nextPersistentEntityId(0)
 {
@@ -42,6 +43,22 @@ Entity* World::CreateEntity()
     return entityPtr;
 }
 
+red::Entity* World::CreateSingletonEntity()
+{
+    m_singletonEntity = new Entity(this, m_nextEntityId++);
+    m_singletonEntity->SetPersistent(true);
+
+    return m_singletonEntity;
+}
+
+void World::Init()
+{
+    for (auto& system : m_systems)
+    {
+        system->Init();
+    }
+}
+
 void World::Update()
 {
     for (auto& system : m_systems)
@@ -63,6 +80,8 @@ void World::Update()
 const std::vector<System*>& World::GetSystems() { return m_systems; }
 
 const std::vector<Entity*>& World::GetEntities() { return m_entities; }
+
+Entity& World::GetSingletonEntity() { return *m_singletonEntity; }
 
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 

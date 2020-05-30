@@ -20,7 +20,7 @@ public:
     Application& operator=(const Application&) = delete;
     Application& operator=(Application&&) = default;
 
-    World& CreateWorld(bool registerConfiguredSystems = true);
+    World& CreateWorld();
 
     bool Run();
 

@@ -18,7 +18,8 @@ void Engine::Init(const std::string_view& resourceFolder, int argc, char** argv)
     auto& instance = GetRedInstance();
     
     auto config = instance.Get<Configuration>();
-    config->LoadConfigFile(std::string(resourceFolder).append("/config.ini"));
+    config->SetResourceFolder(resourceFolder);
+    config->LoadConfigFile(std::string(resourceFolder).append("/config.ini")); // TODO Set the resource folder configuration
     config->ParseCommandLine(argc, argv);
 
     instance.InitAllSubEngines();

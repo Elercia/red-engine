@@ -25,6 +25,7 @@ ResourceEngine::~ResourceEngine()
 
 std::shared_ptr<Texture2D> ResourceEngine::LoadTexture(const std::string& path)
 {
+    // TODO path should be relative to resource folder
     return GetRedSubEngine<ResourceEngine>()->LoadTextureInternal(path);
 }
 

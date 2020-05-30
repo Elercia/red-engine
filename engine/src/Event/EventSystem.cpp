@@ -1,39 +1,44 @@
-#include <RedEngine/Input/InputManager.hpp>
+#include <RedEngine/Event/EventSystem.hpp>
+#include <RedEngine/Input/InputDefinitionTranslationUnit.hpp>
 #include <RedEngine/Debug/Logger/Logger.hpp>
 #include <SDL2/SDL_events.h>
 
 namespace red
 {
-InputManager::InputManager()
-    : SubEngine(), m_quitRequested(false), m_keyStates(), m_mouseButtonState(), m_mousePosition()
+EventSystem::EventSystem() : SubEngine(), m_quitRequested(false), m_keyStates(), m_mousePosition()
 {
 }
 
-bool InputManager::GetKey(red::KeyCodes::Enum key) const { return m_keyStates[key].isPressed; }
+bool EventSystem::GetKey(red::KeyCodes::Enum key) const { return m_keyStates.at(key).isPressed; }
 
-bool InputManager::GetKeyUp(KeyCodes::Enum key) const { return m_keyStates[key].isUp; }
+bool EventSystem::GetKeyUp(KeyCodes::Enum key) const { return m_keyStates.at(key).isUp; }
 
-bool InputManager::GetKeyDown(KeyCodes::Enum key) const { return m_keyStates[key].isDown; }
+bool EventSystem::GetKeyDown(KeyCodes::Enum key) const { return m_keyStates.at(key).isDown; }
 
-bool InputManager::GetMouseButton(MouseButtons::Enum button) const
+KeyState EventSystem::GetKeyState(KeyCodes::Enum key) const { return m_keyStates.at(key); }
+
+const Vector2& EventSystem::GetMousePosition() const { return m_mousePosition; }
+
+void EventSystem::SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type)
 {
-    return m_mouseButtonState[button].isPressed;
+    SDL_Event event;
+
+    event.type = type == KeyEventType::KEY_DOWN ? SDL_KEYDOWN : SDL_KEYUP;
+    event.key.keysym.scancode = g_keyboardSDLTranslationMap.at(key);
+
+    SDL_PushEvent(&event);
 }
 
-bool InputManager::GetMouseButtonUp(MouseButtons::Enum button) const
+void EventSystem::Update()
 {
-    return m_mouseButtonState[button].isUp;
-}
+    // Reset the inputs
+    // KeyDown and KeyUp only live for one frame
+    for (auto& state : m_keyStates)
+    {
+        state.isDown = false;
+        state.isUp = false;
+    }
 
-bool InputManager::GetMouseButtonDown(MouseButtons::Enum button) const
-{
-    return m_mouseButtonState[button].isDown;
-}
-
-const Vector2& InputManager::GetMousePosition() const { return m_mousePosition; }
-
-void InputManager::Update()
-{
     // Update the inputs
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -74,24 +79,31 @@ void InputManager::Update()
                 // -------- KEYS --------
             case SDL_KEYDOWN:
             {
-                auto& keyState = m_keyStates[event.key.keysym.scancode];
+                auto& keyState =
+                    m_keyStates[g_keyboardTranslationMap.at(event.key.keysym.scancode)];
 
-                if (!keyState.isDown)
+                if (!keyState.isPressed)
                 {
-                    keyState = {true, false, true};
-                    RED_LOG_DEBUG("Key DOWN {}", g_keyCodeReadable[event.key.keysym.scancode]);
+                    keyState.isPressed = true;
+                    keyState.isDown = true;
+
+                    RED_LOG_DEBUG(
+                        "Key DOWN {}",
+                        g_keyCodeReadable[g_keyboardTranslationMap.at(event.key.keysym.scancode)]);
                 }
             }
             break;
             case SDL_KEYUP:
             {
-                auto& keyState = m_keyStates[event.key.keysym.scancode];
+                auto& keyState =
+                    m_keyStates[g_keyboardTranslationMap.at(event.key.keysym.scancode)];
 
-                if (!keyState.isUp)
-                {
-                    keyState = {false, true, false};
-                    RED_LOG_DEBUG("Key UP {}", g_keyCodeReadable[event.key.keysym.scancode]);
-                }
+                keyState.isPressed = false;
+                keyState.isUp = true;
+
+                RED_LOG_DEBUG(
+                    "Key UP {}",
+                    g_keyCodeReadable[g_keyboardTranslationMap.at(event.key.keysym.scancode)]);
             }
             break;
                 // -------- MOUSE --------
@@ -103,25 +115,27 @@ void InputManager::Update()
             break;
             case SDL_MOUSEBUTTONDOWN:
             {
-                auto& keyState = m_mouseButtonState[event.button.button];
+                auto& keyState = m_keyStates[g_mouseTranslationUnit.at(event.button.button)];
 
                 if (!keyState.isDown)
                 {
                     keyState = {true, false, true};
-                    RED_LOG_DEBUG("Mouse button DOWN {}",
-                                  g_mouseButtonsReadable[event.button.button]);
+                    RED_LOG_DEBUG(
+                        "Mouse button DOWN {}",
+                        g_keyCodeReadable[g_mouseTranslationUnit.at(event.button.button)]);
                 }
             }
             break;
             case SDL_MOUSEBUTTONUP:
             {
-                auto& keyState = m_mouseButtonState[event.button.button];
+                auto& keyState = m_keyStates[g_mouseTranslationUnit.at(event.button.button)];
 
                 if (!keyState.isUp)
                 {
                     keyState = {false, true, false};
-                    RED_LOG_DEBUG("Mouse button UP {}",
-                                  g_mouseButtonsReadable[event.button.button]);
+                    RED_LOG_DEBUG(
+                        "Mouse button UP {}",
+                        g_keyCodeReadable[g_mouseTranslationUnit.at(event.button.button)]);
                 }
             }
             break;
@@ -161,6 +175,6 @@ void InputManager::Update()
     }
 }
 
-bool InputManager::QuitRequested() const { return m_quitRequested; }
+bool EventSystem::QuitRequested() const { return m_quitRequested; }
 
 }  // namespace red

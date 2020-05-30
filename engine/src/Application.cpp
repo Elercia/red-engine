@@ -1,14 +1,16 @@
+#include <RedEngine/Core/Time/Time.hpp>
+#include <RedEngine/Application/Application.hpp>
+#include <RedEngine/Debug/Debug.hpp>
+#include <RedEngine/Rendering/System/RenderingSystem.hpp>
+#include <RedEngine/Debug/Profiler.hpp>
+#include <RedEngine/Input/Component/UserInput.hpp>
+#include <RedEngine/Event/EventSystem.hpp>
+
 #include <array>
 #include <chrono>
 #include <memory>
 #include <numeric>
 #include <thread>
-
-#include <RedEngine/Core/Time/Time.hpp>
-#include "RedEngine/Application/Application.hpp"
-#include "RedEngine/Debug/Debug.hpp"
-#include "RedEngine/Rendering/System/RenderingSystem.hpp"
-#include "RedEngine/Debug/Profiler.hpp"
 
 namespace red
 {
@@ -23,7 +25,7 @@ Application::~Application() { PROFILER_SHUTDOWN(); }
 bool Application::Run()
 {
     RED_ASSERT(m_world != nullptr, "The application need a level to start");
-    auto* inputManager = GetRedSubEngine<InputManager>();
+    auto* eventSystem = GetRedSubEngine<EventSystem>();
 
     std::array<double, 10> frameTimes{};
     uint8_t frameIndex = 0;
@@ -52,14 +54,14 @@ bool Application::Run()
 
         Time::DeltaTime(deltaTime);
 
-        inputManager->Update();
+        eventSystem->Update();
 
-        if (inputManager->QuitRequested())
+        if (eventSystem->QuitRequested())
         {
             break;
         }
 
-        if (inputManager->GetKeyDown(KeyCodes::KEY_F))
+        if (eventSystem->GetKeyDown(KeyCodes::KEY_F))
         {
             isFullScreen = !isFullScreen;
             CVar<FullScreenMode::Enum> fullscreen{"fullscreen_mode", "window",
@@ -80,6 +82,9 @@ void Application::CreateWorld()
     RED_ASSERT(m_world == nullptr, "Only one world is allowed");
 
     m_world = std::make_unique<World>();
+
+    auto entity = m_world->CreateSingletonEntity();
+    entity->AddComponent<UserInputComponent>();
 }
 
 void Application::LoadLevel(Level* level)
@@ -101,6 +106,8 @@ void Application::LoadLevel(Level* level)
     m_world->UnloadTransientEntities();
 
     m_currentLevel->Init(*m_world);
+
+    m_world->Init();
 }
 World& Application::GetWorld() { return *m_world; }
 
