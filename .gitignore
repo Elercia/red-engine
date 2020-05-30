@@ -123,6 +123,8 @@ _deps
 .vs/
 CMakeSettings.json
 
+*.code-workspace
+
 ### Clion ###
 .idea/
 cmake-build-*/
