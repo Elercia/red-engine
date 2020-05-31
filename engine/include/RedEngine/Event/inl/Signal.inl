@@ -23,7 +23,7 @@ template <class C>
 typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Connect(
     void (C::*method)(SignalArgs... args), C* obj)
 {
-    auto& f = [obj, method](SignalArgs&&... funcArgs) {
+    auto f = [obj, method](SignalArgs&&... funcArgs) {
         (obj->*method)(std::forward<SignalArgs>(funcArgs)...);
     };
 
