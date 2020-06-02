@@ -8,7 +8,6 @@
 
 namespace red
 {
-using ComponentName_t = const char*;
 using ComponentId_t = uint32_t;
 using EntityId_t = uint32_t;
 

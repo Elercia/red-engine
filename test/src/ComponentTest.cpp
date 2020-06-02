@@ -12,7 +12,7 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock1;
         for (int i = 0; i < 100; ++i)
         {
-            auto entity = world.CreateEntity();
+            auto* entity = world.CreateEntity();
             entitiesWithMock1.push_back(entity);
             REQUIRE(entity != nullptr);
         }
@@ -20,25 +20,25 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock2;
         for (int i = 0; i < 100; ++i)
         {
-            auto entity = world.CreateEntity();
+            auto* entity = world.CreateEntity();
             entitiesWithMock2.push_back(entity);
             REQUIRE(entity != nullptr);
         }
 
         SECTION("Add/Remove components")
         {
-            for (auto entity : entitiesWithMock1)
+            for (auto* entity : entitiesWithMock1)
             {
-                auto component = entity->AddComponent<MockComponent1>();
+                auto* component = entity->AddComponent<MockComponent1>();
 
                 REQUIRE(component != nullptr);
                 REQUIRE(entity->HasComponent<MockComponent1>());
                 REQUIRE(entity->GetComponent<MockComponent1>() == component);
             }
 
-            for (auto entity : entitiesWithMock2)
+            for (auto* entity : entitiesWithMock2)
             {
-                auto component = entity->AddComponent<MockComponent2>();
+                auto* component = entity->AddComponent<MockComponent2>();
 
                 REQUIRE(component != nullptr);
                 REQUIRE(entity->HasComponent<MockComponent2>());
@@ -48,7 +48,7 @@ TEST_CASE("Component", "[ECS]")
                 REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
             }
 
-            for (auto entity : entitiesWithMock1)
+            for (auto* entity : entitiesWithMock1)
             {
                 entity->RemoveComponent<MockComponent1>();
 

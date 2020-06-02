@@ -26,6 +26,7 @@ public:
     World& operator=(World&& world) = delete;
 
     Entity* CreateEntity();
+    Entity* CreateSingletonEntity();
 
     void SetEntityPersistency(Entity* entity, bool persistent);
 
@@ -34,8 +35,11 @@ public:
 
     const std::vector<System*>& GetSystems();
     const std::vector<Entity*>& GetEntities();
+    Entity& GetSingletonEntity();
     ComponentManager* GetComponentManager();
 
+
+    void Init();
     void Update();
 
     void UnloadTransientEntities();
@@ -44,6 +48,7 @@ public:
 private:
     void DestroyEntity(Entity* entity);
 
+    Entity* m_singletonEntity;
     std::vector<Entity*> m_entities;
     std::vector<System*> m_systems;
     ComponentManager* m_componentManager;

@@ -14,7 +14,7 @@ T* Entity::AddComponent(Args&&... args)
 {
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
-    auto componentManager = m_world->GetComponentManager();
+    auto* componentManager = m_world->GetComponentManager();
 
     if (componentManager->HasComponent<T>(this))
     {
