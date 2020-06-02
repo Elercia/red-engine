@@ -36,8 +36,8 @@ TEST_CASE("User input handling", "[Input]")
     auto* eventSystem = red::GetRedSubEngine<red::EventSystem>();
     red::World world;
     auto* singletonEntity = world.CreateSingletonEntity();
-    auto* sys = world.AddSystem<red::UserInputSystem>();
     auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();
+    auto* sys = world.AddSystem<red::UserInputSystem>();
 
     sys->Init();
 

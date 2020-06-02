@@ -39,16 +39,16 @@ public:
     void UnloadTransientComponents();
 
 private:
-    ComponentPool_t& GetComponentPool(ComponentName_t componentName);
-    void StoreComponent(Entity* owner, Component* component);
+    ComponentPool_t& GetComponentPool(std::size_t componentName);
+    void StoreComponent(Entity* owner, Component* component, std::size_t name);
 
     void RemoveComponent(Entity* owner, ComponentPool_t& pool);
 
-    bool HasComponent(Entity* entity, ComponentName_t name);
+    bool HasComponent(Entity* entity, std::size_t name);
 
-    Component* GetComponent(Entity* entity, ComponentName_t name);
+    Component* GetComponent(Entity* entity, std::size_t name);
 
-    std::map<ComponentName_t, ComponentPool_t> m_components;
+    std::map<std::size_t, ComponentPool_t> m_components;
 };
 }  // namespace red
 

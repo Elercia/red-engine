@@ -6,14 +6,12 @@
 
 class MockComponent1 : public red::Component
 {
-    RED_COMPONENT("MOC2")
 public:
     explicit MockComponent1(red::Entity* entity) : red::Component(entity) {}
 };
 
 class MockComponent2 : public red::Component
 {
-    RED_COMPONENT("MOC1")
 public:
     explicit MockComponent2(red::Entity* entity) : red::Component(entity) {}
 };

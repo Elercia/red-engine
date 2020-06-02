@@ -14,7 +14,7 @@ class Texture2D;
 
 class Sprite : public Component
 {
-    RED_COMPONENT("SPRITE")
+    friend class RenderingEngine;
 
 public:
     Sprite(Entity* entity, std::shared_ptr<Texture2D> texture);

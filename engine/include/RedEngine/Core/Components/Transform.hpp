@@ -7,7 +7,6 @@ namespace red
 {
 class Transform : public Component
 {
-    RED_COMPONENT("TRANSFORM")
 public:
     Transform(Entity* entity, int x, int y);
     Transform(Entity* entity, Vector2 position);

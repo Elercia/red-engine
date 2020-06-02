@@ -11,13 +11,11 @@ namespace red
 {
 class UserInputComponent : public Component
 {
-    RED_COMPONENT("UserInput")
-
     friend class UserInputSystem;
 
 public:
-    UserInputComponent(Entity* entity);
-    ~UserInputComponent();
+    explicit UserInputComponent(Entity* entity);
+    ~UserInputComponent() override;
 
     [[nodiscard]] bool GetKeyDown(ActionKey keyId) const;
     [[nodiscard]] bool GetKeyUp(ActionKey keyId) const;
