@@ -22,8 +22,8 @@ public:
 class Vector2
 {
 public:
-    Vector2() : Vector2(0, 0) {}
-    Vector2(int x, int y) : m_x(x), m_y(y) {}
+    Vector2() : Vector2(0.F, 0.F) {}
+    Vector2(float x, float y) : m_x(x), m_y(y) {}
 
     Vector2(const Vector2&) = default;
     Vector2(Vector2&&) = default;
@@ -33,7 +33,7 @@ public:
 
     ~Vector2() = default;
 
-    int m_x, m_y;
+    float m_x, m_y;
 };
 
 }  // namespace red

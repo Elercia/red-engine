@@ -7,13 +7,13 @@ file(GLOB SHADERS resources/*.sc)
 
 set(PROJECT_SOURCES ${HEADERS} ${SOURCES})
 
-add_executable(TemplateSimple
+add_executable(TemplatePong
         ${PROJECT_SOURCES}
         ${SHADERS})
 
-set_target_properties(TemplateSimple PROPERTIES
+set_target_properties(TemplatePong PROPERTIES
         FOLDER ../../ressources
         )
 
-target_link_libraries(TemplateSimple PUBLIC red_engine_lib)
-red_add_template(TemplateSimple resources)
+target_link_libraries(TemplatePong PUBLIC red_engine_lib)
+red_add_template(TemplatePong resources)

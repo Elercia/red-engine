@@ -2,7 +2,10 @@
 
 namespace red
 {
-Entity::Entity(World* world, EntityId_t id) : m_world(world), m_id(id) {}
+Entity::Entity(World* world, EntityId_t id, const std::string& name)
+    : m_world(world), m_id(id), m_name(std::move(name))
+{
+}
 
 void Entity::Destroy()
 {

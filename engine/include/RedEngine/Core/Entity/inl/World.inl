@@ -13,4 +13,10 @@ T* World::AddSystem(Args... args)
     return ptr;
 }
 
+template <class T>
+void World::RemoveSystem()
+{
+    // TODO implement
+}
+
 }  // namespace red

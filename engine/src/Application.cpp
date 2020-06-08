@@ -7,10 +7,9 @@
 #include <RedEngine/Event/EventSystem.hpp>
 
 #include <array>
-#include <chrono>
 #include <memory>
-#include <numeric>
 #include <thread>
+#include <RedEngine/Core/Time/FrameCounter.hpp>
 
 namespace red
 {
@@ -27,9 +26,7 @@ bool Application::Run()
     RED_ASSERT(m_world != nullptr, "The application need a level to start");
     auto* eventSystem = GetRedSubEngine<EventSystem>();
 
-    std::array<double, 10> frameTimes{};
-    uint8_t frameIndex = 0;
-    auto frameStartTime = std::chrono::system_clock::now();
+    FrameCounter fc;
 
     bool isFullScreen = false;
 
@@ -39,20 +36,9 @@ bool Application::Run()
         PROFILER_FRAME("MainThread");
 
         // Compute the delta time
-        auto currentTime = std::chrono::system_clock::now();
-        std::chrono::duration<double, std::milli> diff = currentTime - frameStartTime;
+        auto deltaTime = fc.Update();
 
-        frameTimes[frameIndex] = diff.count();
-        frameIndex = (frameIndex + 1u) % frameTimes.size();
-        frameStartTime = currentTime;
-
-        double deltaTime =
-            std::accumulate(frameTimes.begin(), frameTimes.end(), 1., std::plus<double>()) /
-            10.;  // calculate the mean of delta times (this return at least 1.f)
-
-        RED_LOG_TRACE("Game FPS : {} delta is : {}", 1000 / deltaTime, deltaTime);
-
-        Time::DeltaTime(deltaTime);
+        Time::SetDeltaTime(deltaTime);
 
         eventSystem->Update();
 
@@ -69,6 +55,20 @@ bool Application::Run()
             fullscreen.ChangeValue(isFullScreen ? FullScreenMode::FULLSCREEN
                                                 : FullScreenMode::WINDOWED);
         }
+
+        if (eventSystem->GetKeyDown(KeyCodes::KEY_P))
+        {
+            Time::SetTimeScale(Time::TimeScale() + 0.1F);
+        }
+
+        if (eventSystem->GetKeyDown(KeyCodes::KEY_O))
+        {
+            Time::SetTimeScale(Time::TimeScale() - 0.1F);
+        }
+
+        RED_LOG_TRACE("[Frame rate {}][Delta time {}][Time scale {}][Unscaled delta time {}]",
+                      1 / Time::DeltaTime(), Time::DeltaTime(), Time::TimeScale(),
+                      Time::DeltaTime(false));
 
         // update the world
         m_world->Update();
@@ -91,7 +91,7 @@ void Application::LoadLevel(Level* level)
 {
     if (m_currentLevel != nullptr)
     {
-        m_currentLevel->Finalize();
+        m_currentLevel->Finalize(*m_world);
     }
 
     // reset the old level

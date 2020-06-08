@@ -31,7 +31,8 @@ target_include_directories(red_engine_lib
 target_link_libraries(red_engine_lib
         PUBLIC
         SDL2::SDL2
-        SDL2::SDL2main)
+        SDL2::SDL2main
+        SDL_image::SDL_image)
 
 # FMT
 target_link_libraries(red_engine_lib

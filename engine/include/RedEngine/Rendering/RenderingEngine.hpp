@@ -25,7 +25,6 @@ public:
     void BeginRenderFrame();
     void EndRenderFrame();
 
-    void DebugDrawRect();
     void Render(Sprite* sprite, const Transform& transform);
 
     void Init() override;

@@ -10,7 +10,13 @@ ResourceId_t Texture2D::s_nextResourceId = 0;
 
 ResourceId_t Texture2D::GetNextResourceId() { return s_nextResourceId++; }
 
-SDL_Rect Texture2D::GetTextureSize() const { return m_textureSize; }
+Point Texture2D::GetTextureSize() const { return Point{m_textureSize.w, m_textureSize.h}; }
 
-void Texture2D::Release() { GetRedSubEngine<ResourceEngine>()->ReleaseTexture(this, false); };
+void Texture2D::Release() { GetRedSubEngine<ResourceEngine>()->ReleaseTexture(this, false); }
+
+void Texture2D::ChangeTextureSize(const Point& newSize)
+{
+    m_textureSize.w = newSize.x;
+    m_textureSize.h = newSize.y;
+};
 }  // namespace red

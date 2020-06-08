@@ -14,7 +14,7 @@ public:
     virtual ~Level() = default;
 
     virtual void Init(World& world) = 0;
-    virtual void Finalize() = 0;
+    virtual void Finalize(World& world) = 0;
 
 protected:
     const char* m_levelName;

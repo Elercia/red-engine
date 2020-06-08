@@ -4,9 +4,10 @@
 #include "RedEngine/Rendering/Window.hpp"
 #include "RedEngine/Rendering/Texture2D.hpp"
 #include "RedEngine/Core/Components/Sprite.hpp"
+#include <RedEngine/Resources/Resource.hpp>
 
 #include <SDL2/SDL_render.h>
-#include <RedEngine/Resources/Resource.hpp>
+#include <SDL2/SDL_image.h>
 
 namespace red
 {
@@ -47,29 +48,16 @@ void RenderingEngine::BeginRenderFrame()
 }
 void RenderingEngine::EndRenderFrame() { SDL_RenderPresent(m_renderer); }
 
-void RenderingEngine::DebugDrawRect()
-{
-    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-
-    auto windowInfo = m_window->GetWindowInfo();
-
-    SDL_Rect rect;
-    rect.h = 100;
-    rect.w = 200;
-    rect.x = (windowInfo.width / 2) - rect.w;
-    rect.y = (windowInfo.height / 2) - rect.h;
-    SDL_RenderDrawRect(m_renderer, &rect);
-}
-
 SDL_Renderer* RenderingEngine::GetRenderer() { return m_renderer; }
 
 void RenderingEngine::Render(Sprite* sprite, const Transform& transform)
 {
     if (sprite->m_texture->GetLoadState() == LoadState::STATE_LOADED)
     {
-        auto position = transform.GetPosition();
-        SDL_Rect dest{position.m_x, position.m_y, sprite->m_texture->m_textureSize.h,
-                      sprite->m_texture->m_textureSize.w};
+        const auto& position = transform.GetPosition();
+
+        SDL_Rect dest{static_cast<int>(position.m_x), static_cast<int>(position.m_y),
+                      sprite->m_texture->m_textureSize.w, sprite->m_texture->m_textureSize.h};
 
         SDL_RenderCopy(m_renderer, sprite->m_texture->m_sdlTexture, nullptr, &dest);
     }
@@ -81,6 +69,15 @@ void RenderingEngine::Init()
         RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
         SDL_Quit();
         RED_ABORT("Cannot initialize SDL2");
+    }
+
+    int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
+    if (IMG_Init(flags) != flags)
+    {
+        RED_LOG_ERROR("Error initializing SDL image with error {}", IMG_GetError());
+        IMG_Quit();
+        SDL_Quit();
+        RED_ABORT("Cannot initialize SDL image");
     }
 
     CreateNewWindow();

@@ -10,5 +10,5 @@ public:
     ~DefaultLevel() override = default;
 
     void Init(red::World& world) override;
-    void Finalize() override;
+    void Finalize(red::World& world) override;
 };

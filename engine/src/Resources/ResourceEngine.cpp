@@ -5,6 +5,7 @@
 #include <RedEngine/Debug/Logger/Logger.hpp>
 #include <RedEngine/Core/Engine.hpp>
 #include <RedEngine/Rendering/Texture2D.hpp>
+#include <SDL2/SDL_image.h>
 
 namespace red
 {
@@ -38,7 +39,7 @@ std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string
     // Keep a reference to the created texture
     AddResourceToLoadedResources(ResourceType::TEXTURE2D, texture);
 
-    SDL_Surface* tempSurface = SDL_LoadBMP(path.c_str());
+    SDL_Surface* tempSurface = IMG_Load(path.c_str());
 
     if (tempSurface == nullptr)
     {

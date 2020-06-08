@@ -34,9 +34,11 @@ World::~World()
     delete m_componentManager;
 }
 
-Entity* World::CreateEntity()
+Entity* World::CreateEntity() { return CreateEntity(""); }
+
+Entity* World::CreateEntity(const std::string& name)
 {
-    auto entityPtr = new Entity(this, m_nextEntityId++);
+    auto entityPtr = new Entity(this, m_nextEntityId++, name);
 
     m_entities.push_back(entityPtr);
 
@@ -45,7 +47,7 @@ Entity* World::CreateEntity()
 
 red::Entity* World::CreateSingletonEntity()
 {
-    m_singletonEntity = new Entity(this, m_nextEntityId++);
+    m_singletonEntity = new Entity(this, m_nextEntityId++, "__SingletonEntity__");
     m_singletonEntity->SetPersistent(true);
 
     return m_singletonEntity;
@@ -127,4 +129,5 @@ void World::UnloadSystems()
 
     m_systems.clear();
 }
+
 }  // namespace red

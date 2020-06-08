@@ -3,7 +3,7 @@
 #include <array>
 #include <RedEngine/Core/SubEngine.hpp>
 #include <RedEngine/Input/InputDefinition.hpp>
-#include <RedEngine/Math/Vector.hpp>
+#include <RedEngine/Math/Point.hpp>
 #include <RedEngine/Event/Delegate.hpp>
 #include "../Event/Signal.hpp"
 #include "../Core/Configuration/CVar.hpp"
@@ -22,7 +22,7 @@ public:
 
     [[nodiscard]] KeyState GetKeyState(KeyCodes::Enum key) const;
 
-    [[nodiscard]] const Vector2& GetMousePosition() const;
+    [[nodiscard]] const Point& GetMousePosition() const;
 
     [[nodiscard]] bool QuitRequested() const;
 
@@ -32,10 +32,10 @@ public:
 
 private:
     bool m_quitRequested;
-    Vector2 m_mousePosition;
+    Point m_mousePosition;
 
     std::array<KeyState, KeyCodes::MAX> m_keyStates;
 
-    Signal<Vector2> m_windowResizeSignal;
+    Signal<Point> m_windowResizeSignal;
 };
 }  // namespace red

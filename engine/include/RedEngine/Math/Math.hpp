@@ -19,6 +19,9 @@ public:
 
     static constexpr float Clamp01(float value);
     static constexpr double Clamp01(double value);
+
+    template <typename T>
+    static constexpr bool Between(T value, T lValue, T rValue);
 };
 }  // namespace red
 

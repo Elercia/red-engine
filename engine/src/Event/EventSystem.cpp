@@ -17,7 +17,7 @@ bool EventSystem::GetKeyDown(KeyCodes::Enum key) const { return m_keyStates.at(k
 
 KeyState EventSystem::GetKeyState(KeyCodes::Enum key) const { return m_keyStates.at(key); }
 
-const Vector2& EventSystem::GetMousePosition() const { return m_mousePosition; }
+const Point& EventSystem::GetMousePosition() const { return m_mousePosition; }
 
 void EventSystem::SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type)
 {
@@ -65,7 +65,8 @@ void EventSystem::Update()
 
                         windowHeight.ChangeValue(event.window.data2);
                         windowWidth.ChangeValue(event.window.data1);
-                        m_windowResizeSignal(Vector2(event.window.data1, event.window.data2));
+
+                        m_windowResizeSignal(Point(event.window.data1, event.window.data2));
                         RED_LOG_DEBUG("Window event resized");
                         break;
                 }
@@ -109,7 +110,7 @@ void EventSystem::Update()
                 // -------- MOUSE --------
             case SDL_MOUSEMOTION:
             {
-                m_mousePosition = Vector2({event.motion.x, event.motion.y});
+                m_mousePosition = Point{event.motion.x, event.motion.y};
                 RED_LOG_TRACE("Mouse motion {} {}", event.motion.x, event.motion.y);
             }
             break;

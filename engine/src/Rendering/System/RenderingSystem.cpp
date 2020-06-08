@@ -34,8 +34,6 @@ void RenderingSystem::Update()
         m_renderingEngine->Render(sprite, *transform);
     }
 
-    m_renderingEngine->DebugDrawRect();
-
     m_renderingEngine->EndRenderFrame();
 }
 

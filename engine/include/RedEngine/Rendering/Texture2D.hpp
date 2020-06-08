@@ -1,6 +1,7 @@
 #pragma once
 
 #include <RedEngine/Resources/Resource.hpp>
+#include <RedEngine/Math/Point.hpp>
 
 #include <SDL2/SDL_render.h>
 
@@ -15,7 +16,8 @@ public:
     explicit Texture2D(ResourceId_t resourceId);
     ~Texture2D() override = default;
 
-    [[nodiscard]] SDL_Rect GetTextureSize() const;
+    [[nodiscard]] Point GetTextureSize() const;
+    void ChangeTextureSize(const Point& newSize);
 
     static ResourceId_t GetNextResourceId();
 

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <memory>
-#include <optional>
+#include <string>
 #include <set>
 
 #include "../Components/Component.hpp"
@@ -13,7 +12,7 @@ class World;
 class Entity
 {
 public:
-    Entity(World* world, EntityId_t id);
+    Entity(World* world, EntityId_t id, const std::string& name);
     virtual ~Entity() = default;
 
     Entity(const Entity&) = delete;
@@ -46,6 +45,7 @@ public:
 protected:
     World* m_world;
     EntityId_t m_id;
+    std::string m_name;
 };
 
 }  // namespace red

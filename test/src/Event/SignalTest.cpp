@@ -4,7 +4,7 @@
 
 TEST_CASE("Signal/Slots connections", "[EVENT]")
 {
-    SECTION("Simple lambda")
+    SECTION("Pong lambda")
     {
         bool isCalled = false;
         red::Signal<int> signal;
@@ -15,7 +15,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
         REQUIRE(isCalled);
     }
 
-    SECTION("Simple method bind")
+    SECTION("Pong method bind")
     {
         MyClass mc;
 

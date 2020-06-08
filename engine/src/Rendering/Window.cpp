@@ -92,8 +92,11 @@ SDL_SysWMinfo Window::GetSDLSysInfo()
 
 WindowInfo Window::GetWindowInfo()
 {
-    WindowInfo info{};
-    SDL_GetWindowSize(m_window, &info.width, &info.height);
+    int width;
+    int height;
+    SDL_GetWindowSize(m_window, &width, &height);
+
+    WindowInfo info{width, height};
 
     return info;
 }
