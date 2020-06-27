@@ -21,22 +21,24 @@ void RenderingSystem::Update()
 {
     PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
 
-    auto& window = m_renderingEngine->GetWindow();
-    auto windowInfo = window.GetWindowInfo();
-
-    m_renderingEngine->BeginRenderFrame();
-
-    for (auto& entity : GetComponents<Transform, Sprite>())
+    for (auto& camera : GetComponents<CameraComponent>())
     {
-        auto* sprite = entity->GetComponent<Sprite>();
-        auto* transform = entity->GetComponent<Transform>();
+        auto* cameraComponent = camera->GetComponent<CameraComponent>();
+        m_renderingEngine->BeginCameraRendering(cameraComponent);
 
-        m_renderingEngine->Render(sprite, *transform);
+        for (auto& entity : GetComponents<Transform, Sprite>())
+        {
+            auto* sprite = entity->GetComponent<Sprite>();
+            auto* transform = entity->GetComponent<Transform>();
+
+            m_renderingEngine->Render(cameraComponent, sprite, *transform);
+        }
+
+        m_renderingEngine->EndCameraRendering();
     }
-
-    m_renderingEngine->EndRenderFrame();
 }
 
-void RenderingSystem::Finalise() {}
+void RenderingSystem::PreUpdate() { m_renderingEngine->BeginRenderFrame(); }
+void RenderingSystem::LateUpdate() { m_renderingEngine->EndRenderFrame(); }
 
 }  // namespace red

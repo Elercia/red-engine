@@ -72,6 +72,8 @@ public:
 
     SDL_Window *GetSDLWindow();
 
+    static Window& GetWindow();
+
 private:
     SDL_SysWMinfo GetSDLSysInfo();
 

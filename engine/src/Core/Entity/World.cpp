@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <RedEngine/Debug/Component/DebugComponent.hpp>
 
 #include "RedEngine/Core/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
@@ -28,7 +29,7 @@ World::~World()
 
     for (auto& entity : m_entities)
     {
-        DestroyEntity(entity);
+        delete entity;
     }
 
     delete m_componentManager;
@@ -38,7 +39,7 @@ Entity* World::CreateEntity() { return CreateEntity(""); }
 
 Entity* World::CreateEntity(const std::string& name)
 {
-    auto entityPtr = new Entity(this, m_nextEntityId++, name);
+    auto* entityPtr = new Entity(this, m_nextEntityId++, name);
 
     m_entities.push_back(entityPtr);
 
@@ -47,8 +48,11 @@ Entity* World::CreateEntity(const std::string& name)
 
 red::Entity* World::CreateSingletonEntity()
 {
-    m_singletonEntity = new Entity(this, m_nextEntityId++, "__SingletonEntity__");
+    m_singletonEntity = CreateEntity("__SingletonEntity__");
+
     m_singletonEntity->SetPersistent(true);
+
+    m_singletonEntity->AddComponent<DebugComponent>();
 
     return m_singletonEntity;
 }
@@ -87,7 +91,10 @@ Entity& World::GetSingletonEntity() { return *m_singletonEntity; }
 
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
-void World::DestroyEntity(Entity* entity) { delete entity; }
+void World::DestroyEntity(Entity* entity)
+{
+    delete entity;
+}
 
 void World::SetEntityPersistency(Entity* entity, bool persistent)
 {

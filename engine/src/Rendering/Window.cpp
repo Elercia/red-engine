@@ -1,7 +1,8 @@
+#include <RedEngine/Core/Engine.hpp>
 #include <RedEngine/Debug/Debug.hpp>
 #include <RedEngine/Rendering/Window.hpp>
-#include <iostream>
 #include <RedEngine/Debug/Logger/Logger.hpp>
+#include <iostream>
 
 namespace red
 {
@@ -101,4 +102,6 @@ WindowInfo Window::GetWindowInfo()
     return info;
 }
 SDL_Window* Window::GetSDLWindow() { return m_window; }
+
+Window& Window::GetWindow() { return red::GetRedSubEngine<red::RenderingEngine>()->GetWindow(); }
 }  // namespace red

@@ -23,20 +23,20 @@ void GameControlSystem::Update()
 
     if (userInputComponent->GetKey("1moveDown"))
     {
-        paddleOnePos.m_y += velocity * Time::DeltaTime();
+        paddleOnePos.y += velocity * red::Time::DeltaTime();
     }
     else if (userInputComponent->GetKey("1moveUp"))
     {
-        paddleOnePos.m_y -= velocity * Time::DeltaTime();
+        paddleOnePos.y -= velocity * red::Time::DeltaTime();
     }
 
     if (userInputComponent->GetKey("2moveDown"))
     {
-        paddleTwoPos.m_y += velocity * Time::DeltaTime();
+        paddleTwoPos.y += velocity * red::Time::DeltaTime();
     }
     else if (userInputComponent->GetKey("2moveUp"))
     {
-        paddleTwoPos.m_y -= velocity * Time::DeltaTime();
+        paddleTwoPos.y -= velocity * red::Time::DeltaTime();
     }
 
     KeepInBound(paddleOnePos);
@@ -47,8 +47,8 @@ void GameControlSystem::KeepInBound(red::Vector2& pos)
 {
     auto info = red::GetRedSubEngine<red::RenderingEngine>()->GetWindow().GetWindowInfo();
 
-    if (pos.m_y < 0)
-        pos.m_y = 0;
-    if (pos.m_y + 100.F > static_cast<float>(info.height))
-        pos.m_y = static_cast<float>(info.height - 100);
+    if (pos.y < 0)
+        pos.y = 0;
+    if (pos.y + 100.F > static_cast<float>(info.height))
+        pos.y = static_cast<float>(info.height - 100);
 }

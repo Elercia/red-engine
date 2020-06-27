@@ -25,15 +25,16 @@ void GameLogicSystem::Update()
     auto* paddleTwoTransform = m_paddleTwo->GetComponent<Transform>();
 
     auto& ballPos = ballTransform->GetPosition();
-    auto deltaTime = Time::DeltaTime();
-    ballPos.m_x += ballComponent->m_velocity.m_x * deltaTime;
-    ballPos.m_y += ballComponent->m_velocity.m_y * deltaTime;
+    auto deltaTime = red::Time::DeltaTime();
+    ballPos.x += ballComponent->m_velocity.x * deltaTime;
+    ballPos.y += ballComponent->m_velocity.y * deltaTime;
 
     auto info = GetRedSubEngine<RenderingEngine>()->GetWindow().GetWindowInfo();
 
-    if (ballPos.m_y < (0 + 30.F / 2.F) ||
-        ballPos.m_y > (static_cast<float>(info.height) - 30.F / 2.F))
-        ballComponent->m_velocity.m_y *= -1;  // TODO smooth the bouncing with the ball size
+    if (ballPos.y < (0 + 30.F / 2.F) || ballPos.y > (static_cast<float>(info.height) - 30.F / 2.F))
+        ballComponent->m_velocity.y *= -1;  // TODO smooth the bouncing with the ball size
+
+    DebugDrawLine(ballPos, ballPos + ballComponent->m_velocity * 100.F);
 
     BounceOnPaddles(paddleOneTransform, paddleTwoTransform, ballPos, ballComponent);
 
@@ -45,12 +46,12 @@ void GameLogicSystem::CheckPoints(red::Vector2& ballPos, const red::WindowInfo& 
     auto* score = GetSingletonEntity().GetComponent<ScoreComponent>();
     bool scored = false;
 
-    if (ballPos.m_x < 0)
+    if (ballPos.x < 0)
     {
         std::get<0>(score->m_scores)++;
         scored = true;
     }
-    else if (ballPos.m_x > info.width)
+    else if (ballPos.x > info.width)
     {
         std::get<1>(score->m_scores)++;
         scored = true;
@@ -69,15 +70,15 @@ void GameLogicSystem::BounceOnPaddles(const red::Transform* paddleOneTransform,
     const auto& paddleOnePos = paddleOneTransform->GetPosition();
     const auto& paddleTwoPos = paddleTwoTransform->GetPosition();
 
-    if (ballPos.m_x < paddleOnePos.m_x &&
-        red::Math::Between(ballPos.m_y, paddleOnePos.m_y, paddleOnePos.m_y + 100))
+    if (ballPos.x < paddleOnePos.x &&
+        red::Math::Between(ballPos.y, paddleOnePos.y, paddleOnePos.y + 100))
     {
-        ballComponent->m_velocity.m_x *= -1;
+        ballComponent->m_velocity.x *= -1;
     }
 
-    if (ballPos.m_x > paddleTwoPos.m_x &&
-        red::Math::Between(ballPos.m_y, paddleTwoPos.m_y, paddleTwoPos.m_y + 100))
+    if (ballPos.x > paddleTwoPos.x &&
+        red::Math::Between(ballPos.y, paddleTwoPos.y, paddleTwoPos.y + 100))
     {
-        ballComponent->m_velocity.m_x *= -1;
+        ballComponent->m_velocity.x *= -1;
     }
 }

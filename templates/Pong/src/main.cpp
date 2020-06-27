@@ -1,7 +1,7 @@
 #include <RedEngine/Application/Application.hpp>
 #include <RedEngine/Core/Entity/World.hpp>
 #include <RedEngine/Core/Entity/Entity.hpp>
-#include "DefaultLevel.hpp"
+#include "PongLevel.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 
     red::Application app;
 
-    app.LoadLevel<DefaultLevel>();
+    app.LoadLevel<PongLevel>();
 
     return app.Run() ? EXIT_SUCCESS : EXIT_FAILURE;
 }

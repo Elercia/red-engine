@@ -2,6 +2,26 @@
 
 namespace red
 {
+class Vector2
+{
+public:
+    Vector2() : Vector2(0.F, 0.F) {}
+    Vector2(float px, float py) : x(px), y(py) {}
+
+    Vector2(const Vector2&) = default;
+    Vector2(Vector2&&) = default;
+
+    ~Vector2() = default;
+
+    Vector2& operator=(const Vector2&) = default;
+    Vector2& operator=(Vector2&&) = default;
+
+    Vector2 operator+(const Vector2& other) const;
+    Vector2 operator*(float scalar) const;
+
+    float x, y;
+};
+
 class Vector3
 {
 public:
@@ -19,21 +39,34 @@ public:
     float m_x, m_y, m_z;
 };
 
-class Vector2
+class Vector4
 {
 public:
-    Vector2() : Vector2(0.F, 0.F) {}
-    Vector2(float x, float y) : m_x(x), m_y(y) {}
+    Vector4() : Vector4(0.F, 0.F, 0.F, 0.F) {}
+    Vector4(float px, float py, float pz, float pw) : x(px), y(py), z(pz), w(pw) {}
 
-    Vector2(const Vector2&) = default;
-    Vector2(Vector2&&) = default;
+    Vector4(const Vector4&) = default;
+    Vector4(Vector4&&) = default;
 
-    Vector2& operator=(const Vector2&) = default;
-    Vector2& operator=(Vector2&&) = default;
+    Vector4& operator=(const Vector4&) = default;
+    Vector4& operator=(Vector4&&) = default;
 
-    ~Vector2() = default;
+    ~Vector4() = default;
 
-    float m_x, m_y;
+    float x;
+    float y;
+
+    union
+    {
+        float z;
+        float width;
+    };
+
+    union
+    {
+        float w;
+        float height;
+    };
 };
 
 }  // namespace red

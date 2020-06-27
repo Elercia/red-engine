@@ -4,12 +4,15 @@
 #include <RedEngine/Rendering/System/RenderingSystem.hpp>
 #include <RedEngine/Debug/Profiler.hpp>
 #include <RedEngine/Input/Component/UserInput.hpp>
+#include <RedEngine/Input/System/UserInputSystem.hpp>
+#include <RedEngine/Rendering/System/RenderingSystem.hpp>
 #include <RedEngine/Event/EventSystem.hpp>
 
 #include <array>
 #include <memory>
 #include <thread>
 #include <RedEngine/Core/Time/FrameCounter.hpp>
+#include <RedEngine/Debug/System/DebugSystem.hpp>
 
 namespace red
 {
@@ -83,32 +86,44 @@ void Application::CreateWorld()
 
     m_world = std::make_unique<World>();
 
-    auto entity = m_world->CreateSingletonEntity();
+    auto* entity = m_world->CreateSingletonEntity();
     entity->AddComponent<UserInputComponent>();
+
+    m_world->AddSystem<UserInputSystem>();
+    m_world->AddSystem<RenderingSystem>();
+    m_world->AddSystem<DebugSystem>();
 }
 
-void Application::LoadLevel(Level* level)
+void Application::LoadLevel(const std::string& levelResource)
+{
+    auto* resourceEngine = GetRedSubEngine<ResourceEngine>();
+
+    resourceEngine->LoadLevel(levelResource);
+}
+
+void Application::LoadLevel(std::unique_ptr<Level>&& level)
 {
     if (m_currentLevel != nullptr)
     {
-        m_currentLevel->Finalize(*m_world);
+        m_currentLevel->Finalize();
     }
 
     // reset the old level
-    m_currentLevel.reset(level);
+    m_currentLevel = std::move(level);
 
     if (m_world == nullptr)
     {
         CreateWorld();
     }
 
-    m_world->UnloadSystems();
+    m_currentLevel->SetWorld(m_world.get());
+
     m_world->UnloadTransientEntities();
 
-    m_currentLevel->Init(*m_world);
+    m_currentLevel->Init();
 
     m_world->Init();
 }
-World& Application::GetWorld() { return *m_world; }
 
+World& Application::GetWorld() { return *m_world; }
 }  // namespace red

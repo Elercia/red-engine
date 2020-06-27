@@ -129,4 +129,31 @@ void ResourceEngine::AddResourceToLoadedResources(ResourceType::Enum type,
         m_loadedResources.insert({type, {resource}});
     }
 }
+
+void ResourceEngine::LoadLevel(const std::string& levelName) { RED_ABORT("Not implemented"); }
+
+std::shared_ptr<Texture2D> ResourceEngine::CreateTextureFrom(SDL_Texture* sdlTexture)
+{
+    return GetRedSubEngine<ResourceEngine>()->CreateTextureFromInternal(sdlTexture);
+}
+
+std::shared_ptr<Texture2D> ResourceEngine::CreateTextureFromInternal(SDL_Texture* sdlTexture)
+{
+    auto texture = std::make_shared<Texture2D>(Texture2D::GetNextResourceId());
+    texture->m_loadState = LoadState::STATE_LOADED;
+
+    // Keep a reference to the created texture
+    AddResourceToLoadedResources(ResourceType::TEXTURE2D, texture);
+
+    texture->m_sdlTexture = sdlTexture;
+
+    int h;
+    int w;
+    SDL_QueryTexture(texture->m_sdlTexture, nullptr, nullptr, &w, &h);
+
+    texture->m_textureSize.h = h;
+    texture->m_textureSize.w = w;
+
+    return texture;
+}
 }  // namespace red

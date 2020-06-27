@@ -20,12 +20,15 @@ public:
     ResourceEngine();
     ~ResourceEngine();
 
+    static std::shared_ptr<Texture2D> CreateTextureFrom(SDL_Texture* sdlTexture);
     static std::shared_ptr<Texture2D> LoadTexture(const std::string& path);
-
     void ReleaseTexture(Texture2D* texture, bool erase = true);
+
+    void LoadLevel(const std::string& levelName);
 
 private:
     std::shared_ptr<Texture2D> LoadTextureInternal(const std::string& path);
+    std::shared_ptr<Texture2D> CreateTextureFromInternal(SDL_Texture* sdlTexture);
 
     void AddResourceToLoadedResources(ResourceType::Enum type,
                                       const std::shared_ptr<Texture2D>& resource);

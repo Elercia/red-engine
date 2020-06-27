@@ -7,8 +7,8 @@ void Application::LoadLevel()
 {
     static_assert(std::is_base_of_v<Level, LevelType>, "Load level must be a Level type");
 
-    auto* newLevel = new LevelType();
+    auto newLevel = std::make_unique<LevelType>(m_world.get());
 
-    LoadLevel(newLevel);
+    LoadLevel(std::move(newLevel));
 }
 }  // namespace red

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <set>
+#include <vector>
 
 #include "../Components/Component.hpp"
 
@@ -12,7 +13,7 @@ class World;
 class Entity
 {
 public:
-    Entity(World* world, EntityId_t id, const std::string& name);
+    Entity(World* world, EntityId_t id, std::string  name);
     virtual ~Entity() = default;
 
     Entity(const Entity&) = delete;
@@ -38,14 +39,24 @@ public:
     [[nodiscard]] EntityId_t GetId() const;
     void SetId(EntityId_t id);
 
-    void Destroy();
+    void Destroy(); // TODO Make something of it
 
     void SetPersistent(bool persistent);
+
+    void SetParent(Entity* parent);
+    void AddChild(Entity* child);
+    void RemoveChild(Entity* child);
 
 protected:
     World* m_world;
     EntityId_t m_id;
     std::string m_name;
+
+    bool m_isPersistent;
+
+    Entity* m_parent;
+    std::vector<Entity*> m_children;
+
 };
 
 }  // namespace red
