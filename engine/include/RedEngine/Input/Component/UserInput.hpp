@@ -9,6 +9,7 @@
 
 namespace red
 {
+    //TODO handle joysticks and gamepads in general
 class UserInputComponent : public Component
 {
     friend class UserInputSystem;

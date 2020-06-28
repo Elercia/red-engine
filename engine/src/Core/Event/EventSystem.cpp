@@ -1,6 +1,6 @@
-#include <RedEngine/Event/EventSystem.hpp>
+#include <RedEngine/Core/Event/EventSystem.hpp>
 #include <RedEngine/Input/InputDefinitionTranslationUnit.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <SDL2/SDL_events.h>
 
 namespace red

@@ -7,9 +7,11 @@
 
 namespace red
 {
+    // Add console component (add utilities like "console debug (OR should I make a 'log into console bool ?')")
 class DebugComponent : public Component
 {
     friend class DebugSystem;
+    friend class RenderingSystem;
 
 public:
     explicit DebugComponent(Entity* entity);

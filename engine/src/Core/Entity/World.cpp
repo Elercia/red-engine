@@ -2,12 +2,12 @@
 
 #include <algorithm>
 #include <cassert>
-#include <RedEngine/Debug/Component/DebugComponent.hpp>
+#include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
 
 #include "RedEngine/Core/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/Debug/Debug.hpp"
+#include "RedEngine/Core/Debug/Debug.hpp"
 
 namespace red
 {

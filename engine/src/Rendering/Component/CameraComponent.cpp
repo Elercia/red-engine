@@ -1,7 +1,7 @@
 
 #include <RedEngine/Rendering/Component/CameraComponent.hpp>
 #include <RedEngine/Math/Math.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <RedEngine/Rendering/Window.hpp>
 
 namespace red

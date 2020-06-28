@@ -11,8 +11,10 @@ namespace red
 {
 class Application : public Uncopyable
 {
+    friend class Engine;
+
 public:
-    Application();
+    explicit Application();
     ~Application();
 
     bool Run();
@@ -32,6 +34,7 @@ private:
     /// Properly load a level
     void LoadLevel(std::unique_ptr<Level>&& level);
 
+private:
     std::unique_ptr<World> m_world{nullptr};
     std::unique_ptr<Level> m_currentLevel{nullptr};
 };

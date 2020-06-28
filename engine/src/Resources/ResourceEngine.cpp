@@ -1,8 +1,8 @@
 #include <RedEngine/Core/Components/Sprite.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
 #include <RedEngine/Rendering/RenderingEngine.hpp>
-#include <RedEngine/Debug/Debug.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <RedEngine/Core/Engine.hpp>
 #include <RedEngine/Rendering/Texture2D.hpp>
 #include <SDL2/SDL_image.h>
@@ -27,6 +27,7 @@ ResourceEngine::~ResourceEngine()
 std::shared_ptr<Texture2D> ResourceEngine::LoadTexture(const std::string& path)
 {
     // TODO path should be relative to resource folder
+    // TODO path should be transformed into a specific resource identifier to allow data packaging
     return GetRedSubEngine<ResourceEngine>()->LoadTextureInternal(path);
 }
 

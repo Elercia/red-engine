@@ -7,6 +7,7 @@
 
 namespace red
 {
+    //TODO make something of it ?
 class MemoryManager : public SubEngine
 {
 public:

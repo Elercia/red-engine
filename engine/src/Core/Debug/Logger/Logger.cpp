@@ -1,4 +1,4 @@
-#include "RedEngine/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
 namespace red
 {

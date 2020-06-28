@@ -1,6 +1,7 @@
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Entity/Entity.hpp>
+
 #include <utility>
-#include "RedEngine/Core/Entity/Entity.hpp"
 
 namespace red
 {

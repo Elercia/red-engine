@@ -1,18 +1,18 @@
 #include <RedEngine/Core/Time/Time.hpp>
-#include <RedEngine/Application/Application.hpp>
-#include <RedEngine/Debug/Debug.hpp>
+#include <RedEngine/Core/Application.hpp>
+#include <RedEngine/Core/Debug/Debug.hpp>
 #include <RedEngine/Rendering/System/RenderingSystem.hpp>
-#include <RedEngine/Debug/Profiler.hpp>
+#include <RedEngine/Core/Debug/Profiler.hpp>
 #include <RedEngine/Input/Component/UserInput.hpp>
 #include <RedEngine/Input/System/UserInputSystem.hpp>
 #include <RedEngine/Rendering/System/RenderingSystem.hpp>
-#include <RedEngine/Event/EventSystem.hpp>
+#include <RedEngine/Core/Event/EventSystem.hpp>
+#include <RedEngine/Core/Time/FrameCounter.hpp>
+#include <RedEngine/Core/Debug/System/DebugSystem.hpp>
 
 #include <array>
 #include <memory>
 #include <thread>
-#include <RedEngine/Core/Time/FrameCounter.hpp>
-#include <RedEngine/Debug/System/DebugSystem.hpp>
 
 namespace red
 {

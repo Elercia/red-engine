@@ -9,14 +9,14 @@ class LevelTest1 : public red::Level
 public:
     LevelTest1() : red::Level("LevelTest1") {}
 
-    void Init(red::World& world) override
+    void Init() override
     {
         for (int i = 0; i < 10; ++i)
         {
-            world.CreateEntity();
+            m_world->CreateEntity();
         }
 
-        auto* e = world.CreateEntity();
+        auto* e = m_world->CreateEntity();
         e->SetPersistent(true);
     };
 
@@ -28,7 +28,7 @@ class LevelTest2 : public red::Level
 public:
     LevelTest2() : red::Level("LevelTest2") {}
 
-    void Init(red::World& world) override{
+    void Init() override{
 
     };
     void Finalize() override{};

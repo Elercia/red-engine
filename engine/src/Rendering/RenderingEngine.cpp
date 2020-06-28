@@ -1,10 +1,10 @@
 
-#include "RedEngine/Debug/Debug.hpp"
-#include "RedEngine/Debug/Logger/Logger.hpp"
-#include "RedEngine/Rendering/RenderingEngine.hpp"
-#include "RedEngine/Rendering/Window.hpp"
-#include "RedEngine/Rendering/Texture2D.hpp"
-#include "RedEngine/Core/Components/Sprite.hpp"
+#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
+#include <RedEngine/Rendering/RenderingEngine.hpp>
+#include <RedEngine/Rendering/Window.hpp>
+#include <RedEngine/Rendering/Texture2D.hpp>
+#include <RedEngine/Core/Components/Sprite.hpp>
 #include <RedEngine/Rendering/Component/CameraComponent.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
 

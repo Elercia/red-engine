@@ -1,6 +1,6 @@
 
-#include <RedEngine/Event/Signal.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Event/Signal.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 
 namespace red
 {

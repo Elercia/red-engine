@@ -1,7 +1,7 @@
 #include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/Debug.hpp>
 #include <RedEngine/Rendering/Window.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <iostream>
 
 namespace red

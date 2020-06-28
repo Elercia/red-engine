@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 #ifndef RED_NO_MEMORY_PROFILING
 #define RED_ENABLE_MEMORY_PROFILING
