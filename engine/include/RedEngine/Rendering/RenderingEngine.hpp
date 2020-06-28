@@ -30,7 +30,8 @@ public:
     void EndRenderFrame();
 
     void Render(CameraComponent* camera, Sprite* sprite, const Transform& transform);
-    void DrawLine(Vector2 first, Vector2 second, Color color = ColorConstant::RED);
+    void DrawLine(CameraComponent* camera, Vector2 first, Vector2 second,
+                  Color color = ColorConstant::RED);
 
     void Init() override;
 

@@ -50,25 +50,6 @@ bool Application::Run()
             break;
         }
 
-        if (eventSystem->GetKeyDown(KeyCodes::KEY_F))
-        {
-            isFullScreen = !isFullScreen;
-            CVar<FullScreenMode::Enum> fullscreen{"fullscreen_mode", "window",
-                                                  FullScreenMode::WINDOWED};
-            fullscreen.ChangeValue(isFullScreen ? FullScreenMode::FULLSCREEN
-                                                : FullScreenMode::WINDOWED);
-        }
-
-        if (eventSystem->GetKeyDown(KeyCodes::KEY_P))
-        {
-            Time::SetTimeScale(Time::TimeScale() + 0.1F);
-        }
-
-        if (eventSystem->GetKeyDown(KeyCodes::KEY_O))
-        {
-            Time::SetTimeScale(Time::TimeScale() - 0.1F);
-        }
-
         RED_LOG_TRACE("[Frame rate {}][Delta time {}][Time scale {}][Unscaled delta time {}]",
                       1 / Time::DeltaTime(), Time::DeltaTime(), Time::TimeScale(),
                       Time::DeltaTime(false));

@@ -105,11 +105,14 @@ void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Tran
     }
 }
 
-void RenderingEngine::DrawLine(Vector2 first, Vector2 second, Color color)
+void RenderingEngine::DrawLine(CameraComponent* camera, Vector2 first, Vector2 second, Color color)
 {
+    const auto& fPos = camera->WorldToViewportPoint(first);
+    const auto& sPos = camera->WorldToViewportPoint(first);
+
     SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(m_renderer, static_cast<int>(first.x), static_cast<int>(first.y),
-                       static_cast<int>(second.x), static_cast<int>(second.y));
+    SDL_RenderDrawLine(m_renderer, static_cast<int>(fPos.x), static_cast<int>(fPos.y),
+                       static_cast<int>(sPos.x), static_cast<int>(sPos.y));
 }
 
 void RenderingEngine::Init()

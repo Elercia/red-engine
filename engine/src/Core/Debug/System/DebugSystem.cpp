@@ -2,6 +2,10 @@
 #include <RedEngine/Core/Debug/System/DebugSystem.hpp>
 #include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
 #include <RedEngine/Core/Engine.hpp>
+#include <RedEngine/Core/Time/Time.hpp>
+#include <RedEngine/Rendering/Window.hpp>
+#include <optick.h>
+#include <RedEngine/Core/Debug/Profiler.hpp>
 
 namespace red
 {
@@ -12,16 +16,31 @@ DebugSystem::DebugSystem(World* world)
 
 void DebugSystem::LateUpdate()
 {
+    PROFILER_CATEGORY("Debug", Optick::Category::Debug);
+
+    auto* eventSystem = GetRedSubEngine<EventSystem>();
     auto* debugComp = GetSingletonEntity().GetComponent<DebugComponent>();
 
-    // TODO move this to the rendering engine
-    for (auto& line : debugComp->m_frameDebugLines)
+    if (eventSystem->GetKeyDown(KeyCodes::KEY_F))
     {
-        m_renderingEngine->DrawLine(line.first, line.second);
+        CVar<FullScreenMode::Enum> fullscreen{"fullscreen_mode", "window",
+                                              FullScreenMode::WINDOWED};
+
+        fullscreen.ChangeValue(fullscreen.GetValue() == FullScreenMode::WINDOWED
+                                   ? FullScreenMode::FULLSCREEN
+                                   : FullScreenMode::WINDOWED);
     }
 
-    debugComp->m_frameDebugLines.clear();
+    if (eventSystem->GetKeyDown(KeyCodes::KEY_P))
+    {
+        Time::SetTimeScale(Time::TimeScale() + 0.1F);
+    }
 
-    //TODO add the management of the in-game console and debug facilities like speeding the game and fullscreen control
+    if (eventSystem->GetKeyDown(KeyCodes::KEY_O))
+    {
+        Time::SetTimeScale(Time::TimeScale() - 0.1F);
+    }
+
+    // TODO add the management of the in-game console
 }
 }  // namespace red
