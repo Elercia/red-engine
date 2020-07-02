@@ -4,7 +4,6 @@
 #include <RedEngine/Core/Engine.hpp>
 #include <RedEngine/Core/Time/Time.hpp>
 #include <RedEngine/Rendering/Window.hpp>
-#include <optick.h>
 #include <RedEngine/Core/Debug/Profiler.hpp>
 
 namespace red
