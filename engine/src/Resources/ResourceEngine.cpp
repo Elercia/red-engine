@@ -5,7 +5,12 @@
 #include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <RedEngine/Core/Engine.hpp>
 #include <RedEngine/Rendering/Texture2D.hpp>
+#include <RedEngine/Utils/FileUtils.hpp>
+
 #include <SDL2/SDL_image.h>
+#include <nlohmann/json.hpp>
+
+#include <filesystem>
 
 namespace red
 {
@@ -24,15 +29,23 @@ ResourceEngine::~ResourceEngine()
     }
 }
 
-std::shared_ptr<Texture2D> ResourceEngine::LoadTexture(const std::string& path)
+std::shared_ptr<Texture2D> ResourceEngine::LoadTexture(const std::string& resourceId)
 {
-    // TODO path should be relative to resource folder
     // TODO path should be transformed into a specific resource identifier to allow data packaging
-    return GetRedSubEngine<ResourceEngine>()->LoadTextureInternal(path);
+    return GetRedSubEngine<ResourceEngine>()->LoadTextureInternal(resourceId);
 }
 
-std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string& path)
+void ResourceEngine::LoadSprite(const std::string& resourceId, Sprite* sprite)
 {
+    GetRedSubEngine<ResourceEngine>()->LoadSpriteInternal(resourceId, sprite);
+}
+
+std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string& resourceId)
+{
+    // TODO if the texture exists, return it instead of making another
+    namespace fs = std::filesystem;
+    fs::path p = GetRedSubEngine<Configuration>()->GetResourceFolder() + "/" + resourceId;
+
     auto texture = std::make_shared<Texture2D>(Texture2D::GetNextResourceId());
     texture->m_loadState = LoadState::STATE_ERROR;  // At the end, the texture should either be
                                                     // loaded or not (if an error occurred)
@@ -40,11 +53,11 @@ std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string
     // Keep a reference to the created texture
     AddResourceToLoadedResources(ResourceType::TEXTURE2D, texture);
 
-    SDL_Surface* tempSurface = IMG_Load(path.c_str());
+    SDL_Surface* tempSurface = IMG_Load(p.string().c_str());
 
     if (tempSurface == nullptr)
     {
-        RED_LOG_WARNING("Error creating surface from texture path {} with error {}", path,
+        RED_LOG_WARNING("Error creating surface from texture path {} with error {}", p.string(),
                         SDL_GetError());
 
         return texture;
@@ -57,7 +70,7 @@ std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string
 
     if (texture->m_sdlTexture == nullptr)
     {
-        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", path,
+        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", p.string(),
                         SDL_GetError());
 
         return texture;
@@ -72,7 +85,7 @@ std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string
 
     texture->m_loadState = LoadState::STATE_LOADED;
 
-    RED_LOG_INFO("Creating texture ID : {} from path {}", texture->GetResourceId(), path);
+    RED_LOG_INFO("Creating texture ID : {} from path {}", texture->GetResourceId(), p.string());
 
     return texture;
 }
@@ -157,4 +170,74 @@ std::shared_ptr<Texture2D> ResourceEngine::CreateTextureFromInternal(SDL_Texture
 
     return texture;
 }
+
+void ResourceEngine::LoadSpriteInternal(const std::string& resourceId, Sprite* sprite)
+{
+    namespace fs = std::filesystem;
+    fs::path p = GetRedSubEngine<Configuration>()->GetResourceFolder() + "/" + resourceId + ".json";
+
+    if (!fs::exists(p) || fs::is_directory(p))
+    {
+        RED_LOG_WARNING("Cannot load sprite for path {}", p.string());
+        return;
+    }
+
+    using json = nlohmann::json;
+
+    auto parsedJson = json::parse(ReadFile(p.string()), nullptr, false);
+
+    if (parsedJson.is_discarded() || !parsedJson.is_array())
+    {
+        // TODO in case of an error, do something to handle this
+        RED_LOG_WARNING("Path {} is not a valid JSON", p.string());
+        return;
+    }
+
+    for (auto animationJson : parsedJson)
+    {
+        AnimationDesc animationDesc;
+
+        std::string name = animationJson["name"];
+        animationDesc.name = name;
+
+        auto spriteSheetJson = animationJson.find("spritesheet");
+        if (spriteSheetJson == animationJson.end())
+        {
+            RED_LOG_WARNING("Path {} has no spritesheet attribute", p.string());
+        }
+
+        animationDesc.texture = LoadTextureInternal(spriteSheetJson.value());
+
+        animationDesc.loop = animationJson["loop"];
+
+        auto framesJson = animationJson.find("frames");
+        if (framesJson == animationJson.end())
+        {
+            RED_LOG_WARNING("Animation {} has no frame", name);
+            continue;
+        }
+
+        for (auto& it : framesJson.value())
+        {
+            auto rect = it.find("rect").value();
+            auto size = it.find("size").value();
+            auto duration = it.find("duration").value();
+            auto center = it.find("center").value();
+
+            AnimationFrameDesc frameDesc;
+            frameDesc.rect = {rect["x"], rect["y"], rect["w"], rect["h"]};
+            frameDesc.duration = duration;
+            frameDesc.size = {size["w"], size["h"]};
+            frameDesc.center = {center["x"], center["y"]};
+            frameDesc.flipH = it["flip_h"];
+            frameDesc.flipV = it["flip_v"];
+            frameDesc.rotation = it["rotation"];
+
+            animationDesc.frames.push_back(frameDesc);
+        }
+
+        sprite->m_animations.push_back(animationDesc);
+    }
+}
+
 }  // namespace red

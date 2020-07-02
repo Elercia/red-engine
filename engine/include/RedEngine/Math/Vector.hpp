@@ -2,71 +2,81 @@
 
 namespace red
 {
-class Vector2
+template <typename T>
+class Vector2T
 {
 public:
-    Vector2() : Vector2(0.F, 0.F) {}
-    Vector2(float px, float py) : x(px), y(py) {}
+    Vector2T() : Vector2T(T(), T()) {}
+    Vector2T(T px, T py) : x(px), y(py) {}
 
-    Vector2(const Vector2&) = default;
-    Vector2(Vector2&&) = default;
+    Vector2T(const Vector2T<T>&) = default;
+    Vector2T(Vector2T<T>&&) = default;
 
-    ~Vector2() = default;
+    ~Vector2T() = default;
 
-    Vector2& operator=(const Vector2&) = default;
-    Vector2& operator=(Vector2&&) = default;
+    Vector2T<T>& operator=(const Vector2T<T>&) = default;
+    Vector2T<T>& operator=(Vector2T<T>&&) = default;
 
-    Vector2 operator+(const Vector2& other) const;
-    Vector2 operator*(float scalar) const;
+    Vector2T<T> operator+(const Vector2T<T>& other) const;
+    Vector2T<T> operator*(T scalar) const;
 
-    float x, y;
+    T x, y;
 };
 
-class Vector3
+template <typename T>
+class Vector3T
 {
 public:
-    Vector3() : Vector3(0, 0, 0) {}
-    Vector3(float x, float y, float z) : m_x(x), m_y(y), m_z(z) {}
+    Vector3T() : Vector3T(T(), T(), T()) {}
+    Vector3T(T x, T y, T z) : m_x(x), m_y(y), m_z(z) {}
 
-    Vector3(const Vector3&) = default;
-    Vector3(Vector3&&) = default;
+    Vector3T(const Vector3T&) = default;
+    Vector3T(Vector3T&&) = default;
 
-    Vector3& operator=(const Vector3&) = default;
-    Vector3& operator=(Vector3&&) = default;
+    Vector3T<T>& operator=(const Vector3T<T>&) = default;
+    Vector3T<T>& operator=(Vector3T<T>&&) = default;
 
-    ~Vector3() = default;
+    ~Vector3T() = default;
 
-    float m_x, m_y, m_z;
+    T m_x, m_y, m_z;
 };
 
-class Vector4
+template <typename T>
+class Vector4T
 {
 public:
-    Vector4() : Vector4(0.F, 0.F, 0.F, 0.F) {}
-    Vector4(float px, float py, float pz, float pw) : x(px), y(py), z(pz), w(pw) {}
+    Vector4T() : Vector4T(T(), T(), T(), T()) {}
+    Vector4T(T px, T py, T pz, T pw) : x(px), y(py), z(pz), w(pw) {}
 
-    Vector4(const Vector4&) = default;
-    Vector4(Vector4&&) = default;
+    Vector4T(const Vector4T<T>&) = default;
+    Vector4T(Vector4T<T>&&) = default;
 
-    Vector4& operator=(const Vector4&) = default;
-    Vector4& operator=(Vector4&&) = default;
+    Vector4T<T>& operator=(const Vector4T<T>&) = default;
+    Vector4T<T>& operator=(Vector4T&&) = default;
 
-    ~Vector4() = default;
+    ~Vector4T() = default;
 
-    float x;
-    float y;
+    T x;
+    T y;
 
     union
     {
-        float z;
-        float width;
+        T z;
+        T width;
     };
 
     union
     {
-        float w;
-        float height;
+        T w;
+        T height;
     };
 };
 
+using Vector2 = Vector2T<float>;
+using Vector2i = Vector2T<int>;
+
+using Vector4 = Vector4T<float>;
+using Vector4i = Vector4T<int>;
 }  // namespace red
+
+#include "inl/Vector.inl"

@@ -68,5 +68,7 @@ private:
 
     /// Background color (color to clear the screen before rendering)
     Color m_backgroundColor{ColorConstant::BLACK};
+
+    //TODO camera render texture 
 };
 }  // namespace red

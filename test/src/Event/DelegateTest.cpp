@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <RedEngine/Event/Delegate.hpp>
+#include <RedEngine/Core/Event/Delegate.hpp>
 
 bool g_f_called = false;
 bool g_lambda_called = false;

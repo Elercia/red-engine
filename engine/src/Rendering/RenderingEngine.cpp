@@ -94,14 +94,28 @@ SDL_Renderer* RenderingEngine::GetRenderer() { return m_renderer; }
 
 void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Transform& transform)
 {
-    if (sprite->m_texture->GetLoadState() == LoadState::STATE_LOADED)
+    auto& currentAnimation = *sprite->m_currentAnimationInfo.currentAnimation;
+
+    if (currentAnimation.texture &&
+        currentAnimation.texture->GetLoadState() == LoadState::STATE_LOADED)
     {
         const auto& position = camera->WorldToViewportPoint(transform.GetPosition());
 
-        SDL_Rect dest{static_cast<int>(position.x), static_cast<int>(position.y),
-                      sprite->m_texture->m_textureSize.w, sprite->m_texture->m_textureSize.h};
+        auto& currentAnimationFrame = *sprite->m_currentAnimationInfo.currentAnimationFrame;
 
-        SDL_RenderCopy(m_renderer, sprite->m_texture->m_sdlTexture, nullptr, &dest);
+        SDL_Rect source{currentAnimationFrame.rect.x, currentAnimationFrame.rect.y,
+                        currentAnimationFrame.rect.width, currentAnimationFrame.rect.height};
+        SDL_Rect dest{static_cast<int>(position.x), static_cast<int>(position.y),
+                      currentAnimationFrame.size.x, currentAnimationFrame.size.y};
+
+        SDL_Point center{currentAnimationFrame.center.x, currentAnimationFrame.center.y};
+
+        SDL_RendererFlip flip = (SDL_RendererFlip)(
+            SDL_FLIP_NONE | (currentAnimationFrame.flipH ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) |
+            (currentAnimationFrame.flipV ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE));
+
+        SDL_RenderCopyEx(m_renderer, currentAnimation.texture->m_sdlTexture, &source, &dest,
+                         currentAnimationFrame.rotation, &center, flip);
     }
 }
 

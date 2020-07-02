@@ -1,5 +1,3 @@
-#include <type_traits>
-
 namespace red
 {
 template <class LevelType>

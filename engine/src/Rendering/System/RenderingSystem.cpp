@@ -39,6 +39,8 @@ void RenderingSystem::Update()
             auto* sprite = entity->GetComponent<Sprite>();
             auto* transform = entity->GetComponent<Transform>();
 
+            sprite->NextFrame();
+
             m_renderingEngine->Render(cameraComponent, sprite, *transform);
         }
 
