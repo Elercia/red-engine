@@ -153,12 +153,12 @@ void ResourceEngine::AddResourceToLoadedResources(ResourceType::Enum type,
 std::shared_ptr<red::Resource> ResourceEngine::GetResourceIfExist(ResourceType::Enum resourceType,
                                                                   ResourceId_t resourceId)
 {
-    auto& loadedResourceMap = m_loadedResources.find(ResourceType::TEXTURE2D);
+    auto loadedResourceMap = m_loadedResources.find(ResourceType::TEXTURE2D);
 
     if (loadedResourceMap == m_loadedResources.end())
         return nullptr;
 
-    auto& loadedResourceIt = loadedResourceMap->second.find(resourceId);
+    auto loadedResourceIt = loadedResourceMap->second.find(resourceId);
     if (loadedResourceIt == loadedResourceMap->second.end())
     {
         return nullptr;

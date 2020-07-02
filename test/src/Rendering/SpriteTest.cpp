@@ -22,7 +22,7 @@ TEST_CASE("Sprite test", "[RENDERING]")
 
     SECTION("Frames change properly according to framerate")
     {
-        Time::SetDeltaTime(0.033F);
+        red::Time::SetDeltaTime(0.033F);
         auto oldIt = spriteComponent->GetCurrentAnimationInfo().currentAnimationFrame;
 
         // With a duration of 1 second, the next animation should start after this one
