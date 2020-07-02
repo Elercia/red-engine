@@ -17,15 +17,16 @@ namespace red
 ResourceEngine::ResourceEngine() {}
 ResourceEngine::~ResourceEngine()
 {
-    for (auto& resourceListPair : m_loadedResources)
+    for (auto& typedResource : m_loadedResources)
     {
-        for (auto& resourceItem : resourceListPair.second)
+        for (auto& resourceIdValuePair : typedResource.second)
         {
-            resourceItem->Release();
-            resourceItem.reset();
+            auto& resource = resourceIdValuePair.second;
+            resource->Release();
+            resource.reset();
         }
 
-        resourceListPair.second.clear();
+        typedResource.second.clear();
     }
 }
 
@@ -42,11 +43,20 @@ void ResourceEngine::LoadSprite(const std::string& resourceId, Sprite* sprite)
 
 std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string& resourceId)
 {
-    // TODO if the texture exists, return it instead of making another
     namespace fs = std::filesystem;
+
+    auto textureResourceId = Texture2D::GetResourceIdFromPath(resourceId);
+
+    auto resourcePtr = GetResourceIfExist(ResourceType::TEXTURE2D, textureResourceId);
+
+    if (resourcePtr != nullptr)
+    {
+        return std::static_pointer_cast<Texture2D>(resourcePtr);
+    }
+
     fs::path p = GetRedSubEngine<Configuration>()->GetResourceFolder() + "/" + resourceId;
 
-    auto texture = std::make_shared<Texture2D>(Texture2D::GetNextResourceId());
+    auto texture = std::make_shared<Texture2D>(textureResourceId);
     texture->m_loadState = LoadState::STATE_ERROR;  // At the end, the texture should either be
                                                     // loaded or not (if an error occurred)
 
@@ -99,23 +109,19 @@ void ResourceEngine::ReleaseTexture(Texture2D* texture, bool erase)
 
     texture->m_loadState = LoadState::STATE_NOT_LOADED;
 
-    auto it = m_loadedResources.find(ResourceType::TEXTURE2D);
-    auto& vect = it->second;
+    auto textureMapIt = m_loadedResources.find(ResourceType::TEXTURE2D);
+    auto& textureMap = textureMapIt->second;
 
-    auto foundIt = std::find_if(vect.begin(), vect.end(), [texture](const auto& value) {
-        if (value == nullptr)
-            return false;
-        return texture->GetResourceId() == value->GetResourceId();
-    });
+    auto foundIt = textureMap.find(texture->GetResourceId());
 
-    if (foundIt == vect.end())
+    if (foundIt == textureMap.end())
     {
         RED_LOG_WARNING("Attempted to release a not found texture2D from resource (id:{})",
                         texture->m_resourceId);
         return;
     }
 
-    auto& smartPtr = *foundIt;
+    auto& smartPtr = (foundIt->second);
     if (smartPtr.use_count() != 1)
     {
         RED_LOG_WARNING(
@@ -128,24 +134,40 @@ void ResourceEngine::ReleaseTexture(Texture2D* texture, bool erase)
     RED_LOG_INFO("Release texture ID : {}", texture->GetResourceId());
 
     if (erase)
-        vect.erase(foundIt);
+        textureMap.erase(foundIt);
 }
 void ResourceEngine::AddResourceToLoadedResources(ResourceType::Enum type,
                                                   const std::shared_ptr<Texture2D>& resource)
 {
-    auto it = m_loadedResources.find(type);
-    if (it != m_loadedResources.end())
+    auto resourceTypeMap = m_loadedResources.find(type);
+    if (resourceTypeMap != m_loadedResources.end())
     {
-        it->second.push_back(resource);
+        resourceTypeMap->second.insert({resource->GetResourceId(), resource});
     }
     else
     {
-        m_loadedResources.insert({type, {resource}});
+        m_loadedResources.insert({type, {{resource->GetResourceId(), resource}}});
     }
 }
 
-void ResourceEngine::LoadLevel(const std::string& levelName) { RED_ABORT("Not implemented"); }
+std::shared_ptr<red::Resource> ResourceEngine::GetResourceIfExist(ResourceType::Enum resourceType,
+                                                                  ResourceId_t resourceId)
+{
+    auto& loadedResourceMap = m_loadedResources.find(ResourceType::TEXTURE2D);
 
+    if (loadedResourceMap == m_loadedResources.end())
+        return nullptr;
+
+    auto& loadedResourceIt = loadedResourceMap->second.find(resourceId);
+    if (loadedResourceIt == loadedResourceMap->second.end())
+    {
+        return nullptr;
+    }
+    return loadedResourceIt->second;
+}
+
+void ResourceEngine::LoadLevel(const std::string& levelName) { RED_ABORT("Not implemented"); }
+/*
 std::shared_ptr<Texture2D> ResourceEngine::CreateTextureFrom(SDL_Texture* sdlTexture)
 {
     return GetRedSubEngine<ResourceEngine>()->CreateTextureFromInternal(sdlTexture);
@@ -169,7 +191,7 @@ std::shared_ptr<Texture2D> ResourceEngine::CreateTextureFromInternal(SDL_Texture
     texture->m_textureSize.w = w;
 
     return texture;
-}
+}*/
 
 void ResourceEngine::LoadSpriteInternal(const std::string& resourceId, Sprite* sprite)
 {

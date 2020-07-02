@@ -5,6 +5,8 @@
 
 #include <SDL2/SDL_render.h>
 
+#include <string>
+
 namespace red
 {
 class Texture2D : public Resource
@@ -19,13 +21,11 @@ public:
     [[nodiscard]] Point GetTextureSize() const;
     void ChangeTextureSize(const Point& newSize);
 
-    static ResourceId_t GetNextResourceId();
+    static ResourceId_t GetResourceIdFromPath(const std::string& resourceId);
 
     void Release() override;
 
 private:
-    static ResourceId_t s_nextResourceId;
-
     SDL_Texture* m_sdlTexture{nullptr};
     SDL_Rect m_textureSize{0, 0, 0, 0};
 };

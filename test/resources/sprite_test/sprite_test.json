@@ -58,6 +58,7 @@
   {
     "name": "second",
     "spritesheet": "paddle.png",
+    "loop": true,
     "opacity": {
       "hasOpacity": true,
       "color": {

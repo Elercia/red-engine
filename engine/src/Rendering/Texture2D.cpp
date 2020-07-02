@@ -6,9 +6,14 @@ namespace red
 {
 Texture2D::Texture2D(ResourceId_t resourceId) : Resource(resourceId, ResourceType::TEXTURE2D) {}
 
-ResourceId_t Texture2D::s_nextResourceId = 0;
+ResourceId_t Texture2D::GetResourceIdFromPath(const std::string& resourceId)
+{
+    std::hash<std::string> hash_fn;
 
-ResourceId_t Texture2D::GetNextResourceId() { return s_nextResourceId++; }
+    size_t hash = hash_fn(resourceId);
+
+    return hash;
+}
 
 Point Texture2D::GetTextureSize() const { return Point{m_textureSize.w, m_textureSize.h}; }
 
