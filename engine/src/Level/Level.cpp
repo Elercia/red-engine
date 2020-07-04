@@ -4,6 +4,7 @@
 
 namespace red
 {
-Level::Level(const char *name) : m_levelName(name) {}
+Level::Level(const char* name, World* world) : m_levelName(name), m_world(world) {}
+void Level::SetWorld(World* world) {m_world = world;}
 
 }  // namespace red

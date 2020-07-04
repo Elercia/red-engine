@@ -3,19 +3,19 @@
 
 namespace red
 {
-double Time::s_timeScale = 1.F;
-double Time::s_deltaTime = 0.F;
+float Time::s_timeScale = 1.F;
+float Time::s_deltaTime = 0.F;
 
-double Time::TimeScale() { return s_timeScale; }
+float Time::TimeScale() { return s_timeScale; }
 
-void Time::TimeScale(double newTimeScale) { s_timeScale = Math::Clamp01(newTimeScale); }
+void Time::SetTimeScale(float newTimeScale) { s_timeScale = Math::Clamp(newTimeScale, 0.F, 2.F); }
 
-double Time::DeltaTime(bool scaled) { return scaled ? ScaledDeltaTime() : UnscaledDeltaTime(); }
+float Time::DeltaTime(bool scaled) { return scaled ? ScaledDeltaTime() : UnscaledDeltaTime(); }
 
-double Time::UnscaledDeltaTime() { return s_deltaTime; }
+float Time::UnscaledDeltaTime() { return s_deltaTime; }
 
-double Time::ScaledDeltaTime() { return s_deltaTime * s_timeScale; }
+float Time::ScaledDeltaTime() { return s_deltaTime * s_timeScale; }
 
-void Time::DeltaTime(double newValue) { s_deltaTime = newValue; }
+void Time::SetDeltaTime(float newValue) { s_deltaTime = newValue; }
 
 }  // namespace red

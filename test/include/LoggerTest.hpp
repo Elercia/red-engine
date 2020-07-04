@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 
 class LoggerTest : public red::Logger
 {

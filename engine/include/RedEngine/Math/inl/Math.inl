@@ -1,4 +1,3 @@
-
 namespace red
 {
 template <typename T>
@@ -21,5 +20,11 @@ constexpr T Math::Max(T l, T r)
 
 constexpr float Math::Clamp01(float value) { return Clamp(value, 0.F, 1.F); }
 constexpr double Math::Clamp01(double value) { return Clamp(value, 0., 1.); }
+
+template <typename T>
+constexpr bool Math::Between(T value, T lValue, T rValue)
+{
+    return value >= lValue && value <= rValue;
+}
 
 }  // namespace red

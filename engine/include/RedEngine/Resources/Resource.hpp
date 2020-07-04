@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 namespace red
 {
-using ResourceId_t = uint16_t;
+using ResourceId_t = std::size_t;
 
 struct LoadState
 {

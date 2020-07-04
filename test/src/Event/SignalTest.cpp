@@ -1,10 +1,10 @@
 #include <catch2/catch.hpp>
-#include <RedEngine/Event/Signal.hpp>
+#include <RedEngine/Core/Event/Signal.hpp>
 #include <SignalTest.hpp>
 
 TEST_CASE("Signal/Slots connections", "[EVENT]")
 {
-    SECTION("Simple lambda")
+    SECTION("Pong lambda")
     {
         bool isCalled = false;
         red::Signal<int> signal;
@@ -15,7 +15,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
         REQUIRE(isCalled);
     }
 
-    SECTION("Simple method bind")
+    SECTION("Pong method bind")
     {
         MyClass mc;
 

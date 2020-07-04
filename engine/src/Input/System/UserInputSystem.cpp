@@ -2,7 +2,7 @@
 #include <RedEngine/Core/Configuration/IniReader.hpp>
 #include <RedEngine/Core/Configuration/UserInputHelper.hpp>
 #include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Debug/Profiler.hpp>
+#include <RedEngine/Core/Debug/Profiler.hpp>
 
 namespace red
 {

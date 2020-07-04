@@ -1,12 +1,14 @@
-#include "RedEngine/Debug/Debug.hpp"
-#include "RedEngine/Debug/Logger/Logger.hpp"
-#include "RedEngine/Rendering/RenderingEngine.hpp"
-#include "RedEngine/Rendering/Window.hpp"
-#include "RedEngine/Rendering/Texture2D.hpp"
-#include "RedEngine/Core/Components/Sprite.hpp"
 
-#include <SDL2/SDL_render.h>
-#include <RedEngine/Resources/Resource.hpp>
+#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
+#include <RedEngine/Rendering/RenderingEngine.hpp>
+#include <RedEngine/Rendering/Window.hpp>
+#include <RedEngine/Rendering/Texture2D.hpp>
+#include <RedEngine/Core/Components/Sprite.hpp>
+#include <RedEngine/Rendering/Component/CameraComponent.hpp>
+#include <RedEngine/Resources/ResourceEngine.hpp>
+
+#include <SDL2/SDL_image.h>
 
 namespace red
 {
@@ -40,40 +42,93 @@ void RenderingEngine::InitRenderer()
     RED_LOG_INFO("Init Renderer");
 }
 
-void RenderingEngine::BeginRenderFrame()
-{
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(m_renderer);
-}
+void RenderingEngine::BeginRenderFrame() {}
+
 void RenderingEngine::EndRenderFrame() { SDL_RenderPresent(m_renderer); }
 
-void RenderingEngine::DebugDrawRect()
+void RenderingEngine::BeginCameraRendering(CameraComponent* cameraComponent)
 {
-    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+    // Setup the camera viewport
+    SDL_Rect viewport = {static_cast<int>(cameraComponent->m_viewport.x),
+                         static_cast<int>(cameraComponent->m_viewport.y),
+                         static_cast<int>(cameraComponent->m_viewport.width),
+                         static_cast<int>(cameraComponent->m_viewport.height)};
 
-    auto windowInfo = m_window->GetWindowInfo();
+    SDL_RenderSetViewport(m_renderer, &viewport);
 
-    SDL_Rect rect;
-    rect.h = 100;
-    rect.w = 200;
-    rect.x = (windowInfo.width / 2) - rect.w;
-    rect.y = (windowInfo.height / 2) - rect.h;
-    SDL_RenderDrawRect(m_renderer, &rect);
+    // Set the camera draw color
+    SDL_SetRenderDrawColor(
+        m_renderer, cameraComponent->m_backgroundColor.r, cameraComponent->m_backgroundColor.g,
+        cameraComponent->m_backgroundColor.b, cameraComponent->m_backgroundColor.a);
+
+    SDL_RenderClear(m_renderer);
+
+    //    if (cameraComponent->m_renderedTexture == nullptr)
+    //    {
+    //        auto info = m_window->GetWindowInfo();
+    //
+    //        auto* sdlTexture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888,
+    //                                             SDL_TEXTUREACCESS_TARGET, info.width,
+    //                                             info.height);
+    //
+    //        cameraComponent->m_renderedTexture = ResourceEngine::CreateTextureFrom(sdlTexture);
+    //    }
+    //
+    //    SDL_SetRenderTarget(m_renderer, cameraComponent->m_renderedTexture->m_sdlTexture);
+}
+
+void RenderingEngine::EndCameraRendering()
+{
+    //    // Reset the viewport
+    //    auto info = m_window->GetWindowInfo();
+    //    SDL_Rect viewport = {0, 0, info.width, info.height};
+    //
+    //    SDL_RenderSetViewport(m_renderer, &viewport);
+    //
+    //    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    //
+    //    SDL_SetRenderTarget(m_renderer, nullptr);
 }
 
 SDL_Renderer* RenderingEngine::GetRenderer() { return m_renderer; }
 
-void RenderingEngine::Render(Sprite* sprite, const Transform& transform)
+void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Transform& transform)
 {
-    if (sprite->m_texture->GetLoadState() == LoadState::STATE_LOADED)
-    {
-        auto position = transform.GetPosition();
-        SDL_Rect dest{position.m_x, position.m_y, sprite->m_texture->m_textureSize.h,
-                      sprite->m_texture->m_textureSize.w};
+    auto& currentAnimation = *sprite->m_currentAnimationInfo.currentAnimation;
 
-        SDL_RenderCopy(m_renderer, sprite->m_texture->m_sdlTexture, nullptr, &dest);
+    if (currentAnimation.texture &&
+        currentAnimation.texture->GetLoadState() == LoadState::STATE_LOADED)
+    {
+        const auto& position = camera->WorldToViewportPoint(transform.GetPosition());
+
+        auto& currentAnimationFrame = *sprite->m_currentAnimationInfo.currentAnimationFrame;
+
+        SDL_Rect source{currentAnimationFrame.rect.x, currentAnimationFrame.rect.y,
+                        currentAnimationFrame.rect.width, currentAnimationFrame.rect.height};
+        SDL_Rect dest{static_cast<int>(position.x), static_cast<int>(position.y),
+                      currentAnimationFrame.size.x, currentAnimationFrame.size.y};
+
+        SDL_Point center{currentAnimationFrame.center.x, currentAnimationFrame.center.y};
+
+        SDL_RendererFlip flip = (SDL_RendererFlip)(
+            SDL_FLIP_NONE | (currentAnimationFrame.flipH ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) |
+            (currentAnimationFrame.flipV ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE));
+
+        SDL_RenderCopyEx(m_renderer, currentAnimation.texture->m_sdlTexture, &source, &dest,
+                         currentAnimationFrame.rotation, &center, flip);
     }
 }
+
+void RenderingEngine::DrawLine(CameraComponent* camera, Vector2 first, Vector2 second, Color color)
+{
+    const auto& fPos = camera->WorldToViewportPoint(first);
+    const auto& sPos = camera->WorldToViewportPoint(first);
+
+    SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLine(m_renderer, static_cast<int>(fPos.x), static_cast<int>(fPos.y),
+                       static_cast<int>(sPos.x), static_cast<int>(sPos.y));
+}
+
 void RenderingEngine::Init()
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -81,6 +136,15 @@ void RenderingEngine::Init()
         RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
         SDL_Quit();
         RED_ABORT("Cannot initialize SDL2");
+    }
+
+    int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
+    if (IMG_Init(flags) != flags)
+    {
+        RED_LOG_ERROR("Error initializing SDL image with error {}", IMG_GetError());
+        IMG_Quit();
+        SDL_Quit();
+        RED_ABORT("Cannot initialize SDL image");
     }
 
     CreateNewWindow();

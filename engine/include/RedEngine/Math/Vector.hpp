@@ -2,38 +2,81 @@
 
 namespace red
 {
-class Vector3
+template <typename T>
+class Vector2T
 {
 public:
-    Vector3() : Vector3(0, 0, 0) {}
-    Vector3(float x, float y, float z) : m_x(x), m_y(y), m_z(z) {}
+    Vector2T() : Vector2T(T(), T()) {}
+    Vector2T(T px, T py) : x(px), y(py) {}
 
-    Vector3(const Vector3&) = default;
-    Vector3(Vector3&&) = default;
+    Vector2T(const Vector2T<T>&) = default;
+    Vector2T(Vector2T<T>&&) = default;
 
-    Vector3& operator=(const Vector3&) = default;
-    Vector3& operator=(Vector3&&) = default;
+    ~Vector2T() = default;
 
-    ~Vector3() = default;
+    Vector2T<T>& operator=(const Vector2T<T>&) = default;
+    Vector2T<T>& operator=(Vector2T<T>&&) = default;
 
-    float m_x, m_y, m_z;
+    Vector2T<T> operator+(const Vector2T<T>& other) const;
+    Vector2T<T> operator*(T scalar) const;
+
+    T x, y;
 };
 
-class Vector2
+template <typename T>
+class Vector3T
 {
 public:
-    Vector2() : Vector2(0, 0) {}
-    Vector2(int x, int y) : m_x(x), m_y(y) {}
+    Vector3T() : Vector3T(T(), T(), T()) {}
+    Vector3T(T x, T y, T z) : m_x(x), m_y(y), m_z(z) {}
 
-    Vector2(const Vector2&) = default;
-    Vector2(Vector2&&) = default;
+    Vector3T(const Vector3T&) = default;
+    Vector3T(Vector3T&&) = default;
 
-    Vector2& operator=(const Vector2&) = default;
-    Vector2& operator=(Vector2&&) = default;
+    Vector3T<T>& operator=(const Vector3T<T>&) = default;
+    Vector3T<T>& operator=(Vector3T<T>&&) = default;
 
-    ~Vector2() = default;
+    ~Vector3T() = default;
 
-    int m_x, m_y;
+    T m_x, m_y, m_z;
 };
 
+template <typename T>
+class Vector4T
+{
+public:
+    Vector4T() : Vector4T(T(), T(), T(), T()) {}
+    Vector4T(T px, T py, T pz, T pw) : x(px), y(py), z(pz), w(pw) {}
+
+    Vector4T(const Vector4T<T>&) = default;
+    Vector4T(Vector4T<T>&&) = default;
+
+    Vector4T<T>& operator=(const Vector4T<T>&) = default;
+    Vector4T<T>& operator=(Vector4T&&) = default;
+
+    ~Vector4T() = default;
+
+    T x;
+    T y;
+
+    union
+    {
+        T z;
+        T width;
+    };
+
+    union
+    {
+        T w;
+        T height;
+    };
+};
+
+using Vector2 = Vector2T<float>;
+using Vector2i = Vector2T<int>;
+
+using Vector4 = Vector4T<float>;
+using Vector4i = Vector4T<int>;
 }  // namespace red
+
+#include "inl/Vector.inl"

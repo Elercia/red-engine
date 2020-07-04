@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/Rendering/Component/CameraComponent.hpp>
+
 #include "../../Core/Entity/System.hpp"
 
 namespace red
@@ -12,9 +14,9 @@ class RenderingSystem : public System
 public:
     explicit RenderingSystem(World* world);
 
+    void PreUpdate() override;
     void Update() override;
-
-    void Finalise() override;
+    void LateUpdate() override;
 
 private:
     RenderingEngine* m_renderingEngine;

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <RedEngine/Math/Vector.hpp>
 
 #include "Entity.hpp"
 #include "World.hpp"
@@ -34,6 +35,9 @@ public:
     std::vector<Entity*> GetComponents();
 
     Entity& GetSingletonEntity();
+
+    // Utilities functions
+    void DebugDrawLine(const Vector2& from, const Vector2& to);
 
 protected:
     World* m_world;
