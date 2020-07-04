@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <RedEngine/Math/Vector.hpp>
 
 #include "Entity.hpp"
 #include "World.hpp"
@@ -21,15 +22,22 @@ public:
 
     // Update functions called in this order
     virtual void FixedUpdate(){};
-    virtual void Update() = 0;
+    virtual void Update(){};
     virtual void PreUpdate(){};
     virtual void LateUpdate(){};
 
-    // Call once the system is shutting down to manage system-specific shutdown
+    /// Called once the world is initializing to manager system-specific init
+    virtual void Init(){};
+    /// Called once the system is shutting down to manage system-specific shutdown
     virtual void Finalise(){};
 
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
+
+    Entity& GetSingletonEntity();
+
+    // Utilities functions
+    void DebugDrawLine(const Vector2& from, const Vector2& to);
 
 protected:
     World* m_world;

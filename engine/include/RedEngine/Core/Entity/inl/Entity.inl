@@ -3,9 +3,9 @@
 #include <cassert>
 #include <string>
 
-#include "../../../Debug/Debug.hpp"
-#include "../../Components/ComponentManager.hpp"
-#include "../World.hpp"
+#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Components/ComponentManager.hpp>
+#include <RedEngine/Core/Entity/World.hpp>
 
 namespace red
 {
@@ -14,7 +14,7 @@ T* Entity::AddComponent(Args&&... args)
 {
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
-    auto componentManager = m_world->GetComponentManager();
+    auto* componentManager = m_world->GetComponentManager();
 
     if (componentManager->HasComponent<T>(this))
     {

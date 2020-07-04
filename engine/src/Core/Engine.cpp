@@ -3,6 +3,8 @@
 
 #include "RedEngine/Rendering/RenderingEngine.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Core/Configuration/Configuration.hpp"
+#include "RedEngine/Core/Application.hpp"
 
 namespace red
 {
@@ -12,7 +14,29 @@ Engine& GetRedInstance()
     return s_engine;
 }
 
-void Engine::Init() { GetRedInstance().InitAllSubEngines(); }
+void Engine::Init(const std::string_view& resourceFolder, int argc, char** argv)
+{
+    auto& instance = GetRedInstance();
+
+    auto config = instance.Get<Configuration>();
+    config->SetResourceFolder(resourceFolder);
+    config->LoadConfigFile(
+        std::string(resourceFolder)
+            .append("/config.ini"));  // TODO Set the resource folder configuration
+    config->ParseCommandLine(argc, argv);
+
+    instance.InitAllSubEngines();
+}
+
+Application& Engine::GetApplication()
+{
+    if (m_application == nullptr)
+    {
+        m_application = std::make_unique<Application>();
+    }
+
+    return *m_application;
+}
 
 void Engine::InitAllSubEngines()
 {

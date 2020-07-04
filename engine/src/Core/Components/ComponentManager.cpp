@@ -9,13 +9,13 @@ ComponentManager::ComponentManager() : m_components() {}
 
 std::set<Component*> ComponentManager::GetComponents(Entity* entity) { return {}; }
 
-void ComponentManager::StoreComponent(Entity* owner, Component* component)
+void ComponentManager::StoreComponent(Entity* owner, Component* component, std::size_t name)
 {
-    auto& componentPool = GetComponentPool(component->GetComponentName());
+    auto& componentPool = GetComponentPool(name);
     componentPool[owner->GetId()] = component;
 }
 
-ComponentPool_t& ComponentManager::GetComponentPool(ComponentName_t componentName)
+ComponentPool_t& ComponentManager::GetComponentPool(std::size_t componentName)
 {
     auto poolIt = m_components.find(componentName);
     if (poolIt != m_components.end())
@@ -23,10 +23,8 @@ ComponentPool_t& ComponentManager::GetComponentPool(ComponentName_t componentNam
         return poolIt->second;
     }
 
-    ComponentPool_t pool = (ComponentPool_t) calloc(sizeof(Component*), ComponentPoolSize);
-    m_components[componentName] = pool;
-
-    return m_components[componentName];
+    auto* pool = (ComponentPool_t) calloc(sizeof(Component*), ComponentPoolSize);
+    return m_components.insert({componentName, pool}).first->second;
 }
 
 void ComponentManager::RemoveComponent(Entity* owner, ComponentPool_t& pool)
@@ -38,12 +36,12 @@ void ComponentManager::RemoveComponent(Entity* owner, ComponentPool_t& pool)
     ptr = nullptr;
 }
 
-bool ComponentManager::HasComponent(Entity* entity, ComponentName_t name)
+bool ComponentManager::HasComponent(Entity* entity, std::size_t name)
 {
     return GetComponentPool(name)[entity->GetId()] != nullptr;
 }
 
-Component* ComponentManager::GetComponent(Entity* entity, ComponentName_t name)
+Component* ComponentManager::GetComponent(Entity* entity, std::size_t name)
 {
     return GetComponentPool(name)[entity->GetId()];
 }

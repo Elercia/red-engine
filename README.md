@@ -71,6 +71,7 @@ This project uses Hunter to manage much of its dependencies.
 Hunter libraries :
 - [fmt](https://github.com/fmtlib/fmt)
 - [SDL2](https://www.libsdl.org/)
+- [SDL Image](https://www.libsdl.org/projects/SDL_image/)
 - [Catch2](https://github.com/catchorg/Catch2)
 
 Other libraries :

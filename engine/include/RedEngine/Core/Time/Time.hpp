@@ -8,23 +8,23 @@ class Time
 {
 public:
     /// Get the engine time scale
-    static double TimeScale();
+    static float TimeScale();
     /// Set the engine time scale
-    static void TimeScale(double newTimeScale);
+    static void SetTimeScale(float newTimeScale);
 
     /// Get the last frame delta time
     /// Equivalent to UnscaledDeltaTime if scaled = false
     /// Equivalent to ScaledDeltaTime if scaled = true
-    static double DeltaTime(bool scaled = false);
-    static double UnscaledDeltaTime();
-    static double ScaledDeltaTime();
+    static float DeltaTime(bool scaled = true);
+    static float UnscaledDeltaTime();
+    static float ScaledDeltaTime();
 
-    static void DeltaTime(double newValue);
+    static void SetDeltaTime(float newValue);
 
 private:
     Time() = default;
 
-    static double s_timeScale;
-    static double s_deltaTime;
+    static float s_timeScale;
+    static float s_deltaTime;
 };
 }  // namespace red

@@ -10,7 +10,6 @@ TEST_CASE("Logger", "[Debug]")
         logger.SetLogLevel(red::LogLevel::LEVEL_TRACE);
         logger.LogInternal(red::LogLevel::LEVEL_TRACE, 10, "LoggerTest.cpp", "Doing stuff with {}, {} times",
                            "my bicycle", 10);
-        std::cout << logger.lastLog << std::endl;
 
         REQUIRE(logger.lastLog.find("Doing stuff with my bicycle, 10 times") != std::string::npos);
         REQUIRE(logger.lastLog.find("TRACE") != std::string::npos);

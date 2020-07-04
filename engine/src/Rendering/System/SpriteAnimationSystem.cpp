@@ -1,6 +1,6 @@
 
 #include <RedEngine/Rendering/System/SpriteAnimationSystem.hpp>
-#include <RedEngine/Debug/Logger/Logger.hpp>
+#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <RedEngine/Core/Components/Sprite.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
 

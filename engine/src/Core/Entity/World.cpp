@@ -2,16 +2,18 @@
 
 #include <algorithm>
 #include <cassert>
+#include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
 
 #include "RedEngine/Core/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/Debug/Debug.hpp"
+#include "RedEngine/Core/Debug/Debug.hpp"
 
 namespace red
 {
 World::World()
-    : m_componentManager(new ComponentManager())
+    : m_singletonEntity(nullptr)
+    , m_componentManager(new ComponentManager())
     , m_nextEntityId(MaxPersistentEntities)
     , m_nextPersistentEntityId(0)
 {
@@ -27,19 +29,40 @@ World::~World()
 
     for (auto& entity : m_entities)
     {
-        DestroyEntity(entity);
+        delete entity;
     }
 
     delete m_componentManager;
 }
 
-Entity* World::CreateEntity()
+Entity* World::CreateEntity() { return CreateEntity(""); }
+
+Entity* World::CreateEntity(const std::string& name)
 {
-    auto entityPtr = new Entity(this, m_nextEntityId++);
+    auto* entityPtr = new Entity(this, m_nextEntityId++, name);
 
     m_entities.push_back(entityPtr);
 
     return entityPtr;
+}
+
+red::Entity* World::CreateSingletonEntity()
+{
+    m_singletonEntity = CreateEntity("__SingletonEntity__");
+
+    m_singletonEntity->SetPersistent(true);
+
+    m_singletonEntity->AddComponent<DebugComponent>();
+
+    return m_singletonEntity;
+}
+
+void World::Init()
+{
+    for (auto& system : m_systems)
+    {
+        system->Init();
+    }
 }
 
 void World::Update()
@@ -64,9 +87,14 @@ const std::vector<System*>& World::GetSystems() { return m_systems; }
 
 const std::vector<Entity*>& World::GetEntities() { return m_entities; }
 
+Entity& World::GetSingletonEntity() { return *m_singletonEntity; }
+
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
-void World::DestroyEntity(Entity* entity) { delete entity; }
+void World::DestroyEntity(Entity* entity)
+{
+    delete entity;
+}
 
 void World::SetEntityPersistency(Entity* entity, bool persistent)
 {
@@ -108,4 +136,5 @@ void World::UnloadSystems()
 
     m_systems.clear();
 }
+
 }  // namespace red

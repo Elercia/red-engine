@@ -8,18 +8,6 @@ namespace red
 {
 class Entity;
 
-// RED_COMPONENT
-#define RED_COMPONENT(NAME)                                                                   \
-    friend class RenderingEngine;                                                             \
-    friend class ResourceEngine;                                                              \
-                                                                                              \
-public:                                                                                       \
-    constexpr static red::ComponentName_t ComponentName = NAME;                               \
-    virtual red::ComponentName_t GetComponentName() const override { return ComponentName; }; \
-                                                                                              \
-private:
-// RED_COMPONENT
-
 class Component
 {
 public:
@@ -34,8 +22,6 @@ public:
     [[nodiscard]] ComponentId_t GetComponentId() const;
 
     [[nodiscard]] Entity* GetOwner() const;
-
-    [[nodiscard]] virtual red::ComponentName_t GetComponentName() const = 0;
 
 protected:
     ComponentId_t m_componentId;

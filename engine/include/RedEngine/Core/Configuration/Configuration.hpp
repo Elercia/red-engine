@@ -1,10 +1,11 @@
 #pragma once
 
+#include <RedEngine/Core/SubEngine.hpp>
+#include <RedEngine/Core/Configuration/ConfigurationSerializator.hpp>
+
 #include <filesystem>
 #include <unordered_map>
 #include <string>
-#include <RedEngine/Core/SubEngine.hpp>
-#include <RedEngine/Core/Configuration/ConfigurationSerializator.hpp>
 
 namespace red
 {
@@ -18,7 +19,14 @@ public:
     Configuration();
     ~Configuration();
 
+    void Init() override;
+
     void ParseCommandLine(int argc, char* argv[]);
+
+    void SetResourceFolder(std::string_view resourceFolder);
+    const std::string& GetResourceFolder() const;
+
+    const std::string& GetUserDataFolder() const;
 
     template <typename T>
     static void NewConsoleVariableDeclaration(CVar<T>* cvar, std::string name, std::string category,
@@ -34,7 +42,10 @@ private:
     CVarValue* NewConsoleVariableDeclarationInternal(const std::string& name,
                                                      const std::string& category,
                                                      const std::string& defaultValue);
+
     std::unordered_map<std::string, CVarValue*> m_configVariable;
+    std::string m_resourceFolder;
+    std::string m_userDataFolder;
 };
 
 }  // namespace red

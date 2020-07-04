@@ -7,6 +7,7 @@
 
 #include "../../Math/Vector.hpp"
 #include "Component.hpp"
+#include <RedEngine/Resources/AnnimationDescriptor.hpp>
 
 namespace red
 {
@@ -14,14 +15,28 @@ class Texture2D;
 
 class Sprite : public Component
 {
-    RED_COMPONENT("SPRITE")
+    friend class RenderingEngine;
+    friend class ResourceEngine;
 
 public:
-    Sprite(Entity* entity, std::shared_ptr<Texture2D> texture);
+    Sprite(Entity* entity, const std::string& resourceId);
 
-    [[nodiscard]] std::shared_ptr<Texture2D> GetTexture() const;
+    /// Compute the modifications to do for the next frame
+    void NextFrame();
 
-private:
-    std::shared_ptr<Texture2D> m_texture;
+    /// Start a new animation by it first frame
+    /// name : The animation name
+    /// 
+    /// Return true if the animation is found false otherwise
+    bool StartAnimation(const std::string& name);
+
+	std::vector<AnimationDesc> GetAnimations() const;
+
+	CurrentAnimationDesc GetCurrentAnimationInfo() const;
+
+    private:
+    std::vector<AnimationDesc> m_animations;
+    CurrentAnimationDesc m_currentAnimationInfo;
+
 };
 }  // namespace red
