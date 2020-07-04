@@ -8,15 +8,11 @@
 TEST_CASE("Sprite test", "[RENDERING]")
 {
     using namespace red;
-    Engine::Init("resources", 0, nullptr);
+    GetRedSubEngine<Configuration>()->SetResourceFolder("resources");
 
     World world;
-
-    world.AddSystem<RenderingSystem>();
-    world.CreateSingletonEntity()->AddComponent<CameraComponent>(Vector2{0,0});
     auto* e = world.CreateEntity();
     auto* spriteComponent = e->AddComponent<Sprite>("sprite_test/sprite_test");
-    e->AddComponent<Transform>(Vector2{0, 0});
 
     REQUIRE(spriteComponent->GetAnimations().size() == 2);
 
@@ -29,7 +25,7 @@ TEST_CASE("Sprite test", "[RENDERING]")
         for (int i = 0; i < 31; i++)
         {
             REQUIRE(oldIt == spriteComponent->GetCurrentAnimationInfo().currentAnimationFrame);
-            world.Update();
+            spriteComponent->NextFrame();
         }
 
         REQUIRE(oldIt != spriteComponent->GetCurrentAnimationInfo().currentAnimationFrame);
