@@ -5,7 +5,11 @@
 
 int main(int argc, char* argv[])
 {
-    red::Engine::Init("resources", argc, argv);
+    red::EngineInitDesc desc;
+    desc.config.resourceFolder = "resources";
+    desc.config.argc = argc;
+    desc.config.argv = argv;
+    red::Engine::Init(desc);
 
     red::Application&  app = red::GetRedInstance().GetApplication();
 

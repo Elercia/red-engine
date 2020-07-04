@@ -14,18 +14,11 @@ Engine& GetRedInstance()
     return s_engine;
 }
 
-void Engine::Init(const std::string_view& resourceFolder, int argc, char** argv)
+void Engine::Init(const EngineInitDesc& initDesc)
 {
     auto& instance = GetRedInstance();
 
-    auto config = instance.Get<Configuration>();
-    config->SetResourceFolder(resourceFolder);
-    config->LoadConfigFile(
-        std::string(resourceFolder)
-            .append("/config.ini"));  // TODO Set the resource folder configuration
-    config->ParseCommandLine(argc, argv);
-
-    instance.InitAllSubEngines();
+    instance.InitAllSubEngines(initDesc);
 }
 
 Application& Engine::GetApplication()
@@ -38,11 +31,11 @@ Application& Engine::GetApplication()
     return *m_application;
 }
 
-void Engine::InitAllSubEngines()
+void Engine::InitAllSubEngines(const EngineInitDesc& initDesc)
 {
     std::apply(
-        [](auto&... tupleArgs) {
-            ((void) ApplyInit(std::forward<decltype(tupleArgs)>(tupleArgs)), ...);
+        [initDesc](auto&... tupleArgs) {
+            ((void) ApplyInit(std::forward<decltype(tupleArgs)>(tupleArgs), initDesc), ...);
         },
         m_subEngines);
 }

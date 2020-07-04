@@ -129,7 +129,7 @@ void RenderingEngine::DrawLine(CameraComponent* camera, Vector2 first, Vector2 s
                        static_cast<int>(sPos.x), static_cast<int>(sPos.y));
 }
 
-void RenderingEngine::Init()
+void RenderingEngine::Init(const EngineInitDesc& initDesc)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {

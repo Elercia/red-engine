@@ -16,6 +16,8 @@ namespace red
 {
 class Application;
 
+
+
 /// The engine regroup all the singletons class that are needed by the engine
 /// The placement order in the struct define the creation order, and so the dependencies
 class Engine
@@ -27,12 +29,12 @@ public:
         return &(std::get<SubEngineType>(m_subEngines));
     }
 
-    static void Init(const std::string_view& resourceFolder, int argc, char** argv);
+    static void Init(const EngineInitDesc& initDesc);
 
     Application& GetApplication();
 
 private:
-    void InitAllSubEngines();
+    void InitAllSubEngines(const EngineInitDesc& initDesc);
 
 private:
     std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, EventSystem>

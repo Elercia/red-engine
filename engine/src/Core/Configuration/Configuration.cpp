@@ -19,8 +19,13 @@ Configuration::~Configuration()
     }
 }
 
-void Configuration::Init()
+void Configuration::Init(const EngineInitDesc& initDesc)
 {
+    SetResourceFolder(initDesc.config.resourceFolder);
+    LoadConfigFile(std::string(initDesc.config.resourceFolder)
+                       .append("/config.ini"));  // TODO Set the resource folder configuration
+    ParseCommandLine(initDesc.config.argc, initDesc.config.argv);
+
     const auto& path = std::filesystem::current_path();
     RED_LOG_INFO("Started application in {}", path.u8string());
 

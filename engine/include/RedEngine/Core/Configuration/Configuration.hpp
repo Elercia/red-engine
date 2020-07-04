@@ -19,7 +19,7 @@ public:
     Configuration();
     ~Configuration();
 
-    void Init() override;
+    void Init(const EngineInitDesc& initDesc) override;
 
     void ParseCommandLine(int argc, char* argv[]);
 

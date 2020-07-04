@@ -33,7 +33,7 @@ public:
     void DrawLine(CameraComponent* camera, Vector2 first, Vector2 second,
                   Color color = ColorConstant::RED);
 
-    void Init() override;
+    void Init(const EngineInitDesc& initDesc) override;
 
 private:
     std::unique_ptr<Window> m_window;
