@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/Math/Vector.hpp>
+
 #include <cstdint>
 #include <cstddef>
 #include <string>
@@ -19,14 +21,21 @@ constexpr EntityId_t MaxPersistentEntities = 30;
 
 struct ConfigurationInitDesc
 {
-    int argc {0};
+    int argc{0};
     char** argv;
     std::string resourceFolder;
 };
-    /// Struct that represent all the data used by the subEngines to init themselves
+
+struct PhysicsInitDesc
+{
+    Vector2 gravity{0.F, 0.F};
+};
+
+/// Struct that represent all the data used by the subEngines to init themselves
 struct EngineInitDesc
 {
     ConfigurationInitDesc config;
+    PhysicsInitDesc physics;
 };
 
 }  // namespace red

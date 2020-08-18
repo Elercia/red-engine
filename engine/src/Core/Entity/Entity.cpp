@@ -1,5 +1,6 @@
 #include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <RedEngine/Core/Entity/Entity.hpp>
+#include <RedEngine/Core/Components/Transform.hpp>
 
 #include <utility>
 
@@ -8,6 +9,7 @@ namespace red
 Entity::Entity(World* world, EntityId_t id, std::string name)
     : m_world(world), m_id(id), m_name(std::move(name)), m_parent(nullptr), m_isPersistent(false)
 {
+    AddComponent<Transform>(0.F, 0.F);
 }
 
 void Entity::Destroy()
@@ -62,9 +64,15 @@ void Entity::SetParent(Entity* parent)
 
         SetPersistent(m_parent->m_isPersistent);
     }
+
+    m_isDirty = true;
 }
 
-void Entity::AddChild(Entity* child) { m_children.push_back(child); }
+void Entity::AddChild(Entity* child)
+{
+    m_children.push_back(child);
+    m_isDirty = true;
+}
 
 void Entity::RemoveChild(Entity* child)
 {
@@ -77,6 +85,12 @@ void Entity::RemoveChild(Entity* child)
     }
 
     m_children.erase(it);
+
+    m_isDirty = true;
 }
+
+Entity* Entity::GetParent() { return m_parent; }
+
+World* Entity::GetWorld() { return m_world; }
 
 }  // namespace red

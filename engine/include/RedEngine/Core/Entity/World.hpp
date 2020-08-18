@@ -4,6 +4,8 @@
 
 #include "../EngineConfig.hpp"
 
+#include <Box2D/Dynamics/b2World.h>
+
 #include <memory>
 #include <vector>
 #include <string>
@@ -49,6 +51,8 @@ public:
     void UnloadTransientEntities();
     void UnloadSystems();
 
+    b2World* GetPhysicsWorld();
+
 private:
     void DestroyEntity(Entity* entity);
 
@@ -59,6 +63,8 @@ private:
 
     EntityId_t m_nextEntityId;
     EntityId_t m_nextPersistentEntityId;
+
+    b2World m_physicsWorld; //TODO IPhysicsWorld
 };
 
 }  // namespace red

@@ -20,6 +20,12 @@ Vector2T<T> Vector2T<T>::operator*(T scalar) const
     return value;
 }
 
+template <class T>
+red::Vector2T<T>::operator b2Vec2() const
+{
+    static_assert(std::is_same_v<T, float>, "Conversion to b2Vec2 only work with Vector 2 float");
 
+    return b2Vec2(x, y);
+}
 
 }  // namespace red

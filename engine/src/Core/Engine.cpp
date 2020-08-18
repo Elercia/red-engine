@@ -18,6 +18,7 @@ void Engine::Init(const EngineInitDesc& initDesc)
 {
     auto& instance = GetRedInstance();
 
+    instance.m_initDesc = initDesc;
     instance.InitAllSubEngines(initDesc);
 }
 
@@ -30,6 +31,8 @@ Application& Engine::GetApplication()
 
     return *m_application;
 }
+
+const red::EngineInitDesc& Engine::GetInitDesc() const { return m_initDesc; }
 
 void Engine::InitAllSubEngines(const EngineInitDesc& initDesc)
 {

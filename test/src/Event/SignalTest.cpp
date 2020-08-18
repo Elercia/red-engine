@@ -33,16 +33,16 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
         MyClass mc;
 
         red::Signal<int> signal;
-        auto& slot = signal.Connect(&MyClass::op, &mc);
+        auto* slot = signal.Connect(&MyClass::op, &mc);
 
-        slot.Deactivate();
+        slot->Deactivate();
 
         int a = 10;
         signal.emit(a);
 
         REQUIRE(mc.m_a == -1);
 
-        slot.Activate();
+        slot->Activate();
 
         signal.Deactivate();
 

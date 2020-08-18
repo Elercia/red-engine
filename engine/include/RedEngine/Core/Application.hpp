@@ -7,6 +7,7 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
 
+
 namespace red
 {
 class Application : public Uncopyable

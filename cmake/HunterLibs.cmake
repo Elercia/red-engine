@@ -12,3 +12,6 @@ find_package(fmt CONFIG REQUIRED)
 
 hunter_add_package(nlohmann_json)
 find_package(nlohmann_json CONFIG REQUIRED)
+
+hunter_add_package(Box2D)
+find_package(Box2D CONFIG REQUIRED)

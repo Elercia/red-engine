@@ -16,6 +16,7 @@ World::World()
     , m_componentManager(new ComponentManager())
     , m_nextEntityId(MaxPersistentEntities)
     , m_nextPersistentEntityId(0)
+    , m_physicsWorld({0, 0})  // TODO CVar for gravity ?
 {
 }
 
@@ -91,10 +92,7 @@ Entity& World::GetSingletonEntity() { return *m_singletonEntity; }
 
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
-void World::DestroyEntity(Entity* entity)
-{
-    delete entity;
-}
+void World::DestroyEntity(Entity* entity) { delete entity; }
 
 void World::SetEntityPersistency(Entity* entity, bool persistent)
 {
@@ -136,5 +134,7 @@ void World::UnloadSystems()
 
     m_systems.clear();
 }
+
+b2World* World::GetPhysicsWorld() { return &m_physicsWorld; }
 
 }  // namespace red

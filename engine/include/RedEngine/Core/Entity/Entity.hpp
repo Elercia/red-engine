@@ -46,6 +46,9 @@ public:
     void SetParent(Entity* parent);
     void AddChild(Entity* child);
     void RemoveChild(Entity* child);
+    Entity* GetParent();
+
+    World* GetWorld();
 
 protected:
     World* m_world;
@@ -56,6 +59,7 @@ protected:
 
     Entity* m_parent;
     std::vector<Entity*> m_children;
+    bool m_isDirty{false}; // TODO Look at how to set it back to non-dirty
 
 };
 

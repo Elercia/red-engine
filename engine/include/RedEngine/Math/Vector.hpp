@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Box2D/Common/b2Math.h>
+
 namespace red
 {
 template <typename T>
@@ -19,6 +21,8 @@ public:
 
     Vector2T<T> operator+(const Vector2T<T>& other) const;
     Vector2T<T> operator*(T scalar) const;
+
+    operator b2Vec2() const;
 
     T x, y;
 };

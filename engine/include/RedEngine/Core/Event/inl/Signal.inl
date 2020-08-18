@@ -6,7 +6,7 @@ namespace red
 {
 // --------------- SIGNAL ---------------
 template <typename... SignalArgs>
-typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Connect(
+typename Signal<SignalArgs...>::Slot* Signal<SignalArgs...>::Connect(
     Signal<SignalArgs...>::Func function)
 {
     int id = m_nextSlotId;
@@ -15,12 +15,12 @@ typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Connect(
     auto slot = Slot(this, function, id);
     m_connections.push_back(std::move(slot));
 
-    return m_connections.at(m_connections.size() - 1);
+    return &m_connections.at(m_connections.size() - 1);
 }
 
 template <typename... SignalArgs>
 template <class C>
-typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Connect(
+typename Signal<SignalArgs...>::Slot* Signal<SignalArgs...>::Connect(
     void (C::*method)(SignalArgs... args), C* obj)
 {
     auto f = [obj, method](SignalArgs&&... funcArgs) {

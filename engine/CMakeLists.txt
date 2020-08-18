@@ -49,6 +49,11 @@ target_link_libraries(red_engine_lib
     PUBLIC 
     nlohmann_json::nlohmann_json)
 
+# Box2D 
+target_link_libraries(red_engine_lib 
+    PUBLIC 
+    Box2D::Box2D)
+
 option(RED_USE_PROFILER "Enable application profiler usage" ON)
 
 if (MINGW OR UNIX)

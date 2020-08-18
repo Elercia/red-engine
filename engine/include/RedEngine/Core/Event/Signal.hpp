@@ -42,9 +42,9 @@ public:
     Signal(Signal&&) = default;
     Signal& operator=(Signal&&) = default;
 
-    Slot& Connect(Func function);
+    Slot* Connect(Func function);
     template <class C>
-    Slot& Connect(void(C::* method)(SignalArgs... args), C* obj);
+    Slot* Connect(void(C::* method)(SignalArgs... args), C* obj);
 
     void Activate(bool activeValue = true);
     void Deactivate();

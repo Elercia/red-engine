@@ -1,22 +1,21 @@
 #pragma once
 
-#include <memory>
-#include <tuple>
-#include <type_traits>
-
 #include <RedEngine/Core/Event/EventSystem.hpp>
 #include <RedEngine/Core/Memory/MemoryManager.hpp>
 #include <RedEngine/Core/Configuration/Configuration.hpp>
 #include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
 #include <RedEngine/Rendering/RenderingEngine.hpp>
+
 #include "EngineConfig.hpp"
+
+#include <memory>
+#include <tuple>
+#include <type_traits>
 
 namespace red
 {
 class Application;
-
-
 
 /// The engine regroup all the singletons class that are needed by the engine
 /// The placement order in the struct define the creation order, and so the dependencies
@@ -33,6 +32,8 @@ public:
 
     Application& GetApplication();
 
+    const EngineInitDesc& GetInitDesc() const;
+
 private:
     void InitAllSubEngines(const EngineInitDesc& initDesc);
 
@@ -41,6 +42,7 @@ private:
         m_subEngines{};
 
     std::unique_ptr<Application> m_application;
+    EngineInitDesc m_initDesc;
 };
 
 Engine& GetRedInstance();
