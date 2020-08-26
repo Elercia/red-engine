@@ -1,14 +1,9 @@
 #include <RedEngine/Core/Time/Time.hpp>
 #include <RedEngine/Core/Application.hpp>
 #include <RedEngine/Core/Debug/Debug.hpp>
-#include <RedEngine/Rendering/System/RenderingSystem.hpp>
 #include <RedEngine/Core/Debug/Profiler.hpp>
-#include <RedEngine/Input/Component/UserInput.hpp>
-#include <RedEngine/Input/System/UserInputSystem.hpp>
-#include <RedEngine/Rendering/System/RenderingSystem.hpp>
 #include <RedEngine/Core/Event/EventSystem.hpp>
 #include <RedEngine/Core/Time/FrameCounter.hpp>
-#include <RedEngine/Core/Debug/System/DebugSystem.hpp>
 
 #include <array>
 #include <memory>
@@ -20,18 +15,22 @@ Application::Application()
 {
     PROFILER_APP("Main Application")
     SetLogLevel(LogLevel::LEVEL_DEBUG);
+    CreateWorld();
 }
 
-Application::~Application() { PROFILER_SHUTDOWN(); }
+Application::~Application()
+{
+    LoadLevelInternal(nullptr);
+    delete m_world;
+
+    PROFILER_SHUTDOWN();
+}
 
 bool Application::Run()
 {
-    RED_ASSERT(m_world != nullptr, "The application need a level to start");
     auto* eventSystem = GetRedSubEngine<EventSystem>();
 
     FrameCounter fc;
-
-    bool isFullScreen = false;
 
     // Main loop
     while (true)
@@ -61,20 +60,6 @@ bool Application::Run()
     return true;
 }
 
-void Application::CreateWorld()
-{
-    RED_ASSERT(m_world == nullptr, "Only one world is allowed");
-
-    m_world = std::make_unique<World>();
-
-    auto* entity = m_world->CreateSingletonEntity();
-    entity->AddComponent<UserInputComponent>();
-
-    m_world->AddSystem<UserInputSystem>();
-    m_world->AddSystem<RenderingSystem>();
-    m_world->AddSystem<DebugSystem>();
-}
-
 void Application::LoadLevel(const std::string& levelResource)
 {
     auto* resourceEngine = GetRedSubEngine<ResourceEngine>();
@@ -82,29 +67,35 @@ void Application::LoadLevel(const std::string& levelResource)
     resourceEngine->LoadLevel(levelResource);
 }
 
-void Application::LoadLevel(std::unique_ptr<Level>&& level)
+void Application::LoadLevelInternal(Level* level)
 {
     if (m_currentLevel != nullptr)
     {
-        m_currentLevel->Finalize();
+        m_currentLevel->InternFinalize();
+        delete m_currentLevel;
     }
 
     // reset the old level
-    m_currentLevel = std::move(level);
+    m_currentLevel = level;
 
-    if (m_world == nullptr)
-    {
-        CreateWorld();
-    }
+    if (level != nullptr)
+        m_currentLevel->InternInit();
 
-    m_currentLevel->SetWorld(m_world.get());
-
-    m_world->UnloadTransientEntities();
-
-    m_currentLevel->Init();
-
+    m_world->Clean();
     m_world->Init();
 }
 
-World& Application::GetWorld() { return *m_world; }
+red::Level* Application::GetCurrentLevel() { return m_currentLevel; }
+
+void Application::CreateWorld()
+{
+    if (m_world != nullptr)
+        return;
+
+    m_world = new World;
+    m_world->Init();
+}
+
+red::World* Application::GetWorld() { return m_world; }
+
 }  // namespace red

@@ -34,7 +34,7 @@ public:
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
 
-    Entity& GetSingletonEntity();
+    Entity* GetSingletonEntity();
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

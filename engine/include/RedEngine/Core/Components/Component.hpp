@@ -23,6 +23,8 @@ public:
 
     [[nodiscard]] Entity* GetOwner() const;
 
+    virtual void Finalize();
+
 protected:
     ComponentId_t m_componentId;
     Entity* m_owner;

@@ -12,8 +12,10 @@ class World;
 
 class Entity
 {
+    friend World;
+
 public:
-    Entity(World* world, EntityId_t id, std::string  name);
+    Entity(World* world, EntityId_t id, std::string name);
     virtual ~Entity() = default;
 
     Entity(const Entity&) = delete;
@@ -37,9 +39,10 @@ public:
     bool HasComponent();
 
     [[nodiscard]] EntityId_t GetId() const;
+    [[nodiscard]] bool IsRootEntity() const;
     void SetId(EntityId_t id);
 
-    void Destroy(); // TODO Make something of it
+    void Destroy();
 
     void SetPersistent(bool persistent);
 
@@ -47,6 +50,7 @@ public:
     void AddChild(Entity* child);
     void RemoveChild(Entity* child);
     Entity* GetParent();
+    std::vector<Entity*> GetChildren();
 
     World* GetWorld();
 
@@ -59,8 +63,8 @@ protected:
 
     Entity* m_parent;
     std::vector<Entity*> m_children;
-    bool m_isDirty{false}; // TODO Look at how to set it back to non-dirty
-
+    bool m_isDirty{false};  // TODO Look at how to set it back to non-dirty
+    bool m_isDestroyed{false};
 };
 
 }  // namespace red

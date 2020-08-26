@@ -7,7 +7,6 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Rendering/Window.hpp"
 
-
 namespace red
 {
 class Application : public Uncopyable
@@ -20,8 +19,6 @@ public:
 
     bool Run();
 
-    void CreateWorld();
-
     /// Load a level from the class named LevelType
     template <class LevelType>
     void LoadLevel();
@@ -29,15 +26,18 @@ public:
     /// Load a anonymous level as described in the levelResource file
     void LoadLevel(const std::string& levelResource);
 
-    World& GetWorld();
+    Level* GetCurrentLevel();
+
+    void CreateWorld();
+    World* GetWorld();
 
 private:
     /// Properly load a level
-    void LoadLevel(std::unique_ptr<Level>&& level);
+    void LoadLevelInternal(Level* level);
 
 private:
-    std::unique_ptr<World> m_world{nullptr};
-    std::unique_ptr<Level> m_currentLevel{nullptr};
+    Level* m_currentLevel{nullptr};
+    World* m_world{nullptr};
 };
 }  // namespace red
 

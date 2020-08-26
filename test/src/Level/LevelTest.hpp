@@ -13,10 +13,10 @@ public:
     {
         for (int i = 0; i < 10; ++i)
         {
-            m_world->CreateEntity();
+            CreateEntity();
         }
 
-        auto* e = m_world->CreateEntity();
+        auto* e = CreateEntity();
         e->SetPersistent(true);
     };
 
@@ -28,8 +28,13 @@ class LevelTest2 : public red::Level
 public:
     LevelTest2(red::World* world) : red::Level("LevelTest2", world) {}
 
-    void Init() override{
+    void Init() override
+    {
+        auto* e = CreateEntity();
+        e->SetPersistent(true);
 
+        auto* c = CreateEntity();
+        c->SetParent(e);
     };
     void Finalize() override{};
 };

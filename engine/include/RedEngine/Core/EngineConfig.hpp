@@ -17,8 +17,6 @@ using EntityId_t = uint32_t;
 
 constexpr std::size_t ComponentPoolSize = 2048;
 
-constexpr EntityId_t MaxPersistentEntities = 30;
-
 struct ConfigurationInitDesc
 {
     int argc{0};

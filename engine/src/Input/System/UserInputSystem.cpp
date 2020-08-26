@@ -12,9 +12,9 @@ void UserInputSystem::Init()
 {
     PROFILER_CATEGORY("Input Init", Optick::Category::Input);
 
-    auto& singeltonEntity = GetSingletonEntity();
+    auto* singeltonEntity = GetSingletonEntity();
 
-    m_inputComponent = singeltonEntity.GetComponent<UserInputComponent>();
+    m_inputComponent = singeltonEntity->GetComponent<UserInputComponent>();
 
     m_inputComponent->m_actionMapping = utils::UserInputHelper::LoadActionMapping();
 

@@ -43,7 +43,7 @@ void GameLogicSystem::Update()
 
 void GameLogicSystem::CheckPoints(red::Vector2& ballPos, const red::WindowInfo& info)
 {
-    auto* score = GetSingletonEntity().GetComponent<ScoreComponent>();
+    auto* score = GetSingletonEntity()->GetComponent<ScoreComponent>();
     bool scored = false;
 
     if (ballPos.x < 0)

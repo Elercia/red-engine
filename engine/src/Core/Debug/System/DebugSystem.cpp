@@ -18,7 +18,7 @@ void DebugSystem::LateUpdate()
     PROFILER_CATEGORY("Debug", Optick::Category::Debug);
 
     auto* eventSystem = GetRedSubEngine<EventSystem>();
-    auto* debugComp = GetSingletonEntity().GetComponent<DebugComponent>();
+    auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
 
     if (eventSystem->GetKeyDown(KeyCodes::KEY_F))
     {

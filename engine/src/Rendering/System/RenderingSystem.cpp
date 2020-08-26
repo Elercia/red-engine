@@ -23,7 +23,7 @@ void RenderingSystem::Update()
 {
     PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
 
-    auto* debugComp = GetSingletonEntity().GetComponent<DebugComponent>();
+    auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
 
     m_renderingEngine->BeginRenderFrame();
 

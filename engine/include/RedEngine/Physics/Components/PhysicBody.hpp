@@ -32,6 +32,8 @@ public:
     PhysicBody(Entity* entity, PhysicsBodyType bodyType = PhysicsBodyType::DYNAMIC_BODY);
     ~PhysicBody();
 
+    void Finalize() override;
+
     void SetFastObject(bool fast);
     void SetActive(bool active);
 

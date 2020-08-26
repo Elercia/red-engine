@@ -17,7 +17,7 @@ void GameControlSystem::Update()
     constexpr float velocity = 300.F;
     using namespace red;
 
-    auto* userInputComponent = GetSingletonEntity().GetComponent<UserInputComponent>();
+    auto* userInputComponent = GetSingletonEntity()->AddComponent<UserInputComponent>();
     auto& paddleOnePos = m_paddleOne->GetComponent<Transform>()->GetPosition();
     auto& paddleTwoPos = m_paddleTwo->GetComponent<Transform>()->GetPosition();
 

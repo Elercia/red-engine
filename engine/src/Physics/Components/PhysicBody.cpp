@@ -26,7 +26,9 @@ PhysicBody::PhysicBody(Entity* entity, PhysicsBodyType bodyType) : Component(ent
     m_body = entity->GetWorld()->GetPhysicsWorld()->CreateBody(&bodyDef);
 }
 
-PhysicBody::~PhysicBody() { m_owner->GetWorld()->GetPhysicsWorld()->DestroyBody(m_body); }
+PhysicBody::~PhysicBody() {}
+
+void PhysicBody::Finalize() { m_owner->GetWorld()->GetPhysicsWorld()->DestroyBody(m_body); }
 
 void PhysicBody::AddCollider(ColliderList* colliderList)
 {

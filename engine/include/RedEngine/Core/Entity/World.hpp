@@ -16,6 +16,7 @@ class Entity;
 class ComponentManager;
 class Component;
 class System;
+class Level;
 
 class World : Uncopyable
 {
@@ -29,11 +30,10 @@ public:
     World(World&&) = delete;
     World& operator=(World&& world) = delete;
 
-    Entity* CreateEntity();
-    Entity* CreateEntity(const std::string& name);
+    Entity* CreateRootEntity(Level* level);
+    Entity* CreateEntity(Entity* root = nullptr);
+    Entity* CreateEntity(const std::string& name, Entity* root = nullptr);
     Entity* CreateSingletonEntity();
-
-    void SetEntityPersistency(Entity* entity, bool persistent);
 
     template <class T, class... Args>
     T* AddSystem(Args... args);
@@ -42,19 +42,18 @@ public:
 
     const std::vector<System*>& GetSystems();
     const std::vector<Entity*>& GetEntities();
-    Entity& GetSingletonEntity();
+    Entity* GetSingletonEntity();
     ComponentManager* GetComponentManager();
 
     void Init();
     void Update();
 
-    void UnloadTransientEntities();
-    void UnloadSystems();
+    void Clean();
 
     b2World* GetPhysicsWorld();
 
+
 private:
-    void DestroyEntity(Entity* entity);
 
     Entity* m_singletonEntity;
     std::vector<Entity*> m_entities;
@@ -62,9 +61,8 @@ private:
     ComponentManager* m_componentManager;
 
     EntityId_t m_nextEntityId;
-    EntityId_t m_nextPersistentEntityId;
 
-    b2World m_physicsWorld; //TODO IPhysicsWorld
+    b2World m_physicsWorld;  // TODO IPhysicsWorld
 };
 
 }  // namespace red
