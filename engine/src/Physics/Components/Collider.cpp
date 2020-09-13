@@ -11,26 +11,7 @@
 
 namespace red
 {
-ColliderList::ColliderList(Entity* entity) : Component(entity)
-{
-    Entity* physicBodyEntity = entity;
-
-    while (physicBodyEntity)
-    {
-        m_attachedPhysicBody = physicBodyEntity->GetComponent<PhysicBody>();
-
-        if (m_attachedPhysicBody != nullptr)
-        {
-            m_attachedPhysicBody->AddCollider(this);
-            break;
-        }
-
-        physicBodyEntity = physicBodyEntity->GetParent();
-    }
-
-    if (m_attachedPhysicBody == nullptr)
-        RED_LOG_WARNING("Couldnt attach colliderList to a physicBody");
-}
+ColliderList::ColliderList(Entity* entity) : Component(entity), m_attachedPhysicBody(nullptr) {}
 
 int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
 {
@@ -40,23 +21,26 @@ int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
     collider.m_fixtureDef.isSensor = desc.isTrigger;
     collider.m_fixtureDef.userData = &collider;
 
-    auto itPair = m_colliders.insert({m_nextIndex++, collider});
+    auto itPair = m_colliders.insert({m_nextIndex++, std::move(collider)});
 
-    OnColliderAdded(&itPair.first->second);
+    m_status = ComponentStatus::DIRTY;
 
     return itPair.first->first;
 }
 
 int ColliderList::AddCircleCollider(const CircleColliderDesc& desc)
 {
+    Collider collider;
+
     b2CircleShape shape;
     shape.m_p.Set(desc.center.x, desc.center.y);
     shape.m_radius = desc.radius;
 
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &shape;
+    collider.m_shape = std::make_unique<b2CircleShape>(shape);
 
-    Collider collider;
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = collider.m_shape.get();
+
     collider.m_fixtureDef = fixtureDef;
 
     return AddCollider(std::move(collider), desc);
@@ -64,13 +48,16 @@ int ColliderList::AddCircleCollider(const CircleColliderDesc& desc)
 
 int ColliderList::AddEdgeCollider(const EdgeColliderDesc& desc)
 {
+    Collider collider;
+
     b2EdgeShape shape;
     shape.Set(desc.start, desc.end);
 
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &shape;
+    collider.m_shape = std::make_unique<b2EdgeShape>(shape);
 
-    Collider collider;
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = collider.m_shape.get();
+
     collider.m_fixtureDef = fixtureDef;
 
     return AddCollider(std::move(collider), desc);
@@ -78,6 +65,8 @@ int ColliderList::AddEdgeCollider(const EdgeColliderDesc& desc)
 
 int ColliderList::AddPolygonCollider(const PolygonColliderDesc& desc)
 {
+    Collider collider;
+
     b2PolygonShape shape;
     std::vector<b2Vec2> b2Points;
     b2Points.resize(desc.points.size());
@@ -86,10 +75,11 @@ int ColliderList::AddPolygonCollider(const PolygonColliderDesc& desc)
 
     shape.Set(b2Points.data(), static_cast<int32>(b2Points.size()));
 
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &shape;
+    collider.m_shape = std::make_unique<b2PolygonShape>(shape);
 
-    Collider collider;
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = collider.m_shape.get();
+
     collider.m_fixtureDef = fixtureDef;
 
     return AddCollider(std::move(collider), desc);
@@ -99,11 +89,13 @@ void ColliderList::RemoveCollider(int id)
 {
     auto it = m_colliders.find(id);
 
-    OnColliderRemoved(&it->second);
-
     m_colliders.erase(it);
+
+    m_status = ComponentStatus::DIRTY;
 }
 
-red::PhysicBody* ColliderList::GetAttachedPhysicBody() const { return m_attachedPhysicBody; }
+red::PhysicBody* ColliderList::GetAttachedPhysicBody() { return m_attachedPhysicBody; }
+
+std::map<int, red::Collider>& ColliderList::GetColliders() { return m_colliders; }
 
 }  // namespace red

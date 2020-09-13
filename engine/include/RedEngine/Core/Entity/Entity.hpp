@@ -33,6 +33,9 @@ public:
     template <typename T>
     T* GetComponent();
 
+    template <typename T>
+    T* GetComponentInParent(bool includeOwn = true);
+
     std::set<Component*> GetComponents();
 
     template <typename T>
@@ -41,6 +44,8 @@ public:
     [[nodiscard]] EntityId_t GetId() const;
     [[nodiscard]] bool IsRootEntity() const;
     void SetId(EntityId_t id);
+
+    const std::string& GetName() const;
 
     void Destroy();
 

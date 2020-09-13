@@ -19,34 +19,26 @@ enum class PhysicsBodyType
     KINEMATIC_BODY
 };
 
-struct PhysicBodyColliderHolder
+struct PhysicBodyCreationDesc
 {
-    ColliderList* colliderList;
-    red::Signal<Collider*>::Slot* addedSlot;
-    red::Signal<Collider*>::Slot* RemovedSlot;
+    PhysicsBodyType type;
 };
 
 class PhysicBody : public Component
 {
-public:
-    PhysicBody(Entity* entity, PhysicsBodyType bodyType = PhysicsBodyType::DYNAMIC_BODY);
-    ~PhysicBody();
+    friend class PhysicSystem;
 
-    void Finalize() override;
+public:
+    PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc);
+    ~PhysicBody();
 
     void SetFastObject(bool fast);
     void SetActive(bool active);
 
-    void AddCollider(ColliderList* colliderList);
-    void RemoveCollider(ColliderList* colliderList);
-
-    void OnColliderAdded(Collider* collider);
-    void OnColliderRemoved(Collider* collider);
-
     b2Body* GetBody();
 
 private:
+    PhysicBodyCreationDesc m_desc;
     b2Body* m_body;
-    std::vector<PhysicBodyColliderHolder> m_colliders;
 };
 }  // namespace red

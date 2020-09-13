@@ -18,7 +18,7 @@ T* Entity::AddComponent(Args&&... args)
 
     if (componentManager->HasComponent<T>(this))
     {
-        return componentManager->GetComponent<T>(this);
+        return componentManager->GetComponent<T>(this); // TODO Not the best solution. This return does not respect the args sent
     }
 
     auto componentPtr = componentManager->CreateComponent<T>(this, std::forward<Args>(args)...);
@@ -52,5 +52,25 @@ bool Entity::HasComponent()
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
     return m_world->GetComponentManager()->HasComponent<T>(this);
+}
+
+template <typename T>
+T* Entity::GetComponentInParent(bool includeOwn /*= true*/)
+{
+    static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
+
+    if (includeOwn)
+    {
+        auto* comp = GetComponent<T>();
+        if (comp)
+            return comp;
+    }
+
+    if (m_parent && !m_parent->IsRootEntity())
+    {
+        return m_parent->GetComponentInParent<T>(true);
+    }
+
+    return nullptr;
 }
 }  // namespace red

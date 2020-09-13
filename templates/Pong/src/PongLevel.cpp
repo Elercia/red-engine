@@ -13,6 +13,9 @@
 #include <RedEngine/Rendering/System/RenderingSystem.hpp>
 #include <RedEngine/Physics/System/PhysicsSystem.hpp>
 #include <RedEngine/Core/Debug/System/DebugSystem.hpp>
+#include <RedEngine/Physics/Components/PhysicBody.hpp>
+#include <RedEngine/Core/Entity/Entity.hpp>
+#include <RedEngine/Physics/Components/Collider.hpp>
 
 void PongLevel::Init()
 {
@@ -30,16 +33,20 @@ void PongLevel::Init()
 
     auto* ball = CreateEntity("Ball");
     ball->AddComponent<red::Sprite>("ball");
-    ball->AddComponent<red::Transform>(center);
+    ball->GetComponent<red::Transform>()->SetPosition(center);
     ball->AddComponent<BallComponent>(red::Vector2{100.F, 100.F});
+    red::PhysicBodyCreationDesc desc = {red::PhysicsBodyType::DYNAMIC_BODY};
+    ball->AddComponent<red::PhysicBody>(desc);
+    ball->AddComponent<red::ColliderList>()->AddCircleCollider({false, {5.F, 5.F}, 10.F});
 
     auto* paddleOne = CreateEntity("PaddleTwo");
     paddleOne->AddComponent<red::Sprite>("paddle");
-    paddleOne->AddComponent<red::Transform>(100.F, paddlePosHeight);
+    paddleOne->GetComponent<red::Transform>()->SetPosition({100.F, paddlePosHeight});
 
     auto* paddleTwo = CreateEntity("PaddleOne");
     paddleTwo->AddComponent<red::Sprite>("paddle");
-    paddleTwo->AddComponent<red::Transform>(info.width - 100.F - (30.F / 2.F), paddlePosHeight);
+    paddleTwo->GetComponent<red::Transform>()->SetPosition(
+        {info.width - 100.F - (30.F / 2.F), paddlePosHeight});
 
     auto* singletonEntity = m_world->GetSingletonEntity();
     singletonEntity->AddComponent<ScoreComponent>();

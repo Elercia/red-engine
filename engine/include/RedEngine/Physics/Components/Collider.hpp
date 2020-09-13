@@ -4,9 +4,12 @@
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
+#include <Box2D/Collision/Shapes/b2Shape.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 
 #include <map>
+#include <memory>
+
 
 namespace red
 {
@@ -42,11 +45,14 @@ struct Collider
     ColliderList* m_list;
     b2FixtureDef m_fixtureDef;
     b2Fixture* m_fixture;
+    std::unique_ptr<b2Shape> m_shape{nullptr};
 };
 
 // TODO Collision layers
 class ColliderList : public Component
 {
+    friend class PhysicSystem;
+
 public:
     ColliderList(Entity* entity);
     ~ColliderList() = default;
@@ -57,10 +63,9 @@ public:
     
     void RemoveCollider(int id);
 
-    Signal<Collider*> OnColliderAdded;
-    Signal<Collider*> OnColliderRemoved;
+    PhysicBody* GetAttachedPhysicBody();
 
-    PhysicBody* GetAttachedPhysicBody() const;
+    std::map<int, Collider>& GetColliders();
 
 private:
     int AddCollider(Collider&& collider, const ColliderDesc& desc);

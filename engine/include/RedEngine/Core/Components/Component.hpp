@@ -8,6 +8,13 @@ namespace red
 {
 class Entity;
 
+enum class ComponentStatus
+{
+    CREATED,
+    DIRTY,
+    VALID
+};
+
 class Component
 {
 public:
@@ -23,11 +30,11 @@ public:
 
     [[nodiscard]] Entity* GetOwner() const;
 
-    virtual void Finalize();
-
 protected:
     ComponentId_t m_componentId;
     Entity* m_owner;
+    ComponentStatus m_status;
+
 };
 
 }  // namespace red

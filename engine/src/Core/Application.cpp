@@ -79,10 +79,12 @@ void Application::LoadLevelInternal(Level* level)
     m_currentLevel = level;
 
     if (level != nullptr)
+    {
         m_currentLevel->InternInit();
 
-    m_world->Clean();
-    m_world->Init();
+        m_world->Clean();
+        m_world->Init();
+    }
 }
 
 red::Level* Application::GetCurrentLevel() { return m_currentLevel; }

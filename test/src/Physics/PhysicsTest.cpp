@@ -2,6 +2,7 @@
 
 #include <RedEngine/Physics/Components/Collider.hpp>
 #include <RedEngine/Physics/Components/PhysicBody.hpp>
+#include "RedEngine/Physics/System/PhysicsSystem.hpp"
 
 #include <catch2/catch.hpp>
 
@@ -22,8 +23,11 @@ TEST_CASE("Component binding", "[PHYSICS]")
     using namespace red;
     World w;
     Entity* e = w.CreateEntity();
+    PhysicSystem system(&w);
 
-    auto* body = e->AddComponent<PhysicBody>();
+    red::PhysicBodyCreationDesc desc = {red::PhysicsBodyType::DYNAMIC_BODY};
+
+    auto* body = e->AddComponent<PhysicBody>(desc);
     auto* list = e->AddComponent<ColliderList>();
 
     list->AddCircleCollider({false, {0, 0}, 10.F});
@@ -37,6 +41,8 @@ TEST_CASE("Component binding", "[PHYSICS]")
                                   {4, 3},
 
                               }});
+
+    system.Init();
 
     REQUIRE(size(body->GetBody()->GetFixtureList()) == 3);
 }

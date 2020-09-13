@@ -15,6 +15,8 @@ public:
     [[nodiscard]] const Vector2& GetPosition() const;
     [[nodiscard]] Vector2& GetPosition();
 
+    void SetPosition(const Vector2& pos);
+
 private:
     Vector2 m_position{0, 0};
 };

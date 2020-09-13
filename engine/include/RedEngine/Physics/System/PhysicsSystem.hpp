@@ -10,9 +10,13 @@ public:
     PhysicSystem(World* world);
     ~PhysicSystem();
 
+    void Init() override;
+    void Finalise() override;
+
     void FixedUpdate() override;
 
 private:
+    b2World* m_physicsWorld;
     float timeStep = 1.0f / 60.f;
     int32 velocityIterations = 10;
     int32 positionIterations = 8;

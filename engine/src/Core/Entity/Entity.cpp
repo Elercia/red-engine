@@ -21,12 +21,7 @@ void Entity::Destroy()
         child->Destroy();
     }
 
-    for (auto* c : GetComponents())
-    {
-        c->Finalize();
-    }
-
-    // TODO Free memory
+    // TODO Check if the component are really destroyed
 
     m_isDestroyed = true;
 }
@@ -41,6 +36,8 @@ EntityId_t Entity::GetId() const { return m_id; }
 bool Entity::IsRootEntity() const { return m_parent == nullptr; }
 
 void Entity::SetId(EntityId_t id) { m_id = id; }
+
+const std::string& Entity::GetName() const { return m_name; }
 
 void Entity::SetPersistent(bool persistent)
 {
