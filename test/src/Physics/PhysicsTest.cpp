@@ -45,4 +45,6 @@ TEST_CASE("Component binding", "[PHYSICS]")
     system.Init();
 
     REQUIRE(size(body->GetBody()->GetFixtureList()) == 3);
+
+    system.Finalise();
 }

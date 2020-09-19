@@ -30,11 +30,17 @@ void Sprite::NextFrame()
 
         // We are at the end of the frame list, stop here if the animation is not a loop
         if (m_currentAnimationInfo.currentAnimationFrame ==
-                m_currentAnimationInfo.currentAnimation->frames.end() &&
-            m_currentAnimationInfo.currentAnimation->loop)
+            m_currentAnimationInfo.currentAnimation->frames.end())
         {
-            m_currentAnimationInfo.currentAnimationFrame =
-                m_currentAnimationInfo.currentAnimation->frames.begin();
+            if (m_currentAnimationInfo.currentAnimation->loop)
+            {
+                m_currentAnimationInfo.currentAnimationFrame =
+                    m_currentAnimationInfo.currentAnimation->frames.begin();
+            }
+            else
+            {
+                m_currentAnimationInfo.currentAnimationFrame--;
+            }
         }
     }
 }

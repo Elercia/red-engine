@@ -30,7 +30,10 @@ public:
     void EndRenderFrame();
 
     void Render(CameraComponent* camera, Sprite* sprite, const Transform& transform);
+    
     void DrawLine(CameraComponent* camera, Vector2 first, Vector2 second,
+                  Color color = ColorConstant::RED);
+    void DrawCircle(CameraComponent* camera, Vector2 center, float radius,
                   Color color = ColorConstant::RED);
 
     void Init(const EngineInitDesc& initDesc) override;

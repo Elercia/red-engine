@@ -11,7 +11,7 @@
         "a": 0
       }
     },
-    "loop" :  true,
+    "loop" :  false,
     "frames": [
       {
         "rect": {
@@ -32,26 +32,6 @@
         "flip_h": false,
         "flip_v": false,
         "rotation": 0
-      },
-      {
-        "rect": {
-          "x": 0,
-          "y": 0,
-          "w": 30,
-          "h": 150
-        },
-        "size": {
-          "w": 30,
-          "h": 100
-        },
-        "duration": 0.5,
-        "center": {
-          "x": 15,
-          "y": 50
-        },
-        "flip_h": false,
-        "flip_v": false,
-        "rotation": 90
       }
     ]
   }

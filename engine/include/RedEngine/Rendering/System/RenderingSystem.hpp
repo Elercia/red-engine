@@ -8,6 +8,7 @@ namespace red
 {
 class RenderingEngine;
 class ResourceEngine;
+class CameraComponent;
 
 class RenderingSystem : public System
 {
@@ -17,6 +18,9 @@ public:
     void PreUpdate() override;
     void Update() override;
     void LateUpdate() override;
+
+private:
+    void DrawDebug(CameraComponent* camera);
 
 private:
     RenderingEngine* m_renderingEngine;

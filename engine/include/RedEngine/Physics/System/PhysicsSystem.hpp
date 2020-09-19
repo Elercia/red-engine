@@ -13,7 +13,7 @@ public:
     void Init() override;
     void Finalise() override;
 
-    void FixedUpdate() override;
+    void Update() override;
 
 private:
     b2World* m_physicsWorld;

@@ -6,6 +6,9 @@
 #include <RedEngine/Rendering/Window.hpp>
 #include <RedEngine/Core/Debug/Profiler.hpp>
 
+#include "Box2D/Common/b2Draw.h"
+#include "Box2D/Box2D.h"
+
 namespace red
 {
 DebugSystem::DebugSystem(World* world)
@@ -20,7 +23,25 @@ void DebugSystem::LateUpdate()
     auto* eventSystem = GetRedSubEngine<EventSystem>();
     auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
 
-    if (eventSystem->GetKeyDown(KeyCodes::KEY_F))
+    if (eventSystem->GetKeyDown(KeyCodes::KEY_F1))
+    {
+        if (debugComp->m_physicsDebugDrawer == nullptr)
+        {
+            debugComp->m_physicsDebugDrawer = std::make_unique<PhysicsDebugDrawer>(debugComp);
+            debugComp->m_physicsDebugDrawer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit |
+                                                      b2Draw::e_aabbBit | b2Draw::e_pairBit |
+                                                      b2Draw::e_centerOfMassBit);
+        }
+        else
+        {
+            debugComp->m_physicsDebugDrawer.release();
+        }
+
+        m_world->GetPhysicsWorld()->SetDebugDraw(
+            reinterpret_cast<b2Draw*>(debugComp->m_physicsDebugDrawer.get()));
+    }
+
+    if (eventSystem->GetKeyDown(KeyCodes::KEY_F2))
     {
         CVar<FullScreenMode::Enum> fullscreen{"fullscreen_mode", "window",
                                               FullScreenMode::WINDOWED};
@@ -30,12 +51,12 @@ void DebugSystem::LateUpdate()
                                    : FullScreenMode::WINDOWED);
     }
 
-    if (eventSystem->GetKeyDown(KeyCodes::KEY_P))
+    if (eventSystem->GetKeyDown(KeyCodes::KEY_F5))
     {
         Time::SetTimeScale(Time::TimeScale() + 0.1F);
     }
 
-    if (eventSystem->GetKeyDown(KeyCodes::KEY_O))
+    if (eventSystem->GetKeyDown(KeyCodes::KEY_F6))
     {
         Time::SetTimeScale(Time::TimeScale() - 0.1F);
     }

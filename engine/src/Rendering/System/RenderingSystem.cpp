@@ -8,7 +8,6 @@
 #include <RedEngine/Rendering/Texture2D.hpp>
 #include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
 
-
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world)
@@ -23,8 +22,6 @@ void RenderingSystem::Update()
 {
     PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
 
-    auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
-
     m_renderingEngine->BeginRenderFrame();
 
     // Draw frame for each camera
@@ -32,8 +29,8 @@ void RenderingSystem::Update()
     {
         auto* cameraComponent = camera->GetComponent<CameraComponent>();
         m_renderingEngine->BeginCameraRendering(cameraComponent);
-        
-        // Draw each sprite 
+
+        // Draw each sprite
         for (auto& entity : GetComponents<Transform, Sprite>())
         {
             auto* sprite = entity->GetComponent<Sprite>();
@@ -41,16 +38,10 @@ void RenderingSystem::Update()
 
             sprite->NextFrame();
 
+            DrawDebug(cameraComponent);
+
             m_renderingEngine->Render(cameraComponent, sprite, *transform);
         }
-
-        // Draw debug information
-        for (auto& line : debugComp->m_frameDebugLines)
-        {
-            m_renderingEngine->DrawLine(cameraComponent, line.first, line.second);
-        }
-
-        debugComp->m_frameDebugLines.clear();
 
         m_renderingEngine->EndCameraRendering();
     }
@@ -58,7 +49,60 @@ void RenderingSystem::Update()
     m_renderingEngine->EndRenderFrame();
 }
 
-void RenderingSystem::PreUpdate() {  }
-void RenderingSystem::LateUpdate() {  }
+void RenderingSystem::PreUpdate() {}
+void RenderingSystem::LateUpdate() {}
+
+void RenderingSystem::DrawDebug(CameraComponent* camera)
+{
+    auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
+
+    // Draw debug information
+    for (auto& shape : debugComp->m_frameShapes)
+    {
+        switch (shape->type)
+        {
+            case DebugShapeType::CIRCLE:
+            {
+                auto* circle = static_cast<DebugCircle*>(shape.get());
+
+                m_renderingEngine->DrawCircle(camera, circle->center, circle->radius,
+                                              circle->color);
+            }
+            break;
+            case DebugShapeType::POLYGON:
+            {
+                auto* polygon = static_cast<DebugPolygon*>(shape.get());
+
+                for (int i = 0; i < polygon->points.size(); i++)
+                {
+                    auto& p1 = polygon->points[i];
+
+                    if (i == (polygon->points.size() - 1) && !polygon->isFilled)
+                    {
+                        break;
+                    }
+
+                    int p2Index = polygon->points.size() - 1 == i ? 0 : i + 1;
+                    auto& p2 = polygon->points[p2Index];
+
+                    m_renderingEngine->DrawLine(camera, p1, p2, polygon->color);
+                }
+            }
+            break;
+            case DebugShapeType::SEGMENT:
+            {
+                auto* segment = static_cast<DebugSegment*>(shape.get());
+
+                m_renderingEngine->DrawLine(camera, segment->point1, segment->point2,
+                                            segment->color);
+            }
+            break;
+        }
+    }
+
+    debugComp->m_frameShapes.clear();
+
+    m_world->GetPhysicsWorld()->DrawDebugData();
+}
 
 }  // namespace red

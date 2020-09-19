@@ -22,6 +22,7 @@ public:
     Vector2T<T> operator+(const Vector2T<T>& other) const;
     Vector2T<T> operator*(T scalar) const;
 
+    Vector2T(b2Vec2 box2DVec);
     operator b2Vec2() const;
 
     T x, y;

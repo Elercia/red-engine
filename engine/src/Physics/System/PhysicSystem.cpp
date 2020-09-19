@@ -1,6 +1,7 @@
 #include <RedEngine/Physics/System/PhysicsSystem.hpp>
 #include <RedEngine/Physics/Components/PhysicBody.hpp>
 #include <RedEngine/Physics/Components/Collider.hpp>
+#include <RedEngine/Core/Components/Transform.hpp>
 
 namespace red
 {
@@ -82,18 +83,36 @@ void PhysicSystem::Finalise()
     {
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
-        m_physicsWorld->DestroyBody(physicBody->m_body); // Destroying a beody will destroy all the fixture attached
+        m_physicsWorld->DestroyBody(
+            physicBody->m_body);  // Destroying a beody will destroy all the fixture attached
     }
 }
 
-void PhysicSystem::FixedUpdate()
+void PhysicSystem::Update()
 {
+    b2World* physicsWorld = m_world->GetPhysicsWorld();
+
+    // physicsWorld->ClearForces();
+
     Init();
 
-    b2World* physicsWorld = m_world->GetPhysicsWorld();
+    for (auto* entity : GetComponents<PhysicBody>())
+    {
+        auto* transform = entity->GetComponent<Transform>();
+        auto* physicBody = entity->GetComponent<PhysicBody>();
+
+        physicBody->GetBody()->SetTransform(transform->GetPosition(), 0);
+    }
+
     physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 
-    physicsWorld->ClearForces();
+    for (auto* entity : GetComponents<PhysicBody>())
+    {
+        auto* transform = entity->GetComponent<Transform>();
+        auto* physicBody = entity->GetComponent<PhysicBody>();
+
+        transform->SetPosition(physicBody->GetBody()->GetPosition());
+    }
 }
 
 }  // namespace red

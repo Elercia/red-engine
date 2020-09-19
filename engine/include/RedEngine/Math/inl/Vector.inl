@@ -28,4 +28,11 @@ red::Vector2T<T>::operator b2Vec2() const
     return b2Vec2(x, y);
 }
 
+template <typename T>
+Vector2T<T>::Vector2T(b2Vec2 box2DVec) : Vector2T(box2DVec.x, box2DVec.y)
+{
+    static_assert(std::is_same_v<T, float>,
+                  "Conversion from box2D is only available for float vector");
+}
+
 }  // namespace red
