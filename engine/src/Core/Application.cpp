@@ -32,8 +32,6 @@ bool Application::Run()
 
     FrameCounter fc;
 
-    RED_ASSERT(false, "You are a fucking retard");
-
     // Main loop
     while (true)
     {
