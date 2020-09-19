@@ -1,5 +1,5 @@
 #include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/DebugMacros.hpp>
 #include <RedEngine/Rendering/Window.hpp>
 #include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <iostream>

@@ -1,4 +1,4 @@
-#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/DebugMacros.hpp>
 
 namespace red
 {

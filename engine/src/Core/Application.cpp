@@ -1,6 +1,6 @@
 #include <RedEngine/Core/Time/Time.hpp>
 #include <RedEngine/Core/Application.hpp>
-#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/DebugMacros.hpp>
 #include <RedEngine/Core/Debug/Profiler.hpp>
 #include <RedEngine/Core/Event/EventSystem.hpp>
 #include <RedEngine/Core/Time/FrameCounter.hpp>
@@ -31,6 +31,8 @@ bool Application::Run()
     auto* eventSystem = GetRedSubEngine<EventSystem>();
 
     FrameCounter fc;
+
+    RED_ASSERT(false, "You are a fucking retard");
 
     // Main loop
     while (true)

@@ -3,7 +3,7 @@
 #include <cassert>
 #include <string>
 
-#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/DebugMacros.hpp>
 #include <RedEngine/Core/Components/ComponentManager.hpp>
 #include <RedEngine/Core/Entity/World.hpp>
 

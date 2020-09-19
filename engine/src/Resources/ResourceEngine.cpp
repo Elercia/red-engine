@@ -1,7 +1,7 @@
 #include <RedEngine/Core/Components/Sprite.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
 #include <RedEngine/Rendering/RenderingEngine.hpp>
-#include <RedEngine/Core/Debug/Debug.hpp>
+#include <RedEngine/Core/Debug/DebugMacros.hpp>
 #include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <RedEngine/Core/Engine.hpp>
 #include <RedEngine/Rendering/Texture2D.hpp>
