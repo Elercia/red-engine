@@ -10,7 +10,7 @@ namespace ErrorReturn
     constexpr int BREAK = 0;
     constexpr int CONTINUE = 1;
 }  // namespace ErrorReturn
-int HandleAssert(bool expr, std::string_view message, const char* filename, int line);
+int HandleAssert(bool expr, std::string_view message, const char* filename, int line); //TODO add the possibility to add arguments to the message (, ...) 
 }  // namespace red
 
 #ifndef RED_RETAIL_MODE

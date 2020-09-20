@@ -1,5 +1,8 @@
 #pragma once
 
+// TODO Add a global header to include in every header of red-engine to include vital things like
+// DebugMacros, EngineConfigs and so on
+
 #include <RedEngine/Math/Vector.hpp>
 
 #include <cstdint>
