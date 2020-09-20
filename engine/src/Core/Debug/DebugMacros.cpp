@@ -1,10 +1,10 @@
 #include <RedEngine/Core/Debug/DebugMacros.hpp>
 
-#include "SDL_messagebox.h"
-
 #include <filesystem>
+#include <iostream>
+
 #include <fmt/format.h>
-#include "../../../../../../../../application/Microsoft Visual Studio/2019/VC/Tools/MSVC/14.27.29110/include/iostream"
+#include <SDL2/SDL_messagebox.h>
 
 namespace red
 {
@@ -42,7 +42,7 @@ int HandleAssert(bool expr, std::string_view message, const char* filename, int 
         SDL_MESSAGEBOX_ERROR,          /* .flags */
         NULL,                          /* .window */
         "Red-engine assert triggered", /* .title */
-        formattedMessage.c_str(),              /* .message */
+        formattedMessage.c_str(),      /* .message */
         SDL_arraysize(buttons),        /* .numbuttons */
         buttons,                       /* .buttons */
         &colorScheme                   /* .colorScheme */
@@ -68,6 +68,8 @@ int HandleAssert(bool expr, std::string_view message, const char* filename, int 
             case 1:
                 return ErrorReturn::BREAK;
             case 2:
+                return ErrorReturn::CONTINUE;
+            default:
                 return ErrorReturn::CONTINUE;
         };
     }
