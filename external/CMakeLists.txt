@@ -8,3 +8,6 @@ target_include_directories(debug_break INTERFACE DebugBreak)
 
 # Game profiler
 add_subdirectory(optick)
+
+# Fmod 
+add_subdirectory(Fmod)

@@ -54,6 +54,12 @@ target_link_libraries(red_engine_lib
     PUBLIC 
     Box2D::Box2D)
 
+# Fmod 
+target_link_libraries(red_engine_lib
+            PUBLIC
+            fmod)
+
+# Profiler Optick
 option(RED_USE_PROFILER "Enable application profiler usage" ON)
 
 if (MINGW OR UNIX)
