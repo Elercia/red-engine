@@ -22,9 +22,6 @@ public:
     Vector2T<T> operator+(const Vector2T<T>& other) const;
     Vector2T<T> operator*(T scalar) const;
 
-    Vector2T(b2Vec2 box2DVec);
-    operator b2Vec2() const;
-
     T x, y;
 };
 
@@ -82,6 +79,11 @@ using Vector2i = Vector2T<int>;
 
 using Vector4 = Vector4T<float>;
 using Vector4i = Vector4T<int>;
+
+b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
+Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2);
+
+
 }  // namespace red
 
 #include "inl/Vector.inl"

@@ -20,7 +20,7 @@ file(GLOB_RECURSE INLINE_HEADERS
         )
 
 # red_engine_lib
-add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS} ${INLINE_HEADERS})
+add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS} ${INLINE_HEADERS} "src/Math/Vector.cpp")
 
 target_include_directories(red_engine_lib
         PUBLIC

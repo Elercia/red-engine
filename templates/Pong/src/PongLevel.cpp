@@ -25,16 +25,25 @@ void PongLevel::Init()
 
     red::Vector2 center{info.width / 2.F, info.height / 2.F};
 
+    red::PhysicBodyCreationDesc ballBodyDesc = {red::PhysicsBodyType::DYNAMIC_BODY};
+    red::CircleColliderDesc ballColliderDesc;
+    ballColliderDesc.isTrigger = false;
+    ballColliderDesc.center = {5.F, 5.F};
+    ballColliderDesc.radius = 5.F;
+    ballColliderDesc.restitution = 1.f;
+    ballColliderDesc.friction = 0.f;
+
+    red::PhysicBodyCreationDesc paddleBodyDesc = {red::PhysicsBodyType::KINEMATIC_BODY};
+    red::PolygonColliderDesc paddleColliderDesc;
+    paddleColliderDesc.isTrigger = false;
+    paddleColliderDesc.points = {{0, 0}, {30, 0}, {30, 100}, {0, 100}};
+    paddleColliderDesc.restitution = 1.f;
+
     auto* ball = CreateEntity("Ball");
     ball->AddComponent<red::Sprite>("ball");
     ball->GetComponent<red::Transform>()->SetPosition(center);
-
-    red::PhysicBodyCreationDesc ballBodyDesc = {red::PhysicsBodyType::DYNAMIC_BODY};
     ball->AddComponent<red::PhysicBody>(ballBodyDesc);
-    ball->AddComponent<red::ColliderList>()->AddCircleCollider({false, {5.F, 5.F}, 5.F});
-
-    red::PhysicBodyCreationDesc paddleBodyDesc = {red::PhysicsBodyType::KINEMATIC_BODY};
-    red::PolygonColliderDesc paddleColliderDesc = {false, {{0, 0}, {30, 0}, {30, 100}, {0, 100}}};
+    ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
 
     auto* paddleOne = CreateEntity("PaddleOne");
     paddleOne->AddComponent<red::Sprite>("paddle");
@@ -63,15 +72,19 @@ void PongLevel::Init()
     wallUp->AddComponent<red::PhysicBody>(wallBodyDesc);
     wallDown->AddComponent<red::PhysicBody>(wallBodyDesc);
 
-    wallUp->AddComponent<red::ColliderList>()->AddEdgeCollider(
-        {false, {0.f, 0.f}, {0.f, (float) info.width}});
-    wallDown->AddComponent<red::ColliderList>()->AddEdgeCollider(
-        {false, {(float) info.height, 0.f}, {(float) info.height, (float) info.width}});
+    red::EdgeColliderDesc wallUpColliderDesc;
+    wallUpColliderDesc.isTrigger = false;
+    wallUpColliderDesc.start = {0.f, 0.f};
+    wallUpColliderDesc.end = {0.f, (float) info.width};
 
-    m_world->AddSystem<red::UserInputSystem>();
-    m_world->AddSystem<red::RenderingSystem>();
-    m_world->AddSystem<red::PhysicSystem>();
-    m_world->AddSystem<red::DebugSystem>();
+    red::EdgeColliderDesc wallDownColliderDesc;
+    wallUpColliderDesc.isTrigger = false;
+    wallUpColliderDesc.start = {(float) info.height, 0.f};
+    wallUpColliderDesc.end = {(float) info.height, (float) info.width};
+
+    wallUp->AddComponent<red::ColliderList>()->AddEdgeCollider(wallUpColliderDesc);
+    wallDown->AddComponent<red::ColliderList>()->AddEdgeCollider(wallDownColliderDesc);
+
     m_world->AddSystem<GameLogicSystem>(paddleOne, paddleTwo, ball);
     m_world->AddSystem<GameControlSystem>(paddleOne, paddleTwo);
 }

@@ -51,7 +51,7 @@ int ColliderList::AddEdgeCollider(const EdgeColliderDesc& desc)
     Collider collider;
 
     b2EdgeShape shape;
-    shape.Set(desc.start, desc.end);
+    shape.Set(ConvertToPhysicsVector(desc.start), ConvertToPhysicsVector(desc.end));
 
     collider.m_shape = std::make_unique<b2EdgeShape>(shape);
 
@@ -71,7 +71,7 @@ int ColliderList::AddPolygonCollider(const PolygonColliderDesc& desc)
     std::vector<b2Vec2> b2Points;
     b2Points.resize(desc.points.size());
     std::transform(desc.points.begin(), desc.points.end(), b2Points.begin(),
-                   [](Vector2 v) -> b2Vec2 { return v; });
+                   [](Vector2 v) -> b2Vec2 { return ConvertToPhysicsVector(v); });
 
     shape.Set(b2Points.data(), static_cast<int32>(b2Points.size()));
 

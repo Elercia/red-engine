@@ -31,9 +31,9 @@ public:
 
     void Render(CameraComponent* camera, Sprite* sprite, const Transform& transform);
     
-    void DrawLine(CameraComponent* camera, Vector2 first, Vector2 second,
+    void DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
                   Color color = ColorConstant::RED);
-    void DrawCircle(CameraComponent* camera, Vector2 center, float radius,
+    void DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
                   Color color = ColorConstant::RED);
 
     void Init(const EngineInitDesc& initDesc) override;

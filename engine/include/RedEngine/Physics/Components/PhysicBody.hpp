@@ -21,7 +21,10 @@ enum class PhysicsBodyType
 
 struct PhysicBodyCreationDesc
 {
-    PhysicsBodyType type;
+    PhysicsBodyType type{PhysicsBodyType::STATIC_BODY};
+    float32 linearDamping{0.f};
+    float32 angularDamping{0.f};
+    float32 gravityScale{1.f};
 };
 
 class PhysicBody : public Component

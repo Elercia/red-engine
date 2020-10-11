@@ -19,7 +19,7 @@ void PhysicsDebugDrawer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount,
 
     for (int32 i = 0; i < vertexCount; i++)
     {
-        points.push_back(vertices[i]);
+        points.push_back(ConvertFromPhysicsVector(vertices[i]));
     }
 
     m_debugComponent->AddPolygon(
@@ -33,7 +33,7 @@ void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCo
 
     for (int i = 0; i < vertexCount; i++)
     {
-        points.push_back(vertices[i]);
+        points.push_back(ConvertFromPhysicsVector(vertices[i]));
     }
 
     m_debugComponent->AddPolygon(
@@ -43,25 +43,28 @@ void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCo
 void PhysicsDebugDrawer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 {
     m_debugComponent->AddCircle(
-        center, radius, {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
+        ConvertFromPhysicsVector(center), radius,
+        {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
 }
 
 void PhysicsDebugDrawer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis,
                                          const b2Color& color)
 {
     m_debugComponent->AddCircle(
-        center, radius, {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
+        ConvertFromPhysicsVector(center), radius,
+        {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
 }
 
 void PhysicsDebugDrawer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {
     m_debugComponent->AddLine(
-        p1, p2, {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
+        ConvertFromPhysicsVector(p1), ConvertFromPhysicsVector(p2),
+        {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
 }
 
 void PhysicsDebugDrawer::DrawTransform(const b2Transform& xf)
 {
-    m_debugComponent->AddCircle(xf.p, 1.f, ColorConstant::BLACK);
+    m_debugComponent->AddCircle(ConvertFromPhysicsVector(xf.p), 1.f, ColorConstant::BLACK);
 }
 
 }  // namespace red

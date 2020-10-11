@@ -119,19 +119,24 @@ void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Tran
     }
 }
 
-void RenderingEngine::DrawLine(CameraComponent* camera, Vector2 first, Vector2 second, Color color)
+void RenderingEngine::DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
+                               Color color)
 {
     const auto& fPos = camera->WorldToViewportPoint(first);
-    const auto& sPos = camera->WorldToViewportPoint(first);
+    const auto& sPos = camera->WorldToViewportPoint(second);
 
     SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(m_renderer, static_cast<int>(fPos.x), static_cast<int>(fPos.y),
-                       static_cast<int>(sPos.x), static_cast<int>(sPos.y));
+    SDL_RenderDrawLine(m_renderer, (int) (fPos.x), (int) (fPos.y), (int) (sPos.x), (int) (sPos.y));
 }
 
-void RenderingEngine::DrawCircle(CameraComponent* camera, Vector2 center, float radius,
+void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
                                  Color color /*= ColorConstant::RED*/)
 {
+    const auto& pos = camera->WorldToViewportPoint(center);
+
+    SDL_Rect rect{(int) (pos.x - radius), (int) (pos.y - radius), (int) (pos.x + radius),
+                  (int) (pos.y + radius)};
+    SDL_RenderDrawRect(m_renderer, &rect);
 }
 
 void RenderingEngine::Init(const EngineInitDesc& initDesc)
