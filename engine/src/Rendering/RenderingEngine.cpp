@@ -115,12 +115,12 @@ void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Tran
             (currentAnimationFrame.flipV ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE));
 
         SDL_RenderCopyEx(m_renderer, currentAnimation.texture->m_sdlTexture, &source, &dest,
-                         currentAnimationFrame.rotation, &center, flip);
+                           currentAnimationFrame.rotation, &center, flip);
     }
 }
 
 void RenderingEngine::DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
-                               Color color)
+                               const Color& color)
 {
     const auto& fPos = camera->WorldToViewportPoint(first);
     const auto& sPos = camera->WorldToViewportPoint(second);
@@ -129,14 +129,39 @@ void RenderingEngine::DrawLine(CameraComponent* camera, const Vector2& first, co
     SDL_RenderDrawLine(m_renderer, (int) (fPos.x), (int) (fPos.y), (int) (sPos.x), (int) (sPos.y));
 }
 
+void RenderingEngine::DrawLines(CameraComponent* camera, const std::vector<Vector2>& points,
+                                const Color& color /*= ColorConstant::RED*/,
+                                bool isFilled /*= false*/)
+{
+    std::vector<SDL_Point> sdlPoints;
+    sdlPoints.reserve(points.size());
+    for (const Vector2& p : points)
+    {
+        const auto& v = camera->WorldToViewportPoint(p);
+
+        sdlPoints.push_back({(int) v.x, (int) v.y});
+    }
+
+    SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLines(m_renderer, sdlPoints.data(), (int)sdlPoints.size());
+}
+
 void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
-                                 Color color /*= ColorConstant::RED*/)
+                                 const Color& color /*= ColorConstant::RED*/)
 {
     const auto& pos = camera->WorldToViewportPoint(center);
 
     SDL_Rect rect{(int) (pos.x - radius), (int) (pos.y - radius), (int) (pos.x + radius),
                   (int) (pos.y + radius)};
     SDL_RenderDrawRect(m_renderer, &rect);
+}
+
+void RenderingEngine::DrawPoint(CameraComponent* camera, const Vector2& coord,
+                                const Color& color /*= ColorConstant::RED*/)
+{
+    const auto& pos = camera->WorldToViewportPoint(coord);
+
+    SDL_RenderDrawPoint(m_renderer, (int) pos.x, (int) pos.y);
 }
 
 void RenderingEngine::Init(const EngineInitDesc& initDesc)

@@ -25,8 +25,6 @@ struct ConfigurationInitDesc
     std::string resourceFolder;
 };
 
-constexpr float PHYSICS_PIXEL_PER_METER = 10.f;
-
 /// Struct that represent all the data used by the subEngines to init themselves
 struct EngineInitDesc
 {

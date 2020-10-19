@@ -42,8 +42,8 @@ void PongLevel::Init()
     auto* ball = CreateEntity("Ball");
     ball->AddComponent<red::Sprite>("ball");
     ball->GetComponent<red::Transform>()->SetPosition(center);
-    ball->AddComponent<red::PhysicBody>(ballBodyDesc);
-    ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
+    //ball->AddComponent<red::PhysicBody>(ballBodyDesc);
+    //ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
 
     auto* paddleOne = CreateEntity("PaddleOne");
     paddleOne->AddComponent<red::Sprite>("paddle");
@@ -63,7 +63,7 @@ void PongLevel::Init()
     auto* manager = CreateEntity("Manager");
     manager->AddComponent<ScoreComponent>();
     manager->AddComponent<red::CameraComponent>(center);
-
+    
     red::PhysicBodyCreationDesc wallBodyDesc = {red::PhysicsBodyType::KINEMATIC_BODY};
 
     auto* wallUp = CreateEntity("Wall Up");
@@ -75,12 +75,12 @@ void PongLevel::Init()
     red::EdgeColliderDesc wallUpColliderDesc;
     wallUpColliderDesc.isTrigger = false;
     wallUpColliderDesc.start = {0.f, 0.f};
-    wallUpColliderDesc.end = {0.f, (float) info.width};
+    wallUpColliderDesc.end = {(float) info.width, 0.f};
 
     red::EdgeColliderDesc wallDownColliderDesc;
     wallUpColliderDesc.isTrigger = false;
-    wallUpColliderDesc.start = {(float) info.height, 0.f};
-    wallUpColliderDesc.end = {(float) info.height, (float) info.width};
+    wallUpColliderDesc.start = {0.f, (float) info.height};
+    wallUpColliderDesc.end = {(float) info.width, (float) info.height};
 
     wallUp->AddComponent<red::ColliderList>()->AddEdgeCollider(wallUpColliderDesc);
     wallDown->AddComponent<red::ColliderList>()->AddEdgeCollider(wallDownColliderDesc);

@@ -37,7 +37,7 @@ void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCo
     }
 
     m_debugComponent->AddPolygon(
-        points, {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
+        points, {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)}, true);
 }
 
 void PhysicsDebugDrawer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
@@ -64,7 +64,7 @@ void PhysicsDebugDrawer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b
 
 void PhysicsDebugDrawer::DrawTransform(const b2Transform& xf)
 {
-    m_debugComponent->AddCircle(ConvertFromPhysicsVector(xf.p), 1.f, ColorConstant::BLACK);
+    m_debugComponent->AddPoint(ConvertFromPhysicsVector(xf.p), ColorConstant::BLACK);
 }
 
 }  // namespace red

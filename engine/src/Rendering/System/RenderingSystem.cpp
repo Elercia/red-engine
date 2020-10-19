@@ -73,20 +73,7 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
             {
                 auto* polygon = static_cast<DebugPolygon*>(shape.get());
 
-                for (int i = 0; i < polygon->points.size(); i++)
-                {
-                    auto& p1 = polygon->points[i];
-
-                    if (i == (polygon->points.size() - 1) && !polygon->isFilled)
-                    {
-                        break;
-                    }
-
-                    int p2Index = polygon->points.size() - 1 == i ? 0 : i + 1;
-                    auto& p2 = polygon->points[p2Index];
-
-                    m_renderingEngine->DrawLine(camera, p1, p2, polygon->color);
-                }
+                m_renderingEngine->DrawLines(camera, polygon->points, polygon->color);
             }
             break;
             case DebugShapeType::SEGMENT:
@@ -95,6 +82,13 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
 
                 m_renderingEngine->DrawLine(camera, segment->point1, segment->point2,
                                             segment->color);
+            }
+            break;
+            case DebugShapeType::POINT:
+            {
+                auto* point = static_cast<DebugPoint*>(shape.get());
+
+                m_renderingEngine->DrawPoint(camera, point->coord, point->color);
             }
             break;
         }

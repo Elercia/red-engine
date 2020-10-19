@@ -20,7 +20,7 @@ void PhysicSystem::Init()
         if (physicBody->m_status == ComponentStatus::VALID)
             continue;
 
-        auto& creationDesc = physicBody->m_desc;
+        const auto& creationDesc = physicBody->m_desc;
 
         b2BodyDef bodyDef;
 
@@ -84,7 +84,7 @@ void PhysicSystem::Finalise()
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
         m_physicsWorld->DestroyBody(
-            physicBody->m_body);  // Destroying a beody will destroy all the fixture attached
+            physicBody->m_body);  // Destroying a body will destroy all the fixture attached
     }
 }
 

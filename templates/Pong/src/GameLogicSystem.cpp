@@ -33,9 +33,9 @@ void GameLogicSystem::Init()
 {
     using namespace red;
 
-    auto* body = m_ball->GetComponent<PhysicBody>()->GetBody();
+    //auto* body = m_ball->GetComponent<PhysicBody>()->GetBody();
 
-    body->SetLinearVelocity({10.f, 0.f});
+    //body->SetLinearVelocity({10.f, 0.f});
 }
 
 void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
