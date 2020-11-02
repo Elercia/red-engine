@@ -17,7 +17,7 @@ World::World()
     : m_singletonEntity(nullptr)
     , m_componentManager(new ComponentManager())
     , m_nextEntityId(0)
-    , m_physicsWorld({0, 0})  // TODO CVar for gravity ?
+    , m_physicsWorld() 
 {
 }
 
@@ -134,6 +134,6 @@ Entity* World::GetSingletonEntity() { return m_singletonEntity; }
 
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
-b2World* World::GetPhysicsWorld() { return &m_physicsWorld; }
+PhysicsWorld* World::GetPhysicsWorld() { return &m_physicsWorld; }
 
 }  // namespace red

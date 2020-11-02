@@ -19,13 +19,17 @@ int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
     collider.m_list = this;
 
     collider.m_fixtureDef.isSensor = desc.isTrigger;
-    collider.m_fixtureDef.userData = &collider;
 
-    auto itPair = m_colliders.insert({m_nextIndex++, std::move(collider)});
+    auto insertionResult = m_colliders.insert({m_nextIndex++, std::move(collider)});
+
+    // Set the used data to the right collider
+    auto& mapPair = insertionResult.first;
+    auto& colliderInserted = mapPair->second;
+    colliderInserted.m_fixtureDef.userData = &colliderInserted;
 
     m_status = ComponentStatus::DIRTY;
 
-    return itPair.first->first;
+    return mapPair->first;
 }
 
 int ColliderList::AddCircleCollider(const CircleColliderDesc& desc)

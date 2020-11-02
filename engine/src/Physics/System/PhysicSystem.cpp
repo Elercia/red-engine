@@ -2,6 +2,9 @@
 #include <RedEngine/Physics/Components/PhysicBody.hpp>
 #include <RedEngine/Physics/Components/Collider.hpp>
 #include <RedEngine/Core/Components/Transform.hpp>
+#include <RedEngine/Physics/ContactInfo.hpp>
+
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 namespace red
 {
@@ -11,7 +14,9 @@ PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->
 
 PhysicSystem::~PhysicSystem() {}
 
-void PhysicSystem::Init()
+void PhysicSystem::Init() { ManageEntities(); }
+
+void PhysicSystem::ManageEntities()
 {
     for (auto* entity : GetComponents<PhysicBody>())
     {
@@ -22,24 +27,7 @@ void PhysicSystem::Init()
 
         const auto& creationDesc = physicBody->m_desc;
 
-        b2BodyDef bodyDef;
-
-        bodyDef.userData = this;
-
-        switch (creationDesc.type)
-        {
-            case PhysicsBodyType::DYNAMIC_BODY:
-                bodyDef.type = b2_dynamicBody;
-                break;
-            case PhysicsBodyType::STATIC_BODY:
-                bodyDef.type = b2_staticBody;
-                break;
-            case PhysicsBodyType::KINEMATIC_BODY:
-                bodyDef.type = b2_kinematicBody;
-                break;
-        }
-
-        physicBody->m_body = m_world->GetPhysicsWorld()->CreateBody(&bodyDef);
+        m_physicsWorld->InitPhysicsBody(physicBody, creationDesc);
 
         physicBody->m_status = ComponentStatus::VALID;
     }
@@ -83,18 +71,15 @@ void PhysicSystem::Finalise()
     {
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
-        m_physicsWorld->DestroyBody(
-            physicBody->m_body);  // Destroying a body will destroy all the fixture attached
+        m_physicsWorld->DestroyPhysicsBody(physicBody);  // Destroying a body will destroy all the fixture attached
     }
 }
 
 void PhysicSystem::Update()
 {
-    b2World* physicsWorld = m_world->GetPhysicsWorld();
+    m_physicsWorld->ClearForces();
 
-    // physicsWorld->ClearForces();
-
-    Init();
+    ManageEntities();
 
     for (auto* entity : GetComponents<PhysicBody>())
     {
@@ -104,7 +89,7 @@ void PhysicSystem::Update()
         physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), 0);
     }
 
-    physicsWorld->Step(timeStep, velocityIterations, positionIterations);
+    m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 
     for (auto* entity : GetComponents<PhysicBody>())
     {
@@ -113,6 +98,67 @@ void PhysicSystem::Update()
 
         transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
     }
+
+    ManageContacts();
+}
+
+void PhysicSystem::ManageContacts()
+{
+    auto& contacts = m_physicsWorld->GetContacts();
+
+    for (const auto& contact : contacts)
+    {
+        auto* physicBody1 =
+            static_cast<PhysicBody*>(contact->GetFixtureA()->GetBody()->GetUserData());
+        auto* physicBody2 =
+            static_cast<PhysicBody*>(contact->GetFixtureB()->GetBody()->GetUserData());
+
+        auto* collider1 = static_cast<Collider*>(contact->GetFixtureA()->GetUserData());
+        auto* collider2 = static_cast<Collider*>(contact->GetFixtureB()->GetUserData());
+
+        // const auto* manifold = contact->GetManifold();
+
+        if (contact->IsTouching())
+        {
+            ManageTriggerContact(physicBody1, physicBody2, collider1, collider2, contact);
+        }
+        else
+        {
+            ManageCollisionContact(physicBody1, physicBody2, collider1, collider2, contact);
+        }
+    }
+}
+
+void PhysicSystem::ManageCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
+                                          Collider* collider1, Collider* collider2,
+                                          const b2Contact* contact)
+{
+    CollisionInfo collisionInfo;
+    collisionInfo.firstPhysicBody = physicBody1;
+    collisionInfo.secondPhysicBody = physicBody2;
+    collisionInfo.firstCollider = collider1;
+    collisionInfo.secondCollider = collider2;
+    collisionInfo.restitution = contact->GetRestitution();
+    collisionInfo.tangentSpeed = contact->GetTangentSpeed();
+
+    physicBody1->m_collisionSignal(collisionInfo);
+    collisionInfo.SwapFirstSecond();
+    physicBody2->m_collisionSignal(collisionInfo);
+}
+
+void PhysicSystem::ManageTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
+                                        Collider* collider1, Collider* collider2,
+                                        const b2Contact* contact)
+{
+    TriggerInfo collisionInfo;
+    collisionInfo.firstPhysicBody = physicBody1;
+    collisionInfo.secondPhysicBody = physicBody2;
+    collisionInfo.firstCollider = collider1;
+    collisionInfo.secondCollider = collider2;
+
+    physicBody1->m_triggerSignal(collisionInfo);
+    collisionInfo.SwapFirstSecond();
+    physicBody2->m_triggerSignal(collisionInfo);
 }
 
 }  // namespace red

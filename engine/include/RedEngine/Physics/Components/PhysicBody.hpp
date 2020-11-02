@@ -2,6 +2,7 @@
 
 #include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
+#include "RedEngine/Physics/ContactInfo.hpp"
 
 #include <Box2D/Dynamics/b2Body.h>
 
@@ -30,6 +31,10 @@ struct PhysicBodyCreationDesc
 class PhysicBody : public Component
 {
     friend class PhysicSystem;
+    friend class PhysicsWorld;
+
+    using OnCollisionSignalType = Signal<const CollisionInfo&>;
+    using OnTriggerSignalType = Signal<const TriggerInfo&>;
 
 public:
     PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc);
@@ -43,5 +48,11 @@ public:
 private:
     PhysicBodyCreationDesc m_desc;
     b2Body* m_body;
+
+    std::vector<OnCollisionSignalType::Slot> m_collisionSlots;
+    OnCollisionSignalType m_collisionSignal;
+
+    std::vector<OnTriggerSignalType::Slot> m_triggerSlots;
+    OnTriggerSignalType m_triggerSignal;
 };
 }  // namespace red

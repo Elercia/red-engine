@@ -96,7 +96,7 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
 
     debugComp->m_frameShapes.clear();
 
-    m_world->GetPhysicsWorld()->DrawDebugData();
+    m_world->GetPhysicsWorld()->DrawDebug();
 }
 
 }  // namespace red
