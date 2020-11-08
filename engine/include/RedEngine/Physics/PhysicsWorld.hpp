@@ -35,10 +35,10 @@ public:
 
 private:
     void UpdateContactInfos();
-    void PhysicsWorld::AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
+    void AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
                                             Collider* collider1, Collider* collider2,
                                             const b2Contact* contact);
-    void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
+    void AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
                                               Collider* collider1, Collider* collider2,
                                               const b2Contact* contact);
 

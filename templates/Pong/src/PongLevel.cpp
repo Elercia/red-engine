@@ -83,7 +83,6 @@ void PongLevel::Init()
     auto* walls = CreateEntity("Walls");
 
     walls->AddComponent<red::PhysicBody>(wallBodyDesc);
-    walls->AddComponent<red::PhysicBody>(wallBodyDesc);
 
     red::EdgeColliderDesc wallUpColliderDesc;
     wallUpColliderDesc.isTrigger = false;
