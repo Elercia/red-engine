@@ -71,13 +71,14 @@ void PhysicSystem::Finalise()
     {
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
-        m_physicsWorld->DestroyPhysicsBody(physicBody);  // Destroying a body will destroy all the fixture attached
+        m_physicsWorld->DestroyPhysicsBody(
+            physicBody);  // Destroying a body will destroy all the fixture attached
     }
 }
 
 void PhysicSystem::Update()
 {
-    m_physicsWorld->ClearForces();
+    //m_physicsWorld->ClearForces();
 
     ManageEntities();
 
@@ -99,66 +100,39 @@ void PhysicSystem::Update()
         transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
     }
 
-    ManageContacts();
+    ManageCollisions();
+    ManageTriggers();
 }
 
-void PhysicSystem::ManageContacts()
-{
-    auto& contacts = m_physicsWorld->GetContacts();
+void PhysicSystem::ManageCollisions() 
+{ 
+    auto& collisions = m_physicsWorld->GetCollisions(); 
 
-    for (const auto& contact : contacts)
+    for (auto& constCollision : collisions) 
     {
-        auto* physicBody1 =
-            static_cast<PhysicBody*>(contact->GetFixtureA()->GetBody()->GetUserData());
-        auto* physicBody2 =
-            static_cast<PhysicBody*>(contact->GetFixtureB()->GetBody()->GetUserData());
+        auto collision = constCollision; // copy
 
-        auto* collider1 = static_cast<Collider*>(contact->GetFixtureA()->GetUserData());
-        auto* collider2 = static_cast<Collider*>(contact->GetFixtureB()->GetUserData());
+        collision.firstPhysicBody->m_collisionSignal.emit(collision);
 
-        // const auto* manifold = contact->GetManifold();
+        collision.SwapFirstSecond();
 
-        if (contact->IsTouching())
-        {
-            ManageTriggerContact(physicBody1, physicBody2, collider1, collider2, contact);
-        }
-        else
-        {
-            ManageCollisionContact(physicBody1, physicBody2, collider1, collider2, contact);
-        }
+        collision.firstPhysicBody->m_collisionSignal.emit(collision);
     }
 }
 
-void PhysicSystem::ManageCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
-                                          Collider* collider1, Collider* collider2,
-                                          const b2Contact* contact)
+void PhysicSystem::ManageTriggers() 
 {
-    CollisionInfo collisionInfo;
-    collisionInfo.firstPhysicBody = physicBody1;
-    collisionInfo.secondPhysicBody = physicBody2;
-    collisionInfo.firstCollider = collider1;
-    collisionInfo.secondCollider = collider2;
-    collisionInfo.restitution = contact->GetRestitution();
-    collisionInfo.tangentSpeed = contact->GetTangentSpeed();
+    auto& triggers = m_physicsWorld->GetTriggers();
 
-    physicBody1->m_collisionSignal(collisionInfo);
-    collisionInfo.SwapFirstSecond();
-    physicBody2->m_collisionSignal(collisionInfo);
+    for (auto& constTrigger : triggers)
+    {
+        auto triggerInfo = constTrigger; // copy
+
+        triggerInfo.firstPhysicBody->m_triggerSignal(triggerInfo);
+
+        triggerInfo.SwapFirstSecond();
+
+        triggerInfo.secondPhysicBody->m_triggerSignal(triggerInfo);
+    }
 }
-
-void PhysicSystem::ManageTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
-                                        Collider* collider1, Collider* collider2,
-                                        const b2Contact* contact)
-{
-    TriggerInfo collisionInfo;
-    collisionInfo.firstPhysicBody = physicBody1;
-    collisionInfo.secondPhysicBody = physicBody2;
-    collisionInfo.firstCollider = collider1;
-    collisionInfo.secondCollider = collider2;
-
-    physicBody1->m_triggerSignal(collisionInfo);
-    collisionInfo.SwapFirstSecond();
-    physicBody2->m_triggerSignal(collisionInfo);
-}
-
 }  // namespace red

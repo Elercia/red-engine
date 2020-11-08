@@ -11,6 +11,13 @@ PhysicBody::PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc)
 
 PhysicBody::~PhysicBody() {}
 
+void PhysicBody::ApplyForce(const Vector2& force, const Vector2& relativePosition)
+{
+    auto worldPosition = ConvertFromPhysicsVector(m_body->GetPosition()) + relativePosition;
+
+    m_body->ApplyForce(ConvertToPhysicsVector(force), ConvertToPhysicsVector(worldPosition), true);
+}
+
 b2Body* PhysicBody::GetBody() { return m_body; }
 
 }  // namespace red

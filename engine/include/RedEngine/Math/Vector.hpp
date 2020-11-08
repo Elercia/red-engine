@@ -20,6 +20,9 @@ public:
     Vector2T<T>& operator=(Vector2T<T>&&) = default;
 
     Vector2T<T> operator+(const Vector2T<T>& other) const;
+    Vector2T<T> operator-(const Vector2T<T>& other) const;
+    Vector2T<T> operator*(const Vector2T<T>& other) const;
+
     Vector2T<T> operator*(T scalar) const;
 
     T x, y;

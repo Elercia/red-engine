@@ -1,11 +1,20 @@
 #pragma once
 
+#include "RedEngine/Math/Vector.hpp"
+
 #include <vector>
 
 namespace red
 {
 class PhysicBody;
 struct Collider;
+
+struct ContactPoint
+{
+    Vector2 localPoint{0.f, 0.f};
+    float normalImpulse{0.f};
+    float tangentImpulse{0.f};
+};
 
 struct CollisionInfo
 {
@@ -18,7 +27,9 @@ struct CollisionInfo
     float restitution;
     float tangentSpeed;
 
-    std::vector<int> contactPoints;
+    Vector2 normal;
+
+    std::vector<ContactPoint> contactPoints;
 
     void SwapFirstSecond();
 };

@@ -47,6 +47,8 @@ struct Collider
     b2FixtureDef m_fixtureDef;
     b2Fixture* m_fixture;
     std::unique_ptr<b2Shape> m_shape{nullptr};
+
+    bool IsTrigger() { return m_fixtureDef.isSensor; }
 };
 
 // TODO Collision layers

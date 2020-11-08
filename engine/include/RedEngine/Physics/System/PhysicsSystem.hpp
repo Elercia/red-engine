@@ -23,11 +23,8 @@ public:
 
 private:
     void ManageEntities();
-    void ManageContacts();
-    void ManageCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
-                                Collider* collider1, Collider* collider2, const b2Contact* contact);
-    void ManageTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1,
-                              Collider* collider2, const b2Contact* contact);
+    void ManageCollisions();
+    void ManageTriggers();
 
 private:
     PhysicsWorld* m_physicsWorld;

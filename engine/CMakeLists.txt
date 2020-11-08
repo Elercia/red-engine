@@ -22,6 +22,12 @@ file(GLOB_RECURSE INLINE_HEADERS
 # red_engine_lib
 add_library(red_engine_lib STATIC ${SOURCES} ${HEADERS} ${INLINE_HEADERS} "src/Math/Vector.cpp")
 
+set(root ${CMAKE_CURRENT_SOURCE_DIR})
+
+source_group(TREE ${root} FILES ${SOURCES})
+source_group(TREE ${root} FILES ${HEADERS})
+source_group(TREE ${root} FILES ${INLINE_HEADERS})
+
 target_include_directories(red_engine_lib
         PUBLIC
         ${INCLUDE_FOLDER})

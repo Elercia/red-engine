@@ -19,7 +19,9 @@ int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
     collider.m_list = this;
 
     collider.m_fixtureDef.isSensor = desc.isTrigger;
-
+    collider.m_fixtureDef.restitution = desc.restitution;
+    collider.m_fixtureDef.friction = desc.friction;
+    
     auto insertionResult = m_colliders.insert({m_nextIndex++, std::move(collider)});
 
     // Set the used data to the right collider

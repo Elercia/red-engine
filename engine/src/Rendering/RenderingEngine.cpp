@@ -151,8 +151,8 @@ void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center,
 {
     const auto& pos = camera->WorldToViewportPoint(center);
 
-    SDL_Rect rect{(int) (pos.x - radius), (int) (pos.y - radius), (int) (pos.x + radius),
-                  (int) (pos.y + radius)};
+    SDL_Rect rect{(int) (pos.x - radius), (int) (pos.y - radius), (int) (radius * 2),
+                  (int) (radius * 2)};
     SDL_RenderDrawRect(m_renderer, &rect);
 }
 
