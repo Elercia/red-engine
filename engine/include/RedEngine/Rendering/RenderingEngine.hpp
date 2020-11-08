@@ -30,11 +30,18 @@ public:
     void EndRenderFrame();
 
     void Render(CameraComponent* camera, Sprite* sprite, const Transform& transform);
-    
-    void DrawLine(CameraComponent* camera, Vector2 first, Vector2 second,
-                  Color color = ColorConstant::RED);
-    void DrawCircle(CameraComponent* camera, Vector2 center, float radius,
-                  Color color = ColorConstant::RED);
+
+    void DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
+                  const Color& color = ColorConstant::RED);
+
+    void DrawLines(CameraComponent* camera, const std::vector<Vector2>& points,
+                   const Color& color = ColorConstant::RED, bool isFilled = false);
+
+    void DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
+                    const Color& color = ColorConstant::RED);
+
+    void DrawPoint(CameraComponent* camera, const Vector2& coord,
+                   const Color& color = ColorConstant::RED);
 
     void Init(const EngineInitDesc& initDesc) override;
 

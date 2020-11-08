@@ -10,7 +10,6 @@
 #include <map>
 #include <memory>
 
-
 namespace red
 {
 class PhysicBody;
@@ -19,24 +18,26 @@ struct Collider;
 
 struct ColliderDesc
 {
-    bool isTrigger;
+    bool isTrigger{false};
+    float32 friction{0.f};
+    float32 restitution{0.f};
 };
 
 struct CircleColliderDesc : public ColliderDesc
 {
-    Vector2 center;
-    float radius;
+    Vector2 center{0.f, 0.f};
+    float radius{0.1f};
 };
 
 struct EdgeColliderDesc : public ColliderDesc
 {
-    Vector2 start;
-    Vector2 end;
+    Vector2 start{0.f, 0.f};
+    Vector2 end{0.f, 0.f};
 };
 
 struct PolygonColliderDesc : public ColliderDesc
 {
-    std::vector<Vector2> points;
+    std::vector<Vector2> points{};
 };
 
 struct Collider
@@ -46,6 +47,8 @@ struct Collider
     b2FixtureDef m_fixtureDef;
     b2Fixture* m_fixture;
     std::unique_ptr<b2Shape> m_shape{nullptr};
+
+    bool IsTrigger() { return m_fixtureDef.isSensor; }
 };
 
 // TODO Collision layers
@@ -60,7 +63,7 @@ public:
     int AddCircleCollider(const CircleColliderDesc& desc);
     int AddEdgeCollider(const EdgeColliderDesc& desc);
     int AddPolygonCollider(const PolygonColliderDesc& desc);
-    
+
     void RemoveCollider(int id);
 
     PhysicBody* GetAttachedPhysicBody();

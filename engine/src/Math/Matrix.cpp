@@ -3,7 +3,7 @@
 
 namespace red
 {
-Matrix4::Matrix4() { memset(m_data, 0.F, sizeof m_data); }
+Matrix4::Matrix4() { memset(m_data, 0, sizeof m_data); }
 
 Matrix4 Matrix4::MakeOrthographic(float left, float right, float bottom, float top, float pNear,
                                   float pFar)

@@ -16,33 +16,6 @@ CameraComponent::CameraComponent(Entity* entity, const Vector2& center)
         Vector2(center.x - m_viewport.width / 2.F, center.y - m_viewport.height / 2.F);
 }
 
-Vector2 red::CameraComponent::ScreenToViewportPoint(const Vector2& point) const
-{
-    if (!Math::Between(point.x, m_viewport.x, m_viewport.x + m_viewport.width) ||
-        !Math::Between(point.y, m_viewport.y, m_viewport.y + m_viewport.height))
-    {
-        RED_LOG_WARNING("Camera ScreenToViewportPoint point is out of viewport");
-        return {-1.F, -1.F};
-    }
-
-    Vector2 rt;
-
-    rt.x = point.x - m_viewport.x;
-    rt.y = point.y - m_viewport.y;
-
-    return rt;
-}
-
-Vector2 CameraComponent::ViewportToScreenPoint(const Vector2& point) const
-{
-    Vector2 rt;
-
-    rt.x = point.x + m_viewport.x;
-    rt.y = point.y + m_viewport.y;
-
-    return rt;
-}
-
 Vector2 CameraComponent::ViewportToWorldPoint(const Vector2& point) const
 {
     Vector2 rt;
@@ -53,25 +26,6 @@ Vector2 CameraComponent::ViewportToWorldPoint(const Vector2& point) const
     return rt;
 }
 
-Vector2 CameraComponent::ScreenToWorldPoint(const Vector2& point) const
-{
-    Vector2 rt;
-
-    rt.x = point.x - m_viewport.x + m_cameraWorldPosition.x;
-    rt.y = point.y - m_viewport.y + m_cameraWorldPosition.y;
-
-    return rt;
-}
-
-Vector2 CameraComponent::WorldToScreenPoint(const Vector2& point) const
-{
-    Vector2 rt;
-
-    rt.x = point.x + m_viewport.x - m_cameraWorldPosition.x;
-    rt.y = point.y + m_viewport.y - m_cameraWorldPosition.y;
-
-    return rt;
-}
 Vector2 CameraComponent::WorldToViewportPoint(const Vector2& point) const
 {
     Vector2 rt;

@@ -1,10 +1,9 @@
 #pragma once
 
 #include <RedEngine/Utils/Uncopyable.hpp>
+#include <RedEngine/Physics/PhysicsWorld.hpp>
 
 #include "../EngineConfig.hpp"
-
-#include <Box2D/Dynamics/b2World.h>
 
 #include <memory>
 #include <vector>
@@ -50,19 +49,16 @@ public:
 
     void Clean();
 
-    b2World* GetPhysicsWorld();
-
+    PhysicsWorld* GetPhysicsWorld();
 
 private:
-
     Entity* m_singletonEntity;
     std::vector<Entity*> m_entities;
     std::vector<System*> m_systems;
     ComponentManager* m_componentManager;
+    PhysicsWorld m_physicsWorld;
 
     EntityId_t m_nextEntityId;
-
-    b2World m_physicsWorld;  // TODO IPhysicsWorld
 };
 
 }  // namespace red

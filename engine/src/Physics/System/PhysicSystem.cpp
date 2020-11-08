@@ -2,6 +2,9 @@
 #include <RedEngine/Physics/Components/PhysicBody.hpp>
 #include <RedEngine/Physics/Components/Collider.hpp>
 #include <RedEngine/Core/Components/Transform.hpp>
+#include <RedEngine/Physics/ContactInfo.hpp>
+
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 namespace red
 {
@@ -11,7 +14,9 @@ PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->
 
 PhysicSystem::~PhysicSystem() {}
 
-void PhysicSystem::Init()
+void PhysicSystem::Init() { ManageEntities(); }
+
+void PhysicSystem::ManageEntities()
 {
     for (auto* entity : GetComponents<PhysicBody>())
     {
@@ -20,26 +25,9 @@ void PhysicSystem::Init()
         if (physicBody->m_status == ComponentStatus::VALID)
             continue;
 
-        auto& creationDesc = physicBody->m_desc;
+        const auto& creationDesc = physicBody->m_desc;
 
-        b2BodyDef bodyDef;
-
-        bodyDef.userData = this;
-
-        switch (creationDesc.type)
-        {
-            case PhysicsBodyType::DYNAMIC_BODY:
-                bodyDef.type = b2_dynamicBody;
-                break;
-            case PhysicsBodyType::STATIC_BODY:
-                bodyDef.type = b2_staticBody;
-                break;
-            case PhysicsBodyType::KINEMATIC_BODY:
-                bodyDef.type = b2_kinematicBody;
-                break;
-        }
-
-        physicBody->m_body = m_world->GetPhysicsWorld()->CreateBody(&bodyDef);
+        m_physicsWorld->InitPhysicsBody(physicBody, creationDesc);
 
         physicBody->m_status = ComponentStatus::VALID;
     }
@@ -83,36 +71,68 @@ void PhysicSystem::Finalise()
     {
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
-        m_physicsWorld->DestroyBody(
-            physicBody->m_body);  // Destroying a beody will destroy all the fixture attached
+        m_physicsWorld->DestroyPhysicsBody(
+            physicBody);  // Destroying a body will destroy all the fixture attached
     }
 }
 
 void PhysicSystem::Update()
 {
-    b2World* physicsWorld = m_world->GetPhysicsWorld();
+    //m_physicsWorld->ClearForces();
 
-    // physicsWorld->ClearForces();
-
-    Init();
+    ManageEntities();
 
     for (auto* entity : GetComponents<PhysicBody>())
     {
         auto* transform = entity->GetComponent<Transform>();
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
-        physicBody->GetBody()->SetTransform(transform->GetPosition(), 0);
+        physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), 0);
     }
 
-    physicsWorld->Step(timeStep, velocityIterations, positionIterations);
+    m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 
     for (auto* entity : GetComponents<PhysicBody>())
     {
         auto* transform = entity->GetComponent<Transform>();
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
-        transform->SetPosition(physicBody->GetBody()->GetPosition());
+        transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
+    }
+
+    ManageCollisions();
+    ManageTriggers();
+}
+
+void PhysicSystem::ManageCollisions() 
+{ 
+    auto& collisions = m_physicsWorld->GetCollisions(); 
+
+    for (auto& constCollision : collisions) 
+    {
+        auto collision = constCollision; // copy
+
+        collision.firstPhysicBody->m_collisionSignal.emit(collision);
+
+        collision.SwapFirstSecond();
+
+        collision.firstPhysicBody->m_collisionSignal.emit(collision);
     }
 }
 
+void PhysicSystem::ManageTriggers() 
+{
+    auto& triggers = m_physicsWorld->GetTriggers();
+
+    for (auto& constTrigger : triggers)
+    {
+        auto triggerInfo = constTrigger; // copy
+
+        triggerInfo.firstPhysicBody->m_triggerSignal(triggerInfo);
+
+        triggerInfo.SwapFirstSecond();
+
+        triggerInfo.secondPhysicBody->m_triggerSignal(triggerInfo);
+    }
+}
 }  // namespace red
