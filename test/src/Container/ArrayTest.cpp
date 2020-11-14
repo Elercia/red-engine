@@ -42,6 +42,32 @@ TEST_CASE("Array accessors", "[Container]")
     }
 }
 
+TEST_CASE("Array memory shrink/reserve", "[Container]")
+{
+    Array<int> arr;
+    REQUIRE(arr.empty());
+
+    for (int i = 0; i < 100; i++)
+        arr.push_back(i);
+
+    REQUIRE(arr.size() == 100);
+    REQUIRE(arr.capacity() != 100);
+
+    arr.shrink_to_fit();
+
+    REQUIRE(arr.capacity() == 100);
+
+    arr.reserve(200);
+    REQUIRE(arr.capacity() == 200);
+    REQUIRE(arr.size() == 100);
+
+    for (int i = 0; i < 100; i++)
+        arr.push_back(i);
+
+    REQUIRE(arr.capacity() == 200);
+    REQUIRE(arr.size() == 200);
+}
+
 TEST_CASE("Array performance", "[Container]")
 {
     DurationCounter arrayCtr;

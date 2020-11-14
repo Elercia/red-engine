@@ -102,6 +102,7 @@ public:
 
 private:
     void SetCapacity(size_type newCapacity);
+    void SmartReserve(size_type capacity);
     void Resize(size_type count, const T& t);
 
     size_type m_size;

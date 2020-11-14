@@ -6,7 +6,7 @@ template <typename T>
 template <typename... Args>
 typename Array<T>::iterator Array<T>::emplace(const_iterator pos, Args&&... args)
 {
-    reserve(m_size + 1);
+    SmartReserve(m_size + 1);
     m_data[m_size] = T(std::forward<Args>(args)...);
     m_size++;
     return &m_data[m_size - 1];
@@ -16,7 +16,7 @@ template <typename T>
 template <typename... Args>
 void Array<T>::emplace_back(Args&&... args)
 {
-    reserve(m_size + 1);
+    SmartReserve(m_size + 1);
     m_data[m_size] = T(std::forward<Args>(args)...);
     m_size++;
 }
@@ -54,14 +54,14 @@ void Array<T>::Resize(size_type count, const T& t)
 template <typename T>
 void Array<T>::pop_back()
 {
-    reserve(m_size - 1);
+    SmartReserve(m_size - 1);
     m_size--;
 }
 
 template <typename T>
 void Array<T>::push_back(T&& value)
 {
-    reserve(m_size + 1);
+    SmartReserve(m_size + 1);
     m_data[m_size] = std::move(value);
     m_size++;
 }
@@ -69,7 +69,7 @@ void Array<T>::push_back(T&& value)
 template <typename T>
 void Array<T>::push_back(const T& value)
 {
-    reserve(m_size + 1);
+    SmartReserve(m_size + 1);
 
     m_data[m_size] = value;
     m_size++;
@@ -122,7 +122,7 @@ typename Array<T>::iterator Array<T>::erase(iterator pos)
 template <typename T>
 typename Array<T>::iterator Array<T>::insert(const_iterator pos, std::initializer_list<T> ilist)
 {
-    reserve(m_size + ilist.size());
+    SmartReserve(m_size + ilist.size());
 
     m_size++;
 }
@@ -130,7 +130,7 @@ typename Array<T>::iterator Array<T>::insert(const_iterator pos, std::initialize
 template <typename T>
 typename Array<T>::iterator Array<T>::insert(const_iterator pos, size_type count, const T& value)
 {
-    reserve(m_size + count);
+    SmartReserve(m_size + count);
 }
 
 template <typename T>
@@ -142,19 +142,19 @@ void Array<T>::insert(iterator pos, size_type count, const T& value)
 template <typename T>
 typename Array<T>::iterator Array<T>::insert(const_iterator pos, T&& value)
 {
-    reserve(m_size + 1);
+    SmartReserve(m_size + 1);
 }
 
 template <typename T>
 typename Array<T>::iterator Array<T>::insert(const_iterator pos, const T& value)
 {
-    reserve(m_size + 1);
+    SmartReserve(m_size + 1);
 }
 
 template <typename T>
 typename Array<T>::iterator Array<T>::insert(iterator pos, const T& value)
 {
-    reserve(m_size + 1);
+    SmartReserve(m_size + 1);
 }
 
 template <typename T>
@@ -167,11 +167,23 @@ void Array<T>::clear()
 template <typename T>
 void Array<T>::shrink_to_fit()
 {
-    SetCapacity(m_size);
+    reserve(m_size);
 }
 
 template <typename T>
 void Array<T>::reserve(size_type capacity)
+{
+    if (capacity < m_size)
+    {
+        RED_ERROR("Couldnt reserve a size below size");
+        return;
+    }
+
+    SetCapacity(capacity);
+}
+
+template <typename T>
+void red::Array<T>::SmartReserve(size_type capacity)
 {
     if (capacity < m_size)
     {
