@@ -1,3 +1,5 @@
+#include "RedEngine/Math/Math.hpp"
+
 namespace red
 {
 template <typename T>
@@ -122,8 +124,6 @@ typename Array<T>::iterator Array<T>::insert(const_iterator pos, std::initialize
 {
     reserve(m_size + ilist.size());
 
-
-
     m_size++;
 }
 
@@ -136,7 +136,7 @@ typename Array<T>::iterator Array<T>::insert(const_iterator pos, size_type count
 template <typename T>
 void Array<T>::insert(iterator pos, size_type count, const T& value)
 {
-    return insert((const_iterator)pos, count, value);
+    return insert((const_iterator) pos, count, value);
 }
 
 template <typename T>
@@ -183,18 +183,7 @@ void Array<T>::reserve(size_type capacity)
 
     if (capacity > m_capacity)
     {
-        // If the asked capacity is not above our increment
-        if (capacity < m_capacity + CapacitySizeIncrement)
-            newCapacity = m_capacity + CapacitySizeIncrement;
-        else
-            newCapacity = capacity;
-    }
-    else if (capacity < m_capacity)
-    {
-        if (capacity > m_capacity - CapacitySizeIncrement)
-            return;  // the current capacity can hold the ask capacity
-        else
-            newCapacity = capacity;
+        newCapacity = Math::NextPowerOf2(capacity);
     }
 
     SetCapacity(newCapacity);
@@ -203,9 +192,20 @@ void Array<T>::reserve(size_type capacity)
 template <typename T>
 void Array<T>::SetCapacity(size_type askedCapacity)
 {
-    m_data = (T*)realloc(m_data, askedCapacity);
+    if (askedCapacity == m_capacity)
+        return;
+
+    T* tmp = (T*) std::calloc(size_of_type, askedCapacity);
+    RED_ASSERT_S(tmp != nullptr);
+
+    for (int i = 0; i < m_size; i++)
+    {
+        tmp[i] = std::move(m_data[i]);
+    }
+
+    std::swap(m_data, tmp);
+    RED_SAFE_FREE(tmp);
     m_capacity = askedCapacity;
-    RED_ASSERT_S(m_data != nullptr);
 }
 
 template <typename T>
@@ -229,43 +229,37 @@ bool Array<T>::empty() const
 template <typename T>
 typename Array<T>::const_iterator Array<T>::cend() const
 {
-    RED_ASSERT_S(m_size > 0);
-    return m_data[m_size - 1];
+    return end();
 }
 
 template <typename T>
 typename Array<T>::const_iterator Array<T>::end() const
 {
-    RED_ASSERT_S(m_size > 0);
-    return m_data[m_size - 1];
+    return m_data + m_size;
 }
 
 template <typename T>
 typename Array<T>::iterator Array<T>::end()
 {
-    RED_ASSERT_S(m_size > 0);
-    return m_data[m_size - 1];
+    return m_data + m_size;
 }
 
 template <typename T>
 typename Array<T>::const_iterator Array<T>::cbegin() const
 {
-    RED_ASSERT_S(m_size > 0);
-    return m_data[0];
+    return begin();
 }
 
 template <typename T>
 typename Array<T>::const_iterator Array<T>::begin() const
 {
-    RED_ASSERT_S(m_size > 0);
-    return m_data[0];
+    return m_data;
 }
 
 template <typename T>
 typename Array<T>::iterator Array<T>::begin()
 {
-    RED_ASSERT_S(m_size > 0);
-    return m_data[0];
+    return m_data;
 }
 
 template <typename T>
@@ -283,42 +277,38 @@ T* Array<T>::data()
 template <typename T>
 typename Array<T>::const_reference Array<T>::back() const
 {
-    RED_ASSERT_S(m_size > 0);
-    return *(m_data[m_size - 1]);
+    return m_data[m_size - 1];
 }
 
 template <typename T>
 typename Array<T>::reference Array<T>::back()
 {
-    RED_ASSERT_S(m_size > 0);
-    return *(m_data[m_size - 1]);
+    return m_data[m_size - 1];
 }
 
 template <typename T>
 typename Array<T>::const_reference Array<T>::front() const
 {
-    RED_ASSERT_S(m_size > 0);
     return m_data[0];
 }
 
 template <typename T>
 typename Array<T>::reference Array<T>::front()
 {
-    RED_ASSERT_S(m_size > 0);
     return m_data[0];
 }
 
 template <typename T>
 typename Array<T>::reference Array<T>::at(size_type index)
 {
-    RED_ASSERT_S(m_size > index);
+    RED_ASSERT_S(index < m_size);
     return m_data[index];
 }
 
 template <typename T>
 typename Array<T>::const_reference Array<T>::at(size_type index) const
 {
-    RED_ASSERT_S(m_size > index);
+    RED_ASSERT_S(index < m_size);
     return m_data[index];
 }
 
@@ -337,18 +327,17 @@ typename Array<T>::const_reference Array<T>::operator[](size_type index) const
 template <typename T>
 Array<T>::Array() : m_size(0), m_capacity(0), m_data(nullptr)
 {
-    SetCapacity(Array<T>::CapacitySizeIncrement);
 }
 
 template <typename T>
 Array<T>::Array(std::initializer_list<T> list)
 {
-    insert(end(), l.begin(), l.end());
+    insert(m_data, l.begin(), l.end());
 }
 
 template <typename T>
 Array<T>::~Array()
 {
-    RED_SAFE_DELETE(m_data);
+    RED_SAFE_FREE(m_data);
 }
 }  // namespace red

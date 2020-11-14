@@ -19,8 +19,6 @@ public:
 
     using size_type = int;
 
-    static constexpr size_type CapacitySizeIncrement = 5;
-
     static constexpr size_t size_of_type = sizeof(T);
 
     /// Constructors
