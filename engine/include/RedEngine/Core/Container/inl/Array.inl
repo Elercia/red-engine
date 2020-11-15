@@ -195,12 +195,17 @@ void Array<T>::SetCapacity(size_type askedCapacity)
     if (askedCapacity == m_capacity)
         return;
 
-    T* tmp = (T*) std::calloc(size_of_type, askedCapacity);
-    RED_ASSERT_S(tmp != nullptr);
-
-    for (int i = 0; i < m_size; i++)
+    T* tmp = nullptr;
+    
+    if (askedCapacity != 0) 
     {
-        tmp[i] = std::move(m_data[i]);
+        tmp = (T*) std::calloc(size_of_type, askedCapacity);
+        RED_ASSERT_S(tmp != nullptr);
+
+        for (int i = 0; i < m_size; i++)
+        {
+            tmp[i] = std::move(m_data[i]);
+        }
     }
 
     std::swap(m_data, tmp);

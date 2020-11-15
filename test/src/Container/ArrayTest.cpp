@@ -21,6 +21,10 @@ TEST_CASE("Array push back", "[Container]")
         int value = intArray[i];
         REQUIRE(value == i);
     }
+
+    intArray.clear();
+
+    REQUIRE(intArray.size() == 0);
 }
 
 TEST_CASE("Array accessors", "[Container]")
