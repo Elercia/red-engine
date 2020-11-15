@@ -68,6 +68,29 @@ TEST_CASE("Array memory shrink/reserve", "[Container]")
     REQUIRE(arr.size() == 200);
 }
 
+TEST_CASE("Array resize", "[Container]")
+{
+    Array<int> arr;
+    REQUIRE(arr.empty());
+
+    for (int i = 0; i < 10; i++)
+        arr.push_back(i);
+
+    REQUIRE(arr.size() == 10);
+
+    arr.resize(20);
+    REQUIRE(arr.size() == 20);
+
+    arr.resize(20);
+    REQUIRE(arr.size() == 20);
+
+    arr.resize(30, 1000);
+    REQUIRE(arr.size() == 30);
+
+    for (int i = 20; i < 30; i++)
+        REQUIRE(arr[i] == 1000);
+}
+
 TEST_CASE("Array performance", "[Container]")
 {
     DurationCounter arrayCtr;

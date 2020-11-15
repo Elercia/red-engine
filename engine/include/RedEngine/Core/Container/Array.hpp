@@ -69,8 +69,6 @@ public:
     void clear();
 
     void resize(size_type count, T value = T());
-    void resize(size_type count);
-    void resize(size_type count, const T& value);
 
     /// Modifiers
     iterator insert(iterator pos, const T& value);

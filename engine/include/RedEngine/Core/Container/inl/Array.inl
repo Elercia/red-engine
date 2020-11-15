@@ -22,18 +22,6 @@ void Array<T>::emplace_back(Args&&... args)
 }
 
 template <typename T>
-void Array<T>::resize(size_type count, const T& value)
-{
-    Resize(count, value);
-}
-
-template <typename T>
-void Array<T>::resize(size_type count)
-{
-    Resize(count, T());
-}
-
-template <typename T>
 void Array<T>::resize(size_type count, T value /*= T()*/)
 {
     Resize(count, value);
