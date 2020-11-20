@@ -44,6 +44,13 @@ TEST_CASE("Array accessors", "[Container]")
     {
         REQUIRE(arr[i] == arr.at(i));
     }
+
+    int i = 0;
+    for (auto elem : arr)
+    {
+        REQUIRE(elem == arr.at(i));
+        i++;
+    }
 }
 
 TEST_CASE("Array memory shrink/reserve", "[Container]")
@@ -93,6 +100,76 @@ TEST_CASE("Array resize", "[Container]")
 
     for (int i = 20; i < 30; i++)
         REQUIRE(arr[i] == 1000);
+}
+
+int s_destructedCount = 0;
+
+class ArrayTestStruct
+{
+public:
+    explicit ArrayTestStruct(int i) : value(i) {}
+    ~ArrayTestStruct() { s_destructedCount++; }
+
+    ArrayTestStruct(const ArrayTestStruct&) = default;
+    ArrayTestStruct& operator=(const ArrayTestStruct&) = default;
+
+    ArrayTestStruct(ArrayTestStruct&&) = default;
+    ArrayTestStruct& operator=(ArrayTestStruct&&) = default;
+
+    int value;
+};
+
+TEST_CASE("Array of struct", "[Container]")
+{
+    {
+        Array<ArrayTestStruct> arr;
+
+        for (int i = 0; i < 100; i++)
+        {
+            ArrayTestStruct a = ArrayTestStruct(i);
+            arr.push_back(std::move(a));
+        }
+
+        REQUIRE(arr.size() == 100);
+        REQUIRE(s_destructedCount == 100); // The 100 "a" objects that get moved
+
+        s_destructedCount = 0;
+
+        for (int i = 0; i < 100; i++)
+        {
+            auto& elem = arr[i];
+            REQUIRE(elem.value == i);
+        }
+
+        REQUIRE(s_destructedCount == 0);
+
+        int i = 0;
+        for (auto& elem : arr)
+        {
+            REQUIRE(i == elem.value);
+            i++;
+        }
+
+        REQUIRE(s_destructedCount == 0);
+
+        {
+            i = 0;
+            const Array<ArrayTestStruct>& ref = arr;
+            for (auto& elem : ref)
+            {
+                REQUIRE(i == elem.value);
+                i++;
+            }
+        }
+
+        REQUIRE(s_destructedCount == 0);
+
+        arr.pop_back();
+
+        REQUIRE(s_destructedCount == 1);
+    }
+
+    REQUIRE(s_destructedCount == 100);
 }
 
 TEST_CASE("Array performance", "[Container]")

@@ -102,12 +102,12 @@ private:
     void SetCapacity(size_type newCapacity);
     void SmartReserve(size_type capacity);
     void Resize(size_type count, const T& t);
+    void Destroy(size_type from, size_type to);
 
     size_type m_size;
     size_type m_capacity;
     T* m_data;
 };
-
 }  // namespace red
 
 #include "inl/Array.inl"

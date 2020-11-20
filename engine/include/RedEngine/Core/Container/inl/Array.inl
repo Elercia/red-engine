@@ -44,6 +44,8 @@ void Array<T>::pop_back()
 {
     SmartReserve(m_size - 1);
     m_size--;
+
+    Destroy(m_size - 1, m_size);
 }
 
 template <typename T>
@@ -173,12 +175,6 @@ void Array<T>::reserve(size_type capacity)
 template <typename T>
 void red::Array<T>::SmartReserve(size_type capacity)
 {
-    if (capacity < m_size)
-    {
-        RED_ERROR("Couldnt reserve a size below size");
-        return;
-    }
-
     size_type newCapacity = m_capacity;
 
     if (capacity > m_capacity)
@@ -196,8 +192,8 @@ void Array<T>::SetCapacity(size_type askedCapacity)
         return;
 
     T* tmp = nullptr;
-    
-    if (askedCapacity != 0) 
+
+    if (askedCapacity != 0)
     {
         tmp = (T*) std::calloc(size_of_type, askedCapacity);
         RED_ASSERT_S(tmp != nullptr);
@@ -343,6 +339,19 @@ Array<T>::Array(std::initializer_list<T> list)
 template <typename T>
 Array<T>::~Array()
 {
+    Destroy(0, m_size);
     RED_SAFE_FREE(m_data);
+}
+
+template <typename T>
+void red::Array<T>::Destroy(size_type from, size_type to)
+{
+    if constexpr (!std::is_trivially_destructible<T>::value)
+    {
+        for (int i = from; i < to; i++)
+        {
+            m_data[i].~T();
+        }
+    }
 }
 }  // namespace red
