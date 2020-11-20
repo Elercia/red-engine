@@ -107,7 +107,7 @@ int s_destructedCount = 0;
 class ArrayTestStruct
 {
 public:
-    explicit ArrayTestStruct(int i) : value(i) {}
+    explicit ArrayTestStruct(int i, int j = 0, const char* c = "") : value(i), j(j), c(c) {}
     ~ArrayTestStruct() { s_destructedCount++; }
 
     ArrayTestStruct(const ArrayTestStruct&) = default;
@@ -117,10 +117,14 @@ public:
     ArrayTestStruct& operator=(ArrayTestStruct&&) = default;
 
     int value;
+    int j;
+    const char* c;
 };
 
 TEST_CASE("Array of struct", "[Container]")
 {
+    s_destructedCount = 0;
+
     {
         Array<ArrayTestStruct> arr;
 
@@ -131,7 +135,7 @@ TEST_CASE("Array of struct", "[Container]")
         }
 
         REQUIRE(arr.size() == 100);
-        REQUIRE(s_destructedCount == 100); // The 100 "a" objects that get moved
+        REQUIRE(s_destructedCount == 100);  // The 100 "a" objects that get moved
 
         s_destructedCount = 0;
 
@@ -167,6 +171,24 @@ TEST_CASE("Array of struct", "[Container]")
         arr.pop_back();
 
         REQUIRE(s_destructedCount == 1);
+    }
+
+    REQUIRE(s_destructedCount == 100);
+}
+
+TEST_CASE("Array emplace", "[Container]")
+{
+    s_destructedCount = 0;
+    {
+        Array<ArrayTestStruct> arr;
+        arr.reserve(100);
+
+        for (int i = 0; i < 100; i++)
+        {
+            arr.emplace_back(i, (i % 2) * 23, "ARRRRR");
+        }
+
+        REQUIRE(s_destructedCount == 0);
     }
 
     REQUIRE(s_destructedCount == 100);

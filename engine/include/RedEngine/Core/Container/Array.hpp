@@ -87,16 +87,9 @@ public:
     void push_back(T&& value);
 
     template <class... Args>
-    void emplace_back(Args&&... args);
-    template <class... Args>
-    iterator emplace(const_iterator pos, Args&&... args);
+    reference emplace_back(Args&&... args);
 
     void pop_back();
-
-    void assign(size_type count, const T& value);
-    template <class InputIt>
-    void assign(InputIt first, InputIt last);
-    void assign(std::initializer_list<T> ilist);
 
 private:
     void SetCapacity(size_type newCapacity);

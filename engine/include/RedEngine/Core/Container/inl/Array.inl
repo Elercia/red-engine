@@ -4,21 +4,16 @@ namespace red
 {
 template <typename T>
 template <typename... Args>
-typename Array<T>::iterator Array<T>::emplace(const_iterator pos, Args&&... args)
+typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
 {
-    SmartReserve(m_size + 1);
-    m_data[m_size] = T(std::forward<Args>(args)...);
+    size_type index = m_size;
     m_size++;
-    return &m_data[m_size - 1];
-}
 
-template <typename T>
-template <typename... Args>
-void Array<T>::emplace_back(Args&&... args)
-{
-    SmartReserve(m_size + 1);
-    m_data[m_size] = T(std::forward<Args>(args)...);
-    m_size++;
+    SmartReserve(m_size);
+
+    new (m_data + index) T(std::forward<Args>(args)...);
+
+    return m_data[index];
 }
 
 template <typename T>
