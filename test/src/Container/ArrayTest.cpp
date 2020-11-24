@@ -275,30 +275,28 @@ TEST_CASE("Array performance", "[Container]")
     DurationCounter stdCtr;
 
     // Array perf
+    arrayCtr.Start();
     {
-        arrayCtr.Start();
-
         Array<int> intArray;
         REQUIRE(intArray.empty());
 
         for (int i = 0; i < 10000; i++)
             intArray.push_back(i);
-
-        arrayCtr.Stop();
     }
+    arrayCtr.Stop();
+
 
     // std perf
+    stdCtr.Start();
     {
-        stdCtr.Start();
-
         std::vector<int> intVector;
         REQUIRE(intVector.empty());
 
         for (int i = 0; i < 10000; i++)
             intVector.push_back(i);
-
-        stdCtr.Stop();
     }
+    stdCtr.Stop();
+
 
     REQUIRE(arrayCtr.GetDuration() < stdCtr.GetDuration());
 }
