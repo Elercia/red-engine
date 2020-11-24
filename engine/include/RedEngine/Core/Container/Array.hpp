@@ -71,12 +71,12 @@ public:
     void resize(size_type count, T value = T());
 
     /// Modifiers
-    iterator insert(iterator pos, const T& value);
+    /*iterator insert(iterator pos, const T& value);
     iterator insert(const_iterator pos, const T& value);
     iterator insert(const_iterator pos, T&& value);
     void insert(iterator pos, size_type count, const T& value);
     iterator insert(const_iterator pos, size_type count, const T& value);
-    iterator insert(const_iterator pos, std::initializer_list<T> list);
+    iterator insert(const_iterator pos, std::initializer_list<T> list);*/
 
     iterator erase(iterator pos);
     iterator erase(const_iterator pos);
@@ -92,10 +92,11 @@ public:
     void pop_back();
 
 private:
-    void SetCapacity(size_type newCapacity);
-    void SmartReserve(size_type capacity);
-    void Resize(size_type count, const T& t);
-    void Destroy(size_type from, size_type to);
+    FORCEINLINE void SetCapacity(size_type newCapacity);
+    FORCEINLINE void SmartReserve(size_type capacity);
+    FORCEINLINE void Resize(size_type count, const T& t);
+    FORCEINLINE void Destroy(size_type from, size_type to);
+    FORCEINLINE void Destroy(iterator from, iterator to);
 
     size_type m_size;
     size_type m_capacity;

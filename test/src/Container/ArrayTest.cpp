@@ -176,6 +176,81 @@ TEST_CASE("Array of struct", "[Container]")
     REQUIRE(s_destructedCount == 100);
 }
 
+TEST_CASE("Array erase", "[Container]")
+{
+    Array<int> arr{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    REQUIRE(arr.size() == 10);
+
+    auto itTest2 = arr.erase(arr.begin());
+    REQUIRE(std::find(arr.begin(), arr.end(), 0) == arr.end());
+    REQUIRE(arr.size() == 9);
+
+    auto itTest = arr.erase(arr.begin() + 2, arr.begin() + 5);
+
+    REQUIRE(arr.size() == 6);
+    REQUIRE(std::find(arr.begin(), arr.end(), 3) == arr.end());
+    REQUIRE(std::find(arr.begin(), arr.end(), 4) == arr.end());
+    REQUIRE(std::find(arr.begin(), arr.end(), 5) == arr.end());
+
+    // Erase all even numbers (C++11 and later)
+    for (auto it = arr.begin(); it != arr.end();)
+    {
+        if (*it % 2 == 0)
+        {
+            it = arr.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    REQUIRE(arr.size() == 3);
+    REQUIRE(std::find(arr.begin(), arr.end(), 1) != arr.end());
+    REQUIRE(std::find(arr.begin(), arr.end(), 7) != arr.end());
+    REQUIRE(std::find(arr.begin(), arr.end(), 9) != arr.end());
+}
+
+TEST_CASE("Array erase call destructor", "[Container]")
+{
+    s_destructedCount = 0;
+    {
+        Array<ArrayTestStruct> arr;
+        for (int i = 0; i < 10; i++)
+        {
+            arr.emplace_back(i);
+        }
+        REQUIRE(s_destructedCount == 0);
+        REQUIRE(arr.size() == 10);
+
+        arr.erase(arr.begin());
+        REQUIRE(arr.size() == 9);
+        REQUIRE(s_destructedCount == 1);
+
+        arr.erase(arr.begin() + 2, arr.begin() + 5);
+
+        REQUIRE(arr.size() == 6);
+        REQUIRE(s_destructedCount == 4);
+
+        // Erase all even numbers (C++11 and later)
+        for (auto it = arr.begin(); it != arr.end();)
+        {
+            if (it->value % 2 == 0)
+            {
+                it = arr.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+
+        REQUIRE(arr.size() == 3);
+    }
+
+    REQUIRE(s_destructedCount == 10);
+}
+
 TEST_CASE("Array emplace", "[Container]")
 {
     s_destructedCount = 0;
@@ -217,6 +292,7 @@ TEST_CASE("Array performance", "[Container]")
         stdCtr.Start();
 
         std::vector<int> intVector;
+        REQUIRE(intVector.empty());
 
         for (int i = 0; i < 10000; i++)
             intVector.push_back(i);

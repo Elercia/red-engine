@@ -7,9 +7,11 @@ template <typename... Args>
 typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
 {
     size_type index = m_size;
-    m_size++;
+    size_type newSize = m_size + 1;
 
-    SmartReserve(m_size);
+    SmartReserve(newSize);
+
+    m_size = newSize;
 
     new (m_data + index) T(std::forward<Args>(args)...);
 
@@ -64,26 +66,30 @@ template <typename T>
 typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator last)
 {
     RED_ASSERT_S(last > first);
-    RED_ASSERT_S(first > begin());
+    RED_ASSERT_S(first >= begin());
     RED_ASSERT_S(last <= end());
 
-    size_type valueErased = last - first;
+    iterator index = const_cast<iterator>(first);
+    iterator shift = const_cast<iterator>(last);
 
-    m_size -= valueErased;
+    const_iterator endIt = end();
 
-    iterator shift = last;
-    iterator index = first;
+    Destroy(index, shift);
 
-    const_iterator end = end();
-
-    while (shift < end)
+    while (shift < endIt)
     {
         *index = std::move(*shift);
         index++;
         shift++;
     }
 
-    return shift;
+    size_type valueErased = (size_type)(last - first);
+
+    m_size -= valueErased;
+
+    SmartReserve(m_size);
+
+    return const_cast<iterator>(first);
 }
 
 template <typename T>
@@ -95,7 +101,7 @@ typename Array<T>::iterator Array<T>::erase(iterator first, iterator last)
 template <typename T>
 typename Array<T>::iterator Array<T>::erase(const_iterator pos)
 {
-    return erase(pos, pos);
+    return erase(pos, pos + 1);
 }
 
 template <typename T>
@@ -104,43 +110,43 @@ typename Array<T>::iterator Array<T>::erase(iterator pos)
     return erase((const_iterator) pos);
 }
 
-template <typename T>
-typename Array<T>::iterator Array<T>::insert(const_iterator pos, std::initializer_list<T> ilist)
-{
-    SmartReserve(m_size + ilist.size());
-
-    m_size++;
-}
-
-template <typename T>
-typename Array<T>::iterator Array<T>::insert(const_iterator pos, size_type count, const T& value)
-{
-    SmartReserve(m_size + count);
-}
-
-template <typename T>
-void Array<T>::insert(iterator pos, size_type count, const T& value)
-{
-    return insert((const_iterator) pos, count, value);
-}
-
-template <typename T>
-typename Array<T>::iterator Array<T>::insert(const_iterator pos, T&& value)
-{
-    SmartReserve(m_size + 1);
-}
-
-template <typename T>
-typename Array<T>::iterator Array<T>::insert(const_iterator pos, const T& value)
-{
-    SmartReserve(m_size + 1);
-}
-
-template <typename T>
-typename Array<T>::iterator Array<T>::insert(iterator pos, const T& value)
-{
-    SmartReserve(m_size + 1);
-}
+// template <typename T>
+// typename Array<T>::iterator Array<T>::insert(const_iterator pos, std::initializer_list<T> ilist)
+//{
+//    SmartReserve(m_size + ilist.size());
+//
+//    m_size++;
+//}
+//
+// template <typename T>
+// typename Array<T>::iterator Array<T>::insert(const_iterator pos, size_type count, const T& value)
+//{
+//    SmartReserve(m_size + count);
+//}
+//
+// template <typename T>
+// void Array<T>::insert(iterator pos, size_type count, const T& value)
+//{
+//    return insert((const_iterator) pos, count, value);
+//}
+//
+// template <typename T>
+// typename Array<T>::iterator Array<T>::insert(const_iterator pos, T&& value)
+//{
+//    SmartReserve(m_size + 1);
+//}
+//
+// template <typename T>
+// typename Array<T>::iterator Array<T>::insert(const_iterator pos, const T& value)
+//{
+//    SmartReserve(m_size + 1);
+//}
+//
+// template <typename T>
+// typename Array<T>::iterator Array<T>::insert(iterator pos, const T& value)
+//{
+//    SmartReserve(m_size + 1);
+//}
 
 template <typename T>
 void Array<T>::clear()
@@ -326,9 +332,10 @@ Array<T>::Array() : m_size(0), m_capacity(0), m_data(nullptr)
 }
 
 template <typename T>
-Array<T>::Array(std::initializer_list<T> list)
+Array<T>::Array(std::initializer_list<T> list) : m_size(0), m_capacity(0), m_data(nullptr)
 {
-    insert(m_data, l.begin(), l.end());
+    for (auto it = list.begin(); it != list.end(); it++)
+        push_back(*it);
 }
 
 template <typename T>
@@ -339,13 +346,22 @@ Array<T>::~Array()
 }
 
 template <typename T>
-void red::Array<T>::Destroy(size_type from, size_type to)
+void Array<T>::Destroy(size_type from, size_type to)
+{
+    iterator fromIt = m_data + from;
+    iterator toIt = m_data + to;
+
+    Destroy(fromIt, toIt);
+}
+
+template <typename T>
+void Array<T>::Destroy(iterator from, iterator to)
 {
     if constexpr (!std::is_trivially_destructible<T>::value)
     {
-        for (int i = from; i < to; i++)
+        for (iterator it = from; it < to; it++)
         {
-            m_data[i].~T();
+            it->~T();
         }
     }
 }

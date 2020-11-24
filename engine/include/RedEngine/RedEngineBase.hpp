@@ -2,4 +2,5 @@
 
 #include <RedEngine/Core/Debug/DebugMacros.hpp>
 #include <RedEngine/Core/Memory/Macros.hpp>
+#include <RedEngine/Core/Macros.hpp>
 
