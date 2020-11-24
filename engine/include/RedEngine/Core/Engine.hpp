@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <RedEngine/Core/Event/EventSystem.hpp>
 #include <RedEngine/Core/Memory/MemoryManager.hpp>
 #include <RedEngine/Core/Configuration/Configuration.hpp>

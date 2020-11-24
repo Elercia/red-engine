@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <string>
 #include <tuple>
 #include <filesystem>

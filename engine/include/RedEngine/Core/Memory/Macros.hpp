@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 namespace red
 {
 #define RED_SAFE_DELETE(PTR) \

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include "Box2D/Common/b2Draw.h"
 #include "Box2D/Box2D.h"
 

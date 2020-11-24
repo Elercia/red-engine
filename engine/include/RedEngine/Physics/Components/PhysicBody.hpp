@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
 

@@ -1,4 +1,6 @@
 #pragma once
+
+#include <RedEngine/RedEngineBase.hpp>
 #include <debugbreak.h>
 
 #include <string_view>

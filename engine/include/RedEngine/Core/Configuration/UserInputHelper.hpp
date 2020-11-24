@@ -1,4 +1,6 @@
 #pragma once
+
+#include <RedEngine/RedEngineBase.hpp>
 #include "RedEngine/Input/UserInputDefinition.hpp"
 
 namespace red
