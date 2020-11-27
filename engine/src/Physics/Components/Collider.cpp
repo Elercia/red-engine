@@ -19,13 +19,19 @@ int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
     collider.m_list = this;
 
     collider.m_fixtureDef.isSensor = desc.isTrigger;
-    collider.m_fixtureDef.userData = &collider;
+    collider.m_fixtureDef.restitution = desc.restitution;
+    collider.m_fixtureDef.friction = desc.friction;
+    
+    auto insertionResult = m_colliders.insert({m_nextIndex++, std::move(collider)});
 
-    auto itPair = m_colliders.insert({m_nextIndex++, std::move(collider)});
+    // Set the used data to the right collider
+    auto& mapPair = insertionResult.first;
+    auto& colliderInserted = mapPair->second;
+    colliderInserted.m_fixtureDef.userData = &colliderInserted;
 
     m_status = ComponentStatus::DIRTY;
 
-    return itPair.first->first;
+    return mapPair->first;
 }
 
 int ColliderList::AddCircleCollider(const CircleColliderDesc& desc)
@@ -51,7 +57,7 @@ int ColliderList::AddEdgeCollider(const EdgeColliderDesc& desc)
     Collider collider;
 
     b2EdgeShape shape;
-    shape.Set(desc.start, desc.end);
+    shape.Set(ConvertToPhysicsVector(desc.start), ConvertToPhysicsVector(desc.end));
 
     collider.m_shape = std::make_unique<b2EdgeShape>(shape);
 
@@ -71,7 +77,7 @@ int ColliderList::AddPolygonCollider(const PolygonColliderDesc& desc)
     std::vector<b2Vec2> b2Points;
     b2Points.resize(desc.points.size());
     std::transform(desc.points.begin(), desc.points.end(), b2Points.begin(),
-                   [](Vector2 v) -> b2Vec2 { return v; });
+                   [](Vector2 v) -> b2Vec2 { return ConvertToPhysicsVector(v); });
 
     shape.Set(b2Points.data(), static_cast<int32>(b2Points.size()));
 

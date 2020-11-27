@@ -2,11 +2,6 @@
 
 #include <RedEngine/RedEngineBase.hpp>
 
-// TODO Add a global header to include in every header of red-engine to include vital things like
-// DebugMacros, EngineConfigs and so on
-
-#include <RedEngine/Math/Vector.hpp>
-
 #include <cstdint>
 #include <cstddef>
 #include <string>
@@ -29,16 +24,10 @@ struct ConfigurationInitDesc
     std::string resourceFolder;
 };
 
-struct PhysicsInitDesc
-{
-    Vector2 gravity{0.F, 0.F};
-};
-
 /// Struct that represent all the data used by the subEngines to init themselves
 struct EngineInitDesc
 {
     ConfigurationInitDesc config;
-    PhysicsInitDesc physics;
 };
 
 }  // namespace red

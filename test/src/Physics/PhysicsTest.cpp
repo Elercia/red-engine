@@ -30,17 +30,34 @@ TEST_CASE("Component binding", "[PHYSICS]")
     auto* body = e->AddComponent<PhysicBody>(desc);
     auto* list = e->AddComponent<ColliderList>();
 
-    list->AddCircleCollider({false, {0, 0}, 10.F});
-    list->AddEdgeCollider({false, {0, 0}, {0, 0}});
-    list->AddPolygonCollider({false,
-                              {
-                                  {0, 0},
-                                  {1, 1},
-                                  {2, 1},
-                                  {3, 4},
-                                  {4, 3},
+    {
+        red::CircleColliderDesc circleColliderDesc;
+        circleColliderDesc.isTrigger = false;
+        circleColliderDesc.center = {5.F, 5.F};
+        circleColliderDesc.radius = 5.F;
+        circleColliderDesc.restitution = 1.f;
+        circleColliderDesc.friction = 0.f;
 
-                              }});
+        list->AddCircleCollider(circleColliderDesc);
+    }
+
+    {
+        red::PolygonColliderDesc polygonColliderDesc;
+        polygonColliderDesc.isTrigger = false;
+        polygonColliderDesc.points = {{0, 0}, {30, 0}, {30, 100}, {0, 100}};
+        polygonColliderDesc.restitution = 1.f;
+
+        list->AddPolygonCollider(polygonColliderDesc);
+    }
+
+    {
+        red::EdgeColliderDesc edgeColliderDesc;
+        edgeColliderDesc.isTrigger = false;
+        edgeColliderDesc.start = {0.f, 0.f};
+        edgeColliderDesc.end = {1.f, 0.f};
+
+        list->AddEdgeCollider(edgeColliderDesc);
+    }
 
     system.Init();
 

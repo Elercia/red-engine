@@ -37,8 +37,7 @@ void DebugSystem::LateUpdate()
             debugComp->m_physicsDebugDrawer.release();
         }
 
-        m_world->GetPhysicsWorld()->SetDebugDraw(
-            reinterpret_cast<b2Draw*>(debugComp->m_physicsDebugDrawer.get()));
+        m_world->GetPhysicsWorld()->SetDebugDrawer(debugComp->m_physicsDebugDrawer.get());
     }
 
     if (eventSystem->GetKeyDown(KeyCodes::KEY_F2))

@@ -4,10 +4,15 @@
 #include <RedEngine/Core/Debug/Profiler.hpp>
 #include <RedEngine/Core/Event/EventSystem.hpp>
 #include <RedEngine/Core/Time/FrameCounter.hpp>
+#include <RedEngine/Input/System/UserInputSystem.hpp>
+#include <RedEngine/Rendering/System/RenderingSystem.hpp>
+#include <RedEngine/Physics/System/PhysicsSystem.hpp>
+#include <RedEngine/Core/Debug/System/DebugSystem.hpp>
 
 #include <array>
 #include <memory>
 #include <thread>
+
 
 namespace red
 {
@@ -95,6 +100,10 @@ void Application::CreateWorld()
         return;
 
     m_world = new World;
+    m_world->AddSystem<UserInputSystem>();
+    m_world->AddSystem<RenderingSystem>();
+    m_world->AddSystem<PhysicSystem>();
+    m_world->AddSystem<DebugSystem>();
     m_world->Init();
 }
 
