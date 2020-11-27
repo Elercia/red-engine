@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <SDL2/SDL.h>
 #include <SDL_syswm.h>
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <type_traits>
 
 #include <RedEngine/Core/EngineConfig.hpp>

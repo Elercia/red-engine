@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <array>
 
 #include <RedEngine/Core/Components/Component.hpp>
@@ -24,12 +26,7 @@ public:
     ~CameraComponent() override = default;
 
     /// View ports points
-    // TODO test theses
-    [[nodiscard]] Vector2 ScreenToViewportPoint(const Vector2& point) const;
-    [[nodiscard]] Vector2 ViewportToScreenPoint(const Vector2& point) const;
     [[nodiscard]] Vector2 ViewportToWorldPoint(const Vector2& point) const;
-    [[nodiscard]] Vector2 ScreenToWorldPoint(const Vector2& point) const;
-    [[nodiscard]] Vector2 WorldToScreenPoint(const Vector2& point) const;
     [[nodiscard]] Vector2 WorldToViewportPoint(const Vector2& point) const;
 
     void CenterOn(const Vector2& point);

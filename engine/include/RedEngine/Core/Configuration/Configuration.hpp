@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <RedEngine/Core/SubEngine.hpp>
 #include <RedEngine/Core/Configuration/ConfigurationSerializator.hpp>
 

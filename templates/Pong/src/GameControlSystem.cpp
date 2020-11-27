@@ -4,6 +4,7 @@
 #include <RedEngine/Core/Engine.hpp>
 #include <RedEngine/Rendering/RenderingEngine.hpp>
 #include <RedEngine/Rendering/Window.hpp>
+
 #include "GameControlSystem.hpp"
 
 GameControlSystem::GameControlSystem(red::World* world, red::Entity* paddleOne,

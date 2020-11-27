@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <RedEngine/Core/Components/Component.hpp>
 #include <RedEngine/Math/Vector.hpp>
 #include <RedEngine/Rendering/Color.hpp>
@@ -14,12 +16,12 @@ enum class DebugShapeType
 {
     SEGMENT,
     POLYGON,
-    CIRCLE
+    CIRCLE,
+    POINT
 };
 
 struct DebugShape
 {
-public:
     DebugShapeType type;
     bool isFilled;
     Color color;
@@ -27,22 +29,24 @@ public:
 
 struct DebugCircle : public DebugShape
 {
-public:
     Vector2 center;
     float radius;
 };
 
 struct DebugSegment : public DebugShape
 {
-public:
     Vector2 point1;
     Vector2 point2;
 };
 
 struct DebugPolygon : public DebugShape
 {
-public:
     std::vector<Vector2> points;
+};
+
+struct DebugPoint : public DebugShape
+{
+    Vector2 coord;
 };
 
 // Add console component (add utilities like "console debug (OR should I make a 'log into console
@@ -56,9 +60,12 @@ public:
     explicit DebugComponent(Entity* entity);
     ~DebugComponent() override = default;
 
-    void AddLine(const Vector2& from, const Vector2& to, Color c = ColorConstant::BLACK);
-    void AddCircle(const Vector2& center, float radius, Color c = ColorConstant::BLACK);
-    void AddPolygon(const std::vector<Vector2>& points, Color c = ColorConstant::BLACK);
+    void AddLine(const Vector2& from, const Vector2& to, const Color& c = ColorConstant::BLACK);
+    void AddCircle(const Vector2& center, float radius, const Color& c = ColorConstant::BLACK);
+    void AddPolygon(const std::vector<Vector2>& points, const Color& c = ColorConstant::BLACK,
+                    bool isSolid = false);
+    void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK,
+                  bool isSolid = false);
 
 private:
     std::vector<std::unique_ptr<DebugShape>> m_frameShapes;

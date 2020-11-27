@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <RedEngine/Math/Vector.hpp>
 #include "Component.hpp"
 
