@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <RedEngine/Input/InputDefinition.hpp>
 
 #include <SDL2/SDL_keycode.h>

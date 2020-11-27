@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <sstream>
 

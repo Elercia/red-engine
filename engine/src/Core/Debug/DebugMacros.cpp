@@ -8,7 +8,7 @@
 
 namespace red
 {
-int HandleAssert(bool expr, std::string_view message, const char* filename, int line)
+ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filename, int line)
 {
     if (expr)
         return ErrorReturn::CONTINUE;

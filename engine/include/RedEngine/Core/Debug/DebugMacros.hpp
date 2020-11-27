@@ -1,34 +1,38 @@
 #pragma once
+
+#include <RedEngine/RedEngineBase.hpp>
 #include <debugbreak.h>
 
 #include <string_view>
 
 namespace red
 {
-namespace ErrorReturn
+enum class ErrorReturn
 {
-    constexpr int BREAK = 0;
-    constexpr int CONTINUE = 1;
-}  // namespace ErrorReturn
-int HandleAssert(bool expr, std::string_view message, const char* filename, int line); //TODO add the possibility to add arguments to the message (, ...) 
+    BREAK,
+    CONTINUE
+};
+ErrorReturn HandleAssert(
+    bool expr, std::string_view message, const char* filename,
+    int line);  // TODO add the possibility to add arguments to the message (, ...)
 }  // namespace red
 
 #ifndef RED_RETAIL_MODE
 
-#define RED_ABORT(MSG)                                               \
-    do                                                               \
-    {                                                                \
-        int ret = red::HandleAssert(false, MSG, __FILE__, __LINE__); \
-        if (ret == red::ErrorReturn::BREAK)                          \
-            debug_break();                                           \
+#define RED_ABORT(MSG)                                                            \
+    do                                                                            \
+    {                                                                             \
+        red::ErrorReturn ret = red::HandleAssert(false, MSG, __FILE__, __LINE__); \
+        if (ret == red::ErrorReturn::BREAK)                                       \
+            debug_break();                                                        \
     } while (0);
 
-#define RED_ASSERT(expr, MSG)                                        \
-    do                                                               \
-    {                                                                \
-        int ret = red::HandleAssert(false, MSG, __FILE__, __LINE__); \
-        if (ret == red::ErrorReturn::BREAK)                          \
-            debug_break();                                           \
+#define RED_ASSERT(expr, MSG)                                                     \
+    do                                                                            \
+    {                                                                             \
+        red::ErrorReturn ret = red::HandleAssert(expr, MSG, __FILE__, __LINE__); \
+        if (ret == red::ErrorReturn::BREAK)                                       \
+            debug_break();                                                        \
     } while (0);
 
 #else
@@ -50,3 +54,4 @@ int HandleAssert(bool expr, std::string_view message, const char* filename, int 
 #endif  // DEBUG
 
 #define RED_ERROR(MSG) RED_ASSERT(false, MSG)
+#define RED_ASSERT_S(expr) RED_ASSERT(expr, "Assert triggered")

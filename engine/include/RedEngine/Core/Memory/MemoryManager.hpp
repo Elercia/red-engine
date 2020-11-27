@@ -1,5 +1,7 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include <cstddef>
 
 #include "MemoryProfiler.hpp"
