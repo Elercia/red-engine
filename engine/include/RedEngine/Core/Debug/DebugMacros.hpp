@@ -19,19 +19,19 @@ ErrorReturn HandleAssert(
 
 #ifndef RED_RETAIL_MODE
 
-#define RED_ABORT(MSG)                                                            \
-    do                                                                            \
-    {                                                                             \
-        red::ErrorReturn ret = red::HandleAssert(false, MSG, __FILE__, __LINE__); \
-        if (ret == red::ErrorReturn::BREAK)                                       \
-            debug_break();                                                        \
+#define RED_ABORT(MSG)                                                             \
+    do                                                                             \
+    {                                                                              \
+        red::ErrorReturn _ret = red::HandleAssert(false, MSG, __FILE__, __LINE__); \
+        if (_ret == red::ErrorReturn::BREAK)                                       \
+            debug_break();                                                         \
     } while (0);
 
 #define RED_ASSERT(expr, MSG)                                                     \
     do                                                                            \
     {                                                                             \
-        red::ErrorReturn ret = red::HandleAssert(expr, MSG, __FILE__, __LINE__); \
-        if (ret == red::ErrorReturn::BREAK)                                       \
+        red::ErrorReturn _ret = red::HandleAssert(expr, MSG, __FILE__, __LINE__); \
+        if (_ret == red::ErrorReturn::BREAK)                                      \
             debug_break();                                                        \
     } while (0);
 

@@ -1,5 +1,5 @@
-#include <RedEngine/Core/Time/Time.hpp>
 #include <RedEngine/Core/Application.hpp>
+#include <RedEngine/Core/Time/Time.hpp>
 #include <RedEngine/Core/Debug/DebugMacros.hpp>
 #include <RedEngine/Core/Debug/Profiler.hpp>
 #include <RedEngine/Core/Event/EventSystem.hpp>
@@ -8,6 +8,7 @@
 #include <RedEngine/Rendering/System/RenderingSystem.hpp>
 #include <RedEngine/Physics/System/PhysicsSystem.hpp>
 #include <RedEngine/Core/Debug/System/DebugSystem.hpp>
+#include <RedEngine/Audio/System/AudioSystem.hpp>
 
 #include <array>
 #include <memory>
@@ -67,9 +68,9 @@ bool Application::Run()
 
 void Application::LoadLevel(const std::string& levelResource)
 {
-    auto* resourceEngine = GetRedSubEngine<ResourceEngine>();
+    auto* levelLoader = GetRedSubEngine<ResourceEngine>()->GetResourceLoader<Level>();
 
-    resourceEngine->LoadLevel(levelResource);
+    levelLoader->(levelResource);
 }
 
 void Application::LoadLevelInternal(Level* level)
@@ -103,6 +104,7 @@ void Application::CreateWorld()
     m_world->AddSystem<UserInputSystem>();
     m_world->AddSystem<RenderingSystem>();
     m_world->AddSystem<PhysicSystem>();
+    m_world->AddSystem<AudioSystem>();
     m_world->AddSystem<DebugSystem>();
     m_world->Init();
 }

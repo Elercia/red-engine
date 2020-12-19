@@ -9,7 +9,7 @@
 
 namespace red
 {
-class Level : public Uncopyable
+class Level : public IResource, public Uncopyable
 {
 public:
     explicit Level(std::string name, World* world);

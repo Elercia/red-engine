@@ -4,9 +4,9 @@
 
 namespace red
 {
-Texture2D::Texture2D(ResourceId_t resourceId) : Resource(resourceId, ResourceType::TEXTURE2D) {}
+Texture2D::Texture2D(ResourceId resourceId) : IResource(resourceId, ResourceType::TEXTURE2D) {}
 
-ResourceId_t Texture2D::GetResourceIdFromPath(const std::string& resourceId)
+ResourceId Texture2D::GetResourceIdFromPath(const std::string& resourceId)
 {
     std::hash<std::string> hash_fn;
 
@@ -15,11 +15,11 @@ ResourceId_t Texture2D::GetResourceIdFromPath(const std::string& resourceId)
     return hash;
 }
 
-Point Texture2D::GetTextureSize() const { return Point{m_textureSize.w, m_textureSize.h}; }
+Vector2i Texture2D::GetTextureSize() const { return Vector2i{m_textureSize.w, m_textureSize.h}; }
 
 void Texture2D::Release() { GetRedSubEngine<ResourceEngine>()->ReleaseTexture(this, false); }
 
-void Texture2D::ChangeTextureSize(const Point& newSize)
+void Texture2D::ChangeTextureSize(const Vector2i& newSize)
 {
     m_textureSize.w = newSize.x;
     m_textureSize.h = newSize.y;

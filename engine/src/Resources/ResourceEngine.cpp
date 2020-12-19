@@ -17,16 +17,9 @@ namespace red
 ResourceEngine::ResourceEngine() {}
 ResourceEngine::~ResourceEngine()
 {
-    for (auto& typedResource : m_loadedResources)
+    for (auto& resourceLoaderPair : m_resourceLoaders)
     {
-        for (auto& resourceIdValuePair : typedResource.second)
-        {
-            auto& resource = resourceIdValuePair.second;
-            resource->Release();
-            resource.reset();
-        }
-
-        typedResource.second.clear();
+        RED_SAFE_DELETE(resourceLoaderPair.second);
     }
 }
 
@@ -67,21 +60,19 @@ std::shared_ptr<Texture2D> ResourceEngine::LoadTextureInternal(const std::string
 
     if (tempSurface == nullptr)
     {
-        RED_LOG_WARNING("Error creating surface from texture path {} with error {}", p.string(),
-                        SDL_GetError());
+        RED_LOG_WARNING("Error creating surface from texture path {} with error {}", p.string(), SDL_GetError());
 
         return texture;
     }
 
-    texture->m_sdlTexture = SDL_CreateTextureFromSurface(
-        GetRedSubEngine<RenderingEngine>()->GetRenderer(), tempSurface);
+    texture->m_sdlTexture =
+        SDL_CreateTextureFromSurface(GetRedSubEngine<RenderingEngine>()->GetRenderer(), tempSurface);
 
     SDL_FreeSurface(tempSurface);
 
     if (texture->m_sdlTexture == nullptr)
     {
-        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", p.string(),
-                        SDL_GetError());
+        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", p.string(), SDL_GetError());
 
         return texture;
     }
@@ -116,17 +107,15 @@ void ResourceEngine::ReleaseTexture(Texture2D* texture, bool erase)
 
     if (foundIt == textureMap.end())
     {
-        RED_LOG_WARNING("Attempted to release a not found texture2D from resource (id:{})",
-                        texture->m_resourceId);
+        RED_LOG_WARNING("Attempted to release a not found texture2D from resource (id:{})", texture->m_resourceId);
         return;
     }
 
     auto& smartPtr = (foundIt->second);
     if (smartPtr.use_count() != 1)
     {
-        RED_LOG_WARNING(
-            "Attempted to release a texture2D resource that is used elsewhere (id:{}, use_count:)",
-            texture->m_resourceId, smartPtr.use_count());
+        RED_LOG_WARNING("Attempted to release a texture2D resource that is used elsewhere (id:{}, use_count:)",
+                        texture->m_resourceId, smartPtr.use_count());
 
         return;
     }
@@ -136,8 +125,7 @@ void ResourceEngine::ReleaseTexture(Texture2D* texture, bool erase)
     if (erase)
         textureMap.erase(foundIt);
 }
-void ResourceEngine::AddResourceToLoadedResources(ResourceType::Enum type,
-                                                  const std::shared_ptr<Texture2D>& resource)
+void ResourceEngine::AddResourceToLoadedResources(ResourceType::Enum type, const std::shared_ptr<Texture2D>& resource)
 {
     auto resourceTypeMap = m_loadedResources.find(type);
     if (resourceTypeMap != m_loadedResources.end())

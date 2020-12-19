@@ -32,38 +32,31 @@ target_include_directories(red_engine_lib
         PUBLIC
         ${INCLUDE_FOLDER})
 
-
-# SLD2
+# SDL2
 target_link_libraries(red_engine_lib
-        PUBLIC
         SDL2::SDL2
         SDL2::SDL2main
         SDL_image::SDL_image)
 
 # FMT
 target_link_libraries(red_engine_lib
-        PUBLIC
         fmt::fmt)
 
 # Debug Break
 target_link_libraries(red_engine_lib
-        PUBLIC
         debug_break)
 
 # Json nlohmann_json
 target_link_libraries(red_engine_lib 
-    PUBLIC 
     nlohmann_json::nlohmann_json)
 
 # Box2D 
-target_link_libraries(red_engine_lib 
-    PUBLIC 
+target_link_libraries(red_engine_lib
     Box2D::Box2D)
 
-# Fmod 
+# Fmod
 target_link_libraries(red_engine_lib
-            PUBLIC
-            fmod)
+    fmod)
 
 # Profiler Optick
 option(RED_USE_PROFILER "Enable application profiler usage" ON)
@@ -78,7 +71,6 @@ message(STATUS "Use red-engine profiler : ${RED_USE_PROFILER}")
 if (RED_USE_PROFILER)
     # Optick Profiler
     target_link_libraries(red_engine_lib
-            PRIVATE
             OptickCore)
 
     target_compile_definitions(red_engine_lib

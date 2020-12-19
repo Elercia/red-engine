@@ -1,9 +1,11 @@
 #pragma once
 
+#include <RedEngine/RedEngineBase.hpp>
+
 #include "RedEngine/Core/Entity/System.hpp"
 
-#include <FMOD/fmod.hpp>
-#include <FMOD/fmod_studio.hpp>
+#include <fmod.hpp>
+#include <fmod_studio.hpp>
 
 namespace red
 {
@@ -19,7 +21,8 @@ public:
     virtual void Update() override;
 
 private:
-    FMOD::Studio::System* systemFmod;
+    FMOD::Studio::System* m_studioSystem;
+    FMOD::System* m_system;
 };
 
 }  // namespace red

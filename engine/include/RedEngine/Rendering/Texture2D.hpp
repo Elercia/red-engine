@@ -3,7 +3,7 @@
 #include <RedEngine/RedEngineBase.hpp>
 
 #include <RedEngine/Resources/Resource.hpp>
-#include <RedEngine/Math/Point.hpp>
+#include <RedEngine/Math/Vector.hpp>
 
 #include <SDL2/SDL_render.h>
 
@@ -11,19 +11,19 @@
 
 namespace red
 {
-class Texture2D : public Resource
+class Texture2D : public IResource
 {
     friend class ResourceEngine;
     friend class RenderingEngine;
 
 public:
-    explicit Texture2D(ResourceId_t resourceId);
+    explicit Texture2D(ResourceId resourceId);
     ~Texture2D() override = default;
 
-    [[nodiscard]] Point GetTextureSize() const;
-    void ChangeTextureSize(const Point& newSize);
+    [[nodiscard]] Vector2i GetTextureSize() const;
+    void ChangeTextureSize(const Vector2i& newSize);
 
-    static ResourceId_t GetResourceIdFromPath(const std::string& resourceId);
+    static ResourceId GetResourceIdFromPath(const std::string& resourceId);
 
     void Release() override;
 

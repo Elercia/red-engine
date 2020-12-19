@@ -22,6 +22,9 @@
 
 #include <RedEngine/Input/System/UserInputSystem.hpp>
 
+#include "RedEngine/Audio/Component/AudioSource.hpp"
+#include "RedEngine/Audio/Component/AudioListener.hpp"
+
 void PongLevel::Init()
 {
     auto& window = red::Window::GetWindow();
@@ -36,6 +39,9 @@ void PongLevel::Init()
 
         collisionInfo.firstPhysicBody->ApplyForce(force * collisionInfo.normal,
                                                   collisionInfo.contactPoints[0].localPoint);
+
+        red::SoundDesc desc;
+        collisionInfo.firstPhysicBody->GetOwner()->GetComponent<red::AudioSource>()->PlaySound(desc);
     };
 
     const float ballSize = 30.f;
@@ -56,6 +62,7 @@ void PongLevel::Init()
     ball->GetComponent<red::Transform>()->SetPosition(center);
     auto* ballPhysicBody = ball->AddComponent<red::PhysicBody>(ballBodyDesc);
     ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
+    ball->AddComponent<red::AudioSource>();
 
     ballPhysicBody->m_collisionSignal.Connect(onCollision);
 
@@ -68,8 +75,7 @@ void PongLevel::Init()
 
     auto* paddleTwo = CreateEntity("PaddleTwo");
     paddleTwo->AddComponent<red::Sprite>("paddle");
-    paddleTwo->GetComponent<red::Transform>()->SetPosition(
-        {info.width - 100.F - (30.F / 2.F), paddlePosHeight});
+    paddleTwo->GetComponent<red::Transform>()->SetPosition({info.width - 100.F - (30.F / 2.F), paddlePosHeight});
 
     paddleTwo->AddComponent<red::PhysicBody>(paddleBodyDesc);
     paddleTwo->AddComponent<red::ColliderList>()->AddPolygonCollider(paddleColliderDesc);
@@ -77,6 +83,7 @@ void PongLevel::Init()
     auto* manager = CreateEntity("Manager");
     manager->AddComponent<ScoreComponent>();
     manager->AddComponent<red::CameraComponent>(center);
+    manager->AddComponent<red::AudioListener>();
 
     red::PhysicBodyCreationDesc wallBodyDesc = {red::PhysicsBodyType::STATIC_BODY};
 
