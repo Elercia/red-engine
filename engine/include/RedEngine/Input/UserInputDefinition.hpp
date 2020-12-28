@@ -47,8 +47,8 @@ using ModifierKeyBitSet = std::bitset<6>;
 
 struct KeyMapping
 {
-    KeyCodes::Enum mapping;
-    ModifierKeyBitSet modifiers;
+    KeyCodes::Enum mapping{KeyCodes::MAX};
+    ModifierKeyBitSet modifiers{};
 };
 
 using ActionKey = std::string;

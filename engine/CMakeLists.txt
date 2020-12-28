@@ -32,6 +32,11 @@ target_include_directories(red_engine_lib
         PUBLIC
         ${INCLUDE_FOLDER})
 
+# Warnings & stuff
+target_link_libraries(red_engine_lib
+        red_project_warnings
+        red_project_options)
+
 # SDL2
 target_link_libraries(red_engine_lib
         SDL2::SDL2
@@ -59,13 +64,7 @@ target_link_libraries(red_engine_lib
     fmod)
 
 # Profiler Optick
-option(RED_USE_PROFILER "Enable application profiler usage" ON)
-
-if (MINGW OR UNIX)
-    set(RED_USE_PROFILER FALSE CACHE INTERNAL "Use the red engine profiler" FORCE)
-else ()
-    set(RED_USE_PROFILER ${RED_USE_PROFILER} CACHE INTERNAL "Use the red engine profiler" FORCE)
-endif ()
+option(RED_USE_PROFILER "Enable game profiler" ON)
 
 message(STATUS "Use red-engine profiler : ${RED_USE_PROFILER}")
 if (RED_USE_PROFILER)

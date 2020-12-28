@@ -25,6 +25,7 @@ void Configuration::Init(const EngineInitDesc& initDesc)
     SetResourceFolder(initDesc.config.resourceFolder);
     LoadConfigFile(std::string(initDesc.config.resourceFolder)
                        .append("/config.ini"));  // TODO Set the resource folder configuration
+
     ParseCommandLine(initDesc.config.argc, initDesc.config.argv);
 
     const auto& path = std::filesystem::current_path();
@@ -35,7 +36,7 @@ void Configuration::Init(const EngineInitDesc& initDesc)
     m_userDataFolder = userDataPath.GetValue();
 }
 
-void Configuration::ParseCommandLine(int argc, char** argv) {}
+void Configuration::ParseCommandLine(int /*argc*/, char** /*argv*/) {}
 
 void Configuration::SetResourceFolder(std::string_view resourceFolder) { m_resourceFolder = resourceFolder; }
 

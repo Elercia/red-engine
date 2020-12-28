@@ -58,7 +58,7 @@ void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer) { m_inernalPhysics
 
 void PhysicsWorld::DrawDebug() { m_inernalPhysicsWorld->DrawDebugData(); }
 
-void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
+void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
 {
     const auto* manifold = contact->GetManifold();
 
@@ -75,7 +75,7 @@ void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 
     if (collider1->IsTrigger() || collider2->IsTrigger())
     {
-        AddTriggerContact(physicBody1, physicBody2, collider1, collider2, contact);
+        AddTriggerContact(physicBody1, physicBody2, collider1, collider2);
     }
     else
     {
@@ -117,7 +117,7 @@ void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* phys
 }
 
 void PhysicsWorld::AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1,
-                                     Collider* collider2, const b2Contact* contact)
+                                     Collider* collider2)
 {
     TriggerInfo collisionInfo;
     collisionInfo.firstPhysicBody = physicBody1;

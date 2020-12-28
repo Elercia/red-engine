@@ -46,8 +46,8 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const st
     {
         AnimationDesc animationDesc;
 
-        std::string name = animationJson["name"];
-        animationDesc.name = name;
+        std::string animationName = animationJson["name"];
+        animationDesc.name = animationName;
 
         auto spriteSheetJson = animationJson.find("spritesheet");
         if (spriteSheetJson == animationJson.end())
@@ -62,7 +62,7 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const st
         auto framesJson = animationJson.find("frames");
         if (framesJson == animationJson.end())
         {
-            RED_LOG_WARNING("Animation {} has no frame", name);
+            RED_LOG_WARNING("Animation {} has no frame", animationName);
             continue;
         }
 

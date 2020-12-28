@@ -23,7 +23,7 @@ namespace utils
 
         for (auto& configLine : iniConfig)
         {
-            auto& cat = std::get<0>(configLine);
+            //auto& cat = std::get<0>(configLine);
             auto& key = std::get<1>(configLine);
             auto& value = std::get<2>(configLine);
 

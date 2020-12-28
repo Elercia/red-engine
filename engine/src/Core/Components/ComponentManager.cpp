@@ -21,7 +21,7 @@ ComponentManager::~ComponentManager()
     }
 }
 
-std::set<Component*> ComponentManager::GetComponents(Entity* entity) { return {}; }  // TODO
+std::set<Component*> ComponentManager::GetComponents(Entity* /*entity*/) { return {}; }  // TODO
 
 void ComponentManager::StoreComponent(Entity* owner, Component* component, std::size_t name)
 {

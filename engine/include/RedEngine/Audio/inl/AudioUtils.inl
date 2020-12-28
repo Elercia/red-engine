@@ -11,7 +11,7 @@ bool FmodCheck(FMOD_RESULT result, const char* errorMsg)
     if (!ret)
     {
         RED_ERROR(FMOD_ErrorString(result));
-        RED_LOG_ERROR("Fmod error : {}", FMOD_ErrorString(result));
+        RED_LOG_ERROR("Fmod error : {} with error {}", errorMsg, FMOD_ErrorString(result));
     }
 
     return ret;

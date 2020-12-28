@@ -41,7 +41,7 @@ void PhysicsDebugDrawer::DrawCircle(const b2Vec2& center, float32 radius, const 
                                 {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
 }
 
-void PhysicsDebugDrawer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+void PhysicsDebugDrawer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& /*axis*/, const b2Color& color)
 {
     m_debugComponent->AddCircle(ConvertFromPhysicsVector(center), radius,
                                 {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});

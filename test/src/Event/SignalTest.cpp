@@ -8,7 +8,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
     {
         bool isCalled = false;
         red::Signal<int> signal;
-        signal.Connect([&](int i) { isCalled = true; });
+        signal.Connect([&](int /*i*/) { isCalled = true; });
 
         signal.emit(1);
 

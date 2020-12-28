@@ -4,7 +4,8 @@
 
 namespace red
 {
-void MemoryProfiler::NewAllocation(std::size_t size, void* ptr, int line, const char* file)
+// TODO what is this ? remake it completely 
+void MemoryProfiler::NewAllocation(std::size_t size, void* ptr, int /*line*/, const char* /*file*/)
 {
     for (auto& profile : m_allocatedMemory)
     {
@@ -16,7 +17,7 @@ void MemoryProfiler::NewAllocation(std::size_t size, void* ptr, int line, const 
     }
 }
 
-void MemoryProfiler::NewFree(void* ptr, int line, const char* file)
+void MemoryProfiler::NewFree(void* ptr, int /*line*/, const char* /*file*/)
 {
     for (auto& profile : m_allocatedMemory)
     {

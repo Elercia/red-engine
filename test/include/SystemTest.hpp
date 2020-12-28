@@ -25,10 +25,7 @@ public:
     {
         m_hasBeenUpdated = true;
 
-        for (auto& entity : GetComponents<MockComponent1, MockComponent2>())
-        {
-            m_entityCount++;
-        }
+        m_entityCount += (int)GetComponents<MockComponent1, MockComponent2>().size();
     }
 
     int m_entityCount = 0;

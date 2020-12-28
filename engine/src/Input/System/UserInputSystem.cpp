@@ -7,7 +7,9 @@
 
 namespace red
 {
-UserInputSystem::UserInputSystem(World* world) : System(world) {}
+UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
+{
+}
 
 void UserInputSystem::Init()
 {

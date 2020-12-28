@@ -41,12 +41,12 @@ void CameraComponent::CenterOn(const Vector2& point)
     m_cameraWorldPosition.y = point.y - m_viewport.height / 2.F;
 }
 
-void CameraComponent::Follow(Vector2* followPosition)
+void CameraComponent::Follow(Vector2* /*followPosition*/)
 {
     // TODO
 }
 
-bool CameraComponent::IsVisibleFrom(const Transform* transform) { return true; }
+bool CameraComponent::IsVisibleFrom(const Transform* /*transform*/) { return true; }
 
 const Vector2& CameraComponent::Position() const { return m_cameraWorldPosition; }
 

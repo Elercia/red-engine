@@ -63,16 +63,19 @@ void AudioSystem::Update()
 
         for (auto* entity : GetComponents<AudioSource>())
         {
-            auto* transform = entity->GetComponent<Transform>();
+            // auto* transform = entity->GetComponent<Transform>();
             auto* audioSource = entity->GetComponent<AudioSource>();
 
             for (auto& sound : audioSource->m_soundPlayQueue)
             {
+                (void) sound;
                 FMOD::Sound* sound1;
                 m_system->createSound("resources/sample.mp3", FMOD_2D, 0, &sound1);
 
                 m_system->playSound(sound1, 0, false, &channel1);
             }
+
+            audioSource->m_soundPlayQueue.clear();
         }
 
         FmodCheck(m_system->update(), "Fmod system update");

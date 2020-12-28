@@ -13,7 +13,7 @@
 
 namespace red
 {
-RenderingEngine::RenderingEngine() {}
+RenderingEngine::RenderingEngine() : m_window(nullptr), m_renderer(nullptr) {}
 
 RenderingEngine::~RenderingEngine()
 {
@@ -127,7 +127,8 @@ void RenderingEngine::DrawLine(CameraComponent* camera, const Vector2& first, co
 }
 
 void RenderingEngine::DrawLines(CameraComponent* camera, const std::vector<Vector2>& points,
-                                const Color& color /*= ColorConstant::RED*/, bool isFilled /*= false*/)
+                                const Color& color /*= ColorConstant::RED*/,
+                                bool /*isFilled*/ /*= false*/)  // TODO isFilled
 {
     std::vector<SDL_Point> sdlPoints;
     sdlPoints.reserve(points.size());
@@ -143,7 +144,7 @@ void RenderingEngine::DrawLines(CameraComponent* camera, const std::vector<Vecto
 }
 
 void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
-                                 const Color& color /*= ColorConstant::RED*/)
+                                 const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
 {
     const auto& pos = camera->WorldToViewportPoint(center);
 
@@ -152,14 +153,14 @@ void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center,
 }
 
 void RenderingEngine::DrawPoint(CameraComponent* camera, const Vector2& coord,
-                                const Color& color /*= ColorConstant::RED*/)
+                                const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
 {
     const auto& pos = camera->WorldToViewportPoint(coord);
 
     SDL_RenderDrawPoint(m_renderer, (int) pos.x, (int) pos.y);
 }
 
-void RenderingEngine::Init(const EngineInitDesc& initDesc)
+void RenderingEngine::Init(const EngineInitDesc& /*initDesc*/)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {

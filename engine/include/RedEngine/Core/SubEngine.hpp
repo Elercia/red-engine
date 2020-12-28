@@ -12,7 +12,9 @@ namespace red
 class SubEngine : public Uncopyable
 {
 public:
-    virtual void Init(const EngineInitDesc& initDesc){};
+    virtual ~SubEngine() = default;
+
+    virtual void Init(const EngineInitDesc& /*initDesc*/){};
 };
 
 template <class T>
