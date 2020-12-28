@@ -19,7 +19,18 @@ PointerAlignment: Left
 AlignConsecutiveAssignments: false
 AlignTrailingComments: true
 
-SortIncludes  : false
+
+SortIncludes  : true
+IncludeBlocks : Regroup
+IncludeCategories:
+  - Regex:           'RedEngine'
+    Priority:        2
+  - Regex:           '^<.*\.(?:h|hpp)>'
+    Priority:        3
+  - Regex:           '^<.*>'
+    Priority:        4
+  - Regex:           '.*'
+    Priority:        1
 
 SpaceAfterCStyleCast: true
 CommentPragmas: '^ NO-FORMAT:'

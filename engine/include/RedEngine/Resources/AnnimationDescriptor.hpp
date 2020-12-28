@@ -1,10 +1,10 @@
 #pragma once
 
 #include <RedEngine/RedEngineBase.hpp>
-
-#include "../Math/Vector.hpp"
+#include "RedEngine/Math/Vector.hpp"
 
 #include <vector>
+#include <memory>
 
 namespace red
 {

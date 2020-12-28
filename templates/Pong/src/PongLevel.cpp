@@ -9,10 +9,11 @@
 
 #include <RedEngine/Math/Vector.hpp>
 
-#include <RedEngine/Rendering/Texture2D.hpp>
+#include <RedEngine/Rendering/Resource/Texture2D.hpp>
 #include <RedEngine/Rendering/System/RenderingSystem.hpp>
 #include <RedEngine/Rendering/Window.hpp>
 #include <RedEngine/Rendering/Component/CameraComponent.hpp>
+#include <RedEngine/Rendering/Component/Sprite.hpp>
 
 #include <RedEngine/Physics/Components/Collider.hpp>
 #include <RedEngine/Physics/System/PhysicsSystem.hpp>

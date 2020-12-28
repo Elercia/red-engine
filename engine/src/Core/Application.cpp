@@ -1,19 +1,20 @@
-#include <RedEngine/Core/Application.hpp>
-#include <RedEngine/Core/Time/Time.hpp>
-#include <RedEngine/Core/Debug/DebugMacros.hpp>
-#include <RedEngine/Core/Debug/Profiler.hpp>
-#include <RedEngine/Core/Event/EventSystem.hpp>
-#include <RedEngine/Core/Time/FrameCounter.hpp>
-#include <RedEngine/Input/System/UserInputSystem.hpp>
-#include <RedEngine/Rendering/System/RenderingSystem.hpp>
-#include <RedEngine/Physics/System/PhysicsSystem.hpp>
-#include <RedEngine/Core/Debug/System/DebugSystem.hpp>
-#include <RedEngine/Audio/System/AudioSystem.hpp>
+#include "RedEngine/Core/Application.hpp"
+
+#include "RedEngine/Audio/System/AudioSystem.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
+#include "RedEngine/Core/Debug/System/DebugSystem.hpp"
+#include "RedEngine/Core/Event/EventSystem.hpp"
+#include "RedEngine/Core/Time/FrameCounter.hpp"
+#include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Input/System/UserInputSystem.hpp"
+#include "RedEngine/Level/LevelResourceLoader.hpp"
+#include "RedEngine/Physics/System/PhysicsSystem.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
 
 #include <array>
 #include <memory>
 #include <thread>
-
 
 namespace red
 {
@@ -55,9 +56,8 @@ bool Application::Run()
             break;
         }
 
-        RED_LOG_TRACE("[Frame rate {}][Delta time {}][Time scale {}][Unscaled delta time {}]",
-                      1 / Time::DeltaTime(), Time::DeltaTime(), Time::TimeScale(),
-                      Time::DeltaTime(false));
+        RED_LOG_TRACE("[Frame rate {}][Delta time {}][Time scale {}][Unscaled delta time {}]", 1 / Time::DeltaTime(),
+                      Time::DeltaTime(), Time::TimeScale(), Time::DeltaTime(false));
 
         // update the world
         m_world->Update();
@@ -68,9 +68,9 @@ bool Application::Run()
 
 void Application::LoadLevel(const std::string& levelResource)
 {
-    auto* levelLoader = GetRedSubEngine<ResourceEngine>()->GetResourceLoader<Level>();
+    auto* levelLoader = GetRedSubEngine<ResourceEngine>()->GetResourceLoader<LevelResourceLoader>();
 
-    levelLoader->(levelResource);
+    m_currentLevel = levelLoader->LoadResource(levelResource);
 }
 
 void Application::LoadLevelInternal(Level* level)
@@ -78,11 +78,11 @@ void Application::LoadLevelInternal(Level* level)
     if (m_currentLevel != nullptr)
     {
         m_currentLevel->InternFinalize();
-        delete m_currentLevel;
+        m_currentLevel.reset();
     }
 
     // reset the old level
-    m_currentLevel = level;
+    m_currentLevel.reset(level);
 
     if (level != nullptr)
     {
@@ -93,7 +93,7 @@ void Application::LoadLevelInternal(Level* level)
     }
 }
 
-red::Level* Application::GetCurrentLevel() { return m_currentLevel; }
+std::shared_ptr<Level> Application::GetCurrentLevel() { return m_currentLevel; }
 
 void Application::CreateWorld()
 {

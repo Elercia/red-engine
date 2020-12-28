@@ -2,13 +2,12 @@
 
 #include <RedEngine/RedEngineBase.hpp>
 
-#include <array>
-
 #include <RedEngine/Core/Components/Component.hpp>
-#include <RedEngine/Rendering/Texture2D.hpp>
+#include <RedEngine/Rendering/Resource/Texture2D.hpp>
 #include <RedEngine/Math/Vector.hpp>
 #include <RedEngine/Rendering/Color.hpp>
-#include <RedEngine/Math/Matrix.hpp>
+
+#include <array>
 
 namespace red
 {

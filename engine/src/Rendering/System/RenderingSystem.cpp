@@ -5,7 +5,8 @@
 #include <RedEngine/Core/Debug/Profiler.hpp>
 #include <RedEngine/Rendering/Window.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
-#include <RedEngine/Rendering/Texture2D.hpp>
+#include <RedEngine/Rendering/Resource/Texture2D.hpp>
+#include <RedEngine/Rendering/Component/Sprite.hpp>
 #include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
 
 namespace red

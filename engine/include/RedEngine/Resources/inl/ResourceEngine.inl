@@ -1,19 +1,19 @@
 namespace red
 {
-template <typename IResourceType>
-ResourceLoader<IResourceType>* ResourceEngine::GetResourceLoader(ResourceType resourceType)
+template <typename LoaderType>
+LoaderType* ResourceEngine::GetResourceLoader()
 {
+    ResourceType resourceType = LoaderType::Type::GetResourceType();
+
     auto it = m_resourceLoaders.find(resourceType);
 
-    if (it != m_resourceLoaders.end())
+    if (it == m_resourceLoaders.end())
     {
-        return it->second;
+        RED_ERROR("ResourceLoader not registered");
+
+        return nullptr;
     }
 
-    ResourceLoader<IResourceType>* resourceLoader = new ResourceLoader<IResourceType>();
-
-    m_resourceLoaders.push_back(resourceLoader);
-
-    return resourceLoader;
+    return static_cast<LoaderType*>(it->second);
 }
 }  // namespace red

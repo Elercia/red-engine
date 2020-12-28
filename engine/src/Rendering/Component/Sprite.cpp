@@ -1,6 +1,8 @@
-#include <RedEngine/Core/Components/Sprite.hpp>
+#include <RedEngine/Rendering/Component/Sprite.hpp>
 #include <RedEngine/Resources/ResourceEngine.hpp>
+#include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include <RedEngine/Core/Time/Time.hpp>
+#include "RedEngine/Core/Engine.hpp"
 
 #include <utility>
 
@@ -8,10 +10,15 @@ namespace red
 {
 Sprite::Sprite(Entity* entity, const std::string& resourceId) : Component(entity)
 {
-    ResourceEngine::LoadSprite(resourceId, this);
-    m_currentAnimationInfo.currentAnimation = m_animations.begin();
-    m_currentAnimationInfo.currentAnimationFrame = m_animations[0].frames.begin();
-    m_currentAnimationInfo.deltaTimeAccumulator = 0;
+    m_spriteResource =
+        GetRedSubEngine<ResourceEngine>()->GetResourceLoader<SpriteResourceLoader>()->LoadResource(resourceId);
+
+    if (m_spriteResource)
+    {
+        m_currentAnimationInfo.currentAnimation = m_spriteResource->m_animations.begin();
+        m_currentAnimationInfo.currentAnimationFrame = m_spriteResource->m_animations[0].frames.begin();
+        m_currentAnimationInfo.deltaTimeAccumulator = 0;
+    }
 }
 
 void Sprite::NextFrame()
@@ -29,13 +36,11 @@ void Sprite::NextFrame()
         m_currentAnimationInfo.currentAnimationFrame++;
 
         // We are at the end of the frame list, stop here if the animation is not a loop
-        if (m_currentAnimationInfo.currentAnimationFrame ==
-            m_currentAnimationInfo.currentAnimation->frames.end())
+        if (m_currentAnimationInfo.currentAnimationFrame == m_currentAnimationInfo.currentAnimation->frames.end())
         {
             if (m_currentAnimationInfo.currentAnimation->loop)
             {
-                m_currentAnimationInfo.currentAnimationFrame =
-                    m_currentAnimationInfo.currentAnimation->frames.begin();
+                m_currentAnimationInfo.currentAnimationFrame = m_currentAnimationInfo.currentAnimation->frames.begin();
             }
             else
             {
@@ -47,7 +52,10 @@ void Sprite::NextFrame()
 
 bool Sprite::StartAnimation(const std::string& name)
 {
-    for (auto it = m_animations.begin(); it != m_animations.end(); it++)
+    if (!m_spriteResource)
+        return false;
+
+    for (auto it = m_spriteResource->m_animations.begin(); it != m_spriteResource->m_animations.end(); it++)
     {
         if (it->name == name)
         {
@@ -61,8 +69,8 @@ bool Sprite::StartAnimation(const std::string& name)
     return false;
 }
 
-std::vector<AnimationDesc> Sprite::GetAnimations() const { return m_animations; }
+const std::vector<AnimationDesc>& Sprite::GetAnimations() const { return m_spriteResource->m_animations; }
 
-CurrentAnimationDesc Sprite::GetCurrentAnimationInfo() const { return m_currentAnimationInfo; }
+const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const { return m_currentAnimationInfo; }
 
 }  // namespace red

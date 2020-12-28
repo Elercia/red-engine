@@ -78,7 +78,7 @@ void AudioSystem::Update()
             }
         }
 
-        FmodCheck(m_system->update(), "Fmod system check");
+        FmodCheck(m_system->update(), "Fmod system update");
     }
 }
 

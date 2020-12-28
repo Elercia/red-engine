@@ -34,25 +34,26 @@ public:
 
     Application& GetApplication();
 
+    void RegisterResourceLoaders(ResourceEngine* resourceEngine);
+
     const EngineInitDesc& GetInitDesc() const;
 
 private:
     void InitAllSubEngines(const EngineInitDesc& initDesc);
 
 private:
-    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, EventSystem>
-        m_subEngines{};
+    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, EventSystem> m_subEngines{};
 
     std::unique_ptr<Application> m_application;
     EngineInitDesc m_initDesc;
 };
 
-Engine& GetRedInstance();
+Engine& GetEngine();
 
 template <class SubEngineType>
-SubEngineType* GetRedSubEngine()
+SubEngineType* GetSubEngine()
 {
-    return GetRedInstance().Get<SubEngineType>();
+    return GetEngine().Get<SubEngineType>();
 }
 
 }  // namespace red

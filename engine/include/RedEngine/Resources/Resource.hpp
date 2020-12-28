@@ -4,10 +4,11 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <string>
 
 namespace red
 {
-using ResourceId = std::size_t;
+using ResourceId = std::string;
 
 enum class LoadState
 {
@@ -18,12 +19,19 @@ enum class LoadState
 
 enum class ResourceType
 {
+    LEVEL,
+    SPRITE,
     TEXTURE2D,
     AUDIO,
 };
 
+#define RED_RESOURCE(Type) \
+    static ResourceType GetResourceType() { return Type; }
+
 class IResource
 {
+    friend class IResourceLoader;
+
 public:
     IResource(ResourceId resourceId, ResourceType m_resourceType);
     virtual ~IResource();
@@ -32,7 +40,7 @@ public:
     [[nodiscard]] ResourceType GetResourceType() const;
     [[nodiscard]] LoadState GetLoadState() const;
 
-    virtual void Release() = 0;
+    void SetLoadState(LoadState loadState);
 
 protected:
     ResourceId m_resourceId;
