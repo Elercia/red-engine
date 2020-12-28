@@ -1,15 +1,14 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include <RedEngine/Core/Event/EventSystem.hpp>
-#include <RedEngine/Core/Memory/MemoryManager.hpp>
-#include <RedEngine/Core/Configuration/Configuration.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Resources/ResourceEngine.hpp>
-#include <RedEngine/Rendering/RenderingEngine.hpp>
-
 #include "EngineConfig.hpp"
+
+#include "RedEngine/Core/Configuration/Configuration.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Event/EventSystem.hpp"
+#include "RedEngine/Core/Memory/MemoryManager.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/RenderingEngine.hpp"
+#include "RedEngine/Resources/ResourceEngine.hpp"
 
 #include <memory>
 #include <tuple>

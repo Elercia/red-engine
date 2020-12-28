@@ -1,7 +1,8 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
 #include "fmod_common.h"
+
+#include "RedEngine/Core/Components/Component.hpp"
 
 namespace red
 {

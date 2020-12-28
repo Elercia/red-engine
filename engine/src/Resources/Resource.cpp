@@ -1,4 +1,4 @@
-#include <RedEngine/Resources/Resource.hpp>
+#include "RedEngine/Resources/Resource.hpp"
 
 namespace red
 {

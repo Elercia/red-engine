@@ -1,12 +1,11 @@
-#include <RedEngine/Core/Debug/DebugMacros.hpp>
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
 
 namespace red
 {
 template <typename ComponentType_t, typename... Args>
 ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args)
 {
-    static_assert(std::is_base_of<Component, ComponentType_t>::value,
-                  "ComponentType is not a Component type");
+    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
 
     auto component = new ComponentType_t(owner, std::forward<Args>(args)...);
 

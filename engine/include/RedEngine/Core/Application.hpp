@@ -1,12 +1,12 @@
 #pragma once
 
-#include <memory>
-#include <stack>
-
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Level/Level.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Rendering/Window.hpp"
+
+#include <memory>
+#include <stack>
 
 namespace red
 {

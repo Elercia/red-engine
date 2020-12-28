@@ -1,10 +1,9 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include <RedEngine/Rendering/Component/CameraComponent.hpp>
-
 #include "../../Core/Entity/System.hpp"
+
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/Component/CameraComponent.hpp"
 
 namespace red
 {

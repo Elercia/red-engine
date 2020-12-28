@@ -1,10 +1,10 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "../EngineConfig.hpp"
+
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <memory>
-
-#include "../EngineConfig.hpp"
 
 namespace red
 {
@@ -36,7 +36,6 @@ protected:
     ComponentId_t m_componentId;
     Entity* m_owner;
     ComponentStatus m_status;
-
 };
 
 }  // namespace red

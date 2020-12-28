@@ -1,12 +1,12 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include <string>
-#include <set>
-#include <vector>
-
 #include "../Components/Component.hpp"
+
+#include "RedEngine/RedEngineBase.hpp"
+
+#include <set>
+#include <string>
+#include <vector>
 
 namespace red
 {

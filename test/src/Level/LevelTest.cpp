@@ -1,10 +1,10 @@
 #include <catch2/catch.hpp>
-#include <RedEngine/Core/Application.hpp>
+#include "RedEngine/Core/Application.hpp"
 #include "LevelTest.hpp"
 
 TEST_CASE("Level changer", "[LEVEL]")
 {
-    red::Application& app = red::GetRedInstance().GetApplication();
+    red::Application& app = red::GetEngine().GetApplication();
     auto* world = app.GetWorld();
 
     app.LoadLevel<LevelTest1>();

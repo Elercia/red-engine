@@ -1,6 +1,5 @@
-#include <RedEngine/Math/Math.hpp>
+#include "RedEngine/Math/Math.hpp"
 
 namespace red
 {
-
 }  // namespace red

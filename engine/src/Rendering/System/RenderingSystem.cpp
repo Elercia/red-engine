@@ -1,20 +1,21 @@
-#include <RedEngine/Rendering/System/RenderingSystem.hpp>
-#include <RedEngine/Core/Components/Component.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Core/Debug/Profiler.hpp>
-#include <RedEngine/Rendering/Window.hpp>
-#include <RedEngine/Resources/ResourceEngine.hpp>
-#include <RedEngine/Rendering/Resource/Texture2D.hpp>
-#include <RedEngine/Rendering/Component/Sprite.hpp>
-#include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
+
+#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Rendering/Component/Sprite.hpp"
+#include "RedEngine/Rendering/Resource/Texture2D.hpp"
+#include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Resources/ResourceEngine.hpp"
 
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world)
     : System(world)
-    , m_renderingEngine(GetRedSubEngine<RenderingEngine>())
-    , m_resourceEngine(GetRedSubEngine<ResourceEngine>())
+    , m_renderingEngine(GetSubEngine<RenderingEngine>())
+    , m_resourceEngine(GetSubEngine<ResourceEngine>())
 {
     RED_LOG_INFO("Adding Rendering system");
 }
@@ -66,8 +67,7 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
             {
                 auto* circle = static_cast<DebugCircle*>(shape.get());
 
-                m_renderingEngine->DrawCircle(camera, circle->center, circle->radius,
-                                              circle->color);
+                m_renderingEngine->DrawCircle(camera, circle->center, circle->radius, circle->color);
             }
             break;
             case DebugShapeType::POLYGON:
@@ -81,8 +81,7 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
             {
                 auto* segment = static_cast<DebugSegment*>(shape.get());
 
-                m_renderingEngine->DrawLine(camera, segment->point1, segment->point2,
-                                            segment->color);
+                m_renderingEngine->DrawLine(camera, segment->point1, segment->point2, segment->color);
             }
             break;
             case DebugShapeType::POINT:

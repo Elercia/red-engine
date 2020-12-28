@@ -1,11 +1,11 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "../Utils/Uncopyable.hpp"
+
+#include "RedEngine/Core/EngineConfig.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <type_traits>
-
-#include <RedEngine/Core/EngineConfig.hpp>
-#include "../Utils/Uncopyable.hpp"
 
 namespace red
 {

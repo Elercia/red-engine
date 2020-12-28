@@ -1,10 +1,11 @@
-#include <RedEngine/Core/Configuration/UserInputHelper.hpp>
-#include <RedEngine/Core/Configuration/Configuration.hpp>
-#include <RedEngine/Core/Configuration/IniReader.hpp>
-#include <RedEngine/Core/Engine.hpp>
+#include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 
-#include <string>
+#include "RedEngine/Core/Configuration/Configuration.hpp"
+#include "RedEngine/Core/Configuration/IniReader.hpp"
+#include "RedEngine/Core/Engine.hpp"
+
 #include <filesystem>
+#include <string>
 
 namespace red
 {
@@ -12,10 +13,10 @@ namespace utils
 {
     red::UserActionMapping UserInputHelper::LoadActionMapping()
     {
-        auto* config = GetRedSubEngine<Configuration>();
+        auto* config = GetSubEngine<Configuration>();
 
-        std::string p = config->GetUserDataFolder() +
-                        std::string{std::filesystem::path::preferred_separator} + "userInput.ini";
+        std::string p =
+            config->GetUserDataFolder() + std::string{std::filesystem::path::preferred_separator} + "userInput.ini";
         auto iniConfig = utils::IniReader::ReadFromFile(p);
 
         UserActionMapping mappings{};
@@ -63,8 +64,7 @@ namespace utils
         return m;
     }
 
-    red::ModifierKeyBitSet UserInputHelper::GetModifiersFromConfigLine(
-        const std::string& modifierString)
+    red::ModifierKeyBitSet UserInputHelper::GetModifiersFromConfigLine(const std::string& modifierString)
     {
         red::ModifierKeyBitSet modifiers;
 

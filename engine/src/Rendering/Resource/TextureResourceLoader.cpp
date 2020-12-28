@@ -1,18 +1,17 @@
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
+
+#include "SDL2/SDL_image.h"
+#include "nlohmann/json.hpp"
+
 #include "RedEngine/Core/Engine.hpp"
-#include "RedEngine/Utils/FileUtils.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
+#include "RedEngine/Utils/FileUtils.hpp"
 
 #include <filesystem>
-#include "nlohmann/json.hpp"
-#include "SDL2/SDL_image.h"
 
 namespace red
 {
-TextureResourceLoader::TextureResourceLoader()
-    : ResourceLoader("Texture2D", ResourceType::TEXTURE2D)
-{
-}
+TextureResourceLoader::TextureResourceLoader() : ResourceLoader("Texture2D", ResourceType::TEXTURE2D) {}
 
 TextureResourceLoader::~TextureResourceLoader() {}
 
@@ -27,7 +26,7 @@ std::shared_ptr<Texture2D> TextureResourceLoader::LoadResource(const std::string
         return resourcePtr;
     }
 
-    fs::path p = GetRedSubEngine<Configuration>()->GetResourceFolder() + "/" + name;
+    fs::path p = GetSubEngine<Configuration>()->GetResourceFolder() + "/" + name;
 
     auto texture = std::make_shared<Texture2D>(name);
 
@@ -43,8 +42,7 @@ std::shared_ptr<Texture2D> TextureResourceLoader::LoadResource(const std::string
         return texture;
     }
 
-    texture->m_sdlTexture =
-        SDL_CreateTextureFromSurface(GetRedSubEngine<RenderingEngine>()->GetRenderer(), tempSurface);
+    texture->m_sdlTexture = SDL_CreateTextureFromSurface(GetSubEngine<RenderingEngine>()->GetRenderer(), tempSurface);
 
     SDL_FreeSurface(tempSurface);
 

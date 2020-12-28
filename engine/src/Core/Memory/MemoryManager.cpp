@@ -1,9 +1,9 @@
 #include "RedEngine/Core/Memory/MemoryManager.hpp"
 
+#include "RedEngine/Core/Engine.hpp"
+
 #include <cstdio>
 #include <cstdlib>
-
-#include "RedEngine/Core/Engine.hpp"
 
 namespace red
 {

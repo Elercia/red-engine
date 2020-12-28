@@ -1,12 +1,10 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include <RedEngine/Resources/Resource.hpp>
-#include <RedEngine/Math/Vector.hpp>
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Resources/Resource.hpp"
 
 #include <SDL2/SDL_render.h>
-
 #include <string>
 
 namespace red

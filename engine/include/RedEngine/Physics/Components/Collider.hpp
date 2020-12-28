@@ -1,14 +1,12 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
 #include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <Box2D/Collision/Shapes/b2Shape.h>
 #include <Box2D/Dynamics/b2Fixture.h>
-
 #include <map>
 #include <memory>
 

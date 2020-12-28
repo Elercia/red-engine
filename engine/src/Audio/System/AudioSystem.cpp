@@ -1,25 +1,22 @@
+#include "RedEngine/Audio/System/AudioSystem.hpp"
+
+#include "RedEngine/Audio/AudioUtils.hpp"
+#include "RedEngine/Audio/Component/AudioListener.hpp"
+#include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Core/Components/Transform.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 
-#include "RedEngine/Audio/AudioUtils.hpp"
-#include "RedEngine/Audio/System/AudioSystem.hpp"
-#include "RedEngine/Audio/Component/AudioSource.hpp"
-#include "RedEngine/Audio/Component/AudioListener.hpp"
-
 namespace red
 {
-AudioSystem::AudioSystem(World* world) : System(world), m_studioSystem(nullptr), m_system(nullptr)
-{
-}
+AudioSystem::AudioSystem(World* world) : System(world), m_studioSystem(nullptr), m_system(nullptr) {}
 
 AudioSystem::~AudioSystem() = default;
 
 void AudioSystem::Init()
 {
     FmodCheck(FMOD::Studio::System::create(&m_studioSystem), "Creating FMOD studio system");
-    FmodCheck(
-        m_studioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL),
-        "Initializing FMOD studio system");
+    FmodCheck(m_studioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL),
+              "Initializing FMOD studio system");
     FmodCheck(m_studioSystem->getCoreSystem(&m_system), "Get core system");
 }
 

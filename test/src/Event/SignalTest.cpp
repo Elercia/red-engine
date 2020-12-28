@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <RedEngine/Core/Event/Signal.hpp>
+#include "RedEngine/Core/Event/Signal.hpp"
 #include <SignalTest.hpp>
 
 TEST_CASE("Signal/Slots connections", "[EVENT]")

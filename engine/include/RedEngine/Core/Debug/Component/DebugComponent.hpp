@@ -1,14 +1,13 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include <RedEngine/Core/Components/Component.hpp>
-#include <RedEngine/Math/Vector.hpp>
-#include <RedEngine/Rendering/Color.hpp>
+#include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/Color.hpp"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace red
 {
@@ -62,10 +61,8 @@ public:
 
     void AddLine(const Vector2& from, const Vector2& to, const Color& c = ColorConstant::BLACK);
     void AddCircle(const Vector2& center, float radius, const Color& c = ColorConstant::BLACK);
-    void AddPolygon(const std::vector<Vector2>& points, const Color& c = ColorConstant::BLACK,
-                    bool isSolid = false);
-    void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK,
-                  bool isSolid = false);
+    void AddPolygon(const std::vector<Vector2>& points, const Color& c = ColorConstant::BLACK, bool isSolid = false);
+    void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK, bool isSolid = false);
 
 private:
     std::vector<std::unique_ptr<DebugShape>> m_frameShapes;

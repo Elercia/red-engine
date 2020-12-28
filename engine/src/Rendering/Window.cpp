@@ -1,7 +1,8 @@
-#include <RedEngine/Core/Debug/DebugMacros.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Rendering/Window.hpp>
+#include "RedEngine/Rendering/Window.hpp"
+
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Engine.hpp"
 
 #include <iostream>
 

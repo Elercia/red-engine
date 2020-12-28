@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RedEngine/Core/Components/Component.hpp>
-#include <RedEngine/Core/Entity/System.hpp>
-#include <RedEngine/Core/Entity/World.hpp>
+#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 
 class MockComponent1 : public red::Component
 {

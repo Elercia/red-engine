@@ -1,11 +1,11 @@
 #pragma once
 
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Resources/Resource.hpp"
+
 #include <map>
 #include <memory>
 #include <string>
-
-#include "RedEngine/RedEngineBase.hpp"
-#include "RedEngine/Resources/Resource.hpp"
 
 namespace red
 {

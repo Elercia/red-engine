@@ -1,7 +1,5 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
 namespace red
 {
 #ifdef __clang__

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RedEngine/Core/Components/Component.hpp>
+#include "RedEngine/Core/Components/Component.hpp"
 
 class ScoreComponent : public red::Component
 {

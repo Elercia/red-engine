@@ -1,10 +1,9 @@
-#include <RedEngine/Core/Debug/DebugMacros.hpp>
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
 
-#include <filesystem>
-#include <iostream>
-
-#include <fmt/format.h>
 #include <SDL2/SDL_messagebox.h>
+#include <filesystem>
+#include <fmt/format.h>
+#include <iostream>
 
 namespace red
 {
@@ -32,11 +31,10 @@ ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filena
                                                     /* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
                                                     {255, 0, 255}}};
     std::string fileFormat = std::string(filename);
-    fileFormat =
-        fileFormat.substr(fileFormat.find_last_of(std::filesystem::path::preferred_separator) + 1);
+    fileFormat = fileFormat.substr(fileFormat.find_last_of(std::filesystem::path::preferred_separator) + 1);
 
-    std::string formattedMessage = fmt::format(
-        FMT_STRING("[ERROR]\n[FILENAME] {}\n[LINE] {}\n[MESSAGE] {}"), fileFormat, line, message);
+    std::string formattedMessage =
+        fmt::format(FMT_STRING("[ERROR]\n[FILENAME] {}\n[LINE] {}\n[MESSAGE] {}"), fileFormat, line, message);
 
     const SDL_MessageBoxData messageboxdata = {
         SDL_MESSAGEBOX_ERROR,          /* .flags */

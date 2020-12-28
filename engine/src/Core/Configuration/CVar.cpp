@@ -1,4 +1,5 @@
 #include "RedEngine/Core/Configuration/CVar.hpp"
+
 #include "RedEngine/Core/Configuration/Configuration.hpp"
 
 #include <utility>
@@ -29,10 +30,7 @@ std::string CVarValue::GetName() const { return m_name; }
 
 std::string CVarValue::GetCategory() const { return m_category; }
 
-std::string CVarValue::GetLongName() const
-{
-    return ConfigurationUtils::GetLongName(m_category, m_name);
-}
+std::string CVarValue::GetLongName() const { return ConfigurationUtils::GetLongName(m_category, m_name); }
 size_t CVarValue::OnValueChange(std::function<void(CVarValue*)> callback)
 {
     auto index = m_valueChangeCallback.size();

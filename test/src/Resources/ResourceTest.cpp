@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <RedEngine/Resources/ResourceEngine.hpp>
+#include "RedEngine/Resources/ResourceEngine.hpp"
 #include "RedEngine/Level/LevelResourceLoader.hpp"
 
 using namespace red;

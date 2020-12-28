@@ -1,4 +1,5 @@
 #include "RedEngine/Rendering/Resource/SpriteResource.hpp"
+
 #include "RedEngine/Resources/Resource.hpp"
 
 namespace red

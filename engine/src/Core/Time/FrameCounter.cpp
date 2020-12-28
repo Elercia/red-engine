@@ -1,14 +1,13 @@
 
-#include <RedEngine/Core/Time/FrameCounter.hpp>
+#include "RedEngine/Core/Time/FrameCounter.hpp"
+
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+
 #include <numeric>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 
 namespace red
 {
-FrameCounter::FrameCounter()
-    : _lastFrameTimePoint(Clock::now()), m_frameBuffer(), m_currentFrameBufferIndex(0)
-{
-}
+FrameCounter::FrameCounter() : _lastFrameTimePoint(Clock::now()), m_frameBuffer(), m_currentFrameBufferIndex(0) {}
 
 float FrameCounter::Update()
 {
@@ -24,9 +23,8 @@ float FrameCounter::Update()
 
     _lastFrameTimePoint = currentTime;
 
-    float meanDeltaTime =
-        std::accumulate(m_frameBuffer.begin(), m_frameBuffer.end(), 0.F, std::plus<float>()) /
-        m_frameBuffer.size();  // calculate the mean of delta times
+    float meanDeltaTime = std::accumulate(m_frameBuffer.begin(), m_frameBuffer.end(), 0.F, std::plus<float>()) /
+                          m_frameBuffer.size();  // calculate the mean of delta times
 
     return meanDeltaTime;
 }

@@ -35,7 +35,7 @@ Application::~Application()
 
 bool Application::Run()
 {
-    auto* eventSystem = GetRedSubEngine<EventSystem>();
+    auto* eventSystem = GetSubEngine<EventSystem>();
 
     FrameCounter fc;
 
@@ -68,7 +68,7 @@ bool Application::Run()
 
 void Application::LoadLevel(const std::string& levelResource)
 {
-    auto* levelLoader = GetRedSubEngine<ResourceEngine>()->GetResourceLoader<LevelResourceLoader>();
+    auto* levelLoader = GetSubEngine<ResourceEngine>()->GetResourceLoader<LevelResourceLoader>();
 
     m_currentLevel = levelLoader->LoadResource(levelResource);
 }

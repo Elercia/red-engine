@@ -1,4 +1,4 @@
-#include <RedEngine/Core/Entity/Entity.hpp>
+#include "RedEngine/Core/Entity/Entity.hpp"
 #include <SystemTest.hpp>
 #include <catch2/catch.hpp>
 #include <iostream>

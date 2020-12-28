@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <array>
 
@@ -141,7 +141,7 @@ struct KeyCodes
         KEY_F22,
         KEY_F23,
         KEY_F24,
-        KEY_EXECUTE,
+        KEY_EXEC,
         KEY_HELP,
         KEY_MENU,
         KEY_SELECT,
@@ -420,7 +420,7 @@ constexpr KeyCodeReadableDb InitKeyCodeReadableDb()
     db[KeyCodes::KEY_F22] = "KEY_F22";
     db[KeyCodes::KEY_F23] = "KEY_F23";
     db[KeyCodes::KEY_F24] = "KEY_F24";
-    db[KeyCodes::KEY_EXECUTE] = "KEY_EXECUTE";
+    db[KeyCodes::KEY_EXEC] = "KEY_EXECUTE";
     db[KeyCodes::KEY_HELP] = "KEY_HELP";
     db[KeyCodes::KEY_MENU] = "KEY_MENU";
     db[KeyCodes::KEY_SELECT] = "KEY_SELECT";

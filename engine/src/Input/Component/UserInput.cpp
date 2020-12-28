@@ -1,4 +1,4 @@
-#include <RedEngine/Input/Component/UserInput.hpp>
+#include "RedEngine/Input/Component/UserInput.hpp"
 
 namespace red
 {
@@ -20,8 +20,5 @@ Vector2 UserInputComponent::GetAxis(AxisKey axisId) const
 
 UserActionMapping UserInputComponent::GetActionMapping() { return m_actionMapping; }
 
-void UserInputComponent::SetActionMapping(UserActionMapping mapping)
-{
-    m_actionMapping = std::move(mapping);
-}
+void UserInputComponent::SetActionMapping(UserActionMapping mapping) { m_actionMapping = std::move(mapping); }
 }  // namespace red

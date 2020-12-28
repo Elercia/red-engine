@@ -1,4 +1,4 @@
-#include <RedEngine/Core/Container/Array.hpp>
+#include "RedEngine/Core/Container/Array.hpp"
 #include <catch2/catch.hpp>
 
 #include "TestUtils/TestUtils.hpp"

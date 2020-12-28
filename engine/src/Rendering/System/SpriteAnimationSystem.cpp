@@ -1,8 +1,9 @@
 
-#include <RedEngine/Rendering/System/SpriteAnimationSystem.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Rendering/Component/Sprite.hpp>
-#include <RedEngine/Resources/ResourceEngine.hpp>
+#include "RedEngine/Rendering/System/SpriteAnimationSystem.hpp"
+
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Rendering/Component/Sprite.hpp"
+#include "RedEngine/Resources/ResourceEngine.hpp"
 
 namespace red
 {

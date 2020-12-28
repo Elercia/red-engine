@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include <RedEngine/Math/Vector.hpp>
 #include "Component.hpp"
+
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
 namespace red
 {

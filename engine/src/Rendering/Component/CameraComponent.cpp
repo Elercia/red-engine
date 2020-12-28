@@ -1,19 +1,18 @@
 
-#include <RedEngine/Rendering/Component/CameraComponent.hpp>
-#include <RedEngine/Math/Math.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Rendering/Window.hpp>
+#include "RedEngine/Rendering/Component/CameraComponent.hpp"
+
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Math/Math.hpp"
+#include "RedEngine/Rendering/Window.hpp"
 
 namespace red
 {
-CameraComponent::CameraComponent(Entity* entity, const Vector2& center)
-    : Component(entity), m_renderedTexture(nullptr)
+CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Component(entity), m_renderedTexture(nullptr)
 {
     auto info = Window::GetWindow().GetWindowInfo();
     m_viewport = {0, 0, static_cast<float>(info.width), static_cast<float>(info.height)};
 
-    m_cameraWorldPosition =
-        Vector2(center.x - m_viewport.width / 2.F, center.y - m_viewport.height / 2.F);
+    m_cameraWorldPosition = Vector2(center.x - m_viewport.width / 2.F, center.y - m_viewport.height / 2.F);
 }
 
 Vector2 CameraComponent::ViewportToWorldPoint(const Vector2& point) const
@@ -61,10 +60,7 @@ int CameraComponent::Depth() const { return m_depth; }
 
 void CameraComponent::SetDepth(int depth) { m_depth = depth; }
 
-std::shared_ptr<const Texture2D> CameraComponent::GetRenderedTexture() const
-{
-    return m_renderedTexture;
-}
+std::shared_ptr<const Texture2D> CameraComponent::GetRenderedTexture() const { return m_renderedTexture; }
 
 const Color& CameraComponent::BackgroundColor() const { return m_backgroundColor; }
 

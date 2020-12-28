@@ -1,13 +1,13 @@
-#include <RedEngine/Core/Event/EventSystem.hpp>
-#include <RedEngine/Input/InputDefinitionTranslationUnit.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
+#include "RedEngine/Core/Event/EventSystem.hpp"
+
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Input/InputDefinitionTranslationUnit.hpp"
+
 #include <SDL2/SDL_events.h>
 
 namespace red
 {
-EventSystem::EventSystem() : SubEngine(), m_quitRequested(false), m_keyStates(), m_mousePosition()
-{
-}
+EventSystem::EventSystem() : SubEngine(), m_quitRequested(false), m_keyStates(), m_mousePosition() {}
 
 bool EventSystem::GetKey(red::KeyCodes::Enum key) const { return m_keyStates.at(key).isPressed; }
 
@@ -80,31 +80,26 @@ void EventSystem::Update()
                 // -------- KEYS --------
             case SDL_KEYDOWN:
             {
-                auto& keyState =
-                    m_keyStates[g_keyboardTranslationMap.at(event.key.keysym.scancode)];
+                auto& keyState = m_keyStates[g_keyboardTranslationMap.at(event.key.keysym.scancode)];
 
                 if (!keyState.isPressed)
                 {
                     keyState.isPressed = true;
                     keyState.isDown = true;
 
-                    RED_LOG_DEBUG(
-                        "Key DOWN {}",
-                        g_keyCodeReadable[g_keyboardTranslationMap.at(event.key.keysym.scancode)]);
+                    RED_LOG_DEBUG("Key DOWN {}",
+                                  g_keyCodeReadable[g_keyboardTranslationMap.at(event.key.keysym.scancode)]);
                 }
             }
             break;
             case SDL_KEYUP:
             {
-                auto& keyState =
-                    m_keyStates[g_keyboardTranslationMap.at(event.key.keysym.scancode)];
+                auto& keyState = m_keyStates[g_keyboardTranslationMap.at(event.key.keysym.scancode)];
 
                 keyState.isPressed = false;
                 keyState.isUp = true;
 
-                RED_LOG_DEBUG(
-                    "Key UP {}",
-                    g_keyCodeReadable[g_keyboardTranslationMap.at(event.key.keysym.scancode)]);
+                RED_LOG_DEBUG("Key UP {}", g_keyCodeReadable[g_keyboardTranslationMap.at(event.key.keysym.scancode)]);
             }
             break;
                 // -------- MOUSE --------
@@ -121,9 +116,8 @@ void EventSystem::Update()
                 if (!keyState.isDown)
                 {
                     keyState = {true, false, true};
-                    RED_LOG_DEBUG(
-                        "Mouse button DOWN {}",
-                        g_keyCodeReadable[g_mouseTranslationUnit.at(event.button.button)]);
+                    RED_LOG_DEBUG("Mouse button DOWN {}",
+                                  g_keyCodeReadable[g_mouseTranslationUnit.at(event.button.button)]);
                 }
             }
             break;
@@ -134,16 +128,14 @@ void EventSystem::Update()
                 if (!keyState.isUp)
                 {
                     keyState = {false, true, false};
-                    RED_LOG_DEBUG(
-                        "Mouse button UP {}",
-                        g_keyCodeReadable[g_mouseTranslationUnit.at(event.button.button)]);
+                    RED_LOG_DEBUG("Mouse button UP {}",
+                                  g_keyCodeReadable[g_mouseTranslationUnit.at(event.button.button)]);
                 }
             }
             break;
             case SDL_MOUSEWHEEL:
             {
-                RED_LOG_DEBUG("Mouse wheel detected delta x:{}, y:{}", event.wheel.x,
-                              event.wheel.y);
+                RED_LOG_DEBUG("Mouse wheel detected delta x:{}, y:{}", event.wheel.x, event.wheel.y);
             }
             break;
                 // -------- GAMEPAD --------

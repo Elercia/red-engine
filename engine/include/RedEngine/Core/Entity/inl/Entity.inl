@@ -1,11 +1,11 @@
 
+#include "RedEngine/Core/Components/ComponentManager.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+
 #include <algorithm>
 #include <cassert>
 #include <string>
-
-#include <RedEngine/Core/Debug/DebugMacros.hpp>
-#include <RedEngine/Core/Components/ComponentManager.hpp>
-#include <RedEngine/Core/Entity/World.hpp>
 
 namespace red
 {
@@ -18,7 +18,8 @@ T* Entity::AddComponent(Args&&... args)
 
     if (componentManager->HasComponent<T>(this))
     {
-        return componentManager->GetComponent<T>(this); // TODO Not the best solution. This return does not respect the args sent
+        return componentManager->GetComponent<T>(
+            this);  // TODO Not the best solution. This return does not respect the args sent
     }
 
     auto componentPtr = componentManager->CreateComponent<T>(this, std::forward<Args>(args)...);

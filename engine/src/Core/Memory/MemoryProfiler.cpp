@@ -39,8 +39,7 @@ void MemoryProfiler::DumpMemory() const
         if (profile.ptr != nullptr)
         {
             dumpMemorySize += profile.size;
-            std::cout << "Memory : " << profile.ptr << " of size " << profile.size << " octets"
-                      << std::endl;
+            std::cout << "Memory : " << profile.ptr << " of size " << profile.size << " octets" << std::endl;
         }
     }
 

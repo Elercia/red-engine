@@ -1,7 +1,8 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
 #include "Component.hpp"
+
+#include "RedEngine/RedEngineBase.hpp"
 
 namespace red
 {

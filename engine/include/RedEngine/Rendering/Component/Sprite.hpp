@@ -1,14 +1,14 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-#include "RedEngine/Math/Vector.hpp"
-#include <RedEngine/Resources/AnnimationDescriptor.hpp>
 #include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Resources/AnnimationDescriptor.hpp"
 
+#include <SDL2/SDL_render.h>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <SDL2/SDL_render.h>
 
 namespace red
 {

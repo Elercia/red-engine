@@ -1,9 +1,9 @@
-#include <RedEngine/Utils/FileUtils.hpp>
+#include "RedEngine/Utils/FileUtils.hpp"
 
 #include <fstream>
 #include <sstream>
 
-std::string red::ReadFile(const std::string& fullPath) 
+std::string red::ReadFile(const std::string& fullPath)
 {
     std::ifstream in;
     in.open(fullPath);

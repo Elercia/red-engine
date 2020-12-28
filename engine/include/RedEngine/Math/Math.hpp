@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "RedEngine/RedEngineBase.hpp"
 
 namespace red
 {
@@ -22,7 +22,7 @@ namespace Math
     constexpr bool Between(T value, T lValue, T rValue);
 
     constexpr int NextPowerOf2(int n);
-};
+};  // namespace Math
 }  // namespace red
 
 #include "inl/Math.inl"

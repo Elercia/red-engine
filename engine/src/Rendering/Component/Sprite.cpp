@@ -1,8 +1,9 @@
-#include <RedEngine/Rendering/Component/Sprite.hpp>
-#include <RedEngine/Resources/ResourceEngine.hpp>
-#include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
-#include <RedEngine/Core/Time/Time.hpp>
+#include "RedEngine/Rendering/Component/Sprite.hpp"
+
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
+#include "RedEngine/Resources/ResourceEngine.hpp"
 
 #include <utility>
 
@@ -11,7 +12,7 @@ namespace red
 Sprite::Sprite(Entity* entity, const std::string& resourceId) : Component(entity)
 {
     m_spriteResource =
-        GetRedSubEngine<ResourceEngine>()->GetResourceLoader<SpriteResourceLoader>()->LoadResource(resourceId);
+        GetSubEngine<ResourceEngine>()->GetResourceLoader<SpriteResourceLoader>()->LoadResource(resourceId);
 
     if (m_spriteResource)
     {
