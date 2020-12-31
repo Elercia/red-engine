@@ -1,27 +1,31 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.18)
+
+project(FMOD CXX C)
 
 set( LIB_FMOD_CORE "${CMAKE_CURRENT_SOURCE_DIR}/core/lib/x64/fmod_vc.lib" )
 set( DLL_FMOD_CORE "${CMAKE_CURRENT_SOURCE_DIR}/core/lib/x64/fmod.dll" )
 set( LIB_FMOD_STUDIO "${CMAKE_CURRENT_SOURCE_DIR}/studio/lib/x64/fmodstudio_vc.lib" )
 set( DLL_FMOD_STUDIO "${CMAKE_CURRENT_SOURCE_DIR}/studio/lib/x64/fmodstudio.dll" )
 
-add_library( fmodCore SHARED IMPORTED )
+add_library( FmodCore SHARED IMPORTED GLOBAL)
 set_target_properties(
-        fmodCore PROPERTIES
+        FmodCore PROPERTIES
         IMPORTED_LOCATION ${DLL_FMOD_CORE}
         IMPORTED_IMPLIB ${LIB_FMOD_CORE}
-        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/core/inc
-        DEFINE_SYMBOL BLABLA
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/core/inc"
         )
 
-add_library( fmodStudio SHARED IMPORTED )
+add_library( FmodStudio SHARED IMPORTED GLOBAL)
 set_target_properties(
-        fmodStudio PROPERTIES
+        FmodStudio PROPERTIES
         IMPORTED_LOCATION ${DLL_FMOD_STUDIO}
         IMPORTED_IMPLIB ${LIB_FMOD_STUDIO}
-        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/studio/inc/
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/studio/inc/"
         )
+target_link_libraries(FmodStudio INTERFACE FmodCore)
 
-add_library(fmod empty.cpp)
+file(COPY ${DLL_FMOD_CORE}
+    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-target_link_libraries(fmod PUBLIC fmodCore fmodStudio)
+file(COPY ${DLL_FMOD_STUDIO}
+    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

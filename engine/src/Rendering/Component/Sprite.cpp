@@ -24,6 +24,11 @@ Sprite::Sprite(Entity* entity, const std::string& resourceId) : Component(entity
 
 void Sprite::NextFrame()
 {
+    if (!m_spriteResource)
+    {
+        return;
+    }
+
     m_currentAnimationInfo.deltaTimeAccumulator += Time::DeltaTime();
 
     auto duration = m_currentAnimationInfo.currentAnimationFrame->duration;
@@ -70,8 +75,17 @@ bool Sprite::StartAnimation(const std::string& name)
     return false;
 }
 
-const std::vector<AnimationDesc>& Sprite::GetAnimations() const { return m_spriteResource->m_animations; }
+const std::vector<AnimationDesc>& Sprite::GetAnimations() const
+{
+    RED_ASSERT(m_spriteResource != nullptr, "Resource not loaded, couldn't get the annimations");
+    return m_spriteResource->m_animations;
+}
 
 const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const { return m_currentAnimationInfo; }
+
+bool Sprite::IsValid() const
+{
+    return m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
+}
 
 }  // namespace red

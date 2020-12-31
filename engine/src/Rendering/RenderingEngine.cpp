@@ -93,6 +93,9 @@ SDL_Renderer* RenderingEngine::GetRenderer() { return m_renderer; }
 
 void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Transform& transform)
 {
+    if (!sprite || !sprite->IsValid())
+        return;
+
     auto& currentAnimation = *sprite->m_currentAnimationInfo.currentAnimation;
 
     if (currentAnimation.texture && currentAnimation.texture->GetLoadState() == LoadState::STATE_LOADED)

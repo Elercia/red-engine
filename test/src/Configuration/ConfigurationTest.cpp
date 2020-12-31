@@ -1,12 +1,19 @@
+#include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/Configuration.hpp"
-#include <catch2/catch.hpp>
 #include "RedEngine/Core/Configuration/IniReader.hpp"
+
+#include <catch2/catch.hpp>
+#include <filesystem>
 #include <iostream>
 #include <string>
-#include "RedEngine/Core/Configuration/CVar.hpp"
 
 TEST_CASE("INI file parsing", "[Configuration]")
 {
+    using namespace std::filesystem;
+
+    path p = current_path();
+    std::cout << "current path : " << absolute(p) << std::endl;
+
     SECTION("Reading from ini file")
     {
         auto catKeyValues = red::utils::IniReader::ReadFromFile("resources/config.ini");

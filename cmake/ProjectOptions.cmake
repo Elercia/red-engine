@@ -1,4 +1,4 @@
-# from here:
+# List of warning taken from here:
 # https://github.com/lefticus/cpp_starter_project/blob/master/cmake/CompilerWarnings.cmake
 
 function(set_project_warnings project_name)
@@ -54,6 +54,16 @@ function(set_project_warnings project_name)
         set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
     endif ()
 
+    # Configuration specific flags
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CLANG_WARNINGS ${CLANG_WARNINGS} -WO0 -DRED_DEBUG -g)
+        set(MSVC_WARNINGS ${MSVC_WARNINGS} /MDd /Zi /Ob0 /Od /DRED_DEBUG)
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(CLANG_WARNINGS ${CLANG_WARNINGS} -WO2 )
+        set(MSVC_WARNINGS ${MSVC_WARNINGS} /MD /O2 /Ob2 /DNDEBUG)
+    endif()
+
+    # GCC specific warnings
     set(GCC_WARNINGS
             ${CLANG_WARNINGS}
             -Wmisleading-indentation # warn if identation implies blocks where blocks do not exist
@@ -75,19 +85,6 @@ function(set_project_warnings project_name)
 
 endfunction()
 
-function(red_set_compile_definition pTARGET)
-
-    if (MSVC OR MSYS OR MINGW) # Windows Platform
-        set(PLATFORM PLATFORM_WINDOWS)
-    elseif (APPLE) # Apple platform
-        set(PLATFORM PLATFORM_APPLE)
-    elseif(UNIX AND NOT APPLE) # Linux
-        set(PLATFORM PLATFORM_LINUX)
-    endif ()
-
-    target_compile_definitions(${pTARGET} PUBLIC ${PLATFORM})
-endfunction()
-
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(red_project_options INTERFACE)
 target_compile_features(red_project_options INTERFACE cxx_std_17)
@@ -98,10 +95,25 @@ add_library(red_project_warnings INTERFACE)
 # Standard compiler warnings
 set_project_warnings(red_project_warnings)
 
+# HACKS to remove warning from cmake default configuration
 string(REGEX REPLACE "/W[3|4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 # PCH
 option(ENABLE_PCH "Enable Precompiled Headers" OFF)
 if (ENABLE_PCH)
-    target_precompile_headers(red_project_options INTERFACE <vector> <string> <map> <utility> <memory>)
+    target_precompile_headers(red_project_options INTERFACE <vector> <string> <map> <array> <algorithm> <utility> <memory>)
 endif ()
+
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE
+        Debug
+        CACHE STRING "Choose the type of build." FORCE)
+
+    # Set the possible values of build type for cmake-gui, ccmake
+    set_property(
+        CACHE CMAKE_CONFIGURATION_TYPES
+        PROPERTY STRINGS
+        "Debug"
+        "Release")
+endif()
