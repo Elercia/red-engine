@@ -9,6 +9,8 @@
 #include <RedEngine/Physics/System/PhysicsSystem.hpp>
 #include <RedEngine/Core/Debug/System/DebugSystem.hpp>
 #include <RedEngine/Audio/System/AudioSystem.hpp>
+#include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Level/LevelResourceLoader.hpp"
 
 #include <array>
 #include <memory>
@@ -70,7 +72,7 @@ void Application::LoadLevel(const std::string& levelResource)
 {
     auto* levelLoader = GetRedSubEngine<ResourceEngine>()->GetResourceLoader<Level>();
 
-    levelLoader->(levelResource);
+    levelLoader->Load(levelResource);
 }
 
 void Application::LoadLevelInternal(Level* level)
