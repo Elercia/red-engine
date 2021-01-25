@@ -9,6 +9,5 @@ namespace red
 struct SoundDesc
 {
     std::string name;
-
 };
 }  // namespace red

@@ -1,8 +1,10 @@
-#pragma
+#pragma once
 
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 
+#include <map>
+#include <memory>
 #include <string>
 
 namespace red
@@ -27,11 +29,18 @@ class ResourceLoader : public IResourceLoader
     static_assert(std::is_base_of_v<IResource, IResourceType>, "ResourceLoader template must inherit from Resource");
 
 public:
-    ResourceLoader(const std::string& name, ResourceType resourceType);
-    virtual ~ResourceLoader() = 0;
+    using Type = IResourceType;
 
-    virtual std::shared_ptr<IResourceType> LoadResource(const std::string& name) = 0;
+    ResourceLoader(const std::string& name, ResourceType resourceType);
+    virtual ~ResourceLoader() = default;
+
+    std::shared_ptr<IResourceType> GetFromCache(const std::string& name);
+    std::shared_ptr<IResourceType> GetOrCreateFromCache(const std::string& name);
+
+protected:
+    std::map<ResourceId, std::shared_ptr<IResourceType>> m_loadedResources;
 };
+
 }  // namespace red
 
 #include "inl/ResourceLoader.inl"

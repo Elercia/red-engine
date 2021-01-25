@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <RedEngine/Core/Event/Signal.hpp>
+#include "RedEngine/Core/Event/Signal.hpp"
 #include <SignalTest.hpp>
 
 TEST_CASE("Signal/Slots connections", "[EVENT]")
@@ -8,7 +8,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
     {
         bool isCalled = false;
         red::Signal<int> signal;
-        signal.Connect([&](int i) { isCalled = true; });
+        signal.Connect([&](int /*i*/) { isCalled = true; });
 
         signal.emit(1);
 

@@ -1,12 +1,18 @@
 #include "fmod_errors.h"
 
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+
 namespace red
 {
 bool FmodCheck(FMOD_RESULT result, const char* errorMsg)
 {
     bool ret = result == FMOD_OK;
 
-    RED_ASSERT(ret, FMOD_ErrorString(result));
+    if (!ret)
+    {
+        RED_ERROR(FMOD_ErrorString(result));
+        RED_LOG_ERROR("Fmod error : {} with error {}", errorMsg, FMOD_ErrorString(result));
+    }
 
     return ret;
 }

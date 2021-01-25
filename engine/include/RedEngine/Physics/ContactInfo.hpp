@@ -18,29 +18,29 @@ struct ContactPoint
 
 struct CollisionInfo
 {
-    PhysicBody* firstPhysicBody;
-    PhysicBody* secondPhysicBody;
+    PhysicBody* firstPhysicBody{nullptr};
+    PhysicBody* secondPhysicBody{nullptr};
 
-    Collider* firstCollider;
-    Collider* secondCollider;
+    Collider* firstCollider{nullptr};
+    Collider* secondCollider{nullptr};
 
-    float restitution;
-    float tangentSpeed;
+    float restitution{0.f};
+    float tangentSpeed{0.f};
 
-    Vector2 normal;
+    Vector2 normal{0.f, 0.f};
 
-    std::vector<ContactPoint> contactPoints;
+    std::vector<ContactPoint> contactPoints{};
 
     void SwapFirstSecond();
 };
 
 struct TriggerInfo
 {
-    PhysicBody* firstPhysicBody;
-    PhysicBody* secondPhysicBody;
+    PhysicBody* firstPhysicBody{nullptr};
+    PhysicBody* secondPhysicBody{nullptr};
 
-    Collider* firstCollider;
-    Collider* secondCollider;
+    Collider* firstCollider{nullptr};
+    Collider* secondCollider{nullptr};
 
     void SwapFirstSecond();
 };

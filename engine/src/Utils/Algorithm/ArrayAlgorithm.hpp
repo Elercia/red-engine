@@ -2,7 +2,7 @@
 
 namespace red
 {
-	template <>
+template <>
 inline void Transform();
 }
 

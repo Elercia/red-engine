@@ -1,12 +1,15 @@
-#include <RedEngine/Input/System/UserInputSystem.hpp>
-#include <RedEngine/Core/Configuration/IniReader.hpp>
-#include <RedEngine/Core/Configuration/UserInputHelper.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Core/Debug/Profiler.hpp>
+#include "RedEngine/Input/System/UserInputSystem.hpp"
+
+#include "RedEngine/Core/Configuration/IniReader.hpp"
+#include "RedEngine/Core/Configuration/UserInputHelper.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
+#include "RedEngine/Core/Engine.hpp"
 
 namespace red
 {
-UserInputSystem::UserInputSystem(World* world) : System(world) {}
+UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
+{
+}
 
 void UserInputSystem::Init()
 {
@@ -28,7 +31,7 @@ void UserInputSystem::PreUpdate()
 {
     PROFILER_CATEGORY("Input Update", Optick::Category::Input);
 
-    EventSystem* manager = GetRedSubEngine<EventSystem>();
+    EventSystem* manager = GetSubEngine<EventSystem>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)
     {
         auto& actionName = actionMapping.first;
@@ -66,8 +69,7 @@ void UserInputSystem::PreUpdate()
     }
 }
 
-red::KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState,
-                                                   const std::vector<KeyState>& states)
+red::KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, const std::vector<KeyState>& states)
 {
     KeyState resultState = {false, false, false};
     resultState.isPressed = states[0].isPressed;

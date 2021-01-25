@@ -1,19 +1,18 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Resources/AnnimationDescriptor.hpp"
 
+#include <SDL2/SDL_render.h>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <SDL2/SDL_render.h>
-
-#include "../../Math/Vector.hpp"
-#include "Component.hpp"
-#include <RedEngine/Resources/AnnimationDescriptor.hpp>
 
 namespace red
 {
-class Texture2D;
+class SpriteResource;
 
 class Sprite : public Component
 {
@@ -28,17 +27,16 @@ public:
 
     /// Start a new animation by it first frame
     /// name : The animation name
-    /// 
+    ///
     /// Return true if the animation is found false otherwise
     bool StartAnimation(const std::string& name);
 
-	std::vector<AnimationDesc> GetAnimations() const;
+    const std::vector<AnimationDesc>& GetAnimations() const;
 
-	CurrentAnimationDesc GetCurrentAnimationInfo() const;
+    const CurrentAnimationDesc& GetCurrentAnimationInfo() const;
 
-    private:
-    std::vector<AnimationDesc> m_animations;
+private:
+    std::shared_ptr<SpriteResource> m_spriteResource;
     CurrentAnimationDesc m_currentAnimationInfo;
-
 };
 }  // namespace red

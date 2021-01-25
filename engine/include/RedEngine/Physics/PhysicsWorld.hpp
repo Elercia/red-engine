@@ -1,10 +1,10 @@
 #pragma once
 
-#include <RedEngine/Physics/Components/PhysicBody.hpp>
+#include "Box2D/Dynamics/b2WorldCallbacks.h"
+
+#include "RedEngine/Physics/Components/PhysicBody.hpp"
 
 #include <memory>
-
-#include "Box2D/Dynamics/b2WorldCallbacks.h"
 
 class b2World;
 
@@ -35,12 +35,9 @@ public:
 
 private:
     void UpdateContactInfos();
-    void AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
-                                            Collider* collider1, Collider* collider2,
-                                            const b2Contact* contact);
-    void AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
-                                              Collider* collider1, Collider* collider2,
-                                              const b2Contact* contact);
+    void AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1, Collider* collider2);
+    void AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1, Collider* collider2,
+                             const b2Contact* contact);
 
 private:
     std::unique_ptr<b2World> m_inernalPhysicsWorld;

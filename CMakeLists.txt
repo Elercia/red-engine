@@ -10,7 +10,7 @@ HunterGate(
 
 project(red-engine
         VERSION 0.0
-        DESCRIPTION "Sample game-engine to try-out my skills"
+        DESCRIPTION "2D Game engine"
         LANGUAGES CXX C)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)

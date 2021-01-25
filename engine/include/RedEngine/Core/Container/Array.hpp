@@ -1,11 +1,9 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "RedEngine/RedEngineBase.hpp"
 
-#include <initializer_list>
 #include <cstdlib>
-
-#include <RedEngine/RedEngineBase.hpp>
+#include <initializer_list>
 
 namespace red
 {

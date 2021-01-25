@@ -1,8 +1,6 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
 #include <debugbreak.h>
-
 #include <string_view>
 
 namespace red
@@ -12,9 +10,8 @@ enum class ErrorReturn
     BREAK,
     CONTINUE
 };
-ErrorReturn HandleAssert(
-    bool expr, std::string_view message, const char* filename,
-    int line);  // TODO add the possibility to add arguments to the message (, ...)
+ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filename,
+                         int line);  // TODO add the possibility to add arguments to the message (, ...)
 }  // namespace red
 
 #ifndef RED_RETAIL_MODE

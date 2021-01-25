@@ -1,9 +1,16 @@
 #pragma once
 
+#include "RedEngine/Level/Level.hpp"
+#include "RedEngine/Resources/ResourceLoader.hpp"
+
 namespace red
 {
-template <>
-class ResourceLoader<Level>
+class LevelResourceLoader : public ResourceLoader<Level>
 {
+public:
+    LevelResourceLoader();
+    virtual ~LevelResourceLoader();
+
+    std::shared_ptr<Level> LoadResource(const std::string& name);
 };
 }  // namespace red

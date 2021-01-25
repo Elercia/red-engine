@@ -1,11 +1,12 @@
 #include "RedEngine/Core/Configuration/Configuration.hpp"
-#include <RedEngine/Core/Configuration/IniReader.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include "RedEngine/Core/Configuration/CVar.hpp"
 
+#include "RedEngine/Core/Configuration/CVar.hpp"
+#include "RedEngine/Core/Configuration/IniReader.hpp"
+#include "RedEngine/Core/Engine.hpp"
+
+#include <filesystem>
 #include <string>
 #include <utility>
-#include <filesystem>
 
 namespace red
 {
@@ -24,6 +25,7 @@ void Configuration::Init(const EngineInitDesc& initDesc)
     SetResourceFolder(initDesc.config.resourceFolder);
     LoadConfigFile(std::string(initDesc.config.resourceFolder)
                        .append("/config.ini"));  // TODO Set the resource folder configuration
+
     ParseCommandLine(initDesc.config.argc, initDesc.config.argv);
 
     const auto& path = std::filesystem::current_path();
@@ -34,12 +36,9 @@ void Configuration::Init(const EngineInitDesc& initDesc)
     m_userDataFolder = userDataPath.GetValue();
 }
 
-void Configuration::ParseCommandLine(int argc, char** argv) {}
+void Configuration::ParseCommandLine(int /*argc*/, char** /*argv*/) {}
 
-void Configuration::SetResourceFolder(std::string_view resourceFolder)
-{
-    m_resourceFolder = resourceFolder;
-}
+void Configuration::SetResourceFolder(std::string_view resourceFolder) { m_resourceFolder = resourceFolder; }
 
 const std::string& Configuration::GetResourceFolder() const { return m_resourceFolder; }
 
@@ -47,7 +46,7 @@ const std::string& Configuration::GetUserDataFolder() const { return m_userDataF
 
 void Configuration::LoadConfigFile(std::filesystem::path path)
 {
-    GetRedSubEngine<Configuration>()->LoadConfigFileInternal(std::move(path));
+    GetSubEngine<Configuration>()->LoadConfigFileInternal(std::move(path));
 }
 
 void Configuration::LoadConfigFileInternal(std::filesystem::path path)
@@ -75,16 +74,13 @@ void Configuration::LoadConfigFileInternal(std::filesystem::path path)
     }
 }
 
-CVarValue* Configuration::NewConsoleVariableDeclaration(const std::string& name,
-                                                        const std::string& category,
+CVarValue* Configuration::NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
                                                         const std::string& defaultValue)
 {
-    return GetRedSubEngine<Configuration>()->NewConsoleVariableDeclarationInternal(name, category,
-                                                                                   defaultValue);
+    return GetSubEngine<Configuration>()->NewConsoleVariableDeclarationInternal(name, category, defaultValue);
 }
 
-CVarValue* Configuration::NewConsoleVariableDeclarationInternal(const std::string& name,
-                                                                const std::string& category,
+CVarValue* Configuration::NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
                                                                 const std::string& defaultValue)
 {
     auto configName = ConfigurationUtils::GetLongName(category, name);

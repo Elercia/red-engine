@@ -1,12 +1,12 @@
-#include <RedEngine/Core/Entity/Entity.hpp>
-#include <RedEngine/Physics/Components/Collider.hpp>
-#include <RedEngine/Physics/Components/PhysicBody.hpp>
+#include "RedEngine/Physics/Components/Collider.hpp"
 
-#include <Box2D/Dynamics/b2Fixture.h>
-#include <Box2D/Collision/Shapes/b2EdgeShape.h>
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Physics/Components/PhysicBody.hpp"
+
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
+#include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
-
+#include <Box2D/Dynamics/b2Fixture.h>
 #include <algorithm>
 
 namespace red
@@ -21,7 +21,7 @@ int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
     collider.m_fixtureDef.isSensor = desc.isTrigger;
     collider.m_fixtureDef.restitution = desc.restitution;
     collider.m_fixtureDef.friction = desc.friction;
-    
+
     auto insertionResult = m_colliders.insert({m_nextIndex++, std::move(collider)});
 
     // Set the used data to the right collider

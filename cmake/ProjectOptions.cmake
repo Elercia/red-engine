@@ -2,6 +2,7 @@
 # https://github.com/lefticus/cpp_starter_project/blob/master/cmake/CompilerWarnings.cmake
 
 function(set_project_warnings project_name)
+
     option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" FALSE)
 
     set(MSVC_WARNINGS
@@ -97,8 +98,10 @@ add_library(red_project_warnings INTERFACE)
 # Standard compiler warnings
 set_project_warnings(red_project_warnings)
 
+string(REGEX REPLACE "/W[3|4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+
 # PCH
 option(ENABLE_PCH "Enable Precompiled Headers" OFF)
 if (ENABLE_PCH)
-    target_precompile_headers(project_options INTERFACE <vector> <string> <map> <utility> <memory>)
+    target_precompile_headers(red_project_options INTERFACE <vector> <string> <map> <utility> <memory>)
 endif ()

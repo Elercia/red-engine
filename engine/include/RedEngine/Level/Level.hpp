@@ -1,17 +1,19 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include <RedEngine/Utils/Uncopyable.hpp>
-#include <RedEngine/Core/Entity/World.hpp>
+#include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Resources/Resource.hpp"
+#include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <string>
 
 namespace red
 {
-class Level : public IResource, public Uncopyable
+class Level : public IResource
 {
 public:
+    RED_RESOURCE(ResourceType::LEVEL)
+
     explicit Level(std::string name, World* world);
     virtual ~Level() = default;
 

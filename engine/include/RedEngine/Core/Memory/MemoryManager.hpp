@@ -1,15 +1,15 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "MemoryProfiler.hpp"
+
+#include "RedEngine/Core/SubEngine.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <cstddef>
 
-#include "MemoryProfiler.hpp"
-#include <RedEngine/Core/SubEngine.hpp>
-
 namespace red
 {
-    //TODO make something of it ?
+// TODO make something of it ?
 class MemoryManager : public SubEngine
 {
 public:

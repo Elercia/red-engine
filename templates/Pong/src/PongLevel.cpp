@@ -3,24 +3,25 @@
 #include "ScoreComponent.hpp"
 #include "GameControlSystem.hpp"
 
-#include <RedEngine/Core/Entity/Entity.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Core/Debug/System/DebugSystem.hpp>
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 
-#include <RedEngine/Math/Vector.hpp>
+#include "RedEngine/Math/Vector.hpp"
 
-#include <RedEngine/Rendering/Texture2D.hpp>
-#include <RedEngine/Rendering/System/RenderingSystem.hpp>
-#include <RedEngine/Rendering/Window.hpp>
-#include <RedEngine/Rendering/Component/CameraComponent.hpp>
+#include "RedEngine/Rendering/Resource/Texture2D.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/Sprite.hpp"
 
-#include <RedEngine/Physics/Components/Collider.hpp>
-#include <RedEngine/Physics/System/PhysicsSystem.hpp>
-#include <RedEngine/Physics/Components/PhysicBody.hpp>
+#include "RedEngine/Physics/Components/Collider.hpp"
+#include "RedEngine/Physics/System/PhysicsSystem.hpp"
+#include "RedEngine/Physics/Components/PhysicBody.hpp"
 
-#include <RedEngine/Resources/ResourceEngine.hpp>
+#include "RedEngine/Resources/ResourceEngine.hpp"
 
-#include <RedEngine/Input/System/UserInputSystem.hpp>
+#include "RedEngine/Input/System/UserInputSystem.hpp"
 
 #include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Audio/Component/AudioListener.hpp"

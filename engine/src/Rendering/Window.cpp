@@ -1,16 +1,17 @@
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Core/Debug/DebugMacros.hpp>
-#include <RedEngine/Rendering/Window.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
+#include "RedEngine/Rendering/Window.hpp"
+
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Engine.hpp"
+
 #include <iostream>
 
 namespace red
 {
 Window::Window() : m_title("Hello Red-Engine")
 {
-    m_window = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                m_width.GetValue(), m_height.GetValue(),
-                                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    m_window = SDL_CreateWindow(m_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_width.GetValue(),
+                                m_height.GetValue(), SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     if (m_window == nullptr)
     {
@@ -20,13 +21,11 @@ Window::Window() : m_title("Hello Red-Engine")
 
     RED_LOG_INFO("Create new window");
 
-    m_height->OnValueChange([&](CVarValue* /*elem*/) {
-        SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
-    });
+    m_height->OnValueChange(
+        [&](CVarValue* /*elem*/) { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
 
-    m_width->OnValueChange([&](CVarValue* /*elem*/) {
-        SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue());
-    });
+    m_width->OnValueChange(
+        [&](CVarValue* /*elem*/) { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
 
     m_fullscreen->OnValueChange([&](CVarValue* /*elem*/) {
         int flag = 0;
@@ -103,5 +102,5 @@ WindowInfo Window::GetWindowInfo()
 }
 SDL_Window* Window::GetSDLWindow() { return m_window; }
 
-Window& Window::GetWindow() { return red::GetRedSubEngine<red::RenderingEngine>()->GetWindow(); }
+Window& Window::GetWindow() { return red::GetSubEngine<red::RenderingEngine>()->GetWindow(); }
 }  // namespace red

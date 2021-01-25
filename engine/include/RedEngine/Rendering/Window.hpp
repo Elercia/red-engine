@@ -1,12 +1,11 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "../Core/Configuration/CVar.hpp"
+
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL_syswm.h>
-
-#include "../Core/Configuration/CVar.hpp"
-
 #include <string>
 
 namespace red
@@ -74,7 +73,7 @@ public:
 
     SDL_Window *GetSDLWindow();
 
-    static Window& GetWindow();
+    static Window &GetWindow();
 
 private:
     SDL_SysWMinfo GetSDLSysInfo();

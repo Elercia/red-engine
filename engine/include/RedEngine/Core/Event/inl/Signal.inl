@@ -1,13 +1,12 @@
 
-#include <RedEngine/Core/Event/Signal.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Event/Signal.hpp"
 
 namespace red
 {
 // --------------- SIGNAL ---------------
 template <typename... SignalArgs>
-typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(
-    Signal<SignalArgs...>::Func function)
+typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(Signal<SignalArgs...>::Func function)
 {
     int id = m_nextSlotId;
     m_nextSlotId++;
@@ -20,12 +19,9 @@ typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(
 
 template <typename... SignalArgs>
 template <class C>
-typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(
-    void (C::*method)(SignalArgs... args), C* obj)
+typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(void (C::*method)(SignalArgs... args), C* obj)
 {
-    auto f = [obj, method](SignalArgs&&... funcArgs) {
-        (obj->*method)(std::forward<SignalArgs>(funcArgs)...);
-    };
+    auto f = [obj, method](SignalArgs&&... funcArgs) { (obj->*method)(std::forward<SignalArgs>(funcArgs)...); };
 
     return Connect(std::move(f));
 }
@@ -74,10 +70,9 @@ void Signal<SignalArgs...>::emit(SignalArgs... args)
 template <typename... SignalArgs>
 void Signal<SignalArgs...>::RemoveConnection(Connection* connection)
 {
-    auto it =
-        std::find_if(m_connections.begin(), m_connections.end(), [connection](const Connection& c) {
-            return c.m_connectionId == connection->m_connectionId;
-        });
+    auto it = std::find_if(m_connections.begin(), m_connections.end(), [connection](const Connection& c) {
+        return c.m_connectionId == connection->m_connectionId;
+    });
 
     if (it != m_connections.end())
     {
@@ -169,8 +164,7 @@ Signal<SignalArgs...>::Slot::Slot(const Slot& other)
 }
 
 template <typename... SignalArgs>
-typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Slot::operator=(
-    const Signal<SignalArgs...>::Slot& other)
+typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Slot::operator=(const Signal<SignalArgs...>::Slot& other)
 {
     if (other.m_connection)
     {

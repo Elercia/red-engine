@@ -11,6 +11,6 @@ IResourceLoader::~IResourceLoader() {}
 
 const std::string& IResourceLoader::GetResourceName() const { return m_name; }
 
-const red::ResourceType IResourceLoader::GetResourceType() const { return m_resourceType; }
+const ResourceType IResourceLoader::GetResourceType() const { return m_resourceType; }
 
 }  // namespace red

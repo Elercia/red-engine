@@ -1,20 +1,20 @@
-#include <RedEngine/Physics/PhysicsWorld.hpp>
-#include <RedEngine/Physics/Components/Collider.hpp>
-#include <RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp>
+#include "RedEngine/Physics/PhysicsWorld.hpp"
 
-#include <Box2D/Dynamics/b2World.h>
-#include <Box2D/Dynamics/Contacts/b2Contact.h>
+#include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Physics/Components/Collider.hpp"
+
 #include <Box2D/Common/b2Draw.h>
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
+#include <Box2D/Dynamics/b2World.h>
 
 namespace red
 {
-PhysicsWorld::PhysicsWorld() : m_inernalPhysicsWorld(new b2World({0.f, 0.f})) 
+PhysicsWorld::PhysicsWorld() : m_inernalPhysicsWorld(new b2World({0.f, 0.f}))
 {
     m_inernalPhysicsWorld->SetContactListener(this);
 }
 
-void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody,
-                                   const PhysicBodyCreationDesc& creationDesc)
+void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreationDesc& creationDesc)
 {
     b2BodyDef bodyDef;
 
@@ -50,24 +50,15 @@ void PhysicsWorld::Step(float timeStep, int32 velocityIterations, int32 position
 
 void PhysicsWorld::ClearForces() { m_inernalPhysicsWorld->ClearForces(); }
 
-const std::vector<red::CollisionInfo>& PhysicsWorld::GetCollisions() const
-{
-    return m_frameCollisionInfo;
-}
+const std::vector<red::CollisionInfo>& PhysicsWorld::GetCollisions() const { return m_frameCollisionInfo; }
 
-const std::vector<red::TriggerInfo>& PhysicsWorld::GetTriggers() const
-{
-    return m_frameTriggerInfo;
-}
+const std::vector<red::TriggerInfo>& PhysicsWorld::GetTriggers() const { return m_frameTriggerInfo; }
 
-void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer)
-{
-    m_inernalPhysicsWorld->SetDebugDraw(drawer);
-}
+void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer) { m_inernalPhysicsWorld->SetDebugDraw(drawer); }
 
 void PhysicsWorld::DrawDebug() { m_inernalPhysicsWorld->DrawDebugData(); }
 
-void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* oldManifold) 
+void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
 {
     const auto* manifold = contact->GetManifold();
 
@@ -84,7 +75,7 @@ void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 
     if (collider1->IsTrigger() || collider2->IsTrigger())
     {
-        AddTriggerContact(physicBody1, physicBody2, collider1, collider2, contact);
+        AddTriggerContact(physicBody1, physicBody2, collider1, collider2);
     }
     else
     {
@@ -98,9 +89,8 @@ void PhysicsWorld::UpdateContactInfos()
     m_frameTriggerInfo.clear();
 }
 
-void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
-                                       Collider* collider1, Collider* collider2,
-                                       const b2Contact* contact)
+void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1,
+                                       Collider* collider2, const b2Contact* contact)
 {
     auto* manifold = contact->GetManifold();
 
@@ -120,16 +110,14 @@ void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* phys
     {
         auto& manifoldPoint = manifold->points[i];
         collisionInfo.contactPoints.push_back({ConvertFromPhysicsVector(manifoldPoint.localPoint),
-                                               manifoldPoint.normalImpulse,
-                                               manifoldPoint.tangentImpulse});
+                                               manifoldPoint.normalImpulse, manifoldPoint.tangentImpulse});
     }
 
     m_frameCollisionInfo.push_back(std::move(collisionInfo));
 }
 
-void PhysicsWorld::AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2,
-                                     Collider* collider1, Collider* collider2,
-                                     const b2Contact* contact)
+void PhysicsWorld::AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1,
+                                     Collider* collider2)
 {
     TriggerInfo collisionInfo;
     collisionInfo.firstPhysicBody = physicBody1;

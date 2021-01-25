@@ -1,4 +1,4 @@
-#include <RedEngine/Core/Container/Array.hpp>
+#include "RedEngine/Core/Container/Array.hpp"
 #include <catch2/catch.hpp>
 
 #include "TestUtils/TestUtils.hpp"
@@ -181,11 +181,11 @@ TEST_CASE("Array erase", "[Container]")
     Array<int> arr{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     REQUIRE(arr.size() == 10);
 
-    auto itTest2 = arr.erase(arr.begin());
+    arr.erase(arr.begin());
     REQUIRE(std::find(arr.begin(), arr.end(), 0) == arr.end());
     REQUIRE(arr.size() == 9);
 
-    auto itTest = arr.erase(arr.begin() + 2, arr.begin() + 5);
+    arr.erase(arr.begin() + 2, arr.begin() + 5);
 
     REQUIRE(arr.size() == 6);
     REQUIRE(std::find(arr.begin(), arr.end(), 3) == arr.end());

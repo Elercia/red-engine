@@ -1,14 +1,12 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/Color.hpp"
+#include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
 #include <array>
-
-#include <RedEngine/Core/Components/Component.hpp>
-#include <RedEngine/Rendering/Texture2D.hpp>
-#include <RedEngine/Math/Vector.hpp>
-#include <RedEngine/Rendering/Color.hpp>
-#include <RedEngine/Math/Matrix.hpp>
 
 namespace red
 {
@@ -66,6 +64,6 @@ private:
     /// Background color (color to clear the screen before rendering)
     Color m_backgroundColor{ColorConstant::BLACK};
 
-    //TODO camera render texture 
+    // TODO camera render texture
 };
 }  // namespace red

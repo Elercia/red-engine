@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
 #include <sstream>
 
 #define RED_NEW_CONFIG_TYPE_SERIALIZATOR(TYPE) \
@@ -123,8 +123,7 @@ class has_deserialization_overload
 
     template <typename U>
     static constexpr auto test(U* u) ->
-        typename std::is_same<void,
-                              decltype(red_deserialize_configuration_type(std::string(), *u))>::type
+        typename std::is_same<void, decltype(red_deserialize_configuration_type(std::string(), *u))>::type
     {
         return {};
     }

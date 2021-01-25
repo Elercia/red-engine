@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-
-#include "Box2D/Common/b2Draw.h"
 #include "Box2D/Box2D.h"
+#include "Box2D/Common/b2Draw.h"
+
+#include "RedEngine/RedEngineBase.hpp"
 
 namespace red
 {
@@ -16,12 +16,10 @@ public:
     ~PhysicsDebugDrawer();
 
     /// Draw a closed polygon provided in CCW order.
-    virtual void DrawPolygon(const b2Vec2* vertices, int32 vertexCount,
-                             const b2Color& color) override;
+    virtual void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
 
     /// Draw a solid closed polygon provided in CCW order.
-    virtual void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount,
-                                  const b2Color& color) override;
+    virtual void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
 
     /// Draw a circle.
     virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) override;

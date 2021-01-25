@@ -1,8 +1,9 @@
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Core/Entity/Entity.hpp>
-#include <RedEngine/Core/Components/Transform.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Core/Application.hpp>
+#include "RedEngine/Core/Entity/Entity.hpp"
+
+#include "RedEngine/Core/Application.hpp"
+#include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Engine.hpp"
 
 #include <utility>
 
@@ -26,10 +27,7 @@ void Entity::Destroy()
     m_isDestroyed = true;
 }
 
-std::set<Component*> Entity::GetComponents()
-{
-    return m_world->GetComponentManager()->GetComponents(this);
-}
+std::set<Component*> Entity::GetComponents() { return m_world->GetComponentManager()->GetComponents(this); }
 
 EntityId_t Entity::GetId() const { return m_id; }
 
@@ -45,8 +43,7 @@ void Entity::SetPersistent(bool persistent)
     if (m_isPersistent != persistent)
     {
         // A child cant have a persitency different it parent
-        if (m_parent != nullptr && !m_parent->IsRootEntity() &&
-            m_parent->m_isPersistent != persistent)
+        if (m_parent != nullptr && !m_parent->IsRootEntity() && m_parent->m_isPersistent != persistent)
         {
             m_parent->SetPersistent(persistent);
             return;
@@ -69,7 +66,7 @@ void Entity::SetPersistent(bool persistent)
             }
             else
             {
-                red::Application& app = red::GetRedInstance().GetApplication();
+                red::Application& app = red::GetEngine().GetApplication();
                 SetParent(app.GetCurrentLevel()->GetRootEntity());
             }
         }
@@ -113,8 +110,8 @@ void Entity::RemoveChild(Entity* child)
 
     if (it == m_children.end())
     {
-        RED_LOG_WARNING("Entity RemoveChild child is not part of children (parent {}, child {})",
-                        m_name, child->m_name);
+        RED_LOG_WARNING("Entity RemoveChild child is not part of children (parent {}, child {})", m_name,
+                        child->m_name);
     }
 
     m_children.erase(it);

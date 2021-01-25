@@ -1,23 +1,20 @@
 #include "RedEngine/Core/Entity/World.hpp"
 
-#include <algorithm>
-#include <cassert>
-#include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
-
 #include "RedEngine/Core/Components/ComponentManager.hpp"
+#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/Core/Debug/DebugMacros.hpp"
-#include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
+#include "RedEngine/Level/Level.hpp"
+
+#include <algorithm>
+#include <cassert>
 
 namespace red
 {
 World::World()
-    : m_singletonEntity(nullptr)
-    , m_componentManager(new ComponentManager())
-    , m_nextEntityId(0)
-    , m_physicsWorld() 
+    : m_singletonEntity(nullptr), m_componentManager(new ComponentManager()), m_nextEntityId(0), m_physicsWorld()
 {
 }
 
@@ -53,10 +50,7 @@ red::Entity* World::CreateRootEntity(Level* level)
     return entityPtr;
 }
 
-Entity* World::CreateEntity(Entity* root)
-{
-    return CreateEntity("Entity_" + std::to_string(m_nextEntityId), root);
-}
+Entity* World::CreateEntity(Entity* root) { return CreateEntity("Entity_" + std::to_string(m_nextEntityId), root); }
 
 Entity* World::CreateEntity(const std::string& name, Entity* root)
 {

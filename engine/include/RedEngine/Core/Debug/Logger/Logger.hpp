@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "RedEngine/Core/SubEngine.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <string>
-#include <RedEngine/Core/SubEngine.hpp>
 
 namespace red
 {
@@ -31,8 +31,7 @@ public:
     void SetLogLevel(LogLevel::Enum level);
 
     template <typename... Args>
-    void LogInternal(LogLevel::Enum level, int line, const char* file, const std::string& format,
-                     Args... args);
+    void LogInternal(LogLevel::Enum level, int line, const char* file, const std::string& format, Args... args);
 
 protected:
     virtual void Out(const std::string& data);
@@ -45,8 +44,7 @@ private:
 
 red::Logger* GetRedLogger();
 
-#define RED_LOG(LEVEL, MSG, ...) \
-    GetRedLogger()->LogInternal(LEVEL, __LINE__, __FILE__, MSG, ##__VA_ARGS__)
+#define RED_LOG(LEVEL, MSG, ...) GetRedLogger()->LogInternal(LEVEL, __LINE__, __FILE__, MSG, ##__VA_ARGS__)
 
 #define RED_LOG_TRACE(MSG, ...) RED_LOG(LogLevel::LEVEL_TRACE, MSG, ##__VA_ARGS__)
 #define RED_LOG_DEBUG(MSG, ...) RED_LOG(LogLevel::LEVEL_DEBUG, MSG, ##__VA_ARGS__)

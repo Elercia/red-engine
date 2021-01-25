@@ -1,8 +1,8 @@
-#include <RedEngine/Core/Components/Transform.hpp>
-#include <RedEngine/Core/Time/Time.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Rendering/Window.hpp>
-#include <RedEngine/Math/Math.hpp>
+#include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Math/Math.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 
 #include "GameLogicSystem.hpp"
@@ -20,11 +20,7 @@ void GameLogicSystem::Update()
 
     auto* ballTransform = m_ball->GetComponent<Transform>();
 
-    auto* paddleOneTransform = m_paddleOne->GetComponent<Transform>();
-    auto* paddleTwoTransform = m_paddleTwo->GetComponent<Transform>();
-
     auto& ballPos = ballTransform->GetPosition();
-    auto deltaTime = red::Time::DeltaTime();
 
     CheckPoints(ballPos);
 }

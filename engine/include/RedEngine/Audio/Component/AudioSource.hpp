@@ -1,10 +1,8 @@
 #pragma once
 
-#include "RedEngine/RedEngineBase.hpp"
-
-#include "RedEngine/Core/Components/Component.hpp"
-
 #include "RedEngine/Audio/AudioEvent.hpp"
+#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
 #include <vector>
 

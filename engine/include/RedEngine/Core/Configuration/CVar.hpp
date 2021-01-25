@@ -1,13 +1,13 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
+#include "Configuration.hpp"
 
+#include "RedEngine/RedEngineBase.hpp"
+
+#include <functional>
 #include <string>
 #include <type_traits>
-#include <functional>
 #include <vector>
-
-#include "Configuration.hpp"
 
 namespace red
 {

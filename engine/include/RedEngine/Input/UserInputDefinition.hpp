@@ -1,13 +1,13 @@
 #pragma once
 
-#include <RedEngine/RedEngineBase.hpp>
-#include <RedEngine/Input/InputDefinition.hpp>
+#include "RedEngine/Input/InputDefinition.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
-#include <variant>
 #include <array>
-#include <vector>
-#include <map>
 #include <bitset>
+#include <map>
+#include <variant>
+#include <vector>
 
 namespace red
 {
@@ -47,8 +47,8 @@ using ModifierKeyBitSet = std::bitset<6>;
 
 struct KeyMapping
 {
-    KeyCodes::Enum mapping;
-    ModifierKeyBitSet modifiers;
+    KeyCodes::Enum mapping{KeyCodes::MAX};
+    ModifierKeyBitSet modifiers{};
 };
 
 using ActionKey = std::string;
