@@ -35,8 +35,6 @@ public:
 
     const CurrentAnimationDesc& GetCurrentAnimationInfo() const;
 
-    bool IsValid() const;
-
 private:
     std::shared_ptr<SpriteResource> m_spriteResource;
     CurrentAnimationDesc m_currentAnimationInfo;

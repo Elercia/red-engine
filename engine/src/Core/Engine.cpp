@@ -9,7 +9,6 @@
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
-
 namespace red
 {
 Engine& GetEngine()
