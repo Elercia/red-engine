@@ -6,7 +6,7 @@
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <Box2D/Dynamics/b2Body.h>
+#include <Box2D/b2_body.h>
 #include <vector>
 
 namespace red
@@ -24,9 +24,9 @@ enum class PhysicsBodyType
 struct PhysicBodyCreationDesc
 {
     PhysicsBodyType type{PhysicsBodyType::STATIC_BODY};
-    float32 linearDamping{0.f};
-    float32 angularDamping{0.f};
-    float32 gravityScale{1.f};
+    float linearDamping{0.f};
+    float angularDamping{0.f};
+    float gravityScale{1.f};
 };
 
 class PhysicBody : public Component

@@ -7,3 +7,16 @@
 [submodule "external/Horde3D"]
 	path = external/Horde3D
 	url = https://github.com/horde3d/Horde3D.git
+[submodule "external/Catch2"]
+	path = external/Catch2
+	url = https://github.com/catchorg/Catch2
+	branch = devel
+[submodule "external/fmt"]
+	path = external/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "external/nlohmann_json"]
+	path = external/nlohmann_json
+	url = https://github.com/nlohmann/json.git
+[submodule "external/Box2D"]
+	path = external/Box2D
+	url = https://github.com/erincatto/box2d.git

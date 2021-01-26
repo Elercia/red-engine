@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Box2D/Box2D.h"
-#include "Box2D/Common/b2Draw.h"
+#include "Box2D/box2d.h"
+#include "Box2D/b2_draw.h"
 
 #include "RedEngine/RedEngineBase.hpp"
 
@@ -22,10 +22,10 @@ public:
     virtual void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
 
     /// Draw a circle.
-    virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) override;
+    virtual void DrawCircle(const b2Vec2& center, float radius, const b2Color& color) override;
 
     /// Draw a solid circle.
-    virtual void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis,
+    virtual void DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis,
                                  const b2Color& color) override;
 
     /// Draw a line segment.
@@ -34,6 +34,9 @@ public:
     /// Draw a transform. Choose your own length scale.
     /// @param xf a transform.
     virtual void DrawTransform(const b2Transform& xf) override;
+
+    /// Draw a point.
+    virtual void DrawPoint(const b2Vec2& p, float size, const b2Color& color) override;
 
 private:
     DebugComponent* m_debugComponent;

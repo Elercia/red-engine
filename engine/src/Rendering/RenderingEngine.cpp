@@ -9,7 +9,7 @@
 #include "RedEngine/Rendering/Window.hpp"
 #include "RedEngine/Resources/ResourceEngine.hpp"
 
-#include <SDL2/SDL_image.h>
+#include <SDL_image/SDL_image.h>
 
 namespace red
 {

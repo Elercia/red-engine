@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../Core/Configuration/CVar.hpp"
-
+#include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <SDL2/SDL.h>
-#include <SDL_syswm.h>
+#include <SDL2/SDL_syswm.h>
 #include <string>
 
 namespace red

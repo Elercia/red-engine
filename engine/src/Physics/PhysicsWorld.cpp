@@ -3,9 +3,9 @@
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 
-#include <Box2D/Common/b2Draw.h>
-#include <Box2D/Dynamics/Contacts/b2Contact.h>
-#include <Box2D/Dynamics/b2World.h>
+#include <Box2D/b2_contact.h>
+#include <Box2D/b2_draw.h>
+#include <Box2D/b2_world.h>
 
 namespace red
 {
@@ -18,7 +18,9 @@ void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreat
 {
     b2BodyDef bodyDef;
 
-    bodyDef.userData = physicBody;
+    b2BodyUserData userData;
+    userData.pointer = (uintptr_t) physicBody;
+    bodyDef.userData = userData;
 
     switch (creationDesc.type)
     {
@@ -56,7 +58,7 @@ const std::vector<red::TriggerInfo>& PhysicsWorld::GetTriggers() const { return 
 
 void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer) { m_inernalPhysicsWorld->SetDebugDraw(drawer); }
 
-void PhysicsWorld::DrawDebug() { m_inernalPhysicsWorld->DrawDebugData(); }
+void PhysicsWorld::DrawDebug() { m_inernalPhysicsWorld->DebugDraw(); }
 
 void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
 {
@@ -67,11 +69,11 @@ void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*
         return;
     }
 
-    auto* physicBody1 = static_cast<PhysicBody*>(contact->GetFixtureA()->GetBody()->GetUserData());
-    auto* physicBody2 = static_cast<PhysicBody*>(contact->GetFixtureB()->GetBody()->GetUserData());
+    auto* physicBody1 = reinterpret_cast<PhysicBody*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+    auto* physicBody2 = reinterpret_cast<PhysicBody*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
 
-    auto* collider1 = static_cast<Collider*>(contact->GetFixtureA()->GetUserData());
-    auto* collider2 = static_cast<Collider*>(contact->GetFixtureB()->GetUserData());
+    auto* collider1 = reinterpret_cast<Collider*>(contact->GetFixtureA()->GetUserData().pointer);
+    auto* collider2 = reinterpret_cast<Collider*>(contact->GetFixtureB()->GetUserData().pointer);
 
     if (collider1->IsTrigger() || collider2->IsTrigger())
     {

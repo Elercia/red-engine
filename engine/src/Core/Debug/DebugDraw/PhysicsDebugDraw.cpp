@@ -35,13 +35,14 @@ void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCo
                                  true);
 }
 
-void PhysicsDebugDrawer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+void PhysicsDebugDrawer::DrawCircle(const b2Vec2& center, float radius, const b2Color& color)
 {
     m_debugComponent->AddCircle(ConvertFromPhysicsVector(center), radius,
                                 {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
 }
 
-void PhysicsDebugDrawer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& /*axis*/, const b2Color& color)
+void PhysicsDebugDrawer::DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& /*axis*/,
+                                         const b2Color& color)
 {
     m_debugComponent->AddCircle(ConvertFromPhysicsVector(center), radius,
                                 {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
@@ -56,6 +57,12 @@ void PhysicsDebugDrawer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b
 void PhysicsDebugDrawer::DrawTransform(const b2Transform& xf)
 {
     m_debugComponent->AddPoint(ConvertFromPhysicsVector(xf.p), ColorConstant::BLACK);
+}
+
+void PhysicsDebugDrawer::DrawPoint(const b2Vec2& p, float /*size*/, const b2Color& color)
+{
+    m_debugComponent->AddPoint(ConvertFromPhysicsVector(p),
+                               {uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)});
 }
 
 }  // namespace red

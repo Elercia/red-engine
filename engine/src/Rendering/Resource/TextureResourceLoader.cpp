@@ -1,13 +1,12 @@
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 
-#include "SDL2/SDL_image.h"
-#include "nlohmann/json.hpp"
-
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
 
+#include <SDL_image/SDL_image.h>
 #include <filesystem>
+#include <nlohmann/json.hpp>
 
 namespace red
 {

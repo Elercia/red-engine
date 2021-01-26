@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="external">
+      <UniqueIdentifier>{2839F3DC-1406-4EE8-3D1F-3C90294B8376}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\optick">
+      <UniqueIdentifier>{A1414C2D-0DCD-B9F1-16DE-3CE682E815F2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\optick\samples">
+      <UniqueIdentifier>{E5C9F772-5101-400A-5A0B-A42DC6C16603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\optick\samples\Common">
+      <UniqueIdentifier>{7D237064-6949-3ACB-528F-BF963E545F97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\optick\samples\Common\TestEngine">
+      <UniqueIdentifier>{2242895B-8E5C-ECFC-D77E-FC9043D81304}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\external\optick\samples\Common\TestEngine\TestEngine.h">
+      <Filter>external\optick\samples\Common\TestEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\optick\samples\Common\TestEngine\TestImage.h">
+      <Filter>external\optick\samples\Common\TestEngine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\external\optick\samples\Common\TestEngine\TestEngine.cpp">
+      <Filter>external\optick\samples\Common\TestEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\optick\samples\ConsoleAppMT\main.cpp" />
+  </ItemGroup>
+</Project>

@@ -2,7 +2,7 @@
 
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <Box2D/Common/b2Math.h>
+#include <Box2D/b2_math.h>
 
 namespace red
 {

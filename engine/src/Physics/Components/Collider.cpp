@@ -3,10 +3,10 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 
-#include <Box2D/Collision/Shapes/b2CircleShape.h>
-#include <Box2D/Collision/Shapes/b2EdgeShape.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
-#include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/b2_circle_shape.h>
+#include <Box2D/b2_edge_shape.h>
+#include <Box2D/b2_fixture.h>
+#include <Box2D/b2_polygon_shape.h>
 #include <algorithm>
 
 namespace red
@@ -27,7 +27,10 @@ int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
     // Set the used data to the right collider
     auto& mapPair = insertionResult.first;
     auto& colliderInserted = mapPair->second;
-    colliderInserted.m_fixtureDef.userData = &colliderInserted;
+
+    b2FixtureUserData userData;
+    userData.pointer = (uintptr_t) &colliderInserted;
+    colliderInserted.m_fixtureDef.userData = userData;
 
     m_status = ComponentStatus::DIRTY;
 
@@ -57,7 +60,7 @@ int ColliderList::AddEdgeCollider(const EdgeColliderDesc& desc)
     Collider collider;
 
     b2EdgeShape shape;
-    shape.Set(ConvertToPhysicsVector(desc.start), ConvertToPhysicsVector(desc.end));
+    shape.SetTwoSided(ConvertToPhysicsVector(desc.start), ConvertToPhysicsVector(desc.end));
 
     collider.m_shape = std::make_unique<b2EdgeShape>(shape);
 

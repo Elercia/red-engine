@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine">
+      <UniqueIdentifier>{69C1B416-D5D7-B2AC-1E4F-3ECE8AA48334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Audio">
+      <UniqueIdentifier>{2AFAA0FA-9631-E991-9F3B-4DB50BF20F8B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Audio\Component">
+      <UniqueIdentifier>{0C0FC9AB-787D-1E2B-C166-D92A2D1414C7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Audio\System">
+      <UniqueIdentifier>{FE99ACBF-EABF-7626-D305-FCF1BFCA9BF2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core">
+      <UniqueIdentifier>{612F3C93-4D29-65E5-3696-FBF5222FCB51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Components">
+      <UniqueIdentifier>{D615442D-4284-99AC-8B6D-54ACF71A8F48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Configuration">
+      <UniqueIdentifier>{A8D69B66-94BD-5D5E-3D0E-C47B29D4D6C4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Container">
+      <UniqueIdentifier>{7364E42F-5FB5-CF71-8819-BE3374C962DB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Debug">
+      <UniqueIdentifier>{977EDE9E-8339-CE4A-2CF1-4695188B18DB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Debug\Component">
+      <UniqueIdentifier>{B9BF3416-A511-0C06-8E30-49167A2125EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Debug\DebugDraw">
+      <UniqueIdentifier>{7B78600C-67CA-37FC-50E9-740C3CDA50E5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Debug\Logger">
+      <UniqueIdentifier>{86640516-F21D-70C0-7B7D-8A9AE7352630}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Debug\System">
+      <UniqueIdentifier>{CB411527-37FB-7FD1-C05A-9AAB2C133641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Entity">
+      <UniqueIdentifier>{8D04B07D-F91C-97A7-C2C9-26412EA12B41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Event">
+      <UniqueIdentifier>{72F5F99E-5EB0-E94A-0768-6295F30134DB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Memory">
+      <UniqueIdentifier>{A9AFB28F-15C8-99B9-DE74-29534A4C2E53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Core\Time">
+      <UniqueIdentifier>{9F50F880-0B5E-2667-9444-22520051F21D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Input">
+      <UniqueIdentifier>{281C2EFB-9453-7692-9D5D-DAB509149D8B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Input\Component">
+      <UniqueIdentifier>{8A46EFC5-F6B4-4445-3F9E-FF44AB4B3AE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Input\System">
+      <UniqueIdentifier>{3CD25BE5-28F8-254C-113E-AB17FD024B18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Level">
+      <UniqueIdentifier>{B08D5FFB-1CC5-A792-25CF-0BB69185CE8B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Math">
+      <UniqueIdentifier>{E26F4193-CE69-6AE5-B7D6-00F6A36FD051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Physics">
+      <UniqueIdentifier>{DB1DA08C-47E0-D316-9090-62A3FC91ACF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Physics\Components">
+      <UniqueIdentifier>{10C49137-FCAA-532F-A5FB-B94C91C1CC95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Physics\System">
+      <UniqueIdentifier>{8F8C6A96-7BDD-55D8-A441-449A90F1E841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Rendering">
+      <UniqueIdentifier>{F62154E7-622F-82CD-EB15-7EB857224E84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Rendering\Component">
+      <UniqueIdentifier>{D865B9B9-442A-B8A9-0D90-E873791354DF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Rendering\Resource">
+      <UniqueIdentifier>{CD98B527-B97F-771F-62D0-DD3C4E96F085}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Rendering\System">
+      <UniqueIdentifier>{4A84E350-36C0-E6BA-9FD2-FEB18B2D8FD5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Resources">
+      <UniqueIdentifier>{137E0183-7F8B-2F69-0872-2B54747EFB1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RedEngine\Utils">
+      <UniqueIdentifier>{896D0AFC-F5A4-5293-FEAE-B6B66A65798C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Audio">
+      <UniqueIdentifier>{EE2696B2-5A91-4A29-A3CF-FBCE0F79287E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Audio\Component">
+      <UniqueIdentifier>{D00020A4-3C62-FDB1-C5CF-436431303471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Audio\System">
+      <UniqueIdentifier>{4242FF84-2E3B-1ED7-576D-035C43C5FDE2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core">
+      <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Components">
+      <UniqueIdentifier>{9A079B25-0669-7833-8FD6-BEE5FB36AFF2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Configuration">
+      <UniqueIdentifier>{ECA1C40B-D89B-ED5D-C108-846EADA153CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Debug">
+      <UniqueIdentifier>{DB452204-C713-160A-B0A7-86309C14F26E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Debug\Component">
+      <UniqueIdentifier>{FD6BBDA8-E990-0C29-12DC-F1B8FE5F0B47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Debug\DebugDraw">
+      <UniqueIdentifier>{BF24E99E-AB49-381F-D494-1DAFC018373D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Debug\Logger">
+      <UniqueIdentifier>{4AD7DF7F-B643-9B7A-7F37-33D8EB62BDE2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Debug\System">
+      <UniqueIdentifier>{8FB4EF90-FB20-AB8B-C414-43E93040CDF3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Entity">
+      <UniqueIdentifier>{51B46C8B-BD3F-DA4F-C650-5D44325B3650}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Event">
+      <UniqueIdentifier>{B6BC3D04-A28A-310A-8B1E-A230778B0D6F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Memory">
+      <UniqueIdentifier>{6D5F6F9D-D9EA-DC61-E2FB-5F564E063962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Time">
+      <UniqueIdentifier>{633F7E55-CFFF-F98B-983A-430904BA3E68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Input">
+      <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Input\Component">
+      <UniqueIdentifier>{4E3846BE-BA99-23CC-4307-6A7EAF675A8B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Input\System">
+      <UniqueIdentifier>{807AAEAA-6C73-CDFC-95A5-B28181FDAC08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Level">
+      <UniqueIdentifier>{74BA54B3-E024-092A-2963-BACF950CE77E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Math">
+      <UniqueIdentifier>{261422CF-12E1-7CDA-3BFA-6A822726B268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics">
+      <UniqueIdentifier>{9F8B9316-0B41-0C0C-9435-06E300EA0210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics\Components">
+      <UniqueIdentifier>{548FBADC-4089-E32E-29F6-793F158F499B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics\System">
+      <UniqueIdentifier>{D35508FB-BF39-C950-289A-C3A3149DB3D2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Rendering">
+      <UniqueIdentifier>{BA10DABB-26D1-55F2-EF0B-9F6F5B8B9ACE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Rendering\Component">
+      <UniqueIdentifier>{9C99FB03-08D1-439B-11DB-A7BE7D916A94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Rendering\Resource">
+      <UniqueIdentifier>{1164DECC-FD5D-071F-E6CA-9D2FD2636D8B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Rendering\System">
+      <UniqueIdentifier>{8EAE1854-7A3D-A21D-235C-B6180FCAB2C3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Resources">
+      <UniqueIdentifier>{D76C8757-432D-038E-0C68-4C0B78E7476A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utils">
+      <UniqueIdentifier>{4D9AFFB3-B904-B42A-0243-65D06EEC917F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\AudioEvent.hpp">
+      <Filter>include\RedEngine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\AudioUtils.hpp">
+      <Filter>include\RedEngine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\Component\AudioListener.hpp">
+      <Filter>include\RedEngine\Audio\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\Component\AudioSource.hpp">
+      <Filter>include\RedEngine\Audio\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\System\AudioSystem.hpp">
+      <Filter>include\RedEngine\Audio\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Application.hpp">
+      <Filter>include\RedEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Components\Component.hpp">
+      <Filter>include\RedEngine\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Components\ComponentManager.hpp">
+      <Filter>include\RedEngine\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Components\Transform.hpp">
+      <Filter>include\RedEngine\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\CVar.hpp">
+      <Filter>include\RedEngine\Core\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\Configuration.hpp">
+      <Filter>include\RedEngine\Core\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\ConfigurationSerializator.hpp">
+      <Filter>include\RedEngine\Core\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\ConfigurationUtils.hpp">
+      <Filter>include\RedEngine\Core\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\IniReader.hpp">
+      <Filter>include\RedEngine\Core\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\UserInputHelper.hpp">
+      <Filter>include\RedEngine\Core\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Container\Array.hpp">
+      <Filter>include\RedEngine\Core\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\Component\DebugComponent.hpp">
+      <Filter>include\RedEngine\Core\Debug\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\DebugDraw\PhysicsDebugDraw.hpp">
+      <Filter>include\RedEngine\Core\Debug\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\DebugMacros.hpp">
+      <Filter>include\RedEngine\Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\Logger\Logger.hpp">
+      <Filter>include\RedEngine\Core\Debug\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\Profiler.hpp">
+      <Filter>include\RedEngine\Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\System\DebugSystem.hpp">
+      <Filter>include\RedEngine\Core\Debug\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Engine.hpp">
+      <Filter>include\RedEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\EngineConfig.hpp">
+      <Filter>include\RedEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Entity\Entity.hpp">
+      <Filter>include\RedEngine\Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Entity\System.hpp">
+      <Filter>include\RedEngine\Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Entity\World.hpp">
+      <Filter>include\RedEngine\Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Event\Delegate.hpp">
+      <Filter>include\RedEngine\Core\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Event\EventSystem.hpp">
+      <Filter>include\RedEngine\Core\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Event\Signal.hpp">
+      <Filter>include\RedEngine\Core\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Macros.hpp">
+      <Filter>include\RedEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\Macros.hpp">
+      <Filter>include\RedEngine\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\MemoryManager.hpp">
+      <Filter>include\RedEngine\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\MemoryProfiler.hpp">
+      <Filter>include\RedEngine\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\ObjectHandle.hpp">
+      <Filter>include\RedEngine\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\SubEngine.hpp">
+      <Filter>include\RedEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Time\FrameCounter.hpp">
+      <Filter>include\RedEngine\Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Time\Time.hpp">
+      <Filter>include\RedEngine\Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\Component\UserInput.hpp">
+      <Filter>include\RedEngine\Input\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\InputDefinition.hpp">
+      <Filter>include\RedEngine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\InputDefinitionTranslationUnit.hpp">
+      <Filter>include\RedEngine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\System\UserInputSystem.hpp">
+      <Filter>include\RedEngine\Input\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\UserInputDefinition.hpp">
+      <Filter>include\RedEngine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Level\Level.hpp">
+      <Filter>include\RedEngine\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Level\LevelResourceLoader.hpp">
+      <Filter>include\RedEngine\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Math.hpp">
+      <Filter>include\RedEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Matrix.hpp">
+      <Filter>include\RedEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Point.hpp">
+      <Filter>include\RedEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Vector.hpp">
+      <Filter>include\RedEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\Components\Collider.hpp">
+      <Filter>include\RedEngine\Physics\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\Components\PhysicBody.hpp">
+      <Filter>include\RedEngine\Physics\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\ContactInfo.hpp">
+      <Filter>include\RedEngine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\PhysicsWorld.hpp">
+      <Filter>include\RedEngine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\System\PhysicsSystem.hpp">
+      <Filter>include\RedEngine\Physics\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\RedEngineBase.hpp">
+      <Filter>include\RedEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Color.hpp">
+      <Filter>include\RedEngine\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Component\CameraComponent.hpp">
+      <Filter>include\RedEngine\Rendering\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Component\Sprite.hpp">
+      <Filter>include\RedEngine\Rendering\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\RenderingEngine.hpp">
+      <Filter>include\RedEngine\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\SpriteResource.hpp">
+      <Filter>include\RedEngine\Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\SpriteResourceLoader.hpp">
+      <Filter>include\RedEngine\Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\Texture2D.hpp">
+      <Filter>include\RedEngine\Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\TextureResourceLoader.hpp">
+      <Filter>include\RedEngine\Rendering\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\System\RenderingSystem.hpp">
+      <Filter>include\RedEngine\Rendering\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Window.hpp">
+      <Filter>include\RedEngine\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\AnnimationDescriptor.hpp">
+      <Filter>include\RedEngine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\Resource.hpp">
+      <Filter>include\RedEngine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\ResourceEngine.hpp">
+      <Filter>include\RedEngine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\ResourceLoader.hpp">
+      <Filter>include\RedEngine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Utils\FileUtils.hpp">
+      <Filter>include\RedEngine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Utils\StringUtils.hpp">
+      <Filter>include\RedEngine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine\include\RedEngine\Utils\Uncopyable.hpp">
+      <Filter>include\RedEngine\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\engine\src\Audio\Component\AudioListener.cpp">
+      <Filter>src\Audio\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Audio\Component\AudioSource.cpp">
+      <Filter>src\Audio\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Audio\System\AudioSystem.cpp">
+      <Filter>src\Audio\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Application.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Components\Component.cpp">
+      <Filter>src\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Components\ComponentManager.cpp">
+      <Filter>src\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Components\Transform.cpp">
+      <Filter>src\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Configuration\CVar.cpp">
+      <Filter>src\Core\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Configuration\Configuration.cpp">
+      <Filter>src\Core\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Configuration\ConfigurationUtils.cpp">
+      <Filter>src\Core\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Configuration\IniReader.cpp">
+      <Filter>src\Core\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Configuration\UserInputHelper.cpp">
+      <Filter>src\Core\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Debug\Component\DebugComponent.cpp">
+      <Filter>src\Core\Debug\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Debug\DebugDraw\PhysicsDebugDraw.cpp">
+      <Filter>src\Core\Debug\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Debug\DebugMacros.cpp">
+      <Filter>src\Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Debug\Logger\Logger.cpp">
+      <Filter>src\Core\Debug\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Debug\System\DebugSystem.cpp">
+      <Filter>src\Core\Debug\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Engine.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Entity\Entity.cpp">
+      <Filter>src\Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Entity\System.cpp">
+      <Filter>src\Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Entity\World.cpp">
+      <Filter>src\Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Event\Delegate.cpp">
+      <Filter>src\Core\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Event\EventSystem.cpp">
+      <Filter>src\Core\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Memory\MemoryManager.cpp">
+      <Filter>src\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Memory\MemoryProfiler.cpp">
+      <Filter>src\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Memory\ObjectHandle.cpp">
+      <Filter>src\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Time\FrameCounter.cpp">
+      <Filter>src\Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Core\Time\Time.cpp">
+      <Filter>src\Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Input\Component\UserInput.cpp">
+      <Filter>src\Input\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Input\System\UserInputSystem.cpp">
+      <Filter>src\Input\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Level\Level.cpp">
+      <Filter>src\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Level\LevelResourceLoader.cpp">
+      <Filter>src\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Math\Math.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Math\Matrix.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Math\Vector.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Physics\Components\Collider.cpp">
+      <Filter>src\Physics\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Physics\Components\PhysicBody.cpp">
+      <Filter>src\Physics\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Physics\ContactInfo.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Physics\PhysicsWorld.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Physics\System\PhysicSystem.cpp">
+      <Filter>src\Physics\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\Component\CameraComponent.cpp">
+      <Filter>src\Rendering\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\Component\Sprite.cpp">
+      <Filter>src\Rendering\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\RenderingEngine.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\SpriteResource.cpp">
+      <Filter>src\Rendering\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\SpriteResourceLoader.cpp">
+      <Filter>src\Rendering\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\Texture2D.cpp">
+      <Filter>src\Rendering\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\TextureResourceLoader.cpp">
+      <Filter>src\Rendering\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\System\RenderingSystem.cpp">
+      <Filter>src\Rendering\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Rendering\Window.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Resources\Resource.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Resources\ResourceEngine.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Resources\ResourceLoader.cpp">
+      <Filter>src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Utils\FileUtils.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine\src\Utils\StringUtils.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

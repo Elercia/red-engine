@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AD25BA17-9988-49BC-420E-82722E50153F}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RedEngineLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\..\output\bin\Debug-windows-x86_64\RedEngineLib\</OutDir>
+    <IntDir>..\..\output\obj\Debug-windows-x86_64\RedEngineLib\</IntDir>
+    <TargetName>RedEngineLib</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\output\bin\Release-windows-x86_64\RedEngineLib\</OutDir>
+    <IntDir>..\..\output\obj\Release-windows-x86_64\RedEngineLib\</IntDir>
+    <TargetName>RedEngineLib</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>RED_USE_PROFILER;RED_WINDOWS;RED_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\engine\include;..\..\external\DebugBreak;..\..\external\Fmod\core\inc;..\..\external\Fmod\fsbank\inc;..\..\external\Fmod\studio\inc;..\..\external\optick\src;..\..\external\SDL2\include;..\..\external\SDL2\include\SDL2;..\..\external\SDL_image\include;..\..\external\nlohmann_json\single_include;..\..\external\fmt\include;..\..\external\Box2D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>OptickCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>RED_USE_PROFILER;RED_WINDOWS;RED_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\engine\include;..\..\external\DebugBreak;..\..\external\Fmod\core\inc;..\..\external\Fmod\fsbank\inc;..\..\external\Fmod\studio\inc;..\..\external\optick\src;..\..\external\SDL2\include;..\..\external\SDL2\include\SDL2;..\..\external\SDL_image\include;..\..\external\nlohmann_json\single_include;..\..\external\fmt\include;..\..\external\Box2D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>OptickCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\AudioEvent.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\AudioUtils.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\Component\AudioListener.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\Component\AudioSource.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Audio\System\AudioSystem.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Application.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Components\Component.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Components\ComponentManager.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Components\Transform.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\CVar.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\Configuration.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\ConfigurationSerializator.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\ConfigurationUtils.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\IniReader.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Configuration\UserInputHelper.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Container\Array.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\Component\DebugComponent.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\DebugDraw\PhysicsDebugDraw.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\DebugMacros.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\Logger\Logger.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\Profiler.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Debug\System\DebugSystem.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Engine.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\EngineConfig.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Entity\Entity.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Entity\System.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Entity\World.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Event\Delegate.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Event\EventSystem.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Event\Signal.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Macros.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\Macros.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\MemoryManager.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\MemoryProfiler.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Memory\ObjectHandle.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\SubEngine.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Time\FrameCounter.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Core\Time\Time.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\Component\UserInput.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\InputDefinition.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\InputDefinitionTranslationUnit.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\System\UserInputSystem.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Input\UserInputDefinition.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Level\Level.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Level\LevelResourceLoader.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Math.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Matrix.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Point.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Math\Vector.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\Components\Collider.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\Components\PhysicBody.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\ContactInfo.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\PhysicsWorld.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Physics\System\PhysicsSystem.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\RedEngineBase.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Color.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Component\CameraComponent.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Component\Sprite.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\RenderingEngine.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\SpriteResource.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\SpriteResourceLoader.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\Texture2D.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Resource\TextureResourceLoader.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\System\RenderingSystem.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Rendering\Window.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\AnnimationDescriptor.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\Resource.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\ResourceEngine.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Resources\ResourceLoader.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Utils\FileUtils.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Utils\StringUtils.hpp" />
+    <ClInclude Include="..\..\engine\include\RedEngine\Utils\Uncopyable.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\engine\src\Audio\Component\AudioListener.cpp" />
+    <ClCompile Include="..\..\engine\src\Audio\Component\AudioSource.cpp" />
+    <ClCompile Include="..\..\engine\src\Audio\System\AudioSystem.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Application.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Components\Component.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Components\ComponentManager.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Components\Transform.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Configuration\CVar.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Configuration\Configuration.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Configuration\ConfigurationUtils.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Configuration\IniReader.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Configuration\UserInputHelper.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Debug\Component\DebugComponent.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Debug\DebugDraw\PhysicsDebugDraw.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Debug\DebugMacros.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Debug\Logger\Logger.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Debug\System\DebugSystem.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Engine.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Entity\Entity.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Entity\System.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Entity\World.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Event\Delegate.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Event\EventSystem.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Memory\MemoryManager.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Memory\MemoryProfiler.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Memory\ObjectHandle.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Time\FrameCounter.cpp" />
+    <ClCompile Include="..\..\engine\src\Core\Time\Time.cpp" />
+    <ClCompile Include="..\..\engine\src\Input\Component\UserInput.cpp" />
+    <ClCompile Include="..\..\engine\src\Input\System\UserInputSystem.cpp" />
+    <ClCompile Include="..\..\engine\src\Level\Level.cpp" />
+    <ClCompile Include="..\..\engine\src\Level\LevelResourceLoader.cpp" />
+    <ClCompile Include="..\..\engine\src\Math\Math.cpp" />
+    <ClCompile Include="..\..\engine\src\Math\Matrix.cpp" />
+    <ClCompile Include="..\..\engine\src\Math\Vector.cpp" />
+    <ClCompile Include="..\..\engine\src\Physics\Components\Collider.cpp" />
+    <ClCompile Include="..\..\engine\src\Physics\Components\PhysicBody.cpp" />
+    <ClCompile Include="..\..\engine\src\Physics\ContactInfo.cpp" />
+    <ClCompile Include="..\..\engine\src\Physics\PhysicsWorld.cpp" />
+    <ClCompile Include="..\..\engine\src\Physics\System\PhysicSystem.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\Component\CameraComponent.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\Component\Sprite.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\RenderingEngine.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\SpriteResource.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\SpriteResourceLoader.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\Texture2D.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\Resource\TextureResourceLoader.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\System\RenderingSystem.cpp" />
+    <ClCompile Include="..\..\engine\src\Rendering\Window.cpp" />
+    <ClCompile Include="..\..\engine\src\Resources\Resource.cpp" />
+    <ClCompile Include="..\..\engine\src\Resources\ResourceEngine.cpp" />
+    <ClCompile Include="..\..\engine\src\Resources\ResourceLoader.cpp" />
+    <ClCompile Include="..\..\engine\src\Utils\FileUtils.cpp" />
+    <ClCompile Include="..\..\engine\src\Utils\StringUtils.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

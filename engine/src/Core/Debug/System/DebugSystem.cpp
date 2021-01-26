@@ -1,14 +1,14 @@
 
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 
-#include "Box2D/Box2D.h"
-#include "Box2D/Common/b2Draw.h"
-
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Rendering/Window.hpp"
+
+#include <Box2D/b2_draw.h>
+#include <Box2D/box2d.h>
 
 namespace red
 {

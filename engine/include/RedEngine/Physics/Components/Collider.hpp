@@ -5,8 +5,8 @@
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <Box2D/Collision/Shapes/b2Shape.h>
-#include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/b2_shape.h>
+#include <Box2D/b2_fixture.h>
 #include <map>
 #include <memory>
 
@@ -19,8 +19,8 @@ struct Collider;
 struct ColliderDesc
 {
     bool isTrigger{false};
-    float32 friction{0.f};
-    float32 restitution{0.f};
+    float friction{0.f};
+    float restitution{0.f};
 };
 
 struct CircleColliderDesc : public ColliderDesc
