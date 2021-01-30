@@ -1,4 +1,3 @@
-
 group "RedEngine"
 project "RedEngineLib"
 	kind "StaticLib"
@@ -44,10 +43,27 @@ project "RedEngineLib"
 
 	links
 	{
-		"OptickCore",
+		"SDL2",
+		"SDL2main",
 	}
 
-	filter "system:windows"
+	libdirs
+	{
+		"%{IncludeDir.SDL2}",
+	}
+
+	rtti("Off")
+	exceptionhandling("Off")
+	warnings("Extra")
+	flags("NoPCH")
+
+	configuration { "linux", "gmake" }
+  		buildoptions { "`wx-config --cxxflags`", "-ansi", "-pedantic" }
+
+	configuration { "vs2019" }
+  		buildoptions { "" }
+
+	filter "system:Windows"
 		systemversion "latest"
 
 		defines
@@ -55,7 +71,12 @@ project "RedEngineLib"
 			"RED_WINDOWS"
 		}
 
-	filter "system:linux"
+		links
+		{
+			enginePath .. "/../external/SDL2/lib/x64/SDL2*.*"
+		}
+
+	filter "system:Linux"
 		defines
 		{
 			"RED_LINUX"
@@ -65,12 +86,11 @@ project "RedEngineLib"
 		defines "RED_DEBUG"
 		runtime "Debug"
 		symbols "on"
+		optimize "Off"
 
 	filter "configurations:Release"
 		defines "RED_RELEASE"
 		runtime "Release"
-		optimize "on"
+		optimize "Speed"
 
 	filter ""
-
-	flags { "NoPCH" }

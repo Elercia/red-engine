@@ -46,6 +46,11 @@ project "Template"
 		"RedEngineLib",
 	}
 
+	libdirs
+	{
+		"%{IncludeDir.SDL2}",
+	}
+
 	filter "system:windows"
 		systemversion "latest"
 

@@ -1,5 +1,13 @@
+outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+rootPath = "../"
+enginePath = rootPath .. "engine/"
+externalPath = rootPath .. "external/"
+projectLocation = "./projects/"
+
+print ( "RootPath : " .. rootPath )
+
 workspace "RedEngine"
-	architecture "x64"
 	startproject "RedEngineLib"
 
 	configurations
@@ -8,16 +16,29 @@ workspace "RedEngine"
 		"Release"
 	}
 
-	flags
+	platforms 
 	{
-		"MultiProcessorCompile"
+		"Win64", 
+		"Linux64"
 	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-rootPath = ".."
+	flags
+	{
+		"MultiProcessorCompile",
+	}
 
-print ( "RootPath : " .. rootPath )
+	filter { "platforms:Win64" }
+		system "Windows"
+		architecture "x64"
 
-include "External"
-include "RedEngineLib"
-include "Templates"
+	filter { "platforms:Linux64" }
+		system "Linux"
+		architecture "x64"
+	filter ""
+
+	location(projectLocation);
+
+
+include "External.lua"
+include "RedEngineLib.lua"
+include "Templates.lua"
