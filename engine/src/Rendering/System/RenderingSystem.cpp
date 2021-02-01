@@ -38,6 +38,9 @@ void RenderingSystem::Update()
             auto* sprite = entity->GetComponent<Sprite>();
             auto* transform = entity->GetComponent<Transform>();
 
+            if (!sprite->IsValid())
+                continue;
+
             sprite->NextFrame();
 
             DrawDebug(cameraComponent);

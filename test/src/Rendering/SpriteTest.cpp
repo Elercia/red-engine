@@ -1,19 +1,17 @@
-#include <catch2/catch.hpp>
 #include "RedEngine/Core/Application.hpp"
-#include "RedEngine/Core/Engine.hpp"
-#include "RedEngine/Rendering/System/RenderingSystem.hpp"
-#include "RedEngine/Rendering/Component/Sprite.hpp"
-#include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
-#include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
+#include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
+
+#include <catch2/catch.hpp>
 
 TEST_CASE("Sprite test", "[RENDERING]")
 {
     using namespace red;
-    GetSubEngine<Configuration>()->SetResourceFolder("resources");
-    GetSubEngine<ResourceEngine>()->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader);
-    GetSubEngine<ResourceEngine>()->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader);
 
     World world;
     auto* e = world.CreateEntity();

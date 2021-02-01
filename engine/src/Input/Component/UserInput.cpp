@@ -10,7 +10,7 @@ bool UserInputComponent::GetKeyDown(ActionKey keyId) const { return m_state.at(k
 
 bool UserInputComponent::GetKeyUp(ActionKey keyId) const { return m_state.at(keyId).isUp; }
 
-bool UserInputComponent::GetKey(ActionKey keyId) const { return m_state.at(keyId).isPressed; }
+bool UserInputComponent::GetKey(ActionKey keyId) const { return m_state.at(keyId).isPressed; } // TODO find and return false if not found
 
 Vector2 UserInputComponent::GetAxis(AxisKey axisId) const
 {

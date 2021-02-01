@@ -173,3 +173,5 @@ redcppcheck-cppcheck-build-dir
 !external/**/*.dll
 !external/**/*.lib
 !external/**/*.a
+
+scripts/projects/

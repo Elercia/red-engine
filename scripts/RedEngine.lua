@@ -1,14 +1,14 @@
-outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 
 rootPath = "../"
 enginePath = rootPath .. "engine/"
 externalPath = rootPath .. "external/"
-projectLocation = "./projects/"
+projectsFilesLocation = "./projects/" .. _ACTION
 
 print ( "RootPath : " .. rootPath )
 
 workspace "RedEngine"
-	startproject "RedEngineLib"
+	startproject "Pong"
 
 	configurations
 	{
@@ -28,17 +28,18 @@ workspace "RedEngine"
 	}
 
 	filter { "platforms:Win64" }
-		system "Windows"
+		system "windows"
 		architecture "x64"
 
 	filter { "platforms:Linux64" }
-		system "Linux"
+		system "linux"
 		architecture "x64"
-	filter ""
+	filter {}
 
-	location(projectLocation);
+	location(projectsFilesLocation);
 
 
 include "External.lua"
 include "RedEngineLib.lua"
 include "Templates.lua"
+include "Tests.lua"

@@ -1,39 +1,29 @@
 group "RedEngine"
 project "RedEngineLib"
-	kind "StaticLib"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
+	kind("StaticLib")
+	language("C++")
+	cppdialect("C++17")
 
-	location("projects")
-	targetdir ("%{rootPath}/output/bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("%{rootPath}/output/obj/" .. outputdir .. "/%{prj.name}")
+	rtti("Off")
+	exceptionhandling("Off")
+	warnings("Extra")
+	flags("NoPCH")
+	staticruntime("Off")
 
-	-- pchheader "hzpch.h"
-	-- pchsource "src/hzpch.cpp"
-
-	enginePath = "%{rootPath}/engine"
+	location(projectsFilesLocation)
+	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
+	objdir(rootPath .. "/output/obj/" .. outputDirSementic)
 
 	files
 	{
-		"%{enginePath}/include/**.hpp",
-		"%{enginePath}/src/**.cpp",
+		enginePath .. "/include/**.hpp",
+		enginePath .. "/src/**.cpp",
 	}
 
 	includedirs
 	{
-		"%{enginePath}/include/",
-		"%{IncludeDir.DebugBreak}",
-		"%{IncludeDir.FmodCore}",
-		"%{IncludeDir.FmodFsBank}",
-		"%{IncludeDir.FmodStudio}",
-		"%{IncludeDir.optick}",
-		"%{IncludeDir.SDL2}",
-		"%{IncludeDir.SDL2_internal}",
-		"%{IncludeDir.SDL_image}",
-		"%{IncludeDir.nlohmann_json}",
-		"%{IncludeDir.fmt}",
-		"%{IncludeDir.Box2D}",
+		enginePath .. "/include/",
+		ExternalIncludeDirs,
 	}
 
 	defines
@@ -44,18 +34,19 @@ project "RedEngineLib"
 	links
 	{
 		"SDL2",
-		"SDL2main",
+		"SDL2_image",
+		"Box2D",
+		"fmt",
+		"fmod_vc",
+		"fsbank_vc",
+		"fmodstudio_vc",
+		"optick",
 	}
 
 	libdirs
 	{
-		"%{IncludeDir.SDL2}",
+		ExternalLibDirs
 	}
-
-	rtti("Off")
-	exceptionhandling("Off")
-	warnings("Extra")
-	flags("NoPCH")
 
 	configuration { "linux", "gmake" }
   		buildoptions { "`wx-config --cxxflags`", "-ansi", "-pedantic" }
@@ -63,7 +54,7 @@ project "RedEngineLib"
 	configuration { "vs2019" }
   		buildoptions { "" }
 
-	filter "system:Windows"
+	filter "system:windows"
 		systemversion "latest"
 
 		defines
@@ -73,7 +64,12 @@ project "RedEngineLib"
 
 		links
 		{
-			enginePath .. "/../external/SDL2/lib/x64/SDL2*.*"
+			"SDL2main.lib"
+		}
+
+		linkoptions 
+		{
+			"/NODEFAULTLIB:library"
 		}
 
 	filter "system:Linux"
@@ -86,11 +82,10 @@ project "RedEngineLib"
 		defines "RED_DEBUG"
 		runtime "Debug"
 		symbols "on"
-		optimize "Off"
 
 	filter "configurations:Release"
 		defines "RED_RELEASE"
 		runtime "Release"
-		optimize "Speed"
+		optimize "on"
 
-	filter ""
+	filter {}

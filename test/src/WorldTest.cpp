@@ -1,5 +1,6 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
+
 #include <catch2/catch.hpp>
 
 TEST_CASE("World entity and system check", "[ECS]")

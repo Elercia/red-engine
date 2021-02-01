@@ -74,4 +74,6 @@ const std::vector<AnimationDesc>& Sprite::GetAnimations() const { return m_sprit
 
 const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const { return m_currentAnimationInfo; }
 
+bool Sprite::IsValid() const { return m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED; }
+
 }  // namespace red

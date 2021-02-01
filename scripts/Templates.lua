@@ -1,44 +1,36 @@
-project "Template"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
+function TemplateProject(Name)
+	print("Template Project : " .. Name)
+	
+	group("Template")
+	project(Name)
+	kind("ConsoleApp")
+	language("C++")
+	cppdialect("C++17")
+	staticruntime("Off")	
+	flags { "NoPCH" }
 
-	location("projects")
-	targetdir ("%{rootPath}/output/bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("%{rootPath}/output/obj/" .. outputdir .. "/%{prj.name}")
+	location(projectsFilesLocation)
+	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
+	objdir (rootPath .. "/output/obj/" .. outputDirSementic)
 
-	-- pchheader "hzpch.h"
-	-- pchsource "src/hzpch.cpp"
-
-	PongPath = "%{rootPath}/templates/Pong"
+	local templatePath = rootPath .. "/templates/Pong"
 
 	files
 	{
-		"%{PongPath}/include/**.hpp",
-		"%{PongPath}/src/**.cpp",
+		templatePath .. "/include/**.hpp",
+		templatePath .. "/src/**.cpp",
 	}
 
 	includedirs
 	{
-		"%{PongPath}/include/",
-		"%{enginePath}/include/",
-		"%{IncludeDir.DebugBreak}",
-		"%{IncludeDir.FmodCore}",
-		"%{IncludeDir.FmodFsBank}",
-		"%{IncludeDir.FmodStudio}",
-		"%{IncludeDir.optick}",
-		"%{IncludeDir.SDL2}",
-		"%{IncludeDir.SDL2_internal}",
-		"%{IncludeDir.SDL_image}",
-		"%{IncludeDir.nlohmann_json}",
-		"%{IncludeDir.fmt}",
-		"%{IncludeDir.Box2D}",
+		templatePath .. "/include/",
+		enginePath .. "/include/",
+		ExternalIncludeDirs,
 	}
 
-	defines
+	libdirs
 	{
-		"RED_USE_PROFILER",
+		ExternalLibDirs
 	}
 
 	links
@@ -46,9 +38,9 @@ project "Template"
 		"RedEngineLib",
 	}
 
-	libdirs
+	defines
 	{
-		"%{IncludeDir.SDL2}",
+		"RED_USE_PROFILER",
 	}
 
 	filter "system:windows"
@@ -57,6 +49,11 @@ project "Template"
 		defines
 		{
 			"RED_WINDOWS"
+		}
+
+		links
+		{
+			"SDL2main",
 		}
 
 	filter "system:linux"
@@ -75,6 +72,7 @@ project "Template"
 		runtime "Release"
 		optimize "on"
 
-	filter ""
+	filter {}
+end
 
-	flags { "NoPCH" }
+TemplateProject("Pong")

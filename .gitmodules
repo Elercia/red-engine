@@ -4,10 +4,6 @@
 [submodule "external/optick"]
 	path = external/optick
 	url = https://github.com/bombomby/optick
-[submodule "external/Catch2"]
-	path = external/Catch2
-	url = https://github.com/catchorg/Catch2
-	branch = devel
 [submodule "external/fmt"]
 	path = external/fmt
 	url = https://github.com/fmtlib/fmt.git
