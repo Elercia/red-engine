@@ -34,9 +34,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
-      with:
-        vs-version: '[16.4,16.5)'
+      uses: microsoft/setup-msbuild@v1
     - name: Build
       run: |
         cd scripts
