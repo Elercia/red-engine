@@ -1,7 +1,5 @@
 @ECHO OFF
 
-pushd %~dp0\
-
-call "./bin/premake5.exe" vs2019 --file=RedEngine.lua  
+call "%~dp0/bin/premake5.exe" vs2019 --file=RedEngine.lua  
 
 PAUSE
