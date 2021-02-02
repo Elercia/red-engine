@@ -11,19 +11,19 @@ on:
       - master
       - develop
 jobs:
-  linux:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        config: [debug, release]
-        platform: [Win64]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Build
-      run: cd scripts && ./GenerateProject.sh
-    - name: Test
-      run: scripts/bin/premake5 test --test-all
+  # linux:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       config: [debug, release]
+  #       platform: [Win64]
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #   - name: Build
+  #     run: cd scripts && ./GenerateProject.sh
+  #   - name: Test
+  #     run: scripts/bin/premake5 test --test-all
   windows:
     runs-on: windows-latest
     strategy:
