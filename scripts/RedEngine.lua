@@ -1,6 +1,6 @@
 outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 
-rootPath = "../"
+rootPath = "%{wks.location}/../../../"
 enginePath = rootPath .. "engine/"
 externalPath = rootPath .. "external/"
 projectsFilesLocation = "./projects/" .. _ACTION
@@ -9,6 +9,7 @@ print ( "RootPath : " .. rootPath )
 
 workspace "RedEngine"
 	startproject "Pong"
+	buildmessage ("message")
 
 	configurations
 	{
