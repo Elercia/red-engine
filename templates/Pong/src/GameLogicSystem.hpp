@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RedEngine/Core/Entity/System.hpp>
-#include <RedEngine/Core/Components/Transform.hpp>
-#include <RedEngine/Math/Vector.hpp>
+#include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Math/Vector.hpp"
 
 namespace red
 {
@@ -18,12 +18,9 @@ public:
                     red::Entity* ball);
 
     void Update() override;
+    void Init() override;
 
-    void CheckPoints(red::Vector2& vector2, const red::WindowInfo& info);
-
-    void BounceOnPaddles(const red::Transform* paddleOneTransform,
-                         const red::Transform* paddleTwoTransform, red::Vector2& ballPos,
-                         BallComponent* ballComponent);
+    void CheckPoints(red::Vector2& vector2);
 
 private:
     red::Entity *m_paddleOne, *m_paddleTwo, *m_ball;

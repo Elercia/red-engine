@@ -1,8 +1,9 @@
-#include <fstream>
+#include "RedEngine/Core/Configuration/IniReader.hpp"
 
-#include <RedEngine/Utils/StringUtils.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Core/Configuration/IniReader.hpp>
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Utils/StringUtils.hpp"
+
+#include <fstream>
 
 namespace red
 {
@@ -16,11 +17,9 @@ namespace utils
 
         stream.open(path);
 
-        if (!fs::exists(path) || fs::status(path).type() != fs::file_type::regular ||
-            !stream.is_open())
+        if (!fs::exists(path) || fs::status(path).type() != fs::file_type::regular || !stream.is_open())
         {
-            RED_LOG_WARNING("IniReader cannot load file {} because it doesn't exists",
-                            path.string());
+            RED_LOG_WARNING("IniReader cannot load file {} because it doesn't exists", path.string());
             return {};
         }
 

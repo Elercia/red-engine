@@ -1,14 +1,16 @@
-#include <RedEngine/Core/Time/Time.hpp>
-#include <RedEngine/Core/Application.hpp>
-#include <RedEngine/Core/Debug/Debug.hpp>
-#include <RedEngine/Rendering/System/RenderingSystem.hpp>
-#include <RedEngine/Core/Debug/Profiler.hpp>
-#include <RedEngine/Input/Component/UserInput.hpp>
-#include <RedEngine/Input/System/UserInputSystem.hpp>
-#include <RedEngine/Rendering/System/RenderingSystem.hpp>
-#include <RedEngine/Core/Event/EventSystem.hpp>
-#include <RedEngine/Core/Time/FrameCounter.hpp>
-#include <RedEngine/Core/Debug/System/DebugSystem.hpp>
+#include "RedEngine/Core/Application.hpp"
+
+#include "RedEngine/Audio/System/AudioSystem.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
+#include "RedEngine/Core/Debug/System/DebugSystem.hpp"
+#include "RedEngine/Core/Event/EventSystem.hpp"
+#include "RedEngine/Core/Time/FrameCounter.hpp"
+#include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Input/System/UserInputSystem.hpp"
+#include "RedEngine/Level/LevelResourceLoader.hpp"
+#include "RedEngine/Physics/System/PhysicsSystem.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
 
 #include <array>
 #include <memory>
@@ -20,18 +22,22 @@ Application::Application()
 {
     PROFILER_APP("Main Application")
     SetLogLevel(LogLevel::LEVEL_DEBUG);
+    CreateWorld();
 }
 
-Application::~Application() { PROFILER_SHUTDOWN(); }
+Application::~Application()
+{
+    LoadLevelInternal(nullptr);
+    delete m_world;
+
+    PROFILER_SHUTDOWN();
+}
 
 bool Application::Run()
 {
-    RED_ASSERT(m_world != nullptr, "The application need a level to start");
-    auto* eventSystem = GetRedSubEngine<EventSystem>();
+    auto* eventSystem = GetSubEngine<EventSystem>();
 
     FrameCounter fc;
-
-    bool isFullScreen = false;
 
     // Main loop
     while (true)
@@ -50,9 +56,8 @@ bool Application::Run()
             break;
         }
 
-        RED_LOG_TRACE("[Frame rate {}][Delta time {}][Time scale {}][Unscaled delta time {}]",
-                      1 / Time::DeltaTime(), Time::DeltaTime(), Time::TimeScale(),
-                      Time::DeltaTime(false));
+        RED_LOG_TRACE("[Frame rate {}][Delta time {}][Time scale {}][Unscaled delta time {}]", 1 / Time::DeltaTime(),
+                      Time::DeltaTime(), Time::TimeScale(), Time::DeltaTime(false));
 
         // update the world
         m_world->Update();
@@ -61,50 +66,49 @@ bool Application::Run()
     return true;
 }
 
-void Application::CreateWorld()
-{
-    RED_ASSERT(m_world == nullptr, "Only one world is allowed");
-
-    m_world = std::make_unique<World>();
-
-    auto* entity = m_world->CreateSingletonEntity();
-    entity->AddComponent<UserInputComponent>();
-
-    m_world->AddSystem<UserInputSystem>();
-    m_world->AddSystem<RenderingSystem>();
-    m_world->AddSystem<DebugSystem>();
-}
-
 void Application::LoadLevel(const std::string& levelResource)
 {
-    auto* resourceEngine = GetRedSubEngine<ResourceEngine>();
+    auto* levelLoader = GetSubEngine<ResourceEngine>()->GetResourceLoader<LevelResourceLoader>();
 
-    resourceEngine->LoadLevel(levelResource);
+    m_currentLevel = levelLoader->LoadResource(levelResource);
 }
 
-void Application::LoadLevel(std::unique_ptr<Level>&& level)
+void Application::LoadLevelInternal(Level* level)
 {
     if (m_currentLevel != nullptr)
     {
-        m_currentLevel->Finalize();
+        m_currentLevel->InternFinalize();
+        m_currentLevel.reset();
     }
 
     // reset the old level
-    m_currentLevel = std::move(level);
+    m_currentLevel.reset(level);
 
-    if (m_world == nullptr)
+    if (level != nullptr)
     {
-        CreateWorld();
+        m_currentLevel->InternInit();
+
+        m_world->Clean();
+        m_world->Init();
     }
+}
 
-    m_currentLevel->SetWorld(m_world.get());
+std::shared_ptr<Level> Application::GetCurrentLevel() { return m_currentLevel; }
 
-    m_world->UnloadTransientEntities();
+void Application::CreateWorld()
+{
+    if (m_world != nullptr)
+        return;
 
-    m_currentLevel->Init();
-
+    m_world = new World;
+    m_world->AddSystem<UserInputSystem>();
+    m_world->AddSystem<RenderingSystem>();
+    m_world->AddSystem<PhysicSystem>();
+    m_world->AddSystem<AudioSystem>();
+    m_world->AddSystem<DebugSystem>();
     m_world->Init();
 }
 
-World& Application::GetWorld() { return *m_world; }
+red::World* Application::GetWorld() { return m_world; }
+
 }  // namespace red

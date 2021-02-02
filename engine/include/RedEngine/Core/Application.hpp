@@ -1,11 +1,12 @@
 #pragma once
 
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Level/Level.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/Window.hpp"
+
 #include <memory>
 #include <stack>
-
-#include "RedEngine/Level/Level.hpp"
-#include "RedEngine/Core/Engine.hpp"
-#include "RedEngine/Rendering/Window.hpp"
 
 namespace red
 {
@@ -19,8 +20,6 @@ public:
 
     bool Run();
 
-    void CreateWorld();
-
     /// Load a level from the class named LevelType
     template <class LevelType>
     void LoadLevel();
@@ -28,15 +27,18 @@ public:
     /// Load a anonymous level as described in the levelResource file
     void LoadLevel(const std::string& levelResource);
 
-    World& GetWorld();
+    std::shared_ptr<Level> GetCurrentLevel();
+
+    void CreateWorld();
+    World* GetWorld();
 
 private:
     /// Properly load a level
-    void LoadLevel(std::unique_ptr<Level>&& level);
+    void LoadLevelInternal(Level* level);
 
 private:
-    std::unique_ptr<World> m_world{nullptr};
-    std::unique_ptr<Level> m_currentLevel{nullptr};
+    std::shared_ptr<Level> m_currentLevel{nullptr};
+    World* m_world{nullptr};
 };
 }  // namespace red
 

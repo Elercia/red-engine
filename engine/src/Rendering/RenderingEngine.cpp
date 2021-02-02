@@ -1,18 +1,19 @@
 
-#include <RedEngine/Core/Debug/Debug.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Rendering/RenderingEngine.hpp>
-#include <RedEngine/Rendering/Window.hpp>
-#include <RedEngine/Rendering/Texture2D.hpp>
-#include <RedEngine/Core/Components/Sprite.hpp>
-#include <RedEngine/Rendering/Component/CameraComponent.hpp>
-#include <RedEngine/Resources/ResourceEngine.hpp>
+#include "RedEngine/Rendering/RenderingEngine.hpp"
 
-#include <SDL2/SDL_image.h>
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/Sprite.hpp"
+#include "RedEngine/Rendering/Resource/Texture2D.hpp"
+#include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Resources/ResourceEngine.hpp"
+
+#include <SDL_image/SDL_image.h>
 
 namespace red
 {
-RenderingEngine::RenderingEngine() {}
+RenderingEngine::RenderingEngine() : m_window(nullptr), m_renderer(nullptr) {}
 
 RenderingEngine::~RenderingEngine()
 {
@@ -49,17 +50,15 @@ void RenderingEngine::EndRenderFrame() { SDL_RenderPresent(m_renderer); }
 void RenderingEngine::BeginCameraRendering(CameraComponent* cameraComponent)
 {
     // Setup the camera viewport
-    SDL_Rect viewport = {static_cast<int>(cameraComponent->m_viewport.x),
-                         static_cast<int>(cameraComponent->m_viewport.y),
-                         static_cast<int>(cameraComponent->m_viewport.width),
-                         static_cast<int>(cameraComponent->m_viewport.height)};
+    SDL_Rect viewport = {
+        static_cast<int>(cameraComponent->m_viewport.x), static_cast<int>(cameraComponent->m_viewport.y),
+        static_cast<int>(cameraComponent->m_viewport.width), static_cast<int>(cameraComponent->m_viewport.height)};
 
     SDL_RenderSetViewport(m_renderer, &viewport);
 
     // Set the camera draw color
-    SDL_SetRenderDrawColor(
-        m_renderer, cameraComponent->m_backgroundColor.r, cameraComponent->m_backgroundColor.g,
-        cameraComponent->m_backgroundColor.b, cameraComponent->m_backgroundColor.a);
+    SDL_SetRenderDrawColor(m_renderer, cameraComponent->m_backgroundColor.r, cameraComponent->m_backgroundColor.g,
+                           cameraComponent->m_backgroundColor.b, cameraComponent->m_backgroundColor.a);
 
     SDL_RenderClear(m_renderer);
 
@@ -96,40 +95,72 @@ void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Tran
 {
     auto& currentAnimation = *sprite->m_currentAnimationInfo.currentAnimation;
 
-    if (currentAnimation.texture &&
-        currentAnimation.texture->GetLoadState() == LoadState::STATE_LOADED)
+    if (currentAnimation.texture && currentAnimation.texture->GetLoadState() == LoadState::STATE_LOADED)
     {
         const auto& position = camera->WorldToViewportPoint(transform.GetPosition());
 
         auto& currentAnimationFrame = *sprite->m_currentAnimationInfo.currentAnimationFrame;
 
-        SDL_Rect source{currentAnimationFrame.rect.x, currentAnimationFrame.rect.y,
-                        currentAnimationFrame.rect.width, currentAnimationFrame.rect.height};
-        SDL_Rect dest{static_cast<int>(position.x), static_cast<int>(position.y),
-                      currentAnimationFrame.size.x, currentAnimationFrame.size.y};
+        SDL_Rect source{currentAnimationFrame.rect.x, currentAnimationFrame.rect.y, currentAnimationFrame.rect.width,
+                        currentAnimationFrame.rect.height};
+        SDL_Rect dest{static_cast<int>(position.x), static_cast<int>(position.y), currentAnimationFrame.size.x,
+                      currentAnimationFrame.size.y};
 
         SDL_Point center{currentAnimationFrame.center.x, currentAnimationFrame.center.y};
 
-        SDL_RendererFlip flip = (SDL_RendererFlip)(
-            SDL_FLIP_NONE | (currentAnimationFrame.flipH ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) |
-            (currentAnimationFrame.flipV ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE));
+        SDL_RendererFlip flip =
+            (SDL_RendererFlip)(SDL_FLIP_NONE | (currentAnimationFrame.flipH ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) |
+                               (currentAnimationFrame.flipV ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE));
 
         SDL_RenderCopyEx(m_renderer, currentAnimation.texture->m_sdlTexture, &source, &dest,
                          currentAnimationFrame.rotation, &center, flip);
     }
 }
 
-void RenderingEngine::DrawLine(CameraComponent* camera, Vector2 first, Vector2 second, Color color)
+void RenderingEngine::DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second, const Color& color)
 {
     const auto& fPos = camera->WorldToViewportPoint(first);
-    const auto& sPos = camera->WorldToViewportPoint(first);
+    const auto& sPos = camera->WorldToViewportPoint(second);
 
     SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(m_renderer, static_cast<int>(fPos.x), static_cast<int>(fPos.y),
-                       static_cast<int>(sPos.x), static_cast<int>(sPos.y));
+    SDL_RenderDrawLine(m_renderer, (int) (fPos.x), (int) (fPos.y), (int) (sPos.x), (int) (sPos.y));
 }
 
-void RenderingEngine::Init()
+void RenderingEngine::DrawLines(CameraComponent* camera, const std::vector<Vector2>& points,
+                                const Color& color /*= ColorConstant::RED*/,
+                                bool /*isFilled*/ /*= false*/)  // TODO isFilled
+{
+    std::vector<SDL_Point> sdlPoints;
+    sdlPoints.reserve(points.size());
+    for (const Vector2& p : points)
+    {
+        const auto& v = camera->WorldToViewportPoint(p);
+
+        sdlPoints.push_back({(int) v.x, (int) v.y});
+    }
+
+    SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLines(m_renderer, sdlPoints.data(), (int) sdlPoints.size());
+}
+
+void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
+                                 const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
+{
+    const auto& pos = camera->WorldToViewportPoint(center);
+
+    SDL_Rect rect{(int) (pos.x - radius), (int) (pos.y - radius), (int) (radius * 2), (int) (radius * 2)};
+    SDL_RenderDrawRect(m_renderer, &rect);
+}
+
+void RenderingEngine::DrawPoint(CameraComponent* camera, const Vector2& coord,
+                                const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
+{
+    const auto& pos = camera->WorldToViewportPoint(coord);
+
+    SDL_RenderDrawPoint(m_renderer, (int) pos.x, (int) pos.y);
+}
+
+void RenderingEngine::Init(const EngineInitDesc& /*initDesc*/)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {

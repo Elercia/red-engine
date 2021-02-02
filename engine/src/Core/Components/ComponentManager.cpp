@@ -7,7 +7,21 @@ namespace red
 {
 ComponentManager::ComponentManager() : m_components() {}
 
-std::set<Component*> ComponentManager::GetComponents(Entity* entity) { return {}; }
+ComponentManager::~ComponentManager()
+{
+    for (auto componentPoolPair : m_components)
+    {
+        auto* pool = componentPoolPair.second;
+        for (int i = 0; i < ComponentPoolSize; ++i)
+        {
+            delete pool[i];
+        }
+
+        free(pool);
+    }
+}
+
+std::set<Component*> ComponentManager::GetComponents(Entity* /*entity*/) { return {}; }  // TODO
 
 void ComponentManager::StoreComponent(Entity* owner, Component* component, std::size_t name)
 {
@@ -46,20 +60,6 @@ Component* ComponentManager::GetComponent(Entity* entity, std::size_t name)
     return GetComponentPool(name)[entity->GetId()];
 }
 
-ComponentManager::~ComponentManager()
-{
-    for (auto componentPoolPair : m_components)
-    {
-        auto* pool = componentPoolPair.second;
-        for (int i = 0; i < ComponentPoolSize; ++i)
-        {
-            delete pool[i];
-        }
-
-        free(pool);
-    }
-}
-
 void ComponentManager::MoveComponents(EntityId_t from, EntityId_t to)
 {
     for (auto componentPoolPair : m_components)
@@ -77,7 +77,7 @@ void ComponentManager::UnloadTransientComponents()
     {
         auto* pool = componentPoolPair.second;
 
-        for (int i = MaxPersistentEntities; i < ComponentPoolSize; ++i)
+        for (int i = 0; i < ComponentPoolSize; ++i)
         {
             delete pool[i];
         }

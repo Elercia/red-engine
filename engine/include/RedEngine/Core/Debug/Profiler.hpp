@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RedEngine/RedEngineBase.hpp"
+
 #ifdef RED_USE_PROFILER
 
 #include <optick.h>

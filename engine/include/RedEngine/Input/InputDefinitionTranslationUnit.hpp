@@ -1,11 +1,11 @@
 #pragma once
 
-#include <RedEngine/Input/InputDefinition.hpp>
+#include "RedEngine/Input/InputDefinition.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
+#include <SDL2/SDL_gamecontroller.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_mouse.h>
-#include <SDL2/SDL_gamecontroller.h>
-
 #include <map>
 
 namespace red
@@ -129,7 +129,7 @@ SDLKeyboardTranslationMap LoadSDLKeyboardTranslationMap()
     translationMap[SDL_SCANCODE_F22] = KeyCodes::KEY_F22;
     translationMap[SDL_SCANCODE_F23] = KeyCodes::KEY_F23;
     translationMap[SDL_SCANCODE_F24] = KeyCodes::KEY_F24;
-    translationMap[SDL_SCANCODE_EXECUTE] = KeyCodes::KEY_EXECUTE;
+    translationMap[SDL_SCANCODE_EXECUTE] = KeyCodes::KEY_EXEC;
     translationMap[SDL_SCANCODE_HELP] = KeyCodes::KEY_HELP;
     translationMap[SDL_SCANCODE_MENU] = KeyCodes::KEY_MENU;
     translationMap[SDL_SCANCODE_SELECT] = KeyCodes::KEY_SELECT;

@@ -1,12 +1,14 @@
 #pragma once
 
+#include "RedEngine/Core/Configuration/CVar.hpp"
+#include "RedEngine/Core/Event/Delegate.hpp"
+#include "RedEngine/Core/Event/Signal.hpp"
+#include "RedEngine/Core/SubEngine.hpp"
+#include "RedEngine/Input/InputDefinition.hpp"
+#include "RedEngine/Math/Point.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+
 #include <array>
-#include <RedEngine/Core/SubEngine.hpp>
-#include <RedEngine/Input/InputDefinition.hpp>
-#include <RedEngine/Math/Point.hpp>
-#include <RedEngine/Core/Event/Delegate.hpp>
-#include <RedEngine/Core/Event/Signal.hpp>
-#include <RedEngine/Core/Configuration/CVar.hpp>
 
 namespace red
 {
@@ -36,7 +38,7 @@ private:
 
     std::array<KeyState, KeyCodes::MAX> m_keyStates;
 
-    //TODO make more signals (mouse move, key pressed / released)
+    // TODO make more signals (mouse move, key pressed / released)
     Signal<Point> m_windowResizeSignal;
 };
 }  // namespace red

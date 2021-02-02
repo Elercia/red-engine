@@ -1,16 +1,18 @@
 #pragma once
 
+#include "EngineConfig.hpp"
+
+#include "RedEngine/Core/Configuration/Configuration.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Event/EventSystem.hpp"
+#include "RedEngine/Core/Memory/MemoryManager.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/RenderingEngine.hpp"
+#include "RedEngine/Resources/ResourceEngine.hpp"
+
 #include <memory>
 #include <tuple>
 #include <type_traits>
-
-#include <RedEngine/Core/Event/EventSystem.hpp>
-#include <RedEngine/Core/Memory/MemoryManager.hpp>
-#include <RedEngine/Core/Configuration/Configuration.hpp>
-#include <RedEngine/Core/Debug/Logger/Logger.hpp>
-#include <RedEngine/Resources/ResourceEngine.hpp>
-#include <RedEngine/Rendering/RenderingEngine.hpp>
-#include "EngineConfig.hpp"
 
 namespace red
 {
@@ -27,26 +29,30 @@ public:
         return &(std::get<SubEngineType>(m_subEngines));
     }
 
-    static void Init(const std::string_view& resourceFolder, int argc, char** argv);
+    static void Init(const EngineInitDesc& initDesc);
 
     Application& GetApplication();
 
-private:
-    void InitAllSubEngines();
+    void RegisterResourceLoaders(ResourceEngine* resourceEngine);
+
+    const EngineInitDesc& GetInitDesc() const;
 
 private:
-    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, EventSystem>
-        m_subEngines{};
+    void InitAllSubEngines(const EngineInitDesc& initDesc);
+
+private:
+    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, EventSystem> m_subEngines{};
 
     std::unique_ptr<Application> m_application;
+    EngineInitDesc m_initDesc;
 };
 
-Engine& GetRedInstance();
+Engine& GetEngine();
 
 template <class SubEngineType>
-SubEngineType* GetRedSubEngine()
+SubEngineType* GetSubEngine()
 {
-    return GetRedInstance().Get<SubEngineType>();
+    return GetEngine().Get<SubEngineType>();
 }
 
 }  // namespace red

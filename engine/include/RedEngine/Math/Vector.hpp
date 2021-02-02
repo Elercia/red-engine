@@ -1,5 +1,9 @@
 #pragma once
 
+#include "RedEngine/RedEngineBase.hpp"
+
+#include <Box2D/b2_math.h>
+
 namespace red
 {
 template <typename T>
@@ -18,6 +22,9 @@ public:
     Vector2T<T>& operator=(Vector2T<T>&&) = default;
 
     Vector2T<T> operator+(const Vector2T<T>& other) const;
+    Vector2T<T> operator-(const Vector2T<T>& other) const;
+    Vector2T<T> operator*(const Vector2T<T>& other) const;
+
     Vector2T<T> operator*(T scalar) const;
 
     T x, y;
@@ -77,6 +84,10 @@ using Vector2i = Vector2T<int>;
 
 using Vector4 = Vector4T<float>;
 using Vector4i = Vector4T<int>;
+
+b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
+Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2);
+
 }  // namespace red
 
 #include "inl/Vector.inl"

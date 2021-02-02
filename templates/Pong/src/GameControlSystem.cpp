@@ -1,9 +1,10 @@
-#include <RedEngine/Input/Component/UserInput.hpp>
-#include <RedEngine/Core/Components/Transform.hpp>
-#include <RedEngine/Core/Time/Time.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Rendering/RenderingEngine.hpp>
-#include <RedEngine/Rendering/Window.hpp>
+#include "RedEngine/Input/Component/UserInput.hpp"
+#include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Rendering/RenderingEngine.hpp"
+#include "RedEngine/Rendering/Window.hpp"
+
 #include "GameControlSystem.hpp"
 
 GameControlSystem::GameControlSystem(red::World* world, red::Entity* paddleOne,
@@ -17,7 +18,7 @@ void GameControlSystem::Update()
     constexpr float velocity = 300.F;
     using namespace red;
 
-    auto* userInputComponent = GetSingletonEntity().GetComponent<UserInputComponent>();
+    auto* userInputComponent = GetSingletonEntity()->AddComponent<UserInputComponent>();
     auto& paddleOnePos = m_paddleOne->GetComponent<Transform>()->GetPosition();
     auto& paddleTwoPos = m_paddleTwo->GetComponent<Transform>()->GetPosition();
 
@@ -45,7 +46,7 @@ void GameControlSystem::Update()
 
 void GameControlSystem::KeepInBound(red::Vector2& pos)
 {
-    auto info = red::GetRedSubEngine<red::RenderingEngine>()->GetWindow().GetWindowInfo();
+    auto info = red::GetSubEngine<red::RenderingEngine>()->GetWindow().GetWindowInfo();
 
     if (pos.y < 0)
         pos.y = 0;

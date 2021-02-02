@@ -1,5 +1,7 @@
-#include <RedEngine/Core/Configuration/ConfigurationUtils.hpp>
-#include <RedEngine/Core/Configuration/CVar.hpp>
+#include "RedEngine/Core/Configuration/ConfigurationUtils.hpp"
+
+#include "RedEngine/Core/Configuration/CVar.hpp"
+
 #include <cstdlib>
 
 namespace red

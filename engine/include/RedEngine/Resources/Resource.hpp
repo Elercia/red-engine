@@ -1,47 +1,51 @@
 #pragma once
 
-#include <cstdint>
+#include "RedEngine/RedEngineBase.hpp"
+
 #include <cstddef>
+#include <cstdint>
+#include <string>
 
 namespace red
 {
-using ResourceId_t = std::size_t;
+using ResourceId = std::string;
 
-struct LoadState
+enum class LoadState
 {
-    enum Enum
-    {
-        STATE_NOT_LOADED,
-        STATE_LOADED,
-        STATE_ERROR
-    };
+    STATE_NOT_LOADED,
+    STATE_LOADED,
+    STATE_ERROR
 };
 
-struct ResourceType
+enum class ResourceType
 {
-    enum Enum
-    {
-        TEXTURE2D,
-        AUDIO,
-    };
+    LEVEL,
+    SPRITE,
+    TEXTURE2D,
+    AUDIO,
 };
 
-class Resource
+#define RED_RESOURCE(Type) \
+    static ResourceType GetResourceType() { return Type; }
+
+class IResource
 {
+    friend class IResourceLoader;
+
 public:
-    Resource(ResourceId_t resourceId, ResourceType::Enum m_resourceType);
-    virtual ~Resource();
+    IResource(ResourceId resourceId, ResourceType m_resourceType);
+    virtual ~IResource();
 
-    [[nodiscard]] ResourceId_t GetResourceId() const;
-    [[nodiscard]] ResourceType::Enum GetResourceType() const;
-    [[nodiscard]] LoadState::Enum GetLoadState() const;
+    [[nodiscard]] ResourceId GetResourceId() const;
+    [[nodiscard]] ResourceType GetResourceType() const;
+    [[nodiscard]] LoadState GetLoadState() const;
 
-    virtual void Release() = 0;
+    void SetLoadState(LoadState loadState);
 
 protected:
-    const ResourceId_t m_resourceId;
-    const ResourceType::Enum m_resourceType;
-    LoadState::Enum m_loadState;
+    ResourceId m_resourceId;
+    ResourceType m_resourceType;
+    LoadState m_loadState;
 };
 
 }  // namespace red

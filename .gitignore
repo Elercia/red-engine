@@ -168,3 +168,11 @@ $RECYCLE.BIN/
 # cppcheck
 *.cppcheck
 redcppcheck-cppcheck-build-dir
+
+# Revert ignore in external
+!external/**/*.dll
+!external/**/*.lib
+!external/**/*.a
+
+!scripts/bin/*
+scripts/projects/

@@ -1,11 +1,13 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <RedEngine/Math/Vector.hpp>
-
 #include "Entity.hpp"
 #include "World.hpp"
+
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+
+#include <memory>
+#include <vector>
 
 namespace red
 {
@@ -21,7 +23,7 @@ public:
     System& operator=(System&&) = default;
 
     // Update functions called in this order
-    virtual void FixedUpdate(){};
+    virtual void FixedUpdate(){};  // TODO How to make fixed update ?
     virtual void Update(){};
     virtual void PreUpdate(){};
     virtual void LateUpdate(){};
@@ -34,7 +36,7 @@ public:
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
 
-    Entity& GetSingletonEntity();
+    Entity* GetSingletonEntity();
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

@@ -1,8 +1,8 @@
-#include <RedEngine/Core/Event/EventSystem.hpp>
-#include <RedEngine/Core/Engine.hpp>
-#include <RedEngine/Core/Entity/World.hpp>
-#include <RedEngine/Input/System/UserInputSystem.hpp>
-#include <RedEngine/Input/Component/UserInput.hpp>
+#include "RedEngine/Core/Event/EventSystem.hpp"
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Input/System/UserInputSystem.hpp"
+#include "RedEngine/Input/Component/UserInput.hpp"
 
 #include <catch2/catch.hpp>
 #include <SDL2/SDL_events.h>
@@ -12,7 +12,7 @@
 
 TEST_CASE("Raw input handling", "[Input]")
 {
-    auto* eventSystem = red::GetRedSubEngine<red::EventSystem>();
+    auto* eventSystem = red::GetSubEngine<red::EventSystem>();
 
     eventSystem->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
 
@@ -33,7 +33,7 @@ TEST_CASE("Raw input handling", "[Input]")
 
 TEST_CASE("User input handling", "[Input]")
 {
-    auto* eventSystem = red::GetRedSubEngine<red::EventSystem>();
+    auto* eventSystem = red::GetSubEngine<red::EventSystem>();
     red::World world;
     auto* singletonEntity = world.CreateSingletonEntity();
     auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();

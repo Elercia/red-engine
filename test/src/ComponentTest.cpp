@@ -1,4 +1,4 @@
-#include <RedEngine/Core/Entity/Entity.hpp>
+#include "RedEngine/Core/Entity/Entity.hpp"
 #include <SystemTest.hpp>
 #include <catch2/catch.hpp>
 #include <iostream>
@@ -106,13 +106,11 @@ TEST_CASE("Persistent entity", "[ECS]")
 
     auto* entityA = world.CreateEntity();
     REQUIRE(entityA != nullptr);
-    REQUIRE(entityA->GetId() == red::MaxPersistentEntities);
 
     auto* componentAddedA = entityA->AddComponent<MockComponent1>();
     REQUIRE(componentAddedA != nullptr);
 
     entityA->SetPersistent(true);
-    REQUIRE(entityA->GetId() <= red::MaxPersistentEntities);
 
     auto* componentGettedA = entityA->GetComponent<MockComponent1>();
     REQUIRE(componentAddedA == componentGettedA);

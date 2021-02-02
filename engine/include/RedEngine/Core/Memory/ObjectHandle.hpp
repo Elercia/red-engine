@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RedEngine/RedEngineBase.hpp"
+
 namespace red
 {
 template <class T>

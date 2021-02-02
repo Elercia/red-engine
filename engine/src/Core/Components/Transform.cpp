@@ -8,4 +8,6 @@ Transform::Transform(Entity* entity, Vector2 position) : Component(entity), m_po
 const Vector2& Transform::GetPosition() const { return m_position; }
 Vector2& Transform::GetPosition() { return m_position; }
 
+void Transform::SetPosition(const Vector2& pos) { m_position = pos; }
+
 }  // namespace red

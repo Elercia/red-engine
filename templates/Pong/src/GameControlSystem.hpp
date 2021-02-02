@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RedEngine/Core/Entity/System.hpp>
-#include <RedEngine/Math/Vector.hpp>
+#include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Math/Vector.hpp"
 
 class GameControlSystem : public red::System
 {

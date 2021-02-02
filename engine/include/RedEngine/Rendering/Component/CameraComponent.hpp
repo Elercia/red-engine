@@ -1,12 +1,12 @@
 #pragma once
 
-#include <array>
+#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/Color.hpp"
+#include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
-#include <RedEngine/Core/Components/Component.hpp>
-#include <RedEngine/Rendering/Texture2D.hpp>
-#include <RedEngine/Math/Vector.hpp>
-#include <RedEngine/Rendering/Color.hpp>
-#include <RedEngine/Math/Matrix.hpp>
+#include <array>
 
 namespace red
 {
@@ -24,12 +24,7 @@ public:
     ~CameraComponent() override = default;
 
     /// View ports points
-    // TODO test theses
-    [[nodiscard]] Vector2 ScreenToViewportPoint(const Vector2& point) const;
-    [[nodiscard]] Vector2 ViewportToScreenPoint(const Vector2& point) const;
     [[nodiscard]] Vector2 ViewportToWorldPoint(const Vector2& point) const;
-    [[nodiscard]] Vector2 ScreenToWorldPoint(const Vector2& point) const;
-    [[nodiscard]] Vector2 WorldToScreenPoint(const Vector2& point) const;
     [[nodiscard]] Vector2 WorldToViewportPoint(const Vector2& point) const;
 
     void CenterOn(const Vector2& point);
@@ -69,6 +64,6 @@ private:
     /// Background color (color to clear the screen before rendering)
     Color m_backgroundColor{ColorConstant::BLACK};
 
-    //TODO camera render texture 
+    // TODO camera render texture
 };
 }  // namespace red

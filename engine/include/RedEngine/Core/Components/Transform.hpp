@@ -1,7 +1,9 @@
 #pragma once
 
-#include <RedEngine/Math/Vector.hpp>
 #include "Component.hpp"
+
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
 namespace red
 {
@@ -14,6 +16,8 @@ public:
 
     [[nodiscard]] const Vector2& GetPosition() const;
     [[nodiscard]] Vector2& GetPosition();
+
+    void SetPosition(const Vector2& pos);
 
 private:
     Vector2 m_position{0, 0};

@@ -1,9 +1,9 @@
-#include <RedEngine/Core/Configuration/Configuration.hpp>
+#include "RedEngine/Core/Configuration/Configuration.hpp"
 #include <catch2/catch.hpp>
-#include <RedEngine/Core/Configuration/IniReader.hpp>
+#include "RedEngine/Core/Configuration/IniReader.hpp"
 #include <iostream>
 #include <string>
-#include <RedEngine/Core/Configuration/CVar.hpp>
+#include "RedEngine/Core/Configuration/CVar.hpp"
 
 TEST_CASE("INI file parsing", "[Configuration]")
 {

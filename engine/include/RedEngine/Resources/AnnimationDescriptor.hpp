@@ -1,7 +1,9 @@
 #pragma once
 
-#include "../Math/Vector.hpp"
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/RedEngineBase.hpp"
 
+#include <memory>
 #include <vector>
 
 namespace red
@@ -23,7 +25,7 @@ struct AnimationDesc
 {
     std::string name;
     bool loop{false};
-    std::shared_ptr<Texture2D> texture; ///< The animation spritesheet
+    std::shared_ptr<Texture2D> texture;  ///< The animation spritesheet
     std::vector<AnimationFrameDesc> frames;
 };
 
@@ -33,4 +35,4 @@ struct CurrentAnimationDesc
     std::vector<AnimationDesc>::iterator currentAnimation;
     std::vector<AnimationFrameDesc>::iterator currentAnimationFrame;
 };
-}
+}  // namespace red

@@ -1,21 +1,20 @@
 #include "RedEngine/Core/Entity/World.hpp"
 
-#include <algorithm>
-#include <cassert>
-#include <RedEngine/Core/Debug/Component/DebugComponent.hpp>
-
 #include "RedEngine/Core/Components/ComponentManager.hpp"
+#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/Core/Debug/Debug.hpp"
+#include "RedEngine/Input/Component/UserInput.hpp"
+#include "RedEngine/Level/Level.hpp"
+
+#include <algorithm>
+#include <cassert>
 
 namespace red
 {
 World::World()
-    : m_singletonEntity(nullptr)
-    , m_componentManager(new ComponentManager())
-    , m_nextEntityId(MaxPersistentEntities)
-    , m_nextPersistentEntityId(0)
+    : m_singletonEntity(nullptr), m_componentManager(new ComponentManager()), m_nextEntityId(0), m_physicsWorld()
 {
 }
 
@@ -24,7 +23,16 @@ World::~World()
     for (auto& system : m_systems)
     {
         system->Finalise();
+    }
+
+    for (auto& system : m_systems)
+    {
         delete system;
+    }
+
+    for (auto& entity : m_entities)
+    {
+        entity->Destroy();
     }
 
     for (auto& entity : m_entities)
@@ -35,30 +43,43 @@ World::~World()
     delete m_componentManager;
 }
 
-Entity* World::CreateEntity() { return CreateEntity(""); }
+red::Entity* World::CreateRootEntity(Level* level)
+{
+    auto* entityPtr = CreateEntity("root_" + level->GetName(), nullptr);
 
-Entity* World::CreateEntity(const std::string& name)
+    return entityPtr;
+}
+
+Entity* World::CreateEntity(Entity* root) { return CreateEntity("Entity_" + std::to_string(m_nextEntityId), root); }
+
+Entity* World::CreateEntity(const std::string& name, Entity* root)
 {
     auto* entityPtr = new Entity(this, m_nextEntityId++, name);
 
     m_entities.push_back(entityPtr);
+
+    entityPtr->SetParent(root);
 
     return entityPtr;
 }
 
 red::Entity* World::CreateSingletonEntity()
 {
-    m_singletonEntity = CreateEntity("__SingletonEntity__");
+    if (m_singletonEntity != nullptr)
+        return m_singletonEntity;
 
-    m_singletonEntity->SetPersistent(true);
+    m_singletonEntity = CreateEntity("__SingletonEntity__", nullptr);
 
     m_singletonEntity->AddComponent<DebugComponent>();
+    m_singletonEntity->AddComponent<UserInputComponent>();
 
     return m_singletonEntity;
 }
 
 void World::Init()
 {
+    CreateSingletonEntity();
+
     for (auto& system : m_systems)
     {
         system->Init();
@@ -83,58 +104,30 @@ void World::Update()
     }
 }
 
+void World::Clean()
+{
+    std::vector<Entity*> entitiesToRemove;
+    for (auto* entity : m_entities)
+    {
+        if (entity->m_isDestroyed)
+        {
+            entitiesToRemove.push_back(entity);
+            delete entity;
+        }
+    }
+
+    for (auto* e : entitiesToRemove)
+        m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), e), m_entities.end());
+}
+
 const std::vector<System*>& World::GetSystems() { return m_systems; }
 
 const std::vector<Entity*>& World::GetEntities() { return m_entities; }
 
-Entity& World::GetSingletonEntity() { return *m_singletonEntity; }
+Entity* World::GetSingletonEntity() { return m_singletonEntity; }
 
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
-void World::DestroyEntity(Entity* entity)
-{
-    delete entity;
-}
-
-void World::SetEntityPersistency(Entity* entity, bool persistent)
-{
-    EntityId_t entityId;
-    if (persistent)
-    {
-        if (m_nextPersistentEntityId + 1 >= MaxPersistentEntities)
-            RED_ABORT("Cant set the entity persistence because we've reached the limit");
-
-        entityId = m_nextPersistentEntityId;
-        m_nextPersistentEntityId++;
-    }
-    else
-    {
-        entityId = m_nextEntityId;
-        m_nextEntityId++;
-    }
-
-    auto oldEntityId = entity->GetId();
-    entity->SetId(entityId);
-    m_componentManager->MoveComponents(oldEntityId, entityId);
-}
-
-void World::UnloadTransientEntities()
-{
-    m_componentManager->UnloadTransientComponents();
-
-    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(),
-                                    [](Entity* e) { return e->GetId() >= MaxPersistentEntities; }),
-                     m_entities.end());
-}
-
-void World::UnloadSystems()
-{
-    for (auto& system : m_systems)
-    {
-        system->Finalise();
-    }
-
-    m_systems.clear();
-}
+PhysicsWorld* World::GetPhysicsWorld() { return &m_physicsWorld; }
 
 }  // namespace red
