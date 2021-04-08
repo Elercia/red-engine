@@ -32,6 +32,7 @@ public:
         void Deactivate();
 
         void operator()(SignalArgs... args);
+        void emit(SignalArgs... args);
 
     private:
         void AddRef();
@@ -49,7 +50,7 @@ public:
     {
     public:
         Slot();
-        Slot(Connection* connection);
+        Slot(std::weak_ptr<Connection> connection);
         ~Slot();
 
         Slot(Slot&&) = default;
@@ -64,18 +65,18 @@ public:
         void Deactivate();
 
     private:
-        Connection* m_connection;
+        std::weak_ptr<Connection> m_connection;
     };
 
     Signal() = default;
-    ~Signal() = default;
+    ~Signal();
 
     Signal(Signal&&) = default;
     Signal& operator=(Signal&&) = default;
 
-    Slot Connect(Func function);
+    Slot Connect(Func function, bool keepAlive = false);
     template <class C>
-    Slot Connect(void (C::*method)(SignalArgs... args), C* obj);
+    Slot Connect(void (C::*method)(SignalArgs... args), C* obj, bool keepAlive = false);
 
     void Activate(bool activeValue = true);
     void Deactivate();
@@ -87,7 +88,7 @@ public:
     void emit(SignalArgs... args);
 
 private:
-    std::vector<Connection> m_connections{};
+    std::vector<std::shared_ptr<Connection>> m_connections{};
     bool m_isActive{true};
     int m_nextSlotId{0};
 };

@@ -5,25 +5,44 @@
 namespace red
 {
 // --------------- SIGNAL ---------------
+
 template <typename... SignalArgs>
-typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(Signal<SignalArgs...>::Func function)
+Signal<SignalArgs...>::~Signal()
+{
+    for (auto& connexion : m_connections)
+    {
+        connexion.reset();
+    }
+}
+
+template <typename... SignalArgs>
+typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(Signal<SignalArgs...>::Func function,
+                                                                    bool keepAlive /*= false*/)
 {
     int id = m_nextSlotId;
     m_nextSlotId++;
 
-    auto slot = Connection(this, function, id);
-    m_connections.push_back(std::move(slot));
+    auto connexion = std::make_shared<Connection>(this, function, id);
+    if (keepAlive)
+    {
+        connexion->AddRef();
+    }
 
-    return Slot(&m_connections.at(m_connections.size() - 1));
+    m_connections.push_back(std::move(connexion));
+
+    Slot slot(m_connections.back());
+
+    return slot;
 }
 
 template <typename... SignalArgs>
 template <class C>
-typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(void (C::*method)(SignalArgs... args), C* obj)
+typename Signal<SignalArgs...>::Slot Signal<SignalArgs...>::Connect(void (C::*method)(SignalArgs... args), C* obj,
+                                                                    bool keepAlive /*= false*/)
 {
     auto f = [obj, method](SignalArgs&&... funcArgs) { (obj->*method)(std::forward<SignalArgs>(funcArgs)...); };
 
-    return Connect(std::move(f));
+    return Connect(std::move(f), keepAlive);
 }
 
 template <typename... SignalArgs>
@@ -60,9 +79,9 @@ void Signal<SignalArgs...>::emit(SignalArgs... args)
 
     for (auto& connection : m_connections)
     {
-        if (connection.IsActive())
+        if (connection->IsActive())
         {
-            connection(std::forward<SignalArgs>(args)...);
+            connection->emit(std::forward<SignalArgs>(args)...);
         }
     }
 }
@@ -70,9 +89,9 @@ void Signal<SignalArgs...>::emit(SignalArgs... args)
 template <typename... SignalArgs>
 void Signal<SignalArgs...>::RemoveConnection(Connection* connection)
 {
-    auto it = std::find_if(m_connections.begin(), m_connections.end(), [connection](const Connection& c) {
-        return c.m_connectionId == connection->m_connectionId;
-    });
+    auto it = std::find_if(
+        m_connections.begin(), m_connections.end(),
+        [connection](const std::shared_ptr<Connection>& c) { return c->m_connectionId == connection->m_connectionId; });
 
     if (it != m_connections.end())
     {
@@ -83,7 +102,7 @@ void Signal<SignalArgs...>::RemoveConnection(Connection* connection)
 // --------------- CONNECTION ---------------
 template <typename... SignalArgs>
 Signal<SignalArgs...>::Connection::Connection(Signal<SignalArgs...>* ref, Func func, int slotId)
-    : m_signalRef(ref), m_isActive(true), m_func(func), m_connectionId(slotId), m_refCount(1)
+    : m_signalRef(ref), m_isActive(true), m_func(func), m_connectionId(slotId), m_refCount(0)
 {
 }
 
@@ -118,6 +137,12 @@ void Signal<SignalArgs...>::Connection::operator()(SignalArgs... args)
 }
 
 template <typename... SignalArgs>
+void Signal<SignalArgs...>::Connection::emit(SignalArgs... args)
+{
+    m_func(args...);
+}
+
+template <typename... SignalArgs>
 void Signal<SignalArgs...>::Connection::AddRef()
 {
     m_refCount++;
@@ -136,42 +161,38 @@ void Signal<SignalArgs...>::Connection::RemoveRef()
 
 // --------------- SLOT ---------------
 template <typename... SignalArgs>
-Signal<SignalArgs...>::Slot::Slot(Connection* connection) : m_connection(connection)
+Signal<SignalArgs...>::Slot::Slot(std::weak_ptr<Connection> connection) : m_connection(connection)
 {
-    m_connection->AddRef();
+    m_connection.lock()->AddRef();
 }
 
 template <typename... SignalArgs>
-Signal<SignalArgs...>::Slot::Slot() : m_connection(nullptr)
+Signal<SignalArgs...>::Slot::Slot() : m_connection()
 {
 }
 
 template <typename... SignalArgs>
 Signal<SignalArgs...>::Slot::~Slot()
 {
-    if (m_connection)
-        m_connection->RemoveRef();
+    if (!m_connection.expired())
+        m_connection.lock()->RemoveRef();
 }
 
 template <typename... SignalArgs>
 Signal<SignalArgs...>::Slot::Slot(const Slot& other)
 {
-    if (other.m_connection)
-    {
-        m_connection = other.m_connection;
-        m_connection->AddRef();
-    }
+    m_connection = other.m_connection;
+    if (!m_connection.expired())
+        m_connection.lock()->AddRef();
 }
 
 template <typename... SignalArgs>
 typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Slot::operator=(const Signal<SignalArgs...>::Slot& other)
 {
-    if (other.m_connection)
-    {
-        m_connection = other.m_connection;
+    m_connection = other.m_connection;
 
-        m_connection->AddRef();
-    }
+    if (!m_connection.expired())
+        m_connection.lock()->AddRef();
 
     return *this;
 }
@@ -179,23 +200,23 @@ typename Signal<SignalArgs...>::Slot& Signal<SignalArgs...>::Slot::operator=(con
 template <typename... SignalArgs>
 bool Signal<SignalArgs...>::Slot::IsActive()
 {
-    if (!m_connection)
+    if (m_connection.expired())
         return false;
-    return m_connection->IsActive();
+    return m_connection.lock()->IsActive();
 }
 
 template <typename... SignalArgs>
 void Signal<SignalArgs...>::Slot::Activate()
 {
-    if (m_connection)
-        m_connection->Activate();
+    if (!m_connection.expired())
+        m_connection.lock()->Activate();
 }
 
 template <typename... SignalArgs>
 void Signal<SignalArgs...>::Slot::Deactivate()
 {
-    if (m_connection)
-        m_connection->Deactivate();
+    if (!m_connection.expired())
+        m_connection.lock()->Deactivate();
 }
 
 }  // namespace red
