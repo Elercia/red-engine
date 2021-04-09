@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Components/Component.hpp"
-
+#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Components/Transform.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <set>
@@ -26,8 +26,14 @@ public:
     Entity(Entity&&) = default;
     Entity& operator=(Entity&& entity) = default;
 
+    //template <typename T, typename... Args>
+    //T* AddComponent(Args&&... args);
+
     template <typename T, typename... Args>
-    T* AddComponent(Args&&... args);
+    typename std::enable_if<std::is_same<T, Transform>::value, T>::type* AddComponent(Args&&... args);
+
+    template <typename T, typename... Args>
+    typename std::enable_if<!std::is_same<T, Transform>::value, T>::type* AddComponent(Args&&... args);
 
     template <typename T>
     void RemoveComponent();

@@ -10,4 +10,6 @@ Vector2& Transform::GetPosition() { return m_position; }
 
 void Transform::SetPosition(const Vector2& pos) { m_position = pos; }
 
+void Transform::SetPosition(float x, float y) { m_position = Vector2(x, y); }
+
 }  // namespace red

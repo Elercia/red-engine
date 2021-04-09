@@ -10,7 +10,7 @@
 namespace red
 {
 template <typename T, typename... Args>
-T* Entity::AddComponent(Args&&... args)
+typename std::enable_if<!std::is_same<T, Transform>::value, T>::type* Entity::AddComponent(Args&&... args)
 {
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
@@ -18,8 +18,8 @@ T* Entity::AddComponent(Args&&... args)
 
     if (componentManager->HasComponent<T>(this))
     {
-        return componentManager->GetComponent<T>(
-            this);  // TODO Not the best solution. This return does not respect the args sent
+        RED_LOG_ERROR("Entity {} already has the component", m_name);
+        return componentManager->GetComponent<T>(this);
     }
 
     auto componentPtr = componentManager->CreateComponent<T>(this, std::forward<Args>(args)...);
@@ -27,6 +27,16 @@ T* Entity::AddComponent(Args&&... args)
     m_isDirty = true;
 
     return componentPtr;
+}
+
+template <typename T, typename... Args>
+typename std::enable_if<std::is_same<T, Transform>::value, T>::type* Entity::AddComponent(Args&&... args)
+{
+    auto* transform = GetComponent<Transform>();
+
+    transform->SetPosition(std::forward<Args>(args)...);
+
+    return transform;
 }
 
 template <typename T>

@@ -98,6 +98,8 @@ void Entity::SetParent(Entity* parent)
     m_isDirty = true;
 }
 
+
+
 void Entity::AddChild(Entity* child)
 {
     m_children.push_back(child);
