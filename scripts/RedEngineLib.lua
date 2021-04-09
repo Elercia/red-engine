@@ -17,7 +17,9 @@ project "RedEngineLib"
 	files
 	{
 		enginePath .. "/include/**.hpp",
+		enginePath .. "/include/**.inl",
 		enginePath .. "/src/**.cpp",
+		
 	}
 
 	includedirs
