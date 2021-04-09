@@ -10,7 +10,7 @@
 namespace red
 {
 template <typename T, typename... Args>
-typename std::enable_if<!std::is_same<T, Transform>::value, T>::type* Entity::AddComponent(Args&&... args)
+T* Entity::AddComponent(Args&&... args)
 {
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
@@ -27,16 +27,6 @@ typename std::enable_if<!std::is_same<T, Transform>::value, T>::type* Entity::Ad
     m_isDirty = true;
 
     return componentPtr;
-}
-
-template <typename T, typename... Args>
-typename std::enable_if<std::is_same<T, Transform>::value, T>::type* Entity::AddComponent(Args&&... args)
-{
-    auto* transform = GetComponent<Transform>();
-
-    transform->SetPosition(std::forward<Args>(args)...);
-
-    return transform;
 }
 
 template <typename T>

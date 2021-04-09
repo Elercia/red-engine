@@ -26,14 +26,8 @@ public:
     Entity(Entity&&) = default;
     Entity& operator=(Entity&& entity) = default;
 
-    //template <typename T, typename... Args>
-    //T* AddComponent(Args&&... args);
-
     template <typename T, typename... Args>
-    typename std::enable_if<std::is_same<T, Transform>::value, T>::type* AddComponent(Args&&... args);
-
-    template <typename T, typename... Args>
-    typename std::enable_if<!std::is_same<T, Transform>::value, T>::type* AddComponent(Args&&... args);
+    T* AddComponent(Args&&... args);
 
     template <typename T>
     void RemoveComponent();
