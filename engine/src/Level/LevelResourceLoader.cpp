@@ -2,7 +2,7 @@
 
 namespace red
 {
-LevelResourceLoader::LevelResourceLoader() : ResourceLoader("Level", ResourceType::LEVEL) {}
+LevelResourceLoader::LevelResourceLoader(World* world) : ResourceLoader(ResourceType::LEVEL, world) {}
 LevelResourceLoader::~LevelResourceLoader() {}
 
 std::shared_ptr<Level> LevelResourceLoader::LoadResource(const std::string& /*name*/) { return nullptr; }

@@ -12,12 +12,14 @@ namespace red
 {
 class World;
 
+using EntityId = uint32;
+
 class Entity
 {
     friend World;
 
 public:
-    Entity(World* world, EntityId_t id, std::string name);
+    Entity(World* world, EntityId id, std::string name);
     virtual ~Entity() = default;
 
     Entity(const Entity&) = delete;
@@ -43,9 +45,9 @@ public:
     template <typename T>
     bool HasComponent();
 
-    [[nodiscard]] EntityId_t GetId() const;
+    [[nodiscard]] EntityId GetId() const;
     [[nodiscard]] bool IsRootEntity() const;
-    void SetId(EntityId_t id);
+    void SetId(EntityId id);
 
     const std::string& GetName() const;
 
@@ -63,7 +65,7 @@ public:
 
 protected:
     World* m_world;
-    EntityId_t m_id;
+    EntityId m_id;
     std::string m_name;
 
     bool m_isPersistent;

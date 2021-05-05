@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Configuration.hpp"
-
 #include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Core/Configuration/CVarManager.hpp"
 
 #include <functional>
 #include <string>
@@ -15,7 +14,7 @@ class CVarValue
 {
     template <class Type>
     friend class CVar;
-    friend Configuration;
+    friend CVarManager;
 
 public:
     CVarValue(std::string name, std::string category, std::string defaultValue);
@@ -44,7 +43,7 @@ template <class Type>
 class CVar
 {
     friend CVarValue;
-    friend Configuration;
+    friend class CVarManager;
 
 public:
     CVar(std::string name, std::string category, Type defaultValue);

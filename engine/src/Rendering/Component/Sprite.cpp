@@ -1,9 +1,11 @@
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 
+#include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
-#include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
 
 #include <utility>
 
@@ -11,8 +13,10 @@ namespace red
 {
 Sprite::Sprite(Entity* entity, const std::string& resourceId) : Component(entity)
 {
-    m_spriteResource =
-        GetSubEngine<ResourceEngine>()->GetResourceLoader<SpriteResourceLoader>()->LoadResource(resourceId);
+    m_spriteResource = m_owner->GetWorld()
+                           ->GetSingletonComponent<ResourceHolderComponent>()
+                           ->GetResourceLoader<SpriteResourceLoader>()
+                           ->LoadResource(resourceId);
 
     if (m_spriteResource)
     {
@@ -74,6 +78,9 @@ const std::vector<AnimationDesc>& Sprite::GetAnimations() const { return m_sprit
 
 const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const { return m_currentAnimationInfo; }
 
-bool Sprite::IsValid() const { return m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED; }
+bool Sprite::IsValid() const
+{
+    return m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
+}
 
 }  // namespace red

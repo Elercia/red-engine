@@ -21,6 +21,7 @@ int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
     collider.m_fixtureDef.isSensor = desc.isTrigger;
     collider.m_fixtureDef.restitution = desc.restitution;
     collider.m_fixtureDef.friction = desc.friction;
+    collider.m_fixtureDef.density = 1.0f;
 
     auto insertionResult = m_colliders.insert({m_nextIndex++, std::move(collider)});
 

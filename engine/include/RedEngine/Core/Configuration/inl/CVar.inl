@@ -4,7 +4,7 @@ namespace red
 template <class Type>
 CVar<Type>::CVar(std::string name, std::string category, Type defaultValue)
 {
-    Configuration::NewConsoleVariableDeclaration(this, name, category, defaultValue);
+    CVarManager::NewConsoleVariableDeclaration(this, name, category, defaultValue);
 }
 
 template <class Type>

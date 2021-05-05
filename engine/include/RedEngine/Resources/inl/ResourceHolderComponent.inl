@@ -1,7 +1,7 @@
 namespace red
 {
 template <typename LoaderType>
-LoaderType* ResourceEngine::GetResourceLoader()
+LoaderType* ResourceHolderComponent::GetResourceLoader()
 {
     ResourceType resourceType = LoaderType::Type::GetResourceType();
 

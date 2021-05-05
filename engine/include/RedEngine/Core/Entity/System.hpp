@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Entity.hpp"
-#include "World.hpp"
-
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
@@ -13,6 +12,8 @@ namespace red
 {
 class System
 {
+    friend World;
+
 public:
     System(World* world);
     System(System&&) = default;
@@ -23,26 +24,39 @@ public:
     System& operator=(System&&) = default;
 
     // Update functions called in this order
-    virtual void FixedUpdate(){};  // TODO How to make fixed update ?
-    virtual void Update(){};
-    virtual void PreUpdate(){};
-    virtual void LateUpdate(){};
+    virtual void Update() {}
+    virtual void PreUpdate() {}
+    virtual void PostUpdate() {}
 
     /// Called once the world is initializing to manager system-specific init
-    virtual void Init(){};
+    virtual void Init() { m_isInit = true; }
+
     /// Called once the system is shutting down to manage system-specific shutdown
-    virtual void Finalise(){};
+    virtual void Finalise() {}
+
+    virtual void ManageEntities() {}
 
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
+
+    template <typename ComponentType>
+    ComponentType* GetComponent();
 
     Entity* GetSingletonEntity();
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);
 
+    void SetTypeId(std::size_t typeId);
+    std::size_t GetTypeId();
+
+    int GetPriority() const;
+
 protected:
+    bool m_isInit;
     World* m_world;
+    int m_priority;
+    std::size_t m_typeId;
 };
 }  // namespace red
 

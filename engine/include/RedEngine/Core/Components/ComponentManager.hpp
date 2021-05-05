@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../EngineConfig.hpp"
-
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <map>
@@ -14,7 +12,10 @@ namespace red
 class Component;
 class Entity;
 
+using EntityId = uint32;
 using ComponentPool_t = Component**;
+
+constexpr int ComponentPoolSize = 2048;
 
 class ComponentManager
 {
@@ -36,7 +37,7 @@ public:
     template <typename ComponentType_t>
     ComponentType_t* GetComponent(Entity* entity);
 
-    void MoveComponents(EntityId_t from, EntityId_t to);
+    void MoveComponents(EntityId from, EntityId to);
 
     void UnloadTransientComponents();
 

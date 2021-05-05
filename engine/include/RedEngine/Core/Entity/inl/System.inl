@@ -23,4 +23,10 @@ std::vector<Entity*> System::GetComponents()
     return selectedEntities;
 }
 
+template <typename ComponentType>
+ComponentType* System::GetComponent()
+{
+    return GetSingletonEntity()->GetComponent<ComponentType>();
+}
+
 }  // namespace red

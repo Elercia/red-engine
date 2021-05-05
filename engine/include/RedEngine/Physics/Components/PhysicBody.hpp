@@ -34,10 +34,10 @@ class PhysicBody : public Component
     friend class PhysicSystem;
     friend class PhysicsWorld;
 
+public:
     using OnCollisionSignalType = Signal<const CollisionInfo&>;
     using OnTriggerSignalType = Signal<const TriggerInfo&>;
 
-public:
     PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc);
     ~PhysicBody();
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RedEngine/Core/SubEngine.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <string>
@@ -22,7 +21,7 @@ struct LogLevel
 
 void SetLogLevel(LogLevel::Enum level);
 
-class Logger : public SubEngine
+class Logger
 {
 public:
     Logger();

@@ -14,6 +14,8 @@ AudioSystem::~AudioSystem() = default;
 
 void AudioSystem::Init()
 {
+    System::Init();
+
     FmodCheck(FMOD::Studio::System::create(&m_studioSystem), "Creating FMOD studio system");
     FmodCheck(m_studioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL),
               "Initializing FMOD studio system");

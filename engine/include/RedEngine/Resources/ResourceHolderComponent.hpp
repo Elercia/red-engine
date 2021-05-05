@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/SubEngine.hpp"
+#include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Resources/ResourceLoader.hpp"
@@ -11,11 +11,11 @@
 
 namespace red
 {
-class ResourceEngine : public SubEngine
+class ResourceHolderComponent : public Component
 {
 public:
-    ResourceEngine();
-    ~ResourceEngine();
+    ResourceHolderComponent(Entity* owner);
+    ~ResourceHolderComponent();
 
     template <typename LoaderType>
     LoaderType* GetResourceLoader();
@@ -28,4 +28,4 @@ private:
 
 }  // namespace red
 
-#include "inl/ResourceEngine.inl"
+#include "inl/ResourceHolderComponent.inl"

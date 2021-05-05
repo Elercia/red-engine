@@ -2,14 +2,24 @@
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Math/Math.hpp"
-#include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
 namespace red
 {
 CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Component(entity), m_renderedTexture(nullptr)
 {
-    auto info = Window::GetWindow().GetWindowInfo();
+    auto* window = entity->GetWorld()->GetSingletonEntity()->GetComponent<WindowComponent>();
+
+    if (!window)
+    {
+        RED_LOG_ERROR("Camera component created without a window");
+        return;
+    }
+
+    auto info = window->GetWindowInfo();
+
     m_viewport = {0, 0, static_cast<float>(info.width), static_cast<float>(info.height)};
 
     m_cameraWorldPosition = Vector2(center.x - m_viewport.width / 2.F, center.y - m_viewport.height / 2.F);

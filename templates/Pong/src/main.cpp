@@ -1,19 +1,14 @@
-#include "RedEngine/Core/Application.hpp"
-#include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/Core/Entity/Entity.hpp"
+#include "PongEngine.hpp"
 #include "PongLevel.hpp"
+
+#include "RedEngine/Core/Engine.hpp"
+
+using namespace red;
+using namespace pong;
 
 int main(int argc, char* argv[])
 {
-    red::EngineInitDesc desc;
-    desc.config.resourceFolder = "resources";
-    desc.config.argc = argc;
-    desc.config.argv = argv;
-    red::Engine::Init(desc);
+    PongEngine* engine = CreateEngineFrom<PongEngine>(argc, argv);
 
-    red::Application&  app = red::GetEngine().GetApplication();
-
-    app.LoadLevel<PongLevel>();
-
-    return app.Run() ? EXIT_SUCCESS : EXIT_FAILURE;
+    return engine->MainLoop();
 }

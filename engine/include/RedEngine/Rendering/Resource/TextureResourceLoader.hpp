@@ -5,10 +5,12 @@
 
 namespace red
 {
+class World;
+
 class TextureResourceLoader : public ResourceLoader<Texture2D>
 {
 public:
-    TextureResourceLoader();
+    TextureResourceLoader(World* world);
     ~TextureResourceLoader();
 
     std::shared_ptr<Texture2D> LoadResource(const std::string& name);

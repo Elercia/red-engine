@@ -1,14 +1,7 @@
 #pragma once
 
-#include "EngineConfig.hpp"
-
-#include "RedEngine/Core/Configuration/Configuration.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/Core/Event/EventSystem.hpp"
-#include "RedEngine/Core/Memory/MemoryManager.hpp"
 #include "RedEngine/RedEngineBase.hpp"
-#include "RedEngine/Rendering/RenderingEngine.hpp"
-#include "RedEngine/Resources/ResourceEngine.hpp"
 
 #include <memory>
 #include <tuple>
@@ -16,43 +9,31 @@
 
 namespace red
 {
-class Application;
+class World;
 
-/// The engine regroup all the singletons class that are needed by the engine
-/// The placement order in the struct define the creation order, and so the dependencies
+template <typename EngineClass>
+EngineClass* CreateEngineFrom(int argc, char** argv);
+
 class Engine
 {
+    template <typename EngineClass>
+    friend EngineClass* CreateEngineFrom(int argc, char** argv);
+
 public:
-    template <class SubEngineType>
-    SubEngineType* Get()
-    {
-        return &(std::get<SubEngineType>(m_subEngines));
-    }
+    Engine();
+    virtual ~Engine();
 
-    static void Init(const EngineInitDesc& initDesc);
+    int MainLoop();
 
-    Application& GetApplication();
+    virtual bool Create();
+    virtual bool Destroy();
 
-    void RegisterResourceLoaders(ResourceEngine* resourceEngine);
+protected:
+    int m_argc;
+    char** m_argv;
 
-    const EngineInitDesc& GetInitDesc() const;
-
-private:
-    void InitAllSubEngines(const EngineInitDesc& initDesc);
-
-private:
-    std::tuple<Configuration, Logger, MemoryManager, ResourceEngine, RenderingEngine, EventSystem> m_subEngines{};
-
-    std::unique_ptr<Application> m_application;
-    EngineInitDesc m_initDesc;
+    World* m_world;
 };
-
-Engine& GetEngine();
-
-template <class SubEngineType>
-SubEngineType* GetSubEngine()
-{
-    return GetEngine().Get<SubEngineType>();
-}
-
 }  // namespace red
+
+#include "inl/Engine.inl"

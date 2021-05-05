@@ -40,7 +40,7 @@ private:
                              const b2Contact* contact);
 
 private:
-    std::unique_ptr<b2World> m_inernalPhysicsWorld;
+    std::unique_ptr<b2World> m_internalPhysicsWorld;
 
     std::vector<CollisionInfo> m_frameCollisionInfo;
     std::vector<TriggerInfo> m_frameTriggerInfo;

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "MemoryProfiler.hpp"
-
-#include "RedEngine/Core/SubEngine.hpp"
+#include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <cstddef>
@@ -10,7 +8,7 @@
 namespace red
 {
 // TODO make something of it ?
-class MemoryManager : public SubEngine
+class MemoryManager
 {
 public:
     MemoryManager();

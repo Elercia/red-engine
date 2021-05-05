@@ -5,6 +5,7 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/Level.hpp"
 
@@ -14,7 +15,11 @@
 namespace red
 {
 World::World()
-    : m_singletonEntity(nullptr), m_componentManager(new ComponentManager()), m_nextEntityId(0), m_physicsWorld()
+    : m_singletonEntity(nullptr)
+    , m_componentManager(new ComponentManager())
+    , m_nextEntityId(0)
+    , m_physicsWorld()
+    , m_currentLevel(nullptr)
 {
 }
 
@@ -22,17 +27,7 @@ World::~World()
 {
     for (auto& system : m_systems)
     {
-        system->Finalise();
-    }
-
-    for (auto& system : m_systems)
-    {
         delete system;
-    }
-
-    for (auto& entity : m_entities)
-    {
-        entity->Destroy();
     }
 
     for (auto& entity : m_entities)
@@ -70,24 +65,45 @@ red::Entity* World::CreateSingletonEntity()
 
     m_singletonEntity = CreateEntity("__SingletonEntity__", nullptr);
 
-    m_singletonEntity->AddComponent<DebugComponent>();
-    m_singletonEntity->AddComponent<UserInputComponent>();
-
     return m_singletonEntity;
 }
 
 void World::Init()
 {
-    CreateSingletonEntity();
-
     for (auto& system : m_systems)
     {
-        system->Init();
+        if (!system->m_isInit)
+            system->Init();
     }
 }
 
-void World::Update()
+void World::Finalize()
 {
+    ChangeLevel(nullptr);
+
+    for (auto& entity : m_entities)
+    {
+        entity->Destroy();
+    }
+
+    for (auto& system : m_systems)
+    {
+        system->Finalise();
+    }
+}
+
+bool World::Update()
+{
+    std::sort(m_systems.begin(), m_systems.end(),
+              [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
+
+    EventsComponent* events = GetSingletonComponent<EventsComponent>();
+
+    bool quit = events->QuitRequested();
+
+    if (quit)
+        return false;
+
     for (auto& system : m_systems)
     {
         system->PreUpdate();
@@ -100,8 +116,10 @@ void World::Update()
 
     for (auto& system : m_systems)
     {
-        system->LateUpdate();
+        system->PostUpdate();
     }
+
+    return true;
 }
 
 void World::Clean()
@@ -120,6 +138,25 @@ void World::Clean()
         m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), e), m_entities.end());
 }
 
+void World::ChangeLevel(Level* newLevel)
+{
+    if (m_currentLevel != nullptr)
+    {
+        m_currentLevel->InternFinalize();
+        RED_SAFE_DELETE(m_currentLevel);
+    }
+
+    m_currentLevel = newLevel;
+
+    if (m_currentLevel)
+        m_currentLevel->InternInit();
+
+    for (auto* system : m_systems)
+    {
+        system->ManageEntities();
+    }
+}
+
 const std::vector<System*>& World::GetSystems() { return m_systems; }
 
 const std::vector<Entity*>& World::GetEntities() { return m_entities; }
@@ -129,5 +166,7 @@ Entity* World::GetSingletonEntity() { return m_singletonEntity; }
 ComponentManager* World::GetComponentManager() { return m_componentManager; }
 
 PhysicsWorld* World::GetPhysicsWorld() { return &m_physicsWorld; }
+
+red::Entity* World::GetCurrentRootEntity() { return m_currentRootEntity; }
 
 }  // namespace red

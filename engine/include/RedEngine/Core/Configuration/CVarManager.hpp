@@ -1,7 +1,7 @@
 #pragma once
 
-#include "RedEngine/Core/Configuration/ConfigurationSerializator.hpp"
-#include "RedEngine/Core/SubEngine.hpp"
+#include "RedEngine/Core/Configuration/CVarSerialization.hpp"
+#include "RedEngine/Core/Configuration/CVarUtils.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <filesystem>
@@ -14,20 +14,14 @@ template <typename Type>
 class CVar;
 class CVarValue;
 
-class Configuration : public SubEngine
+class CVarManager
 {
 public:
-    Configuration();
-    ~Configuration();
+    static CVarManager& GetInstance();
 
-    void Init(const EngineInitDesc& initDesc) override;
-
-    void ParseCommandLine(int argc, char* argv[]);
-
-    void SetResourceFolder(std::string_view resourceFolder);
-    const std::string& GetResourceFolder() const;
-
-    const std::string& GetUserDataFolder() const;
+public:
+    CVarManager();
+    ~CVarManager();
 
     template <typename T>
     static void NewConsoleVariableDeclaration(CVar<T>* cvar, std::string name, std::string category, T defaultValue);
@@ -48,4 +42,4 @@ private:
 
 }  // namespace red
 
-#include "inl/Configuration.inl"
+#include "inl/CVarManager.inl"

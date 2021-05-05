@@ -12,7 +12,11 @@ PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->
 
 PhysicSystem::~PhysicSystem() {}
 
-void PhysicSystem::Init() { ManageEntities(); }
+void PhysicSystem::Init()
+{
+    System::Init();
+    ManageEntities();
+}
 
 void PhysicSystem::ManageEntities()
 {
@@ -74,7 +78,7 @@ void PhysicSystem::Finalise()
 
 void PhysicSystem::Update()
 {
-    // m_physicsWorld->ClearForces();
+    m_physicsWorld->ClearForces();
 
     ManageEntities();
 

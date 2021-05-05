@@ -17,8 +17,8 @@ function TemplateProject(Name)
 
 	files
 	{
-		templatePath .. "/include/**.hpp",
-		templatePath .. "/include/**.inl",
+		templatePath .. "/src/**.hpp",
+		templatePath .. "/src/**.inl",
 		templatePath .. "/src/**.cpp",
 	}
 

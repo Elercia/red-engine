@@ -12,7 +12,7 @@ namespace red
 class Texture2D : public IResource
 {
     friend class TextureResourceLoader;
-    friend class RenderingEngine;
+    friend class Renderer;
 
 public:
     RED_RESOURCE(ResourceType::TEXTURE2D);

@@ -9,9 +9,9 @@
 
 namespace red
 {
-PhysicsWorld::PhysicsWorld() : m_inernalPhysicsWorld(new b2World({0.f, 0.f}))
+PhysicsWorld::PhysicsWorld() : m_internalPhysicsWorld(new b2World({0.f, 0.f}))
 {
-    m_inernalPhysicsWorld->SetContactListener(this);
+    m_internalPhysicsWorld->SetContactListener(this);
 }
 
 void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreationDesc& creationDesc)
@@ -21,6 +21,7 @@ void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreat
     b2BodyUserData userData;
     userData.pointer = (uintptr_t) physicBody;
     bodyDef.userData = userData;
+    bodyDef.allowSleep = false;
 
     switch (creationDesc.type)
     {
@@ -35,30 +36,30 @@ void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreat
             break;
     }
 
-    physicBody->m_body = m_inernalPhysicsWorld->CreateBody(&bodyDef);
+    physicBody->m_body = m_internalPhysicsWorld->CreateBody(&bodyDef);
 }
 
 void PhysicsWorld::DestroyPhysicsBody(PhysicBody* physicBody)
 {
-    m_inernalPhysicsWorld->DestroyBody(physicBody->GetBody());
+    m_internalPhysicsWorld->DestroyBody(physicBody->GetBody());
 }
 
 void PhysicsWorld::Step(float timeStep, int32 velocityIterations, int32 positionIterations)
 {
     UpdateContactInfos();
 
-    m_inernalPhysicsWorld->Step(timeStep, velocityIterations, positionIterations);
+    m_internalPhysicsWorld->Step(timeStep, velocityIterations, positionIterations);
 }
 
-void PhysicsWorld::ClearForces() { m_inernalPhysicsWorld->ClearForces(); }
+void PhysicsWorld::ClearForces() { m_internalPhysicsWorld->ClearForces(); }
 
 const std::vector<red::CollisionInfo>& PhysicsWorld::GetCollisions() const { return m_frameCollisionInfo; }
 
 const std::vector<red::TriggerInfo>& PhysicsWorld::GetTriggers() const { return m_frameTriggerInfo; }
 
-void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer) { m_inernalPhysicsWorld->SetDebugDraw(drawer); }
+void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer) { m_internalPhysicsWorld->SetDebugDraw(drawer); }
 
-void PhysicsWorld::DrawDebug() { m_inernalPhysicsWorld->DebugDraw(); }
+void PhysicsWorld::DrawDebug() { m_internalPhysicsWorld->DebugDraw(); }
 
 void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
 {

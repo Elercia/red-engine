@@ -1,9 +1,9 @@
-#include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
 namespace red
 {
-ResourceEngine::ResourceEngine() {}
-ResourceEngine::~ResourceEngine()
+ResourceHolderComponent::ResourceHolderComponent(Entity* owner) : Component(owner) {}
+ResourceHolderComponent::~ResourceHolderComponent()
 {
     for (auto& resourceLoaderPair : m_resourceLoaders)
     {
@@ -11,7 +11,7 @@ ResourceEngine::~ResourceEngine()
     }
 }
 
-bool ResourceEngine::RegisterResourceLoader(ResourceType resourceType, IResourceLoader* loader)
+bool ResourceHolderComponent::RegisterResourceLoader(ResourceType resourceType, IResourceLoader* loader)
 {
     auto resourceLoaderIt = m_resourceLoaders.find(resourceType);
 

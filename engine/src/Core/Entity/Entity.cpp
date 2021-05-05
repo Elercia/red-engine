@@ -1,6 +1,5 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 
-#include "RedEngine/Core/Application.hpp"
 #include "RedEngine/Core/Components/Transform.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
@@ -9,7 +8,7 @@
 
 namespace red
 {
-Entity::Entity(World* world, EntityId_t id, std::string name)
+Entity::Entity(World* world, EntityId id, std::string name)
     : m_world(world), m_id(id), m_name(std::move(name)), m_parent(nullptr), m_isPersistent(false)
 {
     AddComponent<Transform>(0.F, 0.F);
@@ -29,11 +28,11 @@ void Entity::Destroy()
 
 std::set<Component*> Entity::GetComponents() { return m_world->GetComponentManager()->GetComponents(this); }
 
-EntityId_t Entity::GetId() const { return m_id; }
+EntityId Entity::GetId() const { return m_id; }
 
 bool Entity::IsRootEntity() const { return m_parent == nullptr; }
 
-void Entity::SetId(EntityId_t id) { m_id = id; }
+void Entity::SetId(EntityId id) { m_id = id; }
 
 const std::string& Entity::GetName() const { return m_name; }
 
@@ -66,8 +65,7 @@ void Entity::SetPersistent(bool persistent)
             }
             else
             {
-                red::Application& app = red::GetEngine().GetApplication();
-                SetParent(app.GetCurrentLevel()->GetRootEntity());
+                SetParent(m_world->GetCurrentRootEntity());
             }
         }
 
@@ -97,8 +95,6 @@ void Entity::SetParent(Entity* parent)
 
     m_isDirty = true;
 }
-
-
 
 void Entity::AddChild(Entity* child)
 {

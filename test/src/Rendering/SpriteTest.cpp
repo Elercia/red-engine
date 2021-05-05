@@ -1,4 +1,3 @@
-#include "RedEngine/Core/Application.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
@@ -6,6 +5,7 @@
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
 #include <catch2/catch.hpp>
 
@@ -14,6 +14,11 @@ TEST_CASE("Sprite test", "[RENDERING]")
     using namespace red;
 
     World world;
+    Entity* sing = world.CreateSingletonEntity();
+    ResourceHolderComponent* holder = sing->AddComponent<ResourceHolderComponent>();
+    holder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(&world));
+    holder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(&world));
+
     auto* e = world.CreateEntity();
     auto* spriteComponent = e->AddComponent<Sprite>("sprite_test/sprite_test");
 

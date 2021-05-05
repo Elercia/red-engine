@@ -1,4 +1,4 @@
-#include "RedEngine/Core/Configuration/ConfigurationUtils.hpp"
+#include "RedEngine/Core/Configuration/CVarUtils.hpp"
 
 #include "RedEngine/Core/Configuration/CVar.hpp"
 
@@ -6,7 +6,13 @@
 
 namespace red
 {
-bool ConfigurationUtils::IsInt(const std::string& value, int& outValue)
+bool CVarUtils::IsBool(const std::string& value, bool& outValue)
+{
+    outValue = value == "1" || value == "true";
+    return true;
+}
+
+bool CVarUtils::IsInt(const std::string& value, int& outValue)
 {
     char* p;
     long converted = std::strtol(value.c_str(), &p, 10);
@@ -20,7 +26,7 @@ bool ConfigurationUtils::IsInt(const std::string& value, int& outValue)
     return true;
 }
 
-bool ConfigurationUtils::IsDouble(const std::string& value, double& outValue)
+bool CVarUtils::IsDouble(const std::string& value, double& outValue)
 {
     char* p;
     double converted = std::strtod(value.c_str(), &p);
@@ -34,13 +40,7 @@ bool ConfigurationUtils::IsDouble(const std::string& value, double& outValue)
     return true;
 }
 
-std::string ConfigurationUtils::GetLongName(const std::string& category, const std::string& key)
-{
-    return category + "_" + key;
-}
+std::string CVarUtils::GetLongName(const std::string& category, const std::string& key) { return category + "_" + key; }
 
-std::string ConfigurationUtils::GetLongName(const CVarValue* cVar)
-{
-    return GetLongName(cVar->GetCategory(), cVar->GetName());
-}
+std::string CVarUtils::GetLongName(const CVarValue* cVar) { return GetLongName(cVar->GetCategory(), cVar->GetName()); }
 }  // namespace red

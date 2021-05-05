@@ -20,7 +20,7 @@ struct ColliderDesc
 {
     bool isTrigger{false};
     float friction{0.f};
-    float restitution{0.f};
+    float restitution{1.f};
 };
 
 struct CircleColliderDesc : public ColliderDesc

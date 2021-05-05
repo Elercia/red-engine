@@ -23,7 +23,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
     using namespace red;
     World w;
     Entity* e = w.CreateEntity();
-    PhysicSystem system(&w);
+    PhysicSystem* system = w.AddSystem<PhysicSystem>();
 
     red::PhysicBodyCreationDesc desc = {red::PhysicsBodyType::DYNAMIC_BODY};
 
@@ -59,9 +59,9 @@ TEST_CASE("Component binding", "[PHYSICS]")
         list->AddEdgeCollider(edgeColliderDesc);
     }
 
-    system.Init();
+    system->Init();
 
     REQUIRE(size(body->GetBody()->GetFixtureList()) == 3);
 
-    system.Finalise();
+    system->Finalise();
 }

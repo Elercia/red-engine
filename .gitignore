@@ -176,3 +176,5 @@ redcppcheck-cppcheck-build-dir
 
 !scripts/bin/*
 scripts/projects/
+
+todo.todo

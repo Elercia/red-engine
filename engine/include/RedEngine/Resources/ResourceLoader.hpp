@@ -9,18 +9,19 @@
 
 namespace red
 {
+class World;
+
 class IResourceLoader
 {
 public:
-    IResourceLoader(const std::string& name, ResourceType resourceType);
+    IResourceLoader(ResourceType resourceType, World* world);
     virtual ~IResourceLoader();
 
-    const std::string& GetResourceName() const;
     const ResourceType GetResourceType() const;
 
 protected:
-    std::string m_name;
     ResourceType m_resourceType;
+    World* m_world;
 };
 
 template <typename IResourceType>
@@ -31,7 +32,7 @@ class ResourceLoader : public IResourceLoader
 public:
     using Type = IResourceType;
 
-    ResourceLoader(const std::string& name, ResourceType resourceType);
+    ResourceLoader(ResourceType resourceType, World* world);
     virtual ~ResourceLoader() = default;
 
     std::shared_ptr<IResourceType> GetFromCache(const std::string& name);

@@ -1,7 +1,7 @@
 #include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 
-#include "RedEngine/Core/Configuration/Configuration.hpp"
 #include "RedEngine/Core/Configuration/IniReader.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
 
 #include <filesystem>
@@ -13,17 +13,14 @@ namespace utils
 {
     red::UserActionMapping UserInputHelper::LoadActionMapping()
     {
-        auto* config = GetSubEngine<Configuration>();
-
-        std::string p =
-            config->GetUserDataFolder() + std::string{std::filesystem::path::preferred_separator} + "userInput.ini";
+        std::string p = "resources/userInput.ini";
         auto iniConfig = utils::IniReader::ReadFromFile(p);
 
         UserActionMapping mappings{};
 
         for (auto& configLine : iniConfig)
         {
-            //auto& cat = std::get<0>(configLine);
+            // auto& cat = std::get<0>(configLine);
             auto& key = std::get<1>(configLine);
             auto& value = std::get<2>(configLine);
 
@@ -100,9 +97,11 @@ namespace utils
 
     red::KeyCodes::Enum UserInputHelper::GetKeyCode(const std::string& keyString)
     {
-        for (auto i = 0; i < g_keyCodeReadable.size(); i++)
+        auto codes = GetKeyCodeReadableDb();
+
+        for (auto i = 0; i < codes.size(); i++)
         {
-            auto& readable = g_keyCodeReadable[i];
+            auto& readable = codes[i];
             if (keyString == readable)
             {
                 return static_cast<red::KeyCodes::Enum>(i);

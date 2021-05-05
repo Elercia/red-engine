@@ -5,13 +5,6 @@
 
 int main(int argc, char* argv[])
 {
-    // global setup...
-    red::EngineInitDesc desc;
-    desc.config.resourceFolder = "resources";
-    desc.config.argc = argc;
-    desc.config.argv = argv;
-    red::Engine::Init(desc);
-
     int result = Catch::Session().run(argc, argv);
 
     // global clean-up...

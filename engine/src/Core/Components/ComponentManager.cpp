@@ -60,7 +60,7 @@ Component* ComponentManager::GetComponent(Entity* entity, std::size_t name)
     return GetComponentPool(name)[entity->GetId()];
 }
 
-void ComponentManager::MoveComponents(EntityId_t from, EntityId_t to)
+void ComponentManager::MoveComponents(EntityId from, EntityId to)
 {
     for (auto componentPoolPair : m_components)
     {

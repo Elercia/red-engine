@@ -1,37 +1,30 @@
 
-#include "RedEngine/Rendering/RenderingEngine.hpp"
+#include "RedEngine/Rendering/Renderer.hpp"
 
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
+#include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
-#include "RedEngine/Rendering/Window.hpp"
-#include "RedEngine/Resources/ResourceEngine.hpp"
 
 #include <SDL_image/SDL_image.h>
 
 namespace red
 {
-RenderingEngine::RenderingEngine() : m_window(nullptr), m_renderer(nullptr) {}
+Renderer::Renderer() : m_renderer(nullptr) {}
 
-RenderingEngine::~RenderingEngine()
+Renderer::~Renderer()
 {
     if (m_renderer != nullptr)
         SDL_DestroyRenderer(m_renderer);
 
-    m_window.reset(nullptr);
-
     SDL_Quit();
 }
 
-void RenderingEngine::CreateNewWindow() { m_window = std::make_unique<Window>(); }
-
-Window& RenderingEngine::GetWindow() { return *m_window; }
-
-void RenderingEngine::InitRenderer()
+void Renderer::InitRenderer(WindowComponent* window)
 {
-    m_renderer = SDL_CreateRenderer(m_window->GetSDLWindow(), -1, SDL_RENDERER_ACCELERATED);
+    m_renderer = SDL_CreateRenderer(window->GetSDLWindow(), -1, SDL_RENDERER_ACCELERATED);
 
     if (m_renderer == nullptr)
     {
@@ -43,11 +36,11 @@ void RenderingEngine::InitRenderer()
     RED_LOG_INFO("Init Renderer");
 }
 
-void RenderingEngine::BeginRenderFrame() {}
+void Renderer::BeginRenderFrame() {}
 
-void RenderingEngine::EndRenderFrame() { SDL_RenderPresent(m_renderer); }
+void Renderer::EndRenderFrame() { SDL_RenderPresent(m_renderer); }
 
-void RenderingEngine::BeginCameraRendering(CameraComponent* cameraComponent)
+void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 {
     // Setup the camera viewport
     SDL_Rect viewport = {
@@ -61,37 +54,16 @@ void RenderingEngine::BeginCameraRendering(CameraComponent* cameraComponent)
                            cameraComponent->m_backgroundColor.b, cameraComponent->m_backgroundColor.a);
 
     SDL_RenderClear(m_renderer);
-
-    //    if (cameraComponent->m_renderedTexture == nullptr)
-    //    {
-    //        auto info = m_window->GetWindowInfo();
-    //
-    //        auto* sdlTexture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888,
-    //                                             SDL_TEXTUREACCESS_TARGET, info.width,
-    //                                             info.height);
-    //
-    //        cameraComponent->m_renderedTexture = ResourceEngine::CreateTextureFrom(sdlTexture);
-    //    }
-    //
-    //    SDL_SetRenderTarget(m_renderer, cameraComponent->m_renderedTexture->m_sdlTexture);
 }
 
-void RenderingEngine::EndCameraRendering()
+void Renderer::EndCameraRendering()
 {
-    //    // Reset the viewport
-    //    auto info = m_window->GetWindowInfo();
-    //    SDL_Rect viewport = {0, 0, info.width, info.height};
-    //
-    //    SDL_RenderSetViewport(m_renderer, &viewport);
-    //
-    //    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    //
-    //    SDL_SetRenderTarget(m_renderer, nullptr);
+    
 }
 
-SDL_Renderer* RenderingEngine::GetRenderer() { return m_renderer; }
+SDL_Renderer* Renderer::GetSDLRenderer() { return m_renderer; }
 
-void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Transform& transform)
+void Renderer::Render(CameraComponent* camera, Sprite* sprite, const Transform& transform)
 {
     auto& currentAnimation = *sprite->m_currentAnimationInfo.currentAnimation;
 
@@ -117,7 +89,7 @@ void RenderingEngine::Render(CameraComponent* camera, Sprite* sprite, const Tran
     }
 }
 
-void RenderingEngine::DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second, const Color& color)
+void Renderer::DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second, const Color& color)
 {
     const auto& fPos = camera->WorldToViewportPoint(first);
     const auto& sPos = camera->WorldToViewportPoint(second);
@@ -126,7 +98,7 @@ void RenderingEngine::DrawLine(CameraComponent* camera, const Vector2& first, co
     SDL_RenderDrawLine(m_renderer, (int) (fPos.x), (int) (fPos.y), (int) (sPos.x), (int) (sPos.y));
 }
 
-void RenderingEngine::DrawLines(CameraComponent* camera, const std::vector<Vector2>& points,
+void Renderer::DrawLines(CameraComponent* camera, const std::vector<Vector2>& points,
                                 const Color& color /*= ColorConstant::RED*/,
                                 bool /*isFilled*/ /*= false*/)  // TODO isFilled
 {
@@ -143,7 +115,7 @@ void RenderingEngine::DrawLines(CameraComponent* camera, const std::vector<Vecto
     SDL_RenderDrawLines(m_renderer, sdlPoints.data(), (int) sdlPoints.size());
 }
 
-void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
+void Renderer::DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
                                  const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
 {
     const auto& pos = camera->WorldToViewportPoint(center);
@@ -152,35 +124,12 @@ void RenderingEngine::DrawCircle(CameraComponent* camera, const Vector2& center,
     SDL_RenderDrawRect(m_renderer, &rect);
 }
 
-void RenderingEngine::DrawPoint(CameraComponent* camera, const Vector2& coord,
+void Renderer::DrawPoint(CameraComponent* camera, const Vector2& coord,
                                 const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
 {
     const auto& pos = camera->WorldToViewportPoint(coord);
 
     SDL_RenderDrawPoint(m_renderer, (int) pos.x, (int) pos.y);
-}
-
-void RenderingEngine::Init(const EngineInitDesc& /*initDesc*/)
-{
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-    {
-        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
-        SDL_Quit();
-        RED_ABORT("Cannot initialize SDL2");
-    }
-
-    int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
-    if (IMG_Init(flags) != flags)
-    {
-        RED_LOG_ERROR("Error initializing SDL image with error {}", IMG_GetError());
-        IMG_Quit();
-        SDL_Quit();
-        RED_ABORT("Cannot initialize SDL image");
-    }
-
-    CreateNewWindow();
-
-    InitRenderer();
 }
 
 }  // namespace red

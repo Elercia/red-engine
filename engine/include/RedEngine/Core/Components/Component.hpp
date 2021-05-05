@@ -1,14 +1,15 @@
 #pragma once
 
-#include "../EngineConfig.hpp"
-
 #include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <memory>
 
 namespace red
 {
 class Entity;
+
+using ComponentId = uint32_t;
 
 enum class ComponentStatus
 {
@@ -17,23 +18,18 @@ enum class ComponentStatus
     VALID
 };
 
-class Component
+class Component : public Uncopyable
 {
 public:
     explicit Component(Entity* entity);
-    Component(Component&&) = default;
-    Component(const Component&) = delete;
-    Component& operator=(const Component&) = delete;
-    Component& operator=(Component&&) = default;
-
     virtual ~Component() = default;
 
-    [[nodiscard]] ComponentId_t GetComponentId() const;
+    Component(Component&&) = default;
+    Component& operator=(Component&&) = default;
 
     [[nodiscard]] Entity* GetOwner() const;
 
 protected:
-    ComponentId_t m_componentId;
     Entity* m_owner;
     ComponentStatus m_status;
 };

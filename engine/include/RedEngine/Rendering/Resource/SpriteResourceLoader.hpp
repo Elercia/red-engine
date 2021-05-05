@@ -6,10 +6,12 @@
 
 namespace red
 {
+class world;
+
 class SpriteResourceLoader : public ResourceLoader<SpriteResource>
 {
 public:
-    SpriteResourceLoader();
+    SpriteResourceLoader(World* world);
     ~SpriteResourceLoader();
 
     std::shared_ptr<SpriteResource> LoadResource(const std::string& name);

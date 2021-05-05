@@ -1,6 +1,7 @@
 
 #include "RedEngine/Core/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 
 #include <algorithm>
@@ -18,7 +19,7 @@ T* Entity::AddComponent(Args&&... args)
 
     if (componentManager->HasComponent<T>(this))
     {
-        RED_LOG_ERROR("Entity {} already has the component", m_name);
+        RED_LOG_WARNING("Entity {} already has the component {}", m_name, typeid(T).name());
         return componentManager->GetComponent<T>(this);
     }
 

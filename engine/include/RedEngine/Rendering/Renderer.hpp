@@ -3,30 +3,27 @@
 #include "Color.hpp"
 
 #include "RedEngine/Core/Components/Transform.hpp"
-#include "RedEngine/Core/SubEngine.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Rendering/Component/CameraComponent.hpp"
 
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 struct SDL_Renderer;
 
 namespace red
 {
-class Window;
+class WindowComponent;
 class Sprite;
 class CameraComponent;
 
-class RenderingEngine : public SubEngine
+class Renderer
 {
 public:
-    RenderingEngine();
-    ~RenderingEngine();
-
-    Window& GetWindow();
-    SDL_Renderer* GetRenderer();
+    Renderer();
+    ~Renderer();
 
     void BeginCameraRendering(CameraComponent* cameraComponent);
     void EndCameraRendering();
@@ -46,15 +43,11 @@ public:
 
     void DrawPoint(CameraComponent* camera, const Vector2& coord, const Color& color = ColorConstant::RED);
 
-    void Init(const EngineInitDesc& initDesc) override;
+    void InitRenderer(WindowComponent* window);
+    SDL_Renderer* GetSDLRenderer();
 
 private:
-    std::unique_ptr<Window> m_window;
     SDL_Renderer* m_renderer;
-
-    void CreateNewWindow();
-
-    void InitRenderer();
 };
 
 }  // namespace red

@@ -1,57 +1,81 @@
 #include "RedEngine/Core/Engine.hpp"
 
-#include "RedEngine/Core/Application.hpp"
-#include "RedEngine/Core/Configuration/Configuration.hpp"
-#include "RedEngine/Core/SubEngine.hpp"
+#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/System/DebugSystem.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Core/Event/System/EventSystem.hpp"
+#include "RedEngine/Core/Time/FrameCounter.hpp"
+#include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Input/System/UserInputSystem.hpp"
 #include "RedEngine/Level/LevelResourceLoader.hpp"
-#include "RedEngine/RedEngineBase.hpp"
-#include "RedEngine/Rendering/RenderingEngine.hpp"
+#include "RedEngine/Physics/PhysicsWorld.hpp"
+#include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
-#include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
+
 namespace red
 {
-Engine& GetEngine()
+Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr) {}
+
+Engine::~Engine() {}
+
+int Engine::MainLoop()
 {
-    static Engine s_engine;
-    return s_engine;
-}
+    m_world->Init();
 
-void Engine::Init(const EngineInitDesc& initDesc)
-{
-    auto& instance = GetEngine();
+    bool continueExec = true;
 
-    instance.m_initDesc = initDesc;
-    instance.InitAllSubEngines(initDesc);
+    FrameCounter fc;
 
-    instance.RegisterResourceLoaders(instance.Get<ResourceEngine>());
-}
-
-Application& Engine::GetApplication()
-{
-    if (m_application == nullptr)
+    while (continueExec)
     {
-        m_application = std::make_unique<Application>();
+        float deltaTime = fc.Update();
+
+        Time::SetDeltaTime(deltaTime);
+
+        //RED_LOG_DEBUG("FPS {}", 1 / deltaTime);
+
+        continueExec = m_world->Update();
+
+        m_world->Clean();
     }
 
-    return *m_application;
+    return 0;
 }
 
-void Engine::RegisterResourceLoaders(ResourceEngine* resourceEngine)
+bool Engine::Create()
 {
-    RED_ASSERT_S(resourceEngine->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader));
-    RED_ASSERT_S(resourceEngine->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader));
-    RED_ASSERT_S(resourceEngine->RegisterResourceLoader(ResourceType::LEVEL, new LevelResourceLoader));
+    m_world = new World;
+
+    auto* singletonEntity = m_world->CreateSingletonEntity();
+
+    // TODO Put it inside a resource loader system
+    ResourceHolderComponent* resourceHolder = singletonEntity->AddComponent<ResourceHolderComponent>();
+    resourceHolder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::LEVEL, new LevelResourceLoader(m_world));
+
+    m_world->AddSystem<RenderingSystem>();
+    m_world->AddSystem<PhysicSystem>();
+    m_world->AddSystem<DebugSystem>();
+    m_world->AddSystem<EventSystem>();
+    m_world->AddSystem<UserInputSystem>();
+
+    m_world->Init();
+
+    return true;
 }
 
-const red::EngineInitDesc& Engine::GetInitDesc() const { return m_initDesc; }
-
-void Engine::InitAllSubEngines(const EngineInitDesc& initDesc)
+bool Engine::Destroy()
 {
-    std::apply(
-        [initDesc](auto&... tupleArgs) {
-            ((void) ApplyInit(std::forward<decltype(tupleArgs)>(tupleArgs), initDesc), ...);
-        },
-        m_subEngines);
+    m_world->Finalize();
+
+    delete m_world;
+
+    return true;
 }
+
 }  // namespace red
