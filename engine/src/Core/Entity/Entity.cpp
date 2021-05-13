@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Components/Transform.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 
 #include <utility>
 
@@ -26,15 +27,30 @@ void Entity::Destroy()
     m_isDestroyed = true;
 }
 
-std::set<Component*> Entity::GetComponents() { return m_world->GetComponentManager()->GetComponents(this); }
+std::set<Component*> Entity::GetComponents()
+{
+    return m_world->GetComponentManager()->GetComponents(this);
+}
 
-EntityId Entity::GetId() const { return m_id; }
+EntityId Entity::GetId() const
+{
+    return m_id;
+}
 
-bool Entity::IsRootEntity() const { return m_parent == nullptr; }
+bool Entity::IsRootEntity() const
+{
+    return m_parent == nullptr;
+}
 
-void Entity::SetId(EntityId id) { m_id = id; }
+void Entity::SetId(EntityId id)
+{
+    m_id = id;
+}
 
-const std::string& Entity::GetName() const { return m_name; }
+const std::string& Entity::GetName() const
+{
+    return m_name;
+}
 
 void Entity::SetPersistent(bool persistent)
 {
@@ -117,10 +133,24 @@ void Entity::RemoveChild(Entity* child)
     m_isDirty = true;
 }
 
-Entity* Entity::GetParent() { return m_parent; }
+Entity* Entity::GetParent()
+{
+    return m_parent;
+}
 
-std::vector<Entity*> Entity::GetChildren() { return m_children; }
+std::vector<Entity*> Entity::GetChildren()
+{
+    return m_children;
+}
 
-World* Entity::GetWorld() { return m_world; }
+World* Entity::GetWorld()
+{
+    return m_world;
+}
+
+red::ComponentManager* Entity::GetComponentManager()
+{
+    return m_world->GetComponentManager();
+}
 
 }  // namespace red

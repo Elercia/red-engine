@@ -1,15 +1,17 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/Entity.hpp"
-#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <vector>
 
 namespace red
 {
+class World;
+
 class System
 {
     friend World;
@@ -24,23 +26,36 @@ public:
     System& operator=(System&&) = default;
 
     // Update functions called in this order
-    virtual void Update() {}
-    virtual void PreUpdate() {}
-    virtual void PostUpdate() {}
+    virtual void Update()
+    {
+    }
+    virtual void PreUpdate()
+    {
+    }
+    virtual void PostUpdate()
+    {
+    }
 
     /// Called once the world is initializing to manager system-specific init
-    virtual void Init() { m_isInit = true; }
+    virtual void Init()
+    {
+        m_isInit = true;
+    }
 
     /// Called once the system is shutting down to manage system-specific shutdown
-    virtual void Finalise() {}
+    virtual void Finalise()
+    {
+    }
 
-    virtual void ManageEntities() {}
+    virtual void ManageEntities()
+    {
+    }
 
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
 
-    template <typename ComponentType>
-    ComponentType* GetComponent();
+    template <typename CT>
+    CT* GetComponent();
 
     Entity* GetSingletonEntity();
 
@@ -51,6 +66,8 @@ public:
     std::size_t GetTypeId();
 
     int GetPriority() const;
+
+    std::vector<Entity*> GetWorldEntities();
 
 protected:
     bool m_isInit;

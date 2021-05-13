@@ -95,7 +95,7 @@ void PhysicsWorld::UpdateContactInfos()
 void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1,
                                        Collider* collider2, const b2Contact* contact)
 {
-    auto* manifold = contact->GetManifold();
+    const auto* manifold = contact->GetManifold();
 
     b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
@@ -111,7 +111,7 @@ void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* phys
 
     for (int i = 0; i < manifold->pointCount; i++)
     {
-        auto& manifoldPoint = manifold->points[i];
+        const auto& manifoldPoint = manifold->points[i];
         collisionInfo.contactPoints.push_back({ConvertFromPhysicsVector(manifoldPoint.localPoint),
                                                manifoldPoint.normalImpulse, manifoldPoint.tangentImpulse});
     }
@@ -128,6 +128,6 @@ void PhysicsWorld::AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physic
     collisionInfo.firstCollider = collider1;
     collisionInfo.secondCollider = collider2;
 
-    m_frameTriggerInfo.push_back(std::move(collisionInfo));
+    m_frameTriggerInfo.push_back(collisionInfo);
 }
 }  // namespace red

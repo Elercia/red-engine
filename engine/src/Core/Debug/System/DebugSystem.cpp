@@ -4,6 +4,8 @@
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
@@ -13,7 +15,9 @@
 
 namespace red
 {
-DebugSystem::DebugSystem(World* world) : System(world) {}
+DebugSystem::DebugSystem(World* world) : System(world)
+{
+}
 
 void DebugSystem::Init()
 {

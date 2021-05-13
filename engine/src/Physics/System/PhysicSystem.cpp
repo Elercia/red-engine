@@ -1,4 +1,5 @@
 #include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
@@ -8,9 +9,13 @@
 
 namespace red
 {
-PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->GetPhysicsWorld()) {}
+PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->GetPhysicsWorld())
+{
+}
 
-PhysicSystem::~PhysicSystem() {}
+PhysicSystem::~PhysicSystem()
+{
+}
 
 void PhysicSystem::Init()
 {

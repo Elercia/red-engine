@@ -2,8 +2,10 @@
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
+#include "RedEngine/Resources/ResourceLoader.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
 
 #include <SDL_image/SDL_image.h>
@@ -12,9 +14,13 @@
 
 namespace red
 {
-TextureResourceLoader::TextureResourceLoader(World* world) : ResourceLoader(ResourceType::TEXTURE2D, world) {}
+TextureResourceLoader::TextureResourceLoader(World* world) : ResourceLoader(ResourceType::TEXTURE2D, world)
+{
+}
 
-TextureResourceLoader::~TextureResourceLoader() {}
+TextureResourceLoader::~TextureResourceLoader()
+{
+}
 
 std::shared_ptr<Texture2D> TextureResourceLoader::LoadResource(const std::string& name)
 {

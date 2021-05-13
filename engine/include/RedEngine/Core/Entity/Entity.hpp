@@ -1,18 +1,23 @@
 #pragma once
 
 #include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
+#include <algorithm>
+#include <cassert>
 #include <set>
 #include <string>
 #include <vector>
 
 namespace red
 {
-class World;
-
 using EntityId = uint32;
+
+class World;
 
 class Entity
 {
@@ -62,6 +67,8 @@ public:
     std::vector<Entity*> GetChildren();
 
     World* GetWorld();
+
+    ComponentManager* GetComponentManager();
 
 protected:
     World* m_world;

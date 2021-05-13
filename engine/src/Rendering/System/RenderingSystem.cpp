@@ -5,13 +5,18 @@
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
 namespace red
 {
-RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr) { RED_LOG_INFO("Adding Rendering system"); }
+RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
+{
+    RED_LOG_INFO("Adding Rendering system");
+}
 
 void RenderingSystem::Init()
 {
@@ -59,10 +64,17 @@ void RenderingSystem::Update()
     m_renderer->EndRenderFrame();
 }
 
-void RenderingSystem::PreUpdate() {}
-void RenderingSystem::PostUpdate() {}
+void RenderingSystem::PreUpdate()
+{
+}
+void RenderingSystem::PostUpdate()
+{
+}
 
-red::Renderer* RenderingSystem::GetRenderer() { return m_renderer; }
+red::Renderer* RenderingSystem::GetRenderer()
+{
+    return m_renderer;
+}
 
 void RenderingSystem::DrawDebug(CameraComponent* camera)
 {

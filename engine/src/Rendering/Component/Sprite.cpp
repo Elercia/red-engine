@@ -2,10 +2,11 @@
 
 #include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
-#include "RedEngine/Core/Entity/Entity.hpp"
 
 #include <utility>
 
@@ -74,9 +75,15 @@ bool Sprite::StartAnimation(const std::string& name)
     return false;
 }
 
-const std::vector<AnimationDesc>& Sprite::GetAnimations() const { return m_spriteResource->m_animations; }
+const std::vector<AnimationDesc>& Sprite::GetAnimations() const
+{
+    return m_spriteResource->m_animations;
+}
 
-const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const { return m_currentAnimationInfo; }
+const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const
+{
+    return m_currentAnimationInfo;
+}
 
 bool Sprite::IsValid() const
 {

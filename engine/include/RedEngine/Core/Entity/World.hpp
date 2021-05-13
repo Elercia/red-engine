@@ -12,10 +12,8 @@
 
 namespace red
 {
-class Entity;
 class ComponentManager;
 class Component;
-class System;
 class Level;
 
 class World : Uncopyable
