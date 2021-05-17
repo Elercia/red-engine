@@ -3,10 +3,10 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 
-#include <Box2D/b2_circle_shape.h>
-#include <Box2D/b2_edge_shape.h>
-#include <Box2D/b2_fixture.h>
-#include <Box2D/b2_polygon_shape.h>
+#include <box2d/b2_circle_shape.h>
+#include <box2d/b2_edge_shape.h>
+#include <box2d/b2_fixture.h>
+#include <box2d/b2_polygon_shape.h>
 #include <algorithm>
 
 namespace red

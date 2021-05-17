@@ -3,9 +3,9 @@
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 
-#include <Box2D/b2_contact.h>
-#include <Box2D/b2_draw.h>
-#include <Box2D/b2_world.h>
+#include <box2d/b2_contact.h>
+#include <box2d/b2_draw.h>
+#include <box2d/b2_world.h>
 
 namespace red
 {

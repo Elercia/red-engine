@@ -1,3 +1,4 @@
-Checks:             'cert-*,performance-*,readability-*,-readability-braces-around-statements,-readability-uppercase-literal-suffix'
+Checks:             'cert-*,performance-*,readability-*,-readability-braces-around-statements,-readability-uppercase-literal-suffix,-readability-convert-member-functions-to-static,-readability-magic-numbers'
 WarningsAsErrors:   '-*'
+HeaderFilterRegex:	'RedEngine/*'
 FormatStyle:        file

@@ -5,7 +5,7 @@
 
 namespace red
 {
-ComponentManager::ComponentManager() : m_components() {}
+ComponentManager::ComponentManager() {}
 
 ComponentManager::~ComponentManager()
 {

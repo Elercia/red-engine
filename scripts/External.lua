@@ -65,7 +65,7 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 	project(Name)
 
 	language("C++")
-	cppdialect("C++17")
+	cppdialect("C++20")
 
 	staticruntime("Off")
 

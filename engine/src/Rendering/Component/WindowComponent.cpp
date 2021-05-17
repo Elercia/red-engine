@@ -99,7 +99,7 @@ SDL_SysWMinfo WindowComponent::GetSDLSysInfo()
     SDL_SysWMinfo sysInfo;
     SDL_VERSION(&sysInfo.version);
 
-    if (!SDL_GetWindowWMInfo(m_window, &sysInfo))
+    if (SDL_GetWindowWMInfo(m_window, &sysInfo) != SDL_TRUE)
     {
         RED_ERROR("Cant get native window handle on windows")
     }

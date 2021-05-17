@@ -16,9 +16,9 @@ namespace red
 {
 World::World()
     : m_singletonEntity(nullptr)
+    , m_currentRootEntity(nullptr)
     , m_componentManager(new ComponentManager())
     , m_nextEntityId(0)
-    , m_physicsWorld()
     , m_currentLevel(nullptr)
 {
 }
@@ -148,7 +148,7 @@ void World::ChangeLevel(Level* newLevel)
 
     m_currentLevel = newLevel;
 
-    if (m_currentLevel)
+    if (m_currentLevel != nullptr)
         m_currentLevel->InternInit();
 
     for (auto* system : m_systems)

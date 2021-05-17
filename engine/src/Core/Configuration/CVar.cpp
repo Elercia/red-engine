@@ -9,7 +9,6 @@ CVarValue::CVarValue(std::string name, std::string category, std::string default
     , m_currentValue(m_defaultValue)
     , m_name(std::move(name))
     , m_category(std::move(category))
-    , m_valueChangeCallback()
 {
 }
 

@@ -10,7 +10,7 @@
 namespace red
 {
 Entity::Entity(World* world, EntityId id, std::string name)
-    : m_world(world), m_id(id), m_name(std::move(name)), m_parent(nullptr), m_isPersistent(false)
+    : m_world(world), m_id(id), m_name(std::move(name)), m_isPersistent(false), m_parent(nullptr)
 {
     AddComponent<Transform>(0.F, 0.F);
 }

@@ -24,9 +24,9 @@ public:
     ~CVarManager();
 
     template <typename T>
-    static void NewConsoleVariableDeclaration(CVar<T>* cvar, std::string name, std::string category, T defaultValue);
+    static void NewConsoleVariableDeclaration(CVar<T>* cvar, const std::string& name, const std::string& category, T defaultValue);
 
-    static void LoadConfigFile(std::filesystem::path path);
+    static void LoadConfigFile(const std::filesystem::path&);
 
 private:
     void LoadConfigFileInternal(std::filesystem::path path);

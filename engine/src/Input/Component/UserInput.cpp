@@ -2,23 +2,40 @@
 
 namespace red
 {
-UserInputComponent::UserInputComponent(Entity* entity) : Component(entity) {}
+UserInputComponent::UserInputComponent(Entity* entity) : Component(entity)
+{
+}
 
 UserInputComponent::~UserInputComponent() = default;
 
-bool UserInputComponent::GetKeyDown(ActionKey keyId) const { return m_state.at(keyId).isDown; }
+[[nodiscard]] bool UserInputComponent::GetKeyDown(const ActionKey& keyId) const
+{
+    return m_state.at(keyId).isDown;
+}
 
-bool UserInputComponent::GetKeyUp(ActionKey keyId) const { return m_state.at(keyId).isUp; }
+[[nodiscard]] bool UserInputComponent::GetKeyUp(const ActionKey& keyId) const
+{
+    return m_state.at(keyId).isUp;
+}
 
-bool UserInputComponent::GetKey(ActionKey keyId) const { return m_state.at(keyId).isPressed; } // TODO find and return false if not found
+[[nodiscard]] bool UserInputComponent::GetKey(const ActionKey& keyId) const
+{
+    return m_state.at(keyId).isPressed;
+}  // TODO find and return false if not found
 
-Vector2 UserInputComponent::GetAxis(AxisKey axisId) const
+Vector2 UserInputComponent::GetAxis(const AxisKey& /*axisId*/) const
 {
     return Vector2();
     // TODO manage axis
 }
 
-UserActionMapping UserInputComponent::GetActionMapping() { return m_actionMapping; }
+UserActionMapping UserInputComponent::GetActionMapping()
+{
+    return m_actionMapping;
+}
 
-void UserInputComponent::SetActionMapping(UserActionMapping mapping) { m_actionMapping = std::move(mapping); }
+void UserInputComponent::SetActionMapping(UserActionMapping mapping)
+{
+    m_actionMapping = std::move(mapping);
+}
 }  // namespace red

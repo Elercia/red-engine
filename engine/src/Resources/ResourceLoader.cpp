@@ -8,6 +8,6 @@ IResourceLoader::IResourceLoader(ResourceType resourceType, World* world) : m_re
 
 IResourceLoader::~IResourceLoader() {}
 
-const ResourceType IResourceLoader::GetResourceType() const { return m_resourceType; }
+ResourceType IResourceLoader::GetResourceType() const { return m_resourceType; }
 
 }  // namespace red

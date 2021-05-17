@@ -6,7 +6,7 @@
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <Box2D/b2_body.h>
+#include <box2d/b2_body.h>
 #include <vector>
 
 namespace red

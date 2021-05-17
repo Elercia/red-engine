@@ -34,7 +34,7 @@ void EventSystem::PreUpdate()
 
     // Update the inputs
     SDL_Event event;
-    while (SDL_PollEvent(&event))
+    while (SDL_PollEvent(&event) != 0)
     {
         /* handle your event here */
         switch (event.type)

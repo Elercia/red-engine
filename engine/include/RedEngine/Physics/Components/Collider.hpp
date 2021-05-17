@@ -5,8 +5,8 @@
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <Box2D/b2_shape.h>
-#include <Box2D/b2_fixture.h>
+#include <box2d/b2_shape.h>
+#include <box2d/b2_fixture.h>
 #include <map>
 #include <memory>
 
@@ -48,7 +48,7 @@ struct Collider
     b2Fixture* m_fixture;
     std::unique_ptr<b2Shape> m_shape{nullptr};
 
-    bool IsTrigger() { return m_fixtureDef.isSensor; }
+    bool IsTrigger() const { return m_fixtureDef.isSensor; }
 };
 
 // TODO Collision layers

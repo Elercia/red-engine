@@ -19,11 +19,11 @@ public:
     explicit UserInputComponent(Entity* entity);
     ~UserInputComponent() override;
 
-    [[nodiscard]] bool GetKeyDown(ActionKey keyId) const;
-    [[nodiscard]] bool GetKeyUp(ActionKey keyId) const;
-    [[nodiscard]] bool GetKey(ActionKey keyId) const;
+    [[nodiscard]] bool GetKeyDown(const ActionKey& keyId) const;
+    [[nodiscard]] bool GetKeyUp(const ActionKey& keyId) const;
+    [[nodiscard]] bool GetKey(const ActionKey& keyId) const;
 
-    [[nodiscard]] Vector2 GetAxis(AxisKey axisId) const;
+    [[nodiscard]] Vector2 GetAxis(const AxisKey& axisId) const;
 
     [[nodiscard]] UserActionMapping GetActionMapping();
     void SetActionMapping(UserActionMapping mapping);

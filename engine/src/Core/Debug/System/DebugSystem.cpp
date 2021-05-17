@@ -10,8 +10,8 @@
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
-#include <Box2D/b2_draw.h>
-#include <Box2D/box2d.h>
+#include <box2d/b2_draw.h>
+#include <box2d/box2d.h>
 
 namespace red
 {

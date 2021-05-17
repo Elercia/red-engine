@@ -13,7 +13,7 @@ CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Compon
 {
     auto* window = entity->GetWorld()->GetSingletonEntity()->GetComponent<WindowComponent>();
 
-    if (!window)
+    if (window == nullptr)
     {
         RED_LOG_ERROR("Camera component created without a window");
         return;

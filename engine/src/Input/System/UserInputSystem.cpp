@@ -35,8 +35,8 @@ void UserInputSystem::PreUpdate()
     auto* eventsSystem = GetComponent<EventsComponent>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)
     {
-        auto& actionName = actionMapping.first;
-        auto& mapping = actionMapping.second;
+        const auto& actionName = actionMapping.first;
+        const auto& mapping = actionMapping.second;
 
         KeyState oldState = m_inputComponent->m_state[actionName];
         KeyState mappingState = eventsSystem->GetKeyState(mapping.mapping);
@@ -75,7 +75,7 @@ red::KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, con
     KeyState resultState = {false, false, false};
     resultState.isPressed = states[0].isPressed;
 
-    for (auto& state : states)
+    for (const auto& state : states)
     {
         // A user input is pressed only if all the required keys are pressed
         resultState.isPressed = state.isPressed && resultState.isPressed;

@@ -17,7 +17,7 @@ public:
     IResourceLoader(ResourceType resourceType, World* world);
     virtual ~IResourceLoader();
 
-    const ResourceType GetResourceType() const;
+    ResourceType GetResourceType() const;
 
 protected:
     ResourceType m_resourceType;

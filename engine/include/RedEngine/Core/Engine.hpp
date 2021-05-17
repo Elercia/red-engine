@@ -11,8 +11,8 @@ namespace red
 {
 class World;
 
-template <typename EngineClass>
-EngineClass* CreateEngineFrom(int argc, char** argv);
+//template <typename EngineClass>
+//EngineClass* CreateEngineFrom(int argc, char** argv);
 
 class Engine
 {

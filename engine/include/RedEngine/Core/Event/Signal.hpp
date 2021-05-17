@@ -56,8 +56,8 @@ public:
         Slot(Slot&&) = default;
         Slot& operator=(Slot&&) = default;
 
-        Slot(const Slot&);
-        Slot& operator=(const Slot&);
+        Slot(const Slot& other);
+        Slot& operator=(const Slot& other);
 
         bool IsActive();
 

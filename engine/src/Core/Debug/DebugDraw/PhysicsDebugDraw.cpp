@@ -6,7 +6,7 @@
 
 namespace red
 {
-PhysicsDebugDrawer::PhysicsDebugDrawer(DebugComponent* debugComponent) : b2Draw(), m_debugComponent(debugComponent) {}
+PhysicsDebugDrawer::PhysicsDebugDrawer(DebugComponent* debugComponent) : m_debugComponent(debugComponent) {}
 
 PhysicsDebugDrawer::~PhysicsDebugDrawer() = default;
 
@@ -14,6 +14,7 @@ void PhysicsDebugDrawer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, 
 {
     std::vector<Vector2> points;
 
+    points.reserve(vertexCount);
     for (int32 i = 0; i < vertexCount; i++)
     {
         points.push_back(ConvertFromPhysicsVector(vertices[i]));
@@ -26,6 +27,7 @@ void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCo
 {
     std::vector<Vector2> points;
 
+    points.reserve(vertexCount);
     for (int i = 0; i < vertexCount; i++)
     {
         points.push_back(ConvertFromPhysicsVector(vertices[i]));

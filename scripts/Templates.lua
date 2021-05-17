@@ -6,8 +6,12 @@ function TemplateProject(Name)
 	kind("ConsoleApp")
 	language("C++")
 	cppdialect("C++17")
-	staticruntime("Off")	
-	flags { "NoPCH" }
+	
+	rtti("Off")
+	exceptionhandling("Off")
+	warnings("Extra")
+	flags("NoPCH")
+	staticruntime("Off")
 
 	location(projectsFilesLocation)
 	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)

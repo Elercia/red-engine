@@ -6,22 +6,38 @@
 
 namespace red
 {
-EventsComponent::EventsComponent(Entity* entity)
-    : Component(entity), m_quitRequested(false), m_keyStates(), m_mousePosition()
+EventsComponent::EventsComponent(Entity* entity) : Component(entity), m_quitRequested(false)
 {
 }
 
-EventsComponent::~EventsComponent() {}
+EventsComponent::~EventsComponent()
+{
+}
 
-bool EventsComponent::GetKey(red::KeyCodes::Enum key) const { return m_keyStates.at(key).isPressed; }
+bool EventsComponent::GetKey(red::KeyCodes::Enum key) const
+{
+    return m_keyStates.at(key).isPressed;
+}
 
-bool EventsComponent::GetKeyUp(KeyCodes::Enum key) const { return m_keyStates.at(key).isUp; }
+bool EventsComponent::GetKeyUp(KeyCodes::Enum key) const
+{
+    return m_keyStates.at(key).isUp;
+}
 
-bool EventsComponent::GetKeyDown(KeyCodes::Enum key) const { return m_keyStates.at(key).isDown; }
+bool EventsComponent::GetKeyDown(KeyCodes::Enum key) const
+{
+    return m_keyStates.at(key).isDown;
+}
 
-KeyState EventsComponent::GetKeyState(KeyCodes::Enum key) const { return m_keyStates.at(key); }
+KeyState EventsComponent::GetKeyState(KeyCodes::Enum key) const
+{
+    return m_keyStates.at(key);
+}
 
-const Vector2i& EventsComponent::GetMousePosition() const { return m_mousePosition; }
+const Vector2i& EventsComponent::GetMousePosition() const
+{
+    return m_mousePosition;
+}
 
 void EventsComponent::SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type)
 {
@@ -33,6 +49,9 @@ void EventsComponent::SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type)
     SDL_PushEvent(&event);
 }
 
-bool EventsComponent::QuitRequested() const { return m_quitRequested; }
+bool EventsComponent::QuitRequested() const
+{
+    return m_quitRequested;
+}
 
 }  // namespace red

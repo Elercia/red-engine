@@ -58,7 +58,7 @@ CVarValue* CVarManager::NewConsoleVariableDeclaration(const std::string& name, c
     return CVarManager::GetInstance().NewConsoleVariableDeclarationInternal(name, category, defaultValue);
 }
 
-void CVarManager::LoadConfigFile(std::filesystem::path path)
+void CVarManager::LoadConfigFile(const std::filesystem::path& path)
 {
     CVarManager::GetInstance().LoadConfigFileInternal(path);
 }

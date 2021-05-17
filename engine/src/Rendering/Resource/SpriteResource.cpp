@@ -4,6 +4,6 @@
 
 namespace red
 {
-SpriteResource::SpriteResource(ResourceId resourceId) : IResource(resourceId, ResourceType::SPRITE) {}
+SpriteResource::SpriteResource(ResourceId resourceId) : IResource(std::move(resourceId), ResourceType::SPRITE) {}
 
 }  // namespace red
