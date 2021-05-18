@@ -4,8 +4,13 @@
 
 class LoggerTest : public red::Logger
 {
+public:
+    LoggerTest() = default;
+    virtual ~LoggerTest() = default;
+
 protected:
-    virtual void Out(const std::string& data) override { lastLog = std::string(data.c_str()); }
+
+    void Out(const std::string& data) override { lastLog = data; }
 
 public:
     std::string lastLog;

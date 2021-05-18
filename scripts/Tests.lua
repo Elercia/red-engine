@@ -5,6 +5,10 @@ project ("RedEngineTest")
     language("C++")
     cppdialect("C++17")
 
+    rtti("Off")
+    exceptionhandling("Off")
+    warnings("Extra")
+    flags("NoPCH")
     staticruntime("Off")
 
     targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
@@ -35,6 +39,14 @@ project ("RedEngineTest")
     {
         "RedEngineLib",
         "SDL2main",
+        "SDL2",
+        "SDL2_image",
+        "Box2D",
+        "fmt",
+        "fmod",
+        "fsbank",
+        "fmodstudio",
+        "optick",
     }
 
     filter "configurations:Debug"

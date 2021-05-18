@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Utils/TypesInfo.hpp"
 
 #include <algorithm>
 #include <cassert>

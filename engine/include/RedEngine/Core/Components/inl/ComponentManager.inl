@@ -9,7 +9,7 @@ ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args
 
     auto component = new ComponentType_t(owner, std::forward<Args>(args)...);
 
-    StoreComponent(owner, component, typeid(ComponentType_t).hash_code());
+    StoreComponent(owner, component, TypeInfo<ComponentType_t>().typeId);
 
     return component;
 }
@@ -17,7 +17,7 @@ ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args
 template <typename ComponentType_t>
 void ComponentManager::RemoveComponent(Entity* owner)
 {
-    auto* pool = GetComponentPool(typeid(ComponentType_t).hash_code());
+    auto* pool = GetComponentPool(TypeInfo<ComponentType_t>().typeId);
 
     RemoveComponent(owner, pool);
 }
@@ -25,13 +25,13 @@ void ComponentManager::RemoveComponent(Entity* owner)
 template <class ComponentType_t>
 bool ComponentManager::HasComponent(Entity* entity)
 {
-    return HasComponent(entity, typeid(ComponentType_t).hash_code());
+    return HasComponent(entity, TypeInfo<ComponentType_t>().typeId);
 }
 
 template <typename ComponentType_t>
 ComponentType_t* ComponentManager::GetComponent(Entity* entity)
 {
-    auto* componentPtr = GetComponent(entity, typeid(ComponentType_t).hash_code());
+    auto* componentPtr = GetComponent(entity, TypeInfo<ComponentType_t>().typeId);
     return reinterpret_cast<ComponentType_t*>(componentPtr);
 }
 }  // namespace red

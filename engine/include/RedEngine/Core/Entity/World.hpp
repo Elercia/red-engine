@@ -4,6 +4,7 @@
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
 #include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Utils/TypesInfo.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <memory>

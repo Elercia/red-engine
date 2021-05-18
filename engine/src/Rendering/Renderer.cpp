@@ -8,7 +8,7 @@
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
-#include <SDL_image/SDL_image.h>
+#include <SDL2/SDL_image.h>
 
 namespace red
 {

@@ -6,15 +6,22 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 
+#include <SDL2/SDL.h>
+
 namespace red
 {
-UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr} { m_priority = 9; }
+UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
+{
+    m_priority = 9;
+}
 
 void UserInputSystem::Init()
 {
     System::Init();
 
     PROFILER_CATEGORY("Input Init", Optick::Category::Input);
+
+    SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 
     auto* singeltonEntity = GetSingletonEntity();
 
@@ -62,7 +69,7 @@ void UserInputSystem::PreUpdate()
         {
             RED_LOG_DEBUG("User action {} is down", actionName);
         }
-         
+
         if (resultState.isUp)
         {
             RED_LOG_DEBUG("User action {} is up", actionName);

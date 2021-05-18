@@ -70,6 +70,9 @@ red::Entity* World::CreateSingletonEntity()
 
 void World::Init()
 {
+    std::sort(m_systems.begin(), m_systems.end(),
+              [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
+
     for (auto& system : m_systems)
     {
         if (!system->m_isInit)

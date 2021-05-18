@@ -3,7 +3,7 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 
 #include <SDL2/SDL.h>
-#include <SDL_image/SDL_image.h>
+#include <SDL2/SDL_image.h>
 
 namespace red
 {

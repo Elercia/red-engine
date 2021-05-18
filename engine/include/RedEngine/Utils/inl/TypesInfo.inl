@@ -6,7 +6,8 @@ constexpr TypeTraits TypeInfo()
     constexpr std::string_view full_name{RED_FUNCNAME};
     constexpr std::string_view left_marker{RED_FUNCNAME_START};
     constexpr std::string_view right_marker{RED_FUNCNAME_END};
-    
+    constexpr std::string_view function_struct_start{RED_FUNCNAME_STRUCT_START};
+
     constexpr auto left_marker_index = full_name.find(left_marker);
     static_assert(left_marker_index != std::string_view::npos, "Type T is not starting with left_marker");
 
@@ -16,12 +17,16 @@ constexpr TypeTraits TypeInfo()
     static_assert(end_index != std::string_view::npos, "Type T is not ending with right_marker");
 
     constexpr auto length = end_index - start_index;
-    
-    std::string_view typeName = full_name.substr(start_index, length);
 
-    //const char* typeName = full_name.substr(0, full_name.length()).data();
+    constexpr auto typeName = full_name.substr(start_index, length);
 
-    TypeTraits typeTraits{typeName, 0};
+    constexpr auto slicedTypeName = typeName.find(function_struct_start) != std::string_view::npos
+                                                    ? typeName.substr(function_struct_start.length())
+                                                    : typeName;
+
+    constexpr auto hash = fnv1a32(slicedTypeName);
+
+    constexpr TypeTraits typeTraits{slicedTypeName, hash};
 
     return typeTraits;
 }

@@ -41,6 +41,14 @@ function TemplateProject(Name)
 	links
 	{
 		"RedEngineLib",
+		"SDL2",
+		"SDL2_image",
+		"Box2D",
+		"fmt",
+		"fmod",
+		"fsbank",
+		"fmodstudio",
+		"optick",
 	}
 
 	defines

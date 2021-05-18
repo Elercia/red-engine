@@ -39,9 +39,9 @@ project "RedEngineLib"
 		"SDL2_image",
 		"Box2D",
 		"fmt",
-		"fmod_vc",
-		"fsbank_vc",
-		"fmodstudio_vc",
+		"fmod",
+		"fsbank",
+		"fmodstudio",
 		"optick",
 	}
 

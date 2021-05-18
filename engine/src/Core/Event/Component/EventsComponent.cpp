@@ -46,7 +46,8 @@ void EventsComponent::SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type)
     event.type = type == KeyEventType::KEY_DOWN ? SDL_KEYDOWN : SDL_KEYUP;
     event.key.keysym.scancode = GetKeyboardSDLTranslationMap().at(key);
 
-    SDL_PushEvent(&event);
+    if (SDL_PushEvent(&event) < 0)
+        RED_LOG_ERROR("Cant push event because : {}", SDL_GetError());
 }
 
 bool EventsComponent::QuitRequested() const

@@ -10,7 +10,7 @@ T* Entity::AddComponent(Args&&... args)
 
     if (componentManager->HasComponent<T>(this))
     {
-        RED_LOG_WARNING("Entity {} already has the component {}", m_name, typeid(T).name());
+        RED_LOG_WARNING("Entity {} already has the component {}", m_name, TypeInfo<T>().name);
         return componentManager->GetComponent<T>(this);
     }
 

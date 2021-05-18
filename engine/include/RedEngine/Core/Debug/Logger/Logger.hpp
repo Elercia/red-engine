@@ -25,7 +25,7 @@ class Logger
 {
 public:
     Logger();
-    ~Logger() = default;
+    virtual ~Logger() = default;
 
     void SetLogLevel(LogLevel::Enum level);
 

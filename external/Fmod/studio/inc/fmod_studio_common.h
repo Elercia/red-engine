@@ -1,6 +1,6 @@
 /* ======================================================================================== */
 /* FMOD Studio API - Common C/C++ header file.                                              */
-/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2020.                               */
+/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2021.                               */
 /*                                                                                          */
 /* This header defines common enumerations, structs and callbacks that are shared between   */
 /* the C and C++ interfaces.                                                                */
@@ -48,6 +48,8 @@ typedef unsigned int FMOD_STUDIO_SYSTEM_CALLBACK_TYPE;
 #define FMOD_STUDIO_SYSTEM_CALLBACK_PREUPDATE               0x00000001
 #define FMOD_STUDIO_SYSTEM_CALLBACK_POSTUPDATE              0x00000002
 #define FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD             0x00000004
+#define FMOD_STUDIO_SYSTEM_CALLBACK_LIVEUPDATE_CONNECTED    0x00000008
+#define FMOD_STUDIO_SYSTEM_CALLBACK_LIVEUPDATE_DISCONNECTED 0x00000010
 #define FMOD_STUDIO_SYSTEM_CALLBACK_ALL                     0xFFFFFFFF
 
 typedef unsigned int FMOD_STUDIO_EVENT_CALLBACK_TYPE;

@@ -8,7 +8,7 @@
 #include "RedEngine/Resources/ResourceLoader.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
 
-#include <SDL_image/SDL_image.h>
+#include <SDL2/SDL_image.h>
 #include <filesystem>
 #include <nlohmann/json.hpp>
 

@@ -44,12 +44,12 @@ TEST_CASE("User input handling", "[Input]")
     auto* singletonEntity = world.CreateSingletonEntity();
 
     auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();
-    auto* sys = world.AddSystem<red::UserInputSystem>();
+    world.AddSystem<red::UserInputSystem>();
 
     auto* eventsComponent = singletonEntity->AddComponent<EventsComponent>();
-    auto* eventSystem = world.AddSystem<EventSystem>();
-
-    sys->Init();
+    world.AddSystem<red::EventSystem>();
+   
+    world.Init();
 
     SECTION("Single input without modifiers")
     {

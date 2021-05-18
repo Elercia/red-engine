@@ -5,6 +5,13 @@ enginePath = rootPath .. "engine/"
 externalPath = rootPath .. "external/"
 projectsFilesLocation = "./projects/" .. _ACTION
 
+availablePlatforms={}
+if os.istarget("linux") then
+	table.insert(availablePlatforms, "Linux64")
+elseif os.istarget("windows") then
+	table.insert(availablePlatforms, "Win64")
+end
+
 print ( "RootPath : " .. rootPath )
 
 workspace "RedEngine"
@@ -19,8 +26,7 @@ workspace "RedEngine"
 
 	platforms 
 	{
-		"Win64", 
-		"Linux64"
+		availablePlatforms
 	}
 
 	flags

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "RedEngine/Math/Hash.hpp"
+
 #include <string_view>
 
 namespace red
@@ -5,16 +9,22 @@ namespace red
 struct TypeTraits
 {
     std::string_view name;
-    const int typeId;
+    const uint32 typeId;
 };
 
 #ifdef _MSC_VER
-#define RED_FUNCNAME "red::TypeInfo<NoInfo>(void)"
+#define RED_FUNCNAME __FUNCSIG__
 #define RED_FUNCNAME_START "red::TypeInfo<"
 #define RED_FUNCNAME_END ">(void)"
-#elif __GCC__
+#define RED_FUNCNAME_STRUCT_START "struct "
+#elif __GNUC__
 #define RED_FUNCNAME __PRETTY_FUNCTION__
+#define RED_FUNCNAME_START "red::TypeInfo() [with T = "
+#define RED_FUNCNAME_END "]"
+#define RED_FUNCNAME_STRUCT_START "error"
 #endif
+
+#define RED_TYPE_INFO(var) red::TypeInfo<decltype(var)>()
 
 template <typename T>
 constexpr TypeTraits TypeInfo();

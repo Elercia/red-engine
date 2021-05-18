@@ -9,26 +9,29 @@ ExternalLibDirs = {}
 --------------------------------------------------------------
 
 -- SDL2 
-table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL2/include")
-table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL2/include/SDL2")
-table.insert(ExternalLibDirs, externalDirectoryPath .. "/SDL2/lib/x64")
+if os.istarget("windows") then
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL2/include")
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL2/include/SDL2")
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/SDL2/lib/x64")
 
-filter { "system:windows" }
-	postbuildcommands { "{COPY} ../../../external/SDL2/lib/x64/SDL2.dll %{cfg.buildtarget.directory}" }	
-filter {}
+	filter { "system:windows" }
+		postbuildcommands { "{COPY} ../../../external/SDL2/lib/x64/SDL2.dll %{cfg.buildtarget.directory}" }	
+	filter {}
 
--- SDL Image
-table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL_image/include")
-table.insert(ExternalLibDirs, externalDirectoryPath .. "/SDL_image/lib/x64")
+	-- SDL Image
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL_image/include")
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/SDL_image/lib/x64")
 
-filter { "system:windows" }
-	postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libjpeg-9.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libpng16-16.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libtiff-5.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libwebp-7.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/SDL2_image.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/zlib1.dll %{cfg.buildtarget.directory}" }
-filter {}
+	filter { "system:windows" }
+		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libjpeg-9.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libpng16-16.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libtiff-5.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libwebp-7.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/SDL2_image.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/zlib1.dll %{cfg.buildtarget.directory}" }
+	filter {}
+end
+
 
 -- DebugBreak (Header only)
 table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/DebugBreak")
@@ -38,17 +41,25 @@ table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/Fmod/core/inc")
 table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/Fmod/fsbank/inc")
 table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/Fmod/studio/inc")
 
-table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/core/lib/x64")
-table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/fsbank/lib/x64")
-table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/studio/lib/x64")
+if os.istarget("windows") then
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/core/lib/x64")
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/fsbank/lib/x64")
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/studio/lib/x64")
+elseif os.istarget("linux") then
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/core/lib/x86_64")
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/fsbank/lib/x86_64")
+	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/studio/lib/x86_64")
+end
 
-filter { "system:windows" }
-	postbuildcommands { "{COPY} ../../../external/Fmod/core/lib/x64/fmod.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/fsbank.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/libfsbvorbis64.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/opus.dll %{cfg.buildtarget.directory}" }
-	postbuildcommands { "{COPY} ../../../external/Fmod/studio/lib/x64/fmodstudio.dll %{cfg.buildtarget.directory}" }
-filter {}
+if os.istarget("windows") then
+	filter { "system:windows" }
+		postbuildcommands { "{COPY} ../../../external/Fmod/core/lib/x64/fmod.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/fsbank.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/libfsbvorbis64.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/opus.dll %{cfg.buildtarget.directory}" }
+		postbuildcommands { "{COPY} ../../../external/Fmod/studio/lib/x64/fmodstudio.dll %{cfg.buildtarget.directory}" }
+	filter {}
+end
 
 -- Json
 table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/nlohmann_json/single_include")
@@ -65,7 +76,7 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 	project(Name)
 
 	language("C++")
-	cppdialect("C++20")
+	cppdialect("C++17")
 
 	staticruntime("Off")
 
