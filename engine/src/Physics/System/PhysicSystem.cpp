@@ -5,7 +5,7 @@
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 
-#include <box2d/b2_Contact.h>
+#include <box2d/b2_contact.h>
 
 namespace red
 {
