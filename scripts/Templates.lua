@@ -53,7 +53,7 @@ function TemplateProject(Name)
 
 	defines
 	{
-		"RED_USE_PROFILER",
+		-- "RED_USE_PROFILER",
 	}
 
 	filter "system:windows"
