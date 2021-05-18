@@ -23,7 +23,7 @@ jobs:
       with:
         submodules: 'recursive'
     - name: Build
-      run: cd scripts && ./GenerateProject.sh && cd projects/gmake2 && make config=debug_linux64 
+      run: cd scripts && cmod a+x GenerateProject.sh && ./GenerateProject.sh && cd projects/gmake2 && make config=debug_linux64 
     # - name: Test
     #   run: scripts/bin/premake5 test --test-all
   windows:
