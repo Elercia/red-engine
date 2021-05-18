@@ -102,7 +102,7 @@ void Signal<SignalArgs...>::RemoveConnection(Connection* connection)
 // --------------- CONNECTION ---------------
 template <typename... SignalArgs>
 Signal<SignalArgs...>::Connection::Connection(Signal<SignalArgs...>* ref, Func func, int slotId)
-    : m_signalRef(ref), m_isActive(true), m_func(func), m_connectionId(slotId), m_refCount(0)
+    : m_isActive(true), m_signalRef(ref), m_func(func), m_connectionId(slotId), m_refCount(0)
 {
 }
 

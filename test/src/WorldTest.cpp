@@ -10,8 +10,8 @@ TEST_CASE("World entity and system check", "[ECS]")
 
     SECTION("Adding entity")
     {
-        int entityCreated = 100;
-        for (int i = 0; i < entityCreated; i++)
+        size_t entityCreated = 100;
+        for (size_t i = 0; i < entityCreated; i++)
         {
             world.CreateEntity();
         }

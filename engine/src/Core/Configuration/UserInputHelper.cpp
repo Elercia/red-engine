@@ -99,7 +99,7 @@ namespace utils
     {
         auto codes = GetKeyCodeReadableDb();
 
-        for (auto i = 0; i < codes.size(); i++)
+        for (size_t i = 0; i < codes.size(); i++)
         {
             auto& readable = codes[i];
             if (keyString == readable)
