@@ -3,7 +3,7 @@
 namespace red
 {
 IResource::IResource(ResourceId resourceId, ResourceType m_resourceType)
-    : m_resourceId(resourceId), m_resourceType(m_resourceType), m_loadState(LoadState::STATE_NOT_LOADED)
+    : m_resourceId(std::move(resourceId)), m_resourceType(m_resourceType), m_loadState(LoadState::STATE_NOT_LOADED)
 {
 }
 

@@ -1,45 +1,55 @@
-#include "RedEngine/Core/Event/EventSystem.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/Input/System/UserInputSystem.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Core/Event/System/EventSystem.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
+#include "RedEngine/Input/System/UserInputSystem.hpp"
 
-#include <catch2/catch.hpp>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_gamecontroller.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_mouse.h>
-#include <SDL2/SDL_gamecontroller.h>
+#include <catch2/catch.hpp>
+
+using namespace red;
 
 TEST_CASE("Raw input handling", "[Input]")
 {
-    auto* eventSystem = red::GetSubEngine<red::EventSystem>();
+    World world;
 
-    eventSystem->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
+    auto* e = world.CreateSingletonEntity();
+    auto* eventsComonent = e->AddComponent<EventsComponent>();
+    auto* eventSystem = world.AddSystem<EventSystem>();
 
-    eventSystem->Update();
+    eventsComonent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
 
-    REQUIRE(eventSystem->GetKey(red::KeyCodes::KEY_W));
-    REQUIRE(eventSystem->GetKeyDown(red::KeyCodes::KEY_W));
-    REQUIRE(!eventSystem->GetKeyUp(red::KeyCodes::KEY_W));
+    eventSystem->PreUpdate();
 
-    eventSystem->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
+    REQUIRE(eventsComonent->GetKey(red::KeyCodes::KEY_W));
+    REQUIRE(eventsComonent->GetKeyDown(red::KeyCodes::KEY_W));
+    REQUIRE(!eventsComonent->GetKeyUp(red::KeyCodes::KEY_W));
 
-    eventSystem->Update();
+    eventsComonent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
 
-    REQUIRE(!eventSystem->GetKey(red::KeyCodes::KEY_W));
-    REQUIRE(!eventSystem->GetKeyDown(red::KeyCodes::KEY_W));
-    REQUIRE(eventSystem->GetKeyUp(red::KeyCodes::KEY_W));
+    eventSystem->PreUpdate();
+
+    REQUIRE(!eventsComonent->GetKey(red::KeyCodes::KEY_W));
+    REQUIRE(!eventsComonent->GetKeyDown(red::KeyCodes::KEY_W));
+    REQUIRE(eventsComonent->GetKeyUp(red::KeyCodes::KEY_W));
 }
 
 TEST_CASE("User input handling", "[Input]")
 {
-    auto* eventSystem = red::GetSubEngine<red::EventSystem>();
     red::World world;
     auto* singletonEntity = world.CreateSingletonEntity();
-    auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();
-    auto* sys = world.AddSystem<red::UserInputSystem>();
 
-    sys->Init();
+    auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();
+    world.AddSystem<red::UserInputSystem>();
+
+    auto* eventsComponent = singletonEntity->AddComponent<EventsComponent>();
+    world.AddSystem<red::EventSystem>();
+   
+    world.Init();
 
     SECTION("Single input without modifiers")
     {
@@ -51,10 +61,9 @@ TEST_CASE("User input handling", "[Input]")
         comp->SetActionMapping(mapping);
 
         // Send event for the same key
-        eventSystem->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
+        eventsComponent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
 
         // Then update
-        eventSystem->Update();
         world.Update();
 
         // Verify the output
@@ -63,7 +72,6 @@ TEST_CASE("User input handling", "[Input]")
         REQUIRE(comp->GetKey(key));
 
         // Update a second time
-        eventSystem->Update();
         world.Update();
 
         // Should not be down anymore
@@ -72,10 +80,9 @@ TEST_CASE("User input handling", "[Input]")
         REQUIRE(comp->GetKey(key));
 
         // Send event for key UP
-        eventSystem->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
+        eventsComponent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
 
         // Update one last time
-        eventSystem->Update();
         world.Update();
 
         // The key should not be pressed and should be UP
@@ -98,10 +105,9 @@ TEST_CASE("User input handling", "[Input]")
         comp->SetActionMapping(actionMapping);
 
         // Send event for the same key (without modifiers)
-        eventSystem->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
+        eventsComponent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
 
         // Then update
-        eventSystem->Update();
         world.Update();
 
         // Verify the output (should not be down)
@@ -109,8 +115,8 @@ TEST_CASE("User input handling", "[Input]")
         REQUIRE(!comp->GetKeyDown(key));
         REQUIRE(!comp->GetKeyUp(key));
 
-        eventSystem->SendKeyEvent(red::KeyCodes::KEY_LCTRL, red::KeyEventType::KEY_DOWN);
-        eventSystem->Update();
+        eventsComponent->SendKeyEvent(red::KeyCodes::KEY_LCTRL, red::KeyEventType::KEY_DOWN);
+
         world.Update();
 
         // Verify the output (should not be down)
@@ -118,8 +124,8 @@ TEST_CASE("User input handling", "[Input]")
         REQUIRE(!comp->GetKeyDown(key));
         REQUIRE(!comp->GetKeyUp(key));
 
-        eventSystem->SendKeyEvent(red::KeyCodes::KEY_LALT, red::KeyEventType::KEY_DOWN);
-        eventSystem->Update();
+        eventsComponent->SendKeyEvent(red::KeyCodes::KEY_LALT, red::KeyEventType::KEY_DOWN);
+
         world.Update();
 
         // Verify the output (now this is good)
@@ -127,8 +133,8 @@ TEST_CASE("User input handling", "[Input]")
         REQUIRE(comp->GetKeyDown(key));
         REQUIRE(!comp->GetKeyUp(key));
 
-        eventSystem->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
-        eventSystem->Update();
+        eventsComponent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
+
         world.Update();
 
         // Verify the output (should be UP)

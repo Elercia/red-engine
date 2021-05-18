@@ -16,8 +16,7 @@ class SpriteResource;
 
 class Sprite : public Component
 {
-    friend class RenderingEngine;
-    friend class ResourceEngine;
+    friend class Renderer;
 
 public:
     Sprite(Entity* entity, const std::string& resourceId);

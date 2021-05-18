@@ -11,21 +11,23 @@ on:
       - master
       - develop
 jobs:
-  # linux:
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       config: [debug, release]
-  #       platform: [Win64]
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v2
-  #     with:
-  #       submodules: 'recursive'
-  #   - name: Build
-  #     run: cd scripts && ./GenerateProject.sh
-  #   - name: Test
-  #     run: scripts/bin/premake5 test --test-all
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+        platform: [Win64]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: Install dependancies
+      run: sudo apt install libsdl2-dev libsdl2-image-dev
+    - name: Build
+      run: cd scripts && chmod a+x GenerateProject.sh && chmod a+x bin/premake5 && ./GenerateProject.sh && cd projects/gmake2 && make config=debug_linux64 
+    # - name: Test
+    #   run: scripts/bin/premake5 test --test-all
   windows:
     runs-on: windows-latest
     strategy:

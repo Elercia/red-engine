@@ -5,17 +5,14 @@
 
 namespace red
 {
-class RenderingEngine;
-
 class DebugSystem : public System
 {
 public:
     explicit DebugSystem(World* world);
     ~DebugSystem() override = default;
 
-    void LateUpdate() override;
+    virtual void Init() override;
 
-private:
-    RenderingEngine* m_renderingEngine;
+    void Update() override;
 };
 }  // namespace red

@@ -1,3 +1,5 @@
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+
 #include <SystemTest.hpp>
 #include <catch2/catch.hpp>
 #include <iostream>
@@ -5,6 +7,9 @@
 TEST_CASE("System", "[ECS]")
 {
     red::World world;
+    auto* e = world.CreateSingletonEntity();
+    e->AddComponent<red::EventsComponent>();
+
     size_t baseSystemCount = world.GetSystems().size();
     auto* mockSystemPtr = world.AddSystem<MockSystem>();
 

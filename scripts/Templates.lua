@@ -6,8 +6,12 @@ function TemplateProject(Name)
 	kind("ConsoleApp")
 	language("C++")
 	cppdialect("C++17")
-	staticruntime("Off")	
-	flags { "NoPCH" }
+	
+	rtti("Off")
+	exceptionhandling("Off")
+	warnings("Extra")
+	flags("NoPCH")
+	staticruntime("Off")
 
 	location(projectsFilesLocation)
 	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
@@ -17,7 +21,8 @@ function TemplateProject(Name)
 
 	files
 	{
-		templatePath .. "/include/**.hpp",
+		templatePath .. "/src/**.hpp",
+		templatePath .. "/src/**.inl",
 		templatePath .. "/src/**.cpp",
 	}
 
@@ -36,11 +41,19 @@ function TemplateProject(Name)
 	links
 	{
 		"RedEngineLib",
+		"SDL2",
+		"SDL2_image",
+		"Box2D",
+		"fmt",
+		"fmod",
+		"fsbank",
+		"fmodstudio",
+		"optick",
 	}
 
 	defines
 	{
-		"RED_USE_PROFILER",
+		-- "RED_USE_PROFILER",
 	}
 
 	filter "system:windows"

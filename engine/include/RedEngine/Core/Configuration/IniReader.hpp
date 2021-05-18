@@ -17,7 +17,7 @@ namespace utils
     class IniReader
     {
     public:
-        [[nodiscard]] static std::vector<iniCatKeyValue> ReadFromFile(std::filesystem::path path);
+        [[nodiscard]] static std::vector<iniCatKeyValue> ReadFromFile(const std::filesystem::path& path);
 
     private:
         IniReader();

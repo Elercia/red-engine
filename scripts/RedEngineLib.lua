@@ -17,7 +17,9 @@ project "RedEngineLib"
 	files
 	{
 		enginePath .. "/include/**.hpp",
+		enginePath .. "/include/**.inl",
 		enginePath .. "/src/**.cpp",
+		
 	}
 
 	includedirs
@@ -28,7 +30,7 @@ project "RedEngineLib"
 
 	defines
 	{
-		"RED_USE_PROFILER",
+		-- "RED_USE_PROFILER",
 	}
 
 	links
@@ -37,9 +39,9 @@ project "RedEngineLib"
 		"SDL2_image",
 		"Box2D",
 		"fmt",
-		"fmod_vc",
-		"fsbank_vc",
-		"fmodstudio_vc",
+		"fmod",
+		"fsbank",
+		"fmodstudio",
 		"optick",
 	}
 

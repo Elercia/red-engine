@@ -18,6 +18,7 @@ public:
     [[nodiscard]] Vector2& GetPosition();
 
     void SetPosition(const Vector2& pos);
+    void SetPosition(float x, float y);
 
 private:
     Vector2 m_position{0, 0};

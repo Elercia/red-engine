@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Box2D/box2d.h"
-#include "Box2D/b2_draw.h"
-
 #include "RedEngine/RedEngineBase.hpp"
+
+#include <box2d/b2_draw.h>
+#include <box2d/box2d.h>
 
 namespace red
 {
@@ -25,8 +25,7 @@ public:
     virtual void DrawCircle(const b2Vec2& center, float radius, const b2Color& color) override;
 
     /// Draw a solid circle.
-    virtual void DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis,
-                                 const b2Color& color) override;
+    virtual void DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color) override;
 
     /// Draw a line segment.
     virtual void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) override;

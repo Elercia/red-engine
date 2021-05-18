@@ -4,24 +4,35 @@
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
-#include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
-#include <Box2D/b2_draw.h>
-#include <Box2D/box2d.h>
+#include <box2d/b2_draw.h>
+#include <box2d/box2d.h>
 
 namespace red
 {
-DebugSystem::DebugSystem(World* world) : System(world), m_renderingEngine(GetSubEngine<RenderingEngine>()) {}
+DebugSystem::DebugSystem(World* world) : System(world)
+{
+}
 
-void DebugSystem::LateUpdate()
+void DebugSystem::Init()
+{
+    System::Init();
+    GetSingletonEntity()->AddComponent<DebugComponent>();
+}
+
+void DebugSystem::Update()
 {
     PROFILER_CATEGORY("Debug", Optick::Category::Debug);
 
-    auto* eventSystem = GetSubEngine<EventSystem>();
-    auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
+    auto* events = GetComponent<EventsComponent>();
+    auto* debugComp = GetComponent<DebugComponent>();
 
-    if (eventSystem->GetKeyDown(KeyCodes::KEY_F1))
+    if (events->GetKeyDown(KeyCodes::KEY_F1))
     {
         if (debugComp->m_physicsDebugDrawer == nullptr)
         {
@@ -37,7 +48,7 @@ void DebugSystem::LateUpdate()
         m_world->GetPhysicsWorld()->SetDebugDrawer(debugComp->m_physicsDebugDrawer.get());
     }
 
-    if (eventSystem->GetKeyDown(KeyCodes::KEY_F2))
+    if (events->GetKeyDown(KeyCodes::KEY_F2))
     {
         CVar<FullScreenMode::Enum> fullscreen{"fullscreen_mode", "window", FullScreenMode::WINDOWED};
 
@@ -45,12 +56,12 @@ void DebugSystem::LateUpdate()
                                                                                  : FullScreenMode::WINDOWED);
     }
 
-    if (eventSystem->GetKeyDown(KeyCodes::KEY_F5))
+    if (events->GetKeyDown(KeyCodes::KEY_F5))
     {
         Time::SetTimeScale(Time::TimeScale() + 0.1F);
     }
 
-    if (eventSystem->GetKeyDown(KeyCodes::KEY_F6))
+    if (events->GetKeyDown(KeyCodes::KEY_F6))
     {
         Time::SetTimeScale(Time::TimeScale() - 0.1F);
     }

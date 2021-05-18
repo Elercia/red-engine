@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Utils/Types.hpp"
 
 #include <cstdint>
 
@@ -8,11 +9,23 @@ namespace red
 {
 struct Color
 {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
+    constexpr Color(uint8 r, uint8 g, uint8 b);
+    constexpr Color(uint8 r, uint8 g, uint8 b, uint8 a);
+
+    uint8 r;
+    uint8 g;
+    uint8 b;
+    uint8 a;
 };
+
+constexpr Color::Color(uint8 r, uint8 g, uint8 b) : r(r), g(g), b(b), a(255)
+{
+}
+
+constexpr Color::Color(uint8 r, uint8 g, uint8 b, uint8 a) : r(r), g(g), b(b), a(a)
+{
+}
+
 }  // namespace red
 
 #include "inl/Color.inl"

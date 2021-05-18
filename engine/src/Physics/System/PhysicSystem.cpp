@@ -1,18 +1,27 @@
 #include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 
-#include <Box2D/b2_Contact.h>
+#include <box2d/b2_contact.h>
 
 namespace red
 {
-PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->GetPhysicsWorld()) {}
+PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->GetPhysicsWorld())
+{
+}
 
-PhysicSystem::~PhysicSystem() {}
+PhysicSystem::~PhysicSystem()
+{
+}
 
-void PhysicSystem::Init() { ManageEntities(); }
+void PhysicSystem::Init()
+{
+    System::Init();
+    ManageEntities();
+}
 
 void PhysicSystem::ManageEntities()
 {
@@ -37,7 +46,7 @@ void PhysicSystem::ManageEntities()
             continue;
 
         auto* physicBody = entity->GetComponentInParent<PhysicBody>(true);
-        if (!physicBody)
+        if (physicBody == nullptr)
         {
             RED_LOG_WARNING("Collider list added without parenting physicbody (in {})", entity->GetName());
             continue;
@@ -46,7 +55,7 @@ void PhysicSystem::ManageEntities()
         colliderList->m_attachedPhysicBody = physicBody;
 
         auto* fixture = physicBody->GetBody()->GetFixtureList();
-        while (fixture)
+        while (fixture != nullptr)
         {
             physicBody->GetBody()->DestroyFixture(fixture);
             fixture = fixture->GetNext();
@@ -74,7 +83,7 @@ void PhysicSystem::Finalise()
 
 void PhysicSystem::Update()
 {
-    // m_physicsWorld->ClearForces();
+    m_physicsWorld->ClearForces();
 
     ManageEntities();
 
@@ -102,9 +111,7 @@ void PhysicSystem::Update()
 
 void PhysicSystem::ManageCollisions()
 {
-    auto& collisions = m_physicsWorld->GetCollisions();
-
-    for (auto& constCollision : collisions)
+    for (const auto& constCollision : m_physicsWorld->GetCollisions())
     {
         auto collision = constCollision;  // copy
 
@@ -118,9 +125,9 @@ void PhysicSystem::ManageCollisions()
 
 void PhysicSystem::ManageTriggers()
 {
-    auto& triggers = m_physicsWorld->GetTriggers();
+    const auto& triggers = m_physicsWorld->GetTriggers();
 
-    for (auto& constTrigger : triggers)
+    for (const auto& constTrigger : triggers)
     {
         auto triggerInfo = constTrigger;  // copy
 

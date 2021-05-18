@@ -1,5 +1,5 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
-
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
@@ -10,7 +10,7 @@ int size(b2Fixture* fixture)
 {
     int nb = 0;
 
-    while (fixture)
+    while (fixture != nullptr)
     {
         nb++;
         fixture = fixture->GetNext();
@@ -23,7 +23,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
     using namespace red;
     World w;
     Entity* e = w.CreateEntity();
-    PhysicSystem system(&w);
+    PhysicSystem* system = w.AddSystem<PhysicSystem>();
 
     red::PhysicBodyCreationDesc desc = {red::PhysicsBodyType::DYNAMIC_BODY};
 
@@ -59,9 +59,9 @@ TEST_CASE("Component binding", "[PHYSICS]")
         list->AddEdgeCollider(edgeColliderDesc);
     }
 
-    system.Init();
+    system->Init();
 
     REQUIRE(size(body->GetBody()->GetFixtureList()) == 3);
 
-    system.Finalise();
+    system->Finalise();
 }

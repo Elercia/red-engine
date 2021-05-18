@@ -2,14 +2,25 @@
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Math/Math.hpp"
-#include "RedEngine/Rendering/Window.hpp"
+#include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
 namespace red
 {
 CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Component(entity), m_renderedTexture(nullptr)
 {
-    auto info = Window::GetWindow().GetWindowInfo();
+    auto* window = entity->GetWorld()->GetSingletonEntity()->GetComponent<WindowComponent>();
+
+    if (window == nullptr)
+    {
+        RED_LOG_ERROR("Camera component created without a window");
+        return;
+    }
+
+    auto info = window->GetWindowInfo();
+
     m_viewport = {0, 0, static_cast<float>(info.width), static_cast<float>(info.height)};
 
     m_cameraWorldPosition = Vector2(center.x - m_viewport.width / 2.F, center.y - m_viewport.height / 2.F);
@@ -46,24 +57,54 @@ void CameraComponent::Follow(Vector2* /*followPosition*/)
     // TODO
 }
 
-bool CameraComponent::IsVisibleFrom(const Transform* /*transform*/) { return true; }
+bool CameraComponent::IsVisibleFrom(const Transform* /*transform*/)
+{
+    return true;
+}
 
-const Vector2& CameraComponent::Position() const { return m_cameraWorldPosition; }
+const Vector2& CameraComponent::Position() const
+{
+    return m_cameraWorldPosition;
+}
 
-const Vector4& CameraComponent::Viewport() const { return m_viewport; }
+const Vector4& CameraComponent::Viewport() const
+{
+    return m_viewport;
+}
 
-void CameraComponent::SetViewport(const Vector4& viewport) { m_viewport = viewport; }
+void CameraComponent::SetViewport(const Vector4& viewport)
+{
+    m_viewport = viewport;
+}
 
-float CameraComponent::AspectRatio() const { return m_viewport.z / m_viewport.w; }
+float CameraComponent::AspectRatio() const
+{
+    return m_viewport.z / m_viewport.w;
+}
 
-int CameraComponent::Depth() const { return m_depth; }
+int CameraComponent::Depth() const
+{
+    return m_depth;
+}
 
-void CameraComponent::SetDepth(int depth) { m_depth = depth; }
+void CameraComponent::SetDepth(int depth)
+{
+    m_depth = depth;
+}
 
-std::shared_ptr<const Texture2D> CameraComponent::GetRenderedTexture() const { return m_renderedTexture; }
+std::shared_ptr<const Texture2D> CameraComponent::GetRenderedTexture() const
+{
+    return m_renderedTexture;
+}
 
-const Color& CameraComponent::BackgroundColor() const { return m_backgroundColor; }
+const Color& CameraComponent::BackgroundColor() const
+{
+    return m_backgroundColor;
+}
 
-void CameraComponent::SetBackgroundColor(const Color& color) { m_backgroundColor = color; }
+void CameraComponent::SetBackgroundColor(const Color& color)
+{
+    m_backgroundColor = color;
+}
 
 }  // namespace red

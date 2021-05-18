@@ -2,7 +2,7 @@
 
 namespace red
 {
-AudioSource::AudioSource(Entity* owner) : Component(owner), m_soundPlayQueue() {}
+AudioSource::AudioSource(Entity* owner) : Component(owner) {}
 
 void AudioSource::PlaySound(const SoundDesc& sound) { m_soundPlayQueue.push_back(sound); }
 }  // namespace red

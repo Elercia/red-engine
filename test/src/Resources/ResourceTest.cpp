@@ -1,16 +1,18 @@
 #include <catch2/catch.hpp>
-#include "RedEngine/Resources/ResourceEngine.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Level/LevelResourceLoader.hpp"
 
 using namespace red;
 
 TEST_CASE("LEVEL loading", "[Resource]")
 {
-    ResourceEngine engine;
+    World w;
+    Entity* e = w.CreateEntity("test");
+    ResourceHolderComponent* resourceHolderComp = e->AddComponent<ResourceHolderComponent>();
 
-    engine.RegisterResourceLoader(ResourceType::LEVEL, new LevelResourceLoader);
+    resourceHolderComp->RegisterResourceLoader(ResourceType::LEVEL, new LevelResourceLoader(&w));
 
-    auto* loader = engine.GetResourceLoader<LevelResourceLoader>();
+    auto* loader = resourceHolderComp->GetResourceLoader<LevelResourceLoader>();
 
     REQUIRE(loader != nullptr);
 

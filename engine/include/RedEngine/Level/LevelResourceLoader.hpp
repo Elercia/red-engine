@@ -8,7 +8,7 @@ namespace red
 class LevelResourceLoader : public ResourceLoader<Level>
 {
 public:
-    LevelResourceLoader();
+    LevelResourceLoader(World* world);
     virtual ~LevelResourceLoader();
 
     std::shared_ptr<Level> LoadResource(const std::string& name);

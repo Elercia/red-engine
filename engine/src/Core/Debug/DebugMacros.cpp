@@ -57,19 +57,17 @@ ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filena
     {
         return ErrorReturn::BREAK;
     }
-    else
+
+    switch (returnButtonID)
     {
-        switch (returnButtonID)
-        {
-            case 0:
-                abort();
-            case 1:
-                return ErrorReturn::BREAK;
-            case 2:
-                return ErrorReturn::CONTINUE;
-            default:
-                return ErrorReturn::CONTINUE;
-        };
-    }
+        case 0:
+            abort();
+        case 1:
+            return ErrorReturn::BREAK;
+        case 2:
+            return ErrorReturn::CONTINUE;
+        default:
+            return ErrorReturn::CONTINUE;
+    };
 }
 }  // namespace red

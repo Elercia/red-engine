@@ -35,7 +35,7 @@ void MemoryProfiler::DumpMemory() const
 
     uint64_t dumpMemorySize = 0;
 
-    for (auto& profile : m_allocatedMemory)
+    for (const auto& profile : m_allocatedMemory)
     {
         if (profile.ptr != nullptr)
         {

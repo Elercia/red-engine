@@ -1,14 +1,11 @@
 #pragma once
 
-#include "../../Core/Entity/System.hpp"
-
+#include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/RedEngineBase.hpp"
-#include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Renderer.hpp"
 
 namespace red
 {
-class RenderingEngine;
-class ResourceEngine;
 class CameraComponent;
 
 class RenderingSystem : public System
@@ -16,16 +13,19 @@ class RenderingSystem : public System
 public:
     explicit RenderingSystem(World* world);
 
+    virtual void Init() override;
+
     void PreUpdate() override;
     void Update() override;
-    void LateUpdate() override;
+    void PostUpdate() override;
+
+    Renderer* GetRenderer();
 
 private:
     void DrawDebug(CameraComponent* camera);
 
 private:
-    RenderingEngine* m_renderingEngine;
-    ResourceEngine* m_resourceEngine;
+    Renderer* m_renderer;
 };
 
 }  // namespace red

@@ -1,8 +1,11 @@
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
 
 #include <filesystem>
@@ -10,7 +13,7 @@
 
 namespace red
 {
-SpriteResourceLoader::SpriteResourceLoader() : ResourceLoader("Sprite", ResourceType::SPRITE) {}
+SpriteResourceLoader::SpriteResourceLoader(World* world) : ResourceLoader(ResourceType::SPRITE, world) {}
 
 SpriteResourceLoader::~SpriteResourceLoader() {}
 
@@ -24,7 +27,7 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const st
     if (spriteResource->GetLoadState() == LoadState::STATE_LOADED)
         return spriteResource;
 
-    fs::path p = GetSubEngine<Configuration>()->GetResourceFolder() + "/" + name + ".json";
+    fs::path p = "RESOURCES/" + name + ".json";
 
     if (!fs::exists(p) || fs::is_directory(p))
     {
@@ -40,7 +43,8 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const st
         return nullptr;
     }
 
-    auto* textureResourceLoader = GetSubEngine<ResourceEngine>()->GetResourceLoader<TextureResourceLoader>();
+    auto* textureResourceLoader =
+        m_world->GetSingletonComponent<ResourceHolderComponent>()->GetResourceLoader<TextureResourceLoader>();
 
     for (auto animationJson : parsedJson)
     {

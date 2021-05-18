@@ -11,9 +11,9 @@ MemoryManager::MemoryManager() : m_memoryProfiler() {}
 
 MemoryManager::~MemoryManager() {}
 
-void* MemoryManager::Allocate(std::size_t size, int line, const char* file)
+void* MemoryManager::Allocate(std::size_t size, int /*line*/, const char* /*file*/)
 {
-    auto ptr = std::malloc(size);
+    const auto ptr = std::malloc(size);
 
 #ifdef RED_ENABLE_MEMORY_PROFILING
     m_memoryProfiler.NewAllocation(size, ptr, line, file);
@@ -21,9 +21,9 @@ void* MemoryManager::Allocate(std::size_t size, int line, const char* file)
     return ptr;
 }
 
-void* MemoryManager::AllocateArray(std::size_t size, int line, const char* file)
+void* MemoryManager::AllocateArray(std::size_t size, int /*line*/, const char* /*file*/)
 {
-    auto ptr = std::malloc(size);
+    const auto ptr = std::malloc(size);
 
 #ifdef RED_ENABLE_MEMORY_PROFILING
     m_memoryProfiler.NewAllocation(size, ptr, line, file);
@@ -31,7 +31,7 @@ void* MemoryManager::AllocateArray(std::size_t size, int line, const char* file)
     return ptr;
 }
 
-void MemoryManager::Free(void* ptr, int line, const char* file)
+void MemoryManager::Free(void* ptr, int /*line*/, const char* /*file*/)
 {
     std::free(ptr);
 
@@ -40,7 +40,7 @@ void MemoryManager::Free(void* ptr, int line, const char* file)
 #endif
 }
 
-void MemoryManager::FreeArray(void* ptr, int line, const char* file)
+void MemoryManager::FreeArray(void* ptr, int /*line*/, const char* /*file*/)
 {
     std::free(ptr);
 

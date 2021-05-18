@@ -4,20 +4,28 @@
 #include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+
+#include <SDL2/SDL.h>
 
 namespace red
 {
 UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
 {
+    m_priority = 9;
 }
 
 void UserInputSystem::Init()
 {
+    System::Init();
+
     PROFILER_CATEGORY("Input Init", Optick::Category::Input);
+
+    SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 
     auto* singeltonEntity = GetSingletonEntity();
 
-    m_inputComponent = singeltonEntity->GetComponent<UserInputComponent>();
+    m_inputComponent = singeltonEntity->AddComponent<UserInputComponent>();
 
     m_inputComponent->m_actionMapping = utils::UserInputHelper::LoadActionMapping();
 
@@ -31,14 +39,14 @@ void UserInputSystem::PreUpdate()
 {
     PROFILER_CATEGORY("Input Update", Optick::Category::Input);
 
-    EventSystem* manager = GetSubEngine<EventSystem>();
+    auto* eventsSystem = GetComponent<EventsComponent>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)
     {
-        auto& actionName = actionMapping.first;
-        auto& mapping = actionMapping.second;
+        const auto& actionName = actionMapping.first;
+        const auto& mapping = actionMapping.second;
 
         KeyState oldState = m_inputComponent->m_state[actionName];
-        KeyState mappingState = manager->GetKeyState(mapping.mapping);
+        KeyState mappingState = eventsSystem->GetKeyState(mapping.mapping);
 
         std::vector<KeyState> states;
 
@@ -46,7 +54,7 @@ void UserInputSystem::PreUpdate()
         {
             if (mapping.modifiers.test(i))
             {
-                states.push_back(manager->GetKeyState(g_modifierKeys[i].keyCode));
+                states.push_back(eventsSystem->GetKeyState(g_modifierKeys[i].keyCode));
             }
         }
 
@@ -74,7 +82,7 @@ red::KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, con
     KeyState resultState = {false, false, false};
     resultState.isPressed = states[0].isPressed;
 
-    for (auto& state : states)
+    for (const auto& state : states)
     {
         // A user input is pressed only if all the required keys are pressed
         resultState.isPressed = state.isPressed && resultState.isPressed;

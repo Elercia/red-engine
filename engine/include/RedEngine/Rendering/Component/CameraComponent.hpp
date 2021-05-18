@@ -16,7 +16,7 @@ constexpr std::size_t MAX_CAMERA_COUNT = 10;
 
 class CameraComponent : public Component
 {
-    friend class RenderingEngine;
+    friend class Renderer;
     friend class RenderingSystem;
 
 public:

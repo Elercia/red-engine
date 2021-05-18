@@ -8,7 +8,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
     {
         bool isCalled = false;
         red::Signal<int> signal;
-        signal.Connect([&](int /*i*/) { isCalled = true; });
+        signal.Connect([&](int /*i*/) { isCalled = true; }, true);
 
         signal.emit(1);
 
@@ -20,7 +20,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
         MyClass mc;
 
         red::Signal<int> signal;
-        signal.Connect(&MyClass::op, &mc);
+        signal.Connect(&MyClass::op, &mc, true);
 
         int a = 10;
         signal.emit(a);
@@ -33,7 +33,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
         MyClass mc;
 
         red::Signal<int> signal;
-        auto slot = signal.Connect(&MyClass::op, &mc);
+        auto slot = signal.Connect(&MyClass::op, &mc, true);
 
         slot.Deactivate();
 
@@ -64,7 +64,7 @@ TEST_CASE("Signal/Slots connections", "[EVENT]")
         red::Signal<int>::Slot slot;
 
         {
-            auto firstSlot = signal.Connect(&MyClass::op, &mc);
+            auto firstSlot = signal.Connect(&MyClass::op, &mc, true);
             slot = firstSlot;
         }
 

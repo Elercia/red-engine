@@ -9,7 +9,7 @@ namespace red
 {
 namespace utils
 {
-    std::vector<iniCatKeyValue> IniReader::ReadFromFile(std::filesystem::path path)
+    std::vector<iniCatKeyValue> IniReader::ReadFromFile(const std::filesystem::path& path)
     {
         namespace fs = std::filesystem;
 

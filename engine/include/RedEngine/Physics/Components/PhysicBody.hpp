@@ -6,7 +6,7 @@
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <Box2D/b2_body.h>
+#include <box2d/b2_body.h>
 #include <vector>
 
 namespace red
@@ -34,10 +34,10 @@ class PhysicBody : public Component
     friend class PhysicSystem;
     friend class PhysicsWorld;
 
+public:
     using OnCollisionSignalType = Signal<const CollisionInfo&>;
     using OnTriggerSignalType = Signal<const TriggerInfo&>;
 
-public:
     PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc);
     ~PhysicBody();
 
