@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Input/InputDefinition.hpp"
 #include "RedEngine/Math/Vector.hpp"
@@ -12,6 +12,9 @@ class EventsComponent : public Component
     friend class EventSystem;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(EventsComponent, Component)
+    RED_END_COMPONENT_REGISTER()
+
     EventsComponent(Entity* entity);
     ~EventsComponent();
 

@@ -4,6 +4,9 @@ namespace red
 template <typename EngineClass>
 EngineClass* CreateEngineFrom(int argc, char** argv)
 {
+    static_assert(std::is_base_of<Engine, EngineClass>::value,
+                  "EngineClass must be inherited from Engine class");
+
     SetLogLevel(LogLevel::LEVEL_DEBUG);
 
     static EngineClass engine;
@@ -11,7 +14,7 @@ EngineClass* CreateEngineFrom(int argc, char** argv)
     engine.m_argc = argc;
     engine.m_argv = argv;
 
-    bool created = engine.Create();
+    bool created = engine.InternalCreate();
 
     if (!created)
     {

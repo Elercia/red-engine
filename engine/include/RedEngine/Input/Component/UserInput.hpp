@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Input/InputDefinition.hpp"
 #include "RedEngine/Input/UserInputDefinition.hpp"
 #include "RedEngine/Math/Vector.hpp"
@@ -16,6 +16,9 @@ class UserInputComponent : public Component
     friend class UserInputSystem;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(UserInputComponent, Component)
+    RED_END_COMPONENT_REGISTER()
+
     explicit UserInputComponent(Entity* entity);
     ~UserInputComponent() override;
 

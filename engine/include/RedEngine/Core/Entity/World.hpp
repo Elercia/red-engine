@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
@@ -44,6 +45,8 @@ public:
     template <typename T>
     void LoadLevel();
 
+    void LoadLevel(const std::string& levelName);
+
     void ChangeLevel(Level* newLevel);
 
     template <class T>
@@ -65,6 +68,9 @@ public:
 
     Entity* GetCurrentRootEntity();
 
+    template <typename T>
+    bool RegisterComponentType();
+
 private:
     Entity* m_singletonEntity;
     Entity* m_currentRootEntity;
@@ -72,6 +78,7 @@ private:
     std::vector<Entity*> m_entities;
     std::vector<System*> m_systems;
     ComponentManager* m_componentManager;
+    ComponentRegistry* m_componentRegistry;
     PhysicsWorld m_physicsWorld;
 
     EntityId m_nextEntityId;

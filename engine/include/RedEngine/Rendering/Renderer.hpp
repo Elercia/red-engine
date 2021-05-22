@@ -2,7 +2,7 @@
 
 #include "Color.hpp"
 
-#include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"

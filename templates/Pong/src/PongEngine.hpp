@@ -7,6 +7,7 @@ namespace pong
 class PongEngine : public red::Engine
 {
 public:
-	virtual bool Create() override;
+	bool Create() override;
+	bool Destroy() override;
 };
 }  // namespace pong

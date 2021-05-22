@@ -8,7 +8,7 @@ using namespace pong;
 
 int main(int argc, char* argv[])
 {
-    PongEngine* engine = CreateEngineFrom<PongEngine>(argc, argv);
+    auto* engine = CreateEngineFrom<PongEngine>(argc, argv);
 
     return engine->MainLoop();
 }

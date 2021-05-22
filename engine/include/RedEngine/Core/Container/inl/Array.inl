@@ -2,6 +2,8 @@
 
 namespace red
 {
+#ifdef RED_USE_ARRAY
+
 template <typename T>
 template <typename... Args>
 typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
@@ -365,4 +367,5 @@ void Array<T>::Destroy(iterator from, iterator to)
         }
     }
 }
+#endif  // RED_USE_ARRAY
 }  // namespace red

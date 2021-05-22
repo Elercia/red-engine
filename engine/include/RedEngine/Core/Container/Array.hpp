@@ -4,9 +4,12 @@
 
 #include <cstdlib>
 #include <initializer_list>
+#include <vector>
 
 namespace red
 {
+#ifdef RED_USE_ARRAY
+
 template <typename T>
 class Array
 {
@@ -102,6 +105,12 @@ private:
     size_type m_capacity;
     T* m_data;
 };
+#else  // RED_USE_ARRAY
+
+template <typename T>
+using Array = std::vector<T>;
+
+#endif  // else RED_USE_ARRAY
 }  // namespace red
 
 #include "inl/Array.inl"

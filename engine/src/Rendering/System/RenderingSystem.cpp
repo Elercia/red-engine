@@ -1,6 +1,6 @@
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"

@@ -1,6 +1,6 @@
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"

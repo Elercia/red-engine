@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RedEngine//Math/Vector.hpp"
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/RedEngineBase.hpp"
@@ -35,6 +35,9 @@ class PhysicBody : public Component
     friend class PhysicsWorld;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(PhysicBody, Component)
+    RED_END_COMPONENT_REGISTER()
+
     using OnCollisionSignalType = Signal<const CollisionInfo&>;
     using OnTriggerSignalType = Signal<const TriggerInfo&>;
 

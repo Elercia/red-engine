@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Resources/ResourceLoader.hpp"
@@ -14,6 +14,9 @@ namespace red
 class ResourceHolderComponent : public Component
 {
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(ResourceHolderComponent, Component)
+    RED_END_COMPONENT_REGISTER()
+
     ResourceHolderComponent(Entity* owner);
     ~ResourceHolderComponent();
 

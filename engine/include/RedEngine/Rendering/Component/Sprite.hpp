@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
@@ -19,6 +19,9 @@ class Sprite : public Component
     friend class Renderer;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(Sprite, Component)
+    RED_END_COMPONENT_REGISTER()
+
     Sprite(Entity* entity, const std::string& resourceId);
 
     /// Compute the modifications to do for the next frame

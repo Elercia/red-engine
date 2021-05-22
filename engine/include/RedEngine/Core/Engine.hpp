@@ -11,8 +11,8 @@ namespace red
 {
 class World;
 
-//template <typename EngineClass>
-//EngineClass* CreateEngineFrom(int argc, char** argv);
+// template <typename EngineClass>
+// EngineClass* CreateEngineFrom(int argc, char** argv);
 
 class Engine
 {
@@ -25,8 +25,14 @@ public:
 
     int MainLoop();
 
-    virtual bool Create();
-    virtual bool Destroy();
+    virtual bool Create() = 0;
+    virtual bool Destroy() = 0;
+
+    virtual bool RegisterComponentTypes();
+
+private:
+    bool InternalCreate();
+    bool InternalDestroy();
 
 protected:
     int m_argc;
@@ -34,6 +40,7 @@ protected:
 
     World* m_world;
 };
+
 }  // namespace red
 
 #include "inl/Engine.inl"

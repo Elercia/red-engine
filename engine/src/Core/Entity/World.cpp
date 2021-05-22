@@ -1,6 +1,6 @@
 #include "RedEngine/Core/Entity/World.hpp"
 
-#include "RedEngine/Core/Components/ComponentManager.hpp"
+#include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
@@ -8,6 +8,8 @@
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/Level.hpp"
+#include "RedEngine/Level/LevelResourceLoader.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -18,6 +20,7 @@ World::World()
     : m_singletonEntity(nullptr)
     , m_currentRootEntity(nullptr)
     , m_componentManager(new ComponentManager())
+    , m_componentRegistry(new ComponentRegistry())
     , m_nextEntityId(0)
     , m_currentLevel(nullptr)
 {
@@ -45,7 +48,10 @@ red::Entity* World::CreateRootEntity(Level* level)
     return entityPtr;
 }
 
-Entity* World::CreateEntity(Entity* root) { return CreateEntity("Entity_" + std::to_string(m_nextEntityId), root); }
+Entity* World::CreateEntity(Entity* root)
+{
+    return CreateEntity("Entity_" + std::to_string(m_nextEntityId), root);
+}
 
 Entity* World::CreateEntity(const std::string& name, Entity* root)
 {
@@ -141,6 +147,13 @@ void World::Clean()
         m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), e), m_entities.end());
 }
 
+void World::LoadLevel(const std::string& levelName)
+{
+    auto* levelResourceLoader = GetSingletonComponent<ResourceHolderComponent>()->GetResourceLoader<LevelResourceLoader>();
+
+    levelResourceLoader->LoadResource(levelName);
+}
+
 void World::ChangeLevel(Level* newLevel)
 {
     if (m_currentLevel != nullptr)
@@ -160,16 +173,34 @@ void World::ChangeLevel(Level* newLevel)
     }
 }
 
-const std::vector<System*>& World::GetSystems() { return m_systems; }
+const std::vector<System*>& World::GetSystems()
+{
+    return m_systems;
+}
 
-const std::vector<Entity*>& World::GetEntities() { return m_entities; }
+const std::vector<Entity*>& World::GetEntities()
+{
+    return m_entities;
+}
 
-Entity* World::GetSingletonEntity() { return m_singletonEntity; }
+Entity* World::GetSingletonEntity()
+{
+    return m_singletonEntity;
+}
 
-ComponentManager* World::GetComponentManager() { return m_componentManager; }
+ComponentManager* World::GetComponentManager()
+{
+    return m_componentManager;
+}
 
-PhysicsWorld* World::GetPhysicsWorld() { return &m_physicsWorld; }
+PhysicsWorld* World::GetPhysicsWorld()
+{
+    return &m_physicsWorld;
+}
 
-red::Entity* World::GetCurrentRootEntity() { return m_currentRootEntity; }
+red::Entity* World::GetCurrentRootEntity()
+{
+    return m_currentRootEntity;
+}
 
 }  // namespace red

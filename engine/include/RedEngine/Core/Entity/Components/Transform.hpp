@@ -10,6 +10,9 @@ namespace red
 class Transform : public Component
 {
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(Transform, Component)
+    RED_END_COMPONENT_REGISTER()
+
     Transform(Entity* entity, float x, float y);
     Transform(Entity* entity, Vector2 position);
     ~Transform() override = default;

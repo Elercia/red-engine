@@ -1,0 +1,1 @@
+#include "RedEngine/Core/Entity/Components/ComponentRegistryFunction.hpp"

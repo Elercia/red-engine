@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
@@ -57,6 +57,9 @@ class ColliderList : public Component
     friend class PhysicSystem;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(ColliderList, Component)
+    RED_END_COMPONENT_REGISTER()
+
     ColliderList(Entity* entity);
     ~ColliderList() = default;
 

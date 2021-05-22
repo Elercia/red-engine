@@ -1,8 +1,8 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
-#include "RedEngine/Core/Components/ComponentManager.hpp"
-#include "RedEngine/Core/Components/Transform.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/RedEngineBase.hpp"

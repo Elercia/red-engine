@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RedEngine/Audio/AudioEvent.hpp"
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <vector>
@@ -13,6 +13,9 @@ class AudioSource : public Component
     friend class AudioSystem;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(AudioSource, Component)
+    RED_END_COMPONENT_REGISTER()
+
     AudioSource(Entity* owner);
     ~AudioSource() = default;
 

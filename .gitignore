@@ -178,3 +178,5 @@ redcppcheck-cppcheck-build-dir
 scripts/projects/
 
 todo.todo
+
+test/RedEngineTest

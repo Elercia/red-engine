@@ -1,7 +1,7 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Rendering/Color.hpp"
@@ -56,6 +56,9 @@ class DebugComponent : public Component
     friend class RenderingSystem;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(DebugComponent, Component)
+    RED_END_COMPONENT_REGISTER()
+
     explicit DebugComponent(Entity* entity);
     ~DebugComponent() override = default;
 

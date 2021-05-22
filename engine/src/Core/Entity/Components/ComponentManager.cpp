@@ -1,11 +1,13 @@
-#include "RedEngine/Core/Components/ComponentManager.hpp"
+#include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 
 namespace red
 {
-ComponentManager::ComponentManager() {}
+ComponentManager::ComponentManager()
+{
+}
 
 ComponentManager::~ComponentManager()
 {
@@ -21,7 +23,10 @@ ComponentManager::~ComponentManager()
     }
 }
 
-std::set<Component*> ComponentManager::GetComponents(Entity* /*entity*/) { return {}; }  // TODO
+std::set<Component*> ComponentManager::GetComponents(Entity* /*entity*/)
+{
+    return {};
+}  // TODO
 
 void ComponentManager::StoreComponent(Entity* owner, Component* component, std::size_t name)
 {

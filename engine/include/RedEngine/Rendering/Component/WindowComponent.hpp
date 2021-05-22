@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/CVarSerialization.hpp"
 
@@ -28,6 +28,9 @@ struct WindowInfo
 class WindowComponent : public Component
 {
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(WindowComponent, Component)
+    RED_END_COMPONENT_REGISTER()
+
     WindowComponent(Entity* owner);
     virtual ~WindowComponent();
 

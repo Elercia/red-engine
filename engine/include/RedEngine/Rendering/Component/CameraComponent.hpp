@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Rendering/Color.hpp"
@@ -20,6 +20,9 @@ class CameraComponent : public Component
     friend class RenderingSystem;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(CameraComponent, Component)
+    RED_END_COMPONENT_REGISTER()
+
     CameraComponent(Entity* entity, const Vector2& center);
     ~CameraComponent() override = default;
 

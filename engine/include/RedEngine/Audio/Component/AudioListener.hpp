@@ -2,7 +2,7 @@
 
 #include "fmod_common.h"
 
-#include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 
 namespace red
 {
@@ -11,6 +11,9 @@ class AudioListener : public Component
     friend class AudioSystem;
 
 public:
+    RED_START_COMPONENT_REGISTER_INHERITHED(AudioListener, Component)
+    RED_END_COMPONENT_REGISTER()
+
     AudioListener(Entity* owner);
     ~AudioListener();
 

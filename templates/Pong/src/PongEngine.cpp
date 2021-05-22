@@ -6,13 +6,14 @@ namespace pong
 {
 bool PongEngine::Create()
 {
-    bool init = Engine::Create();
+    m_world->LoadLevel<PongLevel>();
 
-    if (init)
-    {
-        m_world->LoadLevel<PongLevel>();
-    }
-
-    return init;
+    return true;
 }
+
+bool PongEngine::Destroy()
+{
+    return true;
+}
+
 }  // namespace pong

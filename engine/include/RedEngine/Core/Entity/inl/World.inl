@@ -46,4 +46,16 @@ T* World::GetSingletonComponent()
     return m_singletonEntity->GetComponent<T>();
 }
 
+template <typename T>
+bool red::World::RegisterComponentType()
+{
+    static_assert(std::is_base_of<Component, T>::value, "RegisterComponentType called on non component type");
+
+    auto* compData = m_componentRegistry->CreateNewComponentData();
+
+    T::RegisterComponentTypeTraits(compData);
+
+    return true;
+}
+
 }  // namespace red
