@@ -8,6 +8,7 @@
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
 #include <box2d/b2_draw.h>
@@ -17,6 +18,7 @@ namespace red
 {
 DebugSystem::DebugSystem(World* world) : System(world)
 {
+    m_priority = 10;
 }
 
 void DebugSystem::Init()
@@ -64,6 +66,11 @@ void DebugSystem::Update()
     if (events->GetKeyDown(KeyCodes::KEY_F6))
     {
         Time::SetTimeScale(Time::TimeScale() - 0.1F);
+    }
+
+    if (events->GetKey(KeyCodes::KEY_B) && events->GetKey(KeyCodes::KEY_LCTRL))
+    {
+        m_world->GetCurrentLevel()->Serialize("resources/serializedLevel.json");
     }
 
     // TODO add the management of the in-game console

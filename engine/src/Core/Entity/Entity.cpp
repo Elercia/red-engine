@@ -1,9 +1,10 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 
-#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Level/LevelData.hpp"
 
 #include <utility>
 
@@ -27,7 +28,7 @@ void Entity::Destroy()
     m_isDestroyed = true;
 }
 
-std::set<Component*> Entity::GetComponents()
+Array<Component*> Entity::GetComponents() const
 {
     return m_world->GetComponentManager()->GetComponents(this);
 }
@@ -81,7 +82,7 @@ void Entity::SetPersistent(bool persistent)
             }
             else
             {
-                SetParent(m_world->GetCurrentRootEntity());
+                SetParent(nullptr);
             }
         }
 
@@ -138,7 +139,7 @@ Entity* Entity::GetParent()
     return m_parent;
 }
 
-std::vector<Entity*> Entity::GetChildren()
+std::vector<Entity*> Entity::GetChildren() const
 {
     return m_children;
 }
@@ -151,6 +152,29 @@ World* Entity::GetWorld()
 red::ComponentManager* Entity::GetComponentManager()
 {
     return m_world->GetComponentManager();
+}
+
+void Entity::Serialize(ILevelEntityData* entityData) const
+{
+    for (auto* child : GetChildren())
+    {
+        child->Serialize(entityData->AddLevelChildEntityData());
+    }
+
+    entityData->SetId(m_id);
+    entityData->SetName(m_name);
+
+    if (m_parent != nullptr)
+        entityData->SetParentId(m_parent->GetId());
+
+    for (auto* comp : GetComponents())
+    {
+        comp->Serialize(entityData->AddLevelComponentData(std::string(comp->GetComponentName())));
+    }
+}
+
+void Entity::Deserialize(const ILevelEntityData* /*entity*/)
+{
 }
 
 }  // namespace red

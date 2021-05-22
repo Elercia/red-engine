@@ -18,7 +18,6 @@ namespace red
 {
 World::World()
     : m_singletonEntity(nullptr)
-    , m_currentRootEntity(nullptr)
     , m_componentManager(new ComponentManager())
     , m_componentRegistry(new ComponentRegistry())
     , m_nextEntityId(0)
@@ -198,9 +197,10 @@ PhysicsWorld* World::GetPhysicsWorld()
     return &m_physicsWorld;
 }
 
-red::Entity* World::GetCurrentRootEntity()
+
+red::Level* World::GetCurrentLevel()
 {
-    return m_currentRootEntity;
+    return m_currentLevel;
 }
 
 }  // namespace red

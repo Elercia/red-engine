@@ -19,6 +19,7 @@ namespace red
 using EntityId = uint32;
 
 class World;
+class ILevelEntityData;
 
 class Entity
 {
@@ -46,7 +47,7 @@ public:
     template <typename T>
     T* GetComponentInParent(bool includeOwn = true);
 
-    std::set<Component*> GetComponents();
+    Array<Component*> GetComponents() const;
 
     template <typename T>
     bool HasComponent();
@@ -65,11 +66,14 @@ public:
     void AddChild(Entity* child);
     void RemoveChild(Entity* child);
     Entity* GetParent();
-    std::vector<Entity*> GetChildren();
+    std::vector<Entity*> GetChildren() const;
 
     World* GetWorld();
 
     ComponentManager* GetComponentManager();
+
+    void Serialize(ILevelEntityData* entity) const;
+    void Deserialize(const ILevelEntityData* entity);
 
 protected:
     World* m_world;

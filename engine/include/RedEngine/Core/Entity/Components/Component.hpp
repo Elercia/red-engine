@@ -10,6 +10,7 @@
 namespace red
 {
 class Entity;
+class ILevelComponentData;
 
 using ComponentId = uint32_t;
 
@@ -34,8 +35,8 @@ public:
 
     [[nodiscard]] Entity* GetOwner() const;
 
-    virtual void Serialize() const;
-    virtual void Deserialize();
+    virtual void Serialize(ILevelComponentData* levelComponentData) const;
+    virtual void Deserialize(const ILevelComponentData* levelComponentData);
 
 protected:
     Entity* m_owner;

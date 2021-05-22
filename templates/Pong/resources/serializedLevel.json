@@ -1,0 +1,66 @@
+[
+    {
+        "components": {
+            "red::AudioSource": {},
+            "red::ColliderList": {},
+            "red::PhysicBody": {},
+            "red::Sprite": {},
+            "red::Transform": {
+                "position": {
+                    "x": 730.189208984375,
+                    "y": 509.8228759765625
+                }
+            }
+        },
+        "id": 2,
+        "name": "Ball",
+        "parentId": 1
+    },
+    {
+        "components": {
+            "red::ColliderList": {},
+            "red::PhysicBody": {},
+            "red::Sprite": {},
+            "red::Transform": {
+                "position": {
+                    "x": 100.0,
+                    "y": 250.0
+                }
+            }
+        },
+        "id": 3,
+        "name": "PaddleOne",
+        "parentId": 1
+    },
+    {
+        "components": {
+            "red::ColliderList": {},
+            "red::PhysicBody": {},
+            "red::Sprite": {},
+            "red::Transform": {
+                "position": {
+                    "x": 685.0,
+                    "y": 250.0
+                }
+            }
+        },
+        "id": 4,
+        "name": "PaddleTwo",
+        "parentId": 1
+    },
+    {
+        "components": {
+            "red::ColliderList": {},
+            "red::PhysicBody": {},
+            "red::Transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0
+                }
+            }
+        },
+        "id": 5,
+        "name": "Walls",
+        "parentId": 1
+    }
+]

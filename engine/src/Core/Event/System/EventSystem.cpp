@@ -8,7 +8,7 @@
 
 namespace red
 {
-EventSystem::EventSystem(World* world) : System(world) { m_priority = 10; }
+EventSystem::EventSystem(World* world) : System(world) { m_priority = 1; }
 
 void EventSystem::Init()
 {

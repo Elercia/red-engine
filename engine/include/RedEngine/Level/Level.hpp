@@ -30,6 +30,9 @@ public:
 
     Entity* GetRootEntity();
 
+    void Serialize(const std::string& path) const;
+    void Deserialize(const std::string& path);
+
 protected:
     std::string m_levelName;
 

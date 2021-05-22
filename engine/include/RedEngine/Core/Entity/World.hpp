@@ -66,14 +66,13 @@ public:
 
     PhysicsWorld* GetPhysicsWorld();
 
-    Entity* GetCurrentRootEntity();
-
     template <typename T>
     bool RegisterComponentType();
 
+    Level* GetCurrentLevel();
+
 private:
     Entity* m_singletonEntity;
-    Entity* m_currentRootEntity;
 
     std::vector<Entity*> m_entities;
     std::vector<System*> m_systems;

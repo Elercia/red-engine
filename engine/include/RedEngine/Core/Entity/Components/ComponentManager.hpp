@@ -2,6 +2,7 @@
 
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
+#include "RedEngine/Core/Container/Array.hpp"
 
 #include <map>
 #include <memory>
@@ -30,7 +31,7 @@ public:
     template <typename ComponentType_t>
     void RemoveComponent(Entity* owner);
 
-    std::set<Component*> GetComponents(Entity* entity);
+    Array<Component*> GetComponents(const Entity* entity) const;
 
     template <class ComponentType_t>
     bool HasComponent(Entity* entity);

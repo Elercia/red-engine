@@ -17,6 +17,9 @@ public:
     Transform(Entity* entity, Vector2 position);
     ~Transform() override = default;
 
+    void Serialize(ILevelComponentData* levelComponentData) const override;
+    void Deserialize(const ILevelComponentData* levelComponentData) override;
+
     [[nodiscard]] const Vector2& GetPosition() const;
     [[nodiscard]] Vector2& GetPosition();
 
