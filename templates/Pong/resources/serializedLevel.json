@@ -6,10 +6,9 @@
             "red::PhysicBody": {},
             "red::Sprite": {},
             "red::Transform": {
-                "position": {
-                    "x": 730.189208984375,
-                    "y": 509.8228759765625
-                }
+                "position": "412.665894;287.334106",
+                "rotation": "0.000000",
+                "scale": "0.000000;0.000000"
             }
         },
         "id": 2,
@@ -22,10 +21,9 @@
             "red::PhysicBody": {},
             "red::Sprite": {},
             "red::Transform": {
-                "position": {
-                    "x": 100.0,
-                    "y": 250.0
-                }
+                "position": "100.000000;250.000000",
+                "rotation": "0.000000",
+                "scale": "0.000000;0.000000"
             }
         },
         "id": 3,
@@ -38,10 +36,9 @@
             "red::PhysicBody": {},
             "red::Sprite": {},
             "red::Transform": {
-                "position": {
-                    "x": 685.0,
-                    "y": 250.0
-                }
+                "position": "685.000000;250.000000",
+                "rotation": "0.000000",
+                "scale": "0.000000;0.000000"
             }
         },
         "id": 4,
@@ -53,10 +50,9 @@
             "red::ColliderList": {},
             "red::PhysicBody": {},
             "red::Transform": {
-                "position": {
-                    "x": 0.0,
-                    "y": 0.0
-                }
+                "position": "0.000000;0.000000",
+                "rotation": "0.000000",
+                "scale": "0.000000;0.000000"
             }
         },
         "id": 5,

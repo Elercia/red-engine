@@ -9,34 +9,9 @@ JsonLevelComponentData::JsonLevelComponentData(json* object) : m_componentObject
 {
 }
 
-void JsonLevelComponentData::WriteVector2(const std::string& name, Vector2 vec2)
+void JsonLevelComponentData::AddPairOfValue(const std::string& name, const std::string& value)
 {
-    json vec2Object;
-
-    vec2Object["x"] = vec2.x;
-    vec2Object["y"] = vec2.y;
-
-    (*m_componentObject)[name] = vec2Object;
-}
-
-Vector2 JsonLevelComponentData::ReadVector2(const std::string& name) const
-{
-    Vector2 vec;
-
-    auto vec2Object = m_componentObject->find(name);
-
-    RED_ASSERT_S(vec2Object != m_componentObject->end());
-    RED_ASSERT_S((*vec2Object)["x"].is_number_float() && (*vec2Object)["y"].is_number_float());
-
-    vec.x = (*vec2Object)["x"].get<float>();
-    vec.y = (*vec2Object)["y"].get<float>();
-
-    return vec;
-}
-
-void JsonLevelComponentData::SetName(const std::string& name)
-{
-    (*m_componentObject)["name"] = name;
+    (*m_componentObject)[name] = value;
 }
 
 ///--- Entity

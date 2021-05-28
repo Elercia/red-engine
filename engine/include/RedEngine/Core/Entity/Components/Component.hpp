@@ -1,15 +1,18 @@
 #pragma once
 
-#include "RedEngine/RedEngineBase.hpp"
-#include "RedEngine/Utils/Uncopyable.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentRegistryFunction.hpp"
+#include "RedEngine/Core/SerializationFunction.hpp"
+#include "RedEngine/Math/SerializationFunction.hpp"
+#include "RedEngine/RedEngineBase.hpp"
+#include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <memory>
 
 namespace red
 {
 class Entity;
+class World;
 class ILevelComponentData;
 
 using ComponentId = uint32_t;
@@ -34,9 +37,10 @@ public:
     Component& operator=(Component&&) = default;
 
     [[nodiscard]] Entity* GetOwner() const;
+    [[nodiscard]] World* GetWorld() const;
 
-    virtual void Serialize(ILevelComponentData* levelComponentData) const;
-    virtual void Deserialize(const ILevelComponentData* levelComponentData);
+    void Serialize(ILevelComponentData* levelComponentData) const;
+    void Deserialize(const ILevelComponentData* levelComponentData);
 
 protected:
     Entity* m_owner;

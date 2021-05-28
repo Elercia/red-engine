@@ -51,7 +51,7 @@ bool red::World::RegisterComponentType()
 {
     static_assert(std::is_base_of<Component, T>::value, "RegisterComponentType called on non component type");
 
-    auto* compData = m_componentRegistry->CreateNewComponentData();
+    auto* compData = m_componentRegistry->CreateNewComponentData(std::string(TypeInfo<T>().name));
 
     T::RegisterComponentTypeTraits(compData);
 

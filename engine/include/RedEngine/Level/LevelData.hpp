@@ -12,10 +12,7 @@ using EntityId = uint32;
 class ILevelComponentData
 {
 public:
-    virtual void WriteVector2(const std::string& name, Vector2 vec2) = 0;
-    virtual Vector2 ReadVector2(const std::string& name) const = 0;
-
-    virtual void SetName(const std::string& name) = 0;
+    virtual void AddPairOfValue(const std::string& name, const std::string& value) = 0;
 };
 
 class ILevelEntityData

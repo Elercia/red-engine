@@ -56,6 +56,7 @@ public:
     const std::vector<Entity*>& GetEntities();
     Entity* GetSingletonEntity();
     ComponentManager* GetComponentManager();
+    ComponentRegistry* GetComponentRegistry();
 
     void Init();
     void Finalize();

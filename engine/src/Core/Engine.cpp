@@ -1,8 +1,10 @@
 #include "RedEngine/Core/Engine.hpp"
 
-#include "RedEngine/Core/Entity/Components/Transform.hpp"
+#include "RedEngine/Audio/Component/AudioListener.hpp"
+#include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Event/System/EventSystem.hpp"
@@ -71,6 +73,8 @@ bool Engine::RegisterComponentTypes()
     CHECK_RETURN(m_world->RegisterComponentType<WindowComponent>());
     CHECK_RETURN(m_world->RegisterComponentType<CameraComponent>());
     CHECK_RETURN(m_world->RegisterComponentType<ResourceHolderComponent>());
+    CHECK_RETURN(m_world->RegisterComponentType<AudioSource>());
+    CHECK_RETURN(m_world->RegisterComponentType<AudioListener>());
 
     return true;
 }

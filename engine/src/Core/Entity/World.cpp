@@ -192,6 +192,12 @@ ComponentManager* World::GetComponentManager()
     return m_componentManager;
 }
 
+
+red::ComponentRegistry* World::GetComponentRegistry()
+{
+    return m_componentRegistry;
+}
+
 PhysicsWorld* World::GetPhysicsWorld()
 {
     return &m_physicsWorld;

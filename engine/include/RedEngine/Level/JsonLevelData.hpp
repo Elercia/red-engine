@@ -19,10 +19,7 @@ public:
     explicit JsonLevelComponentData(json* object);
     ~JsonLevelComponentData() = default;
 
-    void WriteVector2(const std::string& name, Vector2 vec2) override;
-    Vector2 ReadVector2(const std::string& name) const override;
-    
-    void SetName(const std::string& name) override;
+    void AddPairOfValue(const std::string& name, const std::string& value) override;
 
 private:
     json* m_componentObject;

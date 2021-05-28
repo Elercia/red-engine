@@ -12,20 +12,6 @@ Transform::Transform(Entity* entity, Vector2 position) : Component(entity), m_po
 {
 }
 
-void Transform::Serialize(ILevelComponentData* levelComponentData) const
-{
-    Component::Serialize(levelComponentData);
-
-    levelComponentData->WriteVector2("position", m_position);
-}
-
-void Transform::Deserialize(const ILevelComponentData* levelComponentData)
-{
-    Component::Deserialize(levelComponentData);
-
-    m_position = levelComponentData->ReadVector2("position");
-}
-
 const Vector2& Transform::GetPosition() const
 {
     return m_position;
