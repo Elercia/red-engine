@@ -63,6 +63,18 @@ Entity* World::CreateEntity(const std::string& name, Entity* root)
     return entityPtr;
 }
 
+
+red::Entity* World::CreateEntity(EntityId id, const std::string& name, Entity* root /*= nullptr*/)
+{
+    auto* entityPtr = new Entity(this, id, name); //TODO check if there is a entity with this id 
+
+    m_entities.push_back(entityPtr);
+
+    entityPtr->SetParent(root);
+
+    return entityPtr;
+}
+
 red::Entity* World::CreateSingletonEntity()
 {
     if (m_singletonEntity != nullptr)

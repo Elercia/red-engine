@@ -25,9 +25,16 @@ JsonLevelComponentData* JsonLevelEntityData::AddLevelComponentData(const std::st
 {
     json& componentArray = (*m_entityObject)["components"];
 
-    componentArray[componentName] = json::object();
+    auto& obj = componentArray.emplace_back();
 
-    m_components.emplace_back(&componentArray[componentName]);
+    return AddLevelComponentData(componentName, obj);
+}
+
+red::JsonLevelComponentData* JsonLevelEntityData::AddLevelComponentData(const std::string& componentName, json& jsonObj)
+{
+    jsonObj["componentName"] = componentName;
+
+    m_components.emplace_back(&jsonObj);
 
     return &(m_components.back());
 }
@@ -40,7 +47,12 @@ JsonLevelEntityData* JsonLevelEntityData::AddLevelChildEntityData()
 
     json& childNode = childrenArray.back();
 
-    m_children.emplace_back(&childNode);
+    return AddLevelChildEntityData(childNode);
+}
+
+JsonLevelEntityData* JsonLevelEntityData::AddLevelChildEntityData(json& entityJson)
+{
+    m_children.emplace_back(&entityJson);
 
     return &(m_children.back());
 }
@@ -55,15 +67,62 @@ void JsonLevelEntityData::SetId(const EntityId& id)
     (*m_entityObject)["id"] = id;
 }
 
-void JsonLevelEntityData::SetParentId(const EntityId& parentId)
+std::string JsonLevelEntityData::GetName() const
 {
-    (*m_entityObject)["parentId"] = parentId;
+    return (*m_entityObject)["name"];
 }
+
+int JsonLevelEntityData::GetId() const
+{
+    return (*m_entityObject)["id"];
+}
+
+///--- Level
+///---------------------------------------------
 
 red::JsonLevelEntityData* JsonLevelData::AddLevelEntityData()
 {
-    json& entityObject = m_levelObject.emplace_back();
-    return &m_entities.emplace_back(&entityObject);
+    json& entitiesJsonArray = m_levelObject["entities"];
+
+    entitiesJsonArray.push_back({});
+
+    json& entityNode = entitiesJsonArray.back();
+
+    return AddLevelEntityData(entityNode);
+}
+
+red::JsonLevelEntityData* JsonLevelData::AddLevelEntityData(json& entityJson)
+{
+    return &m_entities.emplace_back(&entityJson);
+}
+
+void JsonLevelData::UpdateInternalDataFromReadJson()
+{
+    auto& jsonEntityArray = m_levelObject["entities"];
+
+    for (auto& jsonEntity : jsonEntityArray)
+    {
+        UpdateInternalDataForEntity(jsonEntity, nullptr);
+    }
+}
+
+void JsonLevelData::UpdateInternalDataForEntity(json& jsonEntity, JsonLevelEntityData* parentData)
+{
+    auto* entity =
+        parentData != nullptr ? parentData->AddLevelChildEntityData(jsonEntity) : AddLevelEntityData(jsonEntity);
+
+    auto& jsonChildrenEntityArray = jsonEntity["children"];
+    auto& jsonComponentObjects = jsonEntity["components"];
+
+    for (auto& jsonChildEntity : jsonChildrenEntityArray)
+    {
+        UpdateInternalDataForEntity(jsonChildEntity, entity);
+    }
+
+    for (auto it = jsonComponentObjects.begin(); it != jsonComponentObjects.end(); ++it)
+    {
+        entity->AddLevelComponentData(it.key(), it.value());
+    }
 }
 
 }  // namespace red

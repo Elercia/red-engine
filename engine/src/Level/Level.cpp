@@ -3,11 +3,12 @@
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/JsonLevelData.hpp"
+#include "RedEngine/Level/JsonLevelSerializer.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 
 #include <fstream>
-#include <iostream>
+#include <iosfwd>
 #include <memory>
 
 namespace red
@@ -44,40 +45,35 @@ red::Entity* Level::CreateEntity(const std::string& name)
     return m_world->CreateEntity(name, m_rootEntity);
 }
 
+red::Entity* Level::CreateEntity(EntityId id, const std::string& name)
+{
+    return m_world->CreateEntity(id, name, m_rootEntity);
+}
+
+red::Entity* Level::CreateEntity(EntityId id, const std::string& name, Entity* parent)
+{
+    return m_world->CreateEntity(id, name, parent);
+}
+
 red::Entity* Level::GetRootEntity()
 {
     return m_rootEntity;
 }
 
-void Level::Serialize(const std::string& path) const
+void Level::Serialize(const std::string& path)  // TODO Make const
 {
-    JsonLevelData levelData;
+    JsonLevelSerializer serializer(this);
 
-    for (auto* entities : m_rootEntity->GetChildren())
-    {
-        entities->Serialize(levelData.AddLevelEntityData());
-    }
-
-    std::string levelStr = levelData.m_levelObject.dump(4);
-
-    std::filebuf fb;
-    fb.open(path, std::ios::out);
-    std::ostream os(&fb);
-    os << levelStr;
-    fb.close();
+    if (serializer.SerializeToFile(path) == false)
+        RED_LOG_ERROR("Failed to serialize level to \"{}\"", path);
 }
 
 void Level::Deserialize(const std::string& path)
 {
-    std::string levelStr;
-    std::filebuf fb;
-    fb.open(path, std::ios::out);
-    std::istream os(&fb);
-    os >> levelStr;
-    fb.close();
+    JsonLevelSerializer serializer(this);
 
-    JsonLevelData levelData;
-    levelData.m_levelObject = json::parse(levelStr);
+    if (serializer.DeserializeFromFile(path) == false)
+        RED_LOG_ERROR("Failed to load level from \"{}\"", path);
 }
 
 }  // namespace red

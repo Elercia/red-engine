@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/Level/LevelData.hpp"
 
 namespace red
 {
@@ -18,30 +17,6 @@ Entity* Component::GetOwner() const
 red::World* Component::GetWorld() const
 {
     return m_owner->GetWorld();
-}
-
-void Component::Serialize(ILevelComponentData* levelComponentData) const
-{
-    auto* compRegistry = GetWorld()->GetComponentRegistry();
-
-    const auto* compData = compRegistry->GetComponentData(std::string(GetComponentName()));
-
-    if( compData == nullptr)
-    {
-        RED_LOG_ERROR("Failed to serialize component {}. You forgot to register it", std::string(GetComponentName()));
-        return;
-    }
-
-    for (auto& memberIt : compData->members)
-    {
-        auto str = memberIt.second.serializationFunction(this);
-
-        levelComponentData->AddPairOfValue(memberIt.second.name, str);
-    }
-}
-
-void Component::Deserialize(const ILevelComponentData* /*levelComponentData*/)
-{
 }
 
 }  // namespace red

@@ -39,9 +39,6 @@ public:
     [[nodiscard]] Entity* GetOwner() const;
     [[nodiscard]] World* GetWorld() const;
 
-    void Serialize(ILevelComponentData* levelComponentData) const;
-    void Deserialize(const ILevelComponentData* levelComponentData);
-
 protected:
     Entity* m_owner;
     ComponentStatus m_status;

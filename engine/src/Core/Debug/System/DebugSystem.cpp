@@ -73,6 +73,11 @@ void DebugSystem::Update()
         m_world->GetCurrentLevel()->Serialize("resources/serializedLevel.json");
     }
 
+    if (events->GetKey(KeyCodes::KEY_L) && events->GetKey(KeyCodes::KEY_LCTRL))
+    {
+        m_world->GetCurrentLevel()->Deserialize("resources/serializedLevel.json");
+    }
+
     // TODO add the management of the in-game console
 }
 }  // namespace red

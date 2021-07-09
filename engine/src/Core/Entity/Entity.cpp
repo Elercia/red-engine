@@ -4,7 +4,6 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/Level/LevelData.hpp"
 
 #include <utility>
 
@@ -139,6 +138,11 @@ Entity* Entity::GetParent()
     return m_parent;
 }
 
+const red::Entity* Entity::GetParent() const
+{
+    return m_parent;
+}
+
 std::vector<Entity*> Entity::GetChildren() const
 {
     return m_children;
@@ -152,29 +156,6 @@ World* Entity::GetWorld()
 red::ComponentManager* Entity::GetComponentManager()
 {
     return m_world->GetComponentManager();
-}
-
-void Entity::Serialize(ILevelEntityData* entityData) const
-{
-    for (auto* child : GetChildren())
-    {
-        child->Serialize(entityData->AddLevelChildEntityData());
-    }
-
-    entityData->SetId(m_id);
-    entityData->SetName(m_name);
-
-    if (m_parent != nullptr)
-        entityData->SetParentId(m_parent->GetId());
-
-    for (auto* comp : GetComponents())
-    {
-        comp->Serialize(entityData->AddLevelComponentData(std::string(comp->GetComponentName())));
-    }
-}
-
-void Entity::Deserialize(const ILevelEntityData* /*entity*/)
-{
 }
 
 }  // namespace red

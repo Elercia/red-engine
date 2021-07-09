@@ -12,6 +12,9 @@ namespace red
 class Level : public IResource
 {
 public:
+    friend class ILevelSerializer;
+    friend class JsonLevelSerializer;
+
     RED_RESOURCE(ResourceType::LEVEL)
 
     explicit Level(std::string name, World* world);
@@ -26,11 +29,13 @@ public:
     const std::string& GetName() const;
 
     Entity* CreateEntity();
+    Entity* CreateEntity(EntityId id, const std::string& name);
+    Entity* CreateEntity(EntityId id, const std::string& name, Entity* parent);
     Entity* CreateEntity(const std::string& name);
 
     Entity* GetRootEntity();
 
-    void Serialize(const std::string& path) const;
+    void Serialize(const std::string& path);
     void Deserialize(const std::string& path);
 
 protected:

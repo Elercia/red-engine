@@ -66,14 +66,12 @@ public:
     void AddChild(Entity* child);
     void RemoveChild(Entity* child);
     Entity* GetParent();
+    const Entity* GetParent() const;
     std::vector<Entity*> GetChildren() const;
 
     World* GetWorld();
 
     ComponentManager* GetComponentManager();
-
-    void Serialize(ILevelEntityData* entity) const;
-    void Deserialize(const ILevelEntityData* entity);
 
 protected:
     World* m_world;

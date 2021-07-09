@@ -32,7 +32,9 @@ public:
 
     Entity* CreateRootEntity(Level* level);
     Entity* CreateEntity(Entity* root = nullptr);
+    Entity* CreateEntity(EntityId id, const std::string& name, Entity* root = nullptr);
     Entity* CreateEntity(const std::string& name, Entity* root = nullptr);
+
     Entity* CreateSingletonEntity();
 
     template <class T, class... Args>
