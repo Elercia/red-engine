@@ -20,6 +20,7 @@
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Audio/AudioEvent.hpp"
 
 void PongLevel::Init()
 {
@@ -32,12 +33,7 @@ void PongLevel::Init()
 
     const auto onCollision = [](const red::CollisionInfo& collisionInfo) {
         auto force = red::Vector2(1000.f, 1000.f);
-
-        //collisionInfo.firstPhysicBody->ApplyForce(force * collisionInfo.normal,
-        //                                          collisionInfo.contactPoints[0].localPoint);
-
-        red::SoundDesc desc;
-        collisionInfo.firstPhysicBody->GetOwner()->GetComponent<red::AudioSource>()->PlaySound(desc);
+        collisionInfo.firstPhysicBody->GetOwner()->GetComponent<red::AudioSource>()->Play();
     };
 
     const float ballSize = 30.f;
@@ -55,12 +51,15 @@ void PongLevel::Init()
     paddleColliderDesc.points = {{0, 0}, {30, 0}, {30, 100}, {0, 100}};
     paddleColliderDesc.restitution = 1.f;
 
+    red::SoundDesc ballbounding;
+    ballbounding.name = "ball_bouncing";
+
     auto* ball = CreateEntity("Ball");
     ball->AddComponent<red::Sprite>("ball");
     ball->GetComponent<red::Transform>()->SetPosition(center);
     auto* ballPhysicBody = ball->AddComponent<red::PhysicBody>(ballBodyDesc);
     ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
-    ball->AddComponent<red::AudioSource>();
+    ball->AddComponent<red::AudioSource>(ballbounding);
 
     auto slot = ballPhysicBody->m_collisionSignal.Connect(onCollision);
 

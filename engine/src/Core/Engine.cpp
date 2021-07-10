@@ -15,6 +15,8 @@
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
+#include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
+#include "RedEngine/Audio/System/AudioSystem.hpp"
 
 namespace red
 {
@@ -57,12 +59,14 @@ bool Engine::Create()
     resourceHolder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::LEVEL, new LevelResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::SOUND, new SoundResourceLoader(m_world));
 
     m_world->AddSystem<RenderingSystem>();
     m_world->AddSystem<PhysicSystem>();
     m_world->AddSystem<DebugSystem>();
     m_world->AddSystem<EventSystem>();
     m_world->AddSystem<UserInputSystem>();
+    m_world->AddSystem<AudioSystem>();
 
     m_world->Init();
 

@@ -8,7 +8,7 @@
 
 namespace red
 {
-class SpriteResource : IResource
+class SpriteResource : public IResource
 {
     friend class Sprite;
     friend class SpriteResourceLoader;

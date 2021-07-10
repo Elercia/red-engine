@@ -14,8 +14,6 @@ FORCEINLINE void ConvertRef(Vector2& out, const FMOD_VECTOR& fmodVector);
 
 FORCEINLINE FMOD_VECTOR Convert(const Vector2& vector);
 FORCEINLINE Vector2 Convert(const FMOD_VECTOR& fmodVector);
-
-FMOD_VECTOR FMOD_VEC_UP;
 }  // namespace red
 
 #include "inl/AudioUtils.inl"

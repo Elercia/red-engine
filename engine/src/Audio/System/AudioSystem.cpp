@@ -3,12 +3,15 @@
 #include "RedEngine/Audio/AudioUtils.hpp"
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 #include "RedEngine/Audio/Component/AudioSource.hpp"
+#include "RedEngine/Audio/Resource/SoundResource.hpp"
 #include "RedEngine/Core/Components/Transform.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 
 namespace red
 {
-AudioSystem::AudioSystem(World* world) : System(world), m_studioSystem(nullptr), m_system(nullptr) {}
+AudioSystem::AudioSystem(World* world) : System(world), m_studioSystem(nullptr), m_system(nullptr)
+{
+}
 
 AudioSystem::~AudioSystem() = default;
 
@@ -30,19 +33,19 @@ void AudioSystem::Finalise()
 
 void AudioSystem::Update()
 {
-    FMOD::Channel* channel1 = nullptr;
-
+    // Update listeners
     for (auto* audioListenerEntity : GetComponents<AudioListener>())
     {
         auto* audioListener = audioListenerEntity->GetComponent<AudioListener>();
         auto* audioListenerTransform = audioListenerEntity->GetComponent<Transform>();
 
-        FMOD_VECTOR oldPos = audioListener->m_fmodVect;
-        ConvertRef(audioListener->m_fmodVect, audioListenerTransform->GetPosition());
+        FMOD_VECTOR oldPos = Convert(audioListener->m_lastFramePos);
+        FMOD_VECTOR currentPos = Convert(audioListenerTransform->GetPosition());
+        audioListener->m_lastFramePos = audioListenerTransform->GetPosition();
 
         FMOD_VECTOR velocity;
-        velocity.x = (audioListener->m_fmodVect.x - oldPos.x) * (1000 / Time::DeltaTime());
-        velocity.y = (audioListener->m_fmodVect.y - oldPos.y) * (1000 / Time::DeltaTime());
+        velocity.x = (currentPos.x - oldPos.x) * (1000 / Time::DeltaTime());
+        velocity.y = (currentPos.y - oldPos.y) * (1000 / Time::DeltaTime());
         velocity.z = 0;
 
         FMOD_VECTOR forward;
@@ -56,32 +59,59 @@ void AudioSystem::Update()
         up.y = 0;
 
         FMOD_3D_ATTRIBUTES attributes = {{0}};
-        attributes.position = audioListener->m_fmodVect;
+        attributes.position = currentPos;
         attributes.velocity = velocity;
         attributes.forward = forward;
         attributes.up = up;
         FmodCheck(m_studioSystem->setListenerAttributes(audioListener->m_listenerId, &attributes),
                   "Set listener attributes");
+    }
 
-        for (auto* entity : GetComponents<AudioSource>())
+    // Update audio sources
+    for (auto* entity : GetComponents<AudioSource>())
+    {
+        auto* audioSource = entity->GetComponent<AudioSource>();
+        auto resource = audioSource->GetResource();
+        
+        if (resource->GetLoadState() != LoadState::STATE_LOADED)
         {
-            // auto* transform = entity->GetComponent<Transform>();
-            auto* audioSource = entity->GetComponent<AudioSource>();
-
-            for (auto& sound : audioSource->m_soundPlayQueue)
-            {
-                (void) sound;
-                FMOD::Sound* sound1;
-                m_system->createSound("resources/sample.mp3", FMOD_2D, 0, &sound1);
-
-                m_system->playSound(sound1, 0, false, &channel1);
-            }
-
-            audioSource->m_soundPlayQueue.clear();
+            continue;
         }
 
-        FmodCheck(m_system->update(), "Fmod system update");
+        if (audioSource->m_needStart)
+        {
+            m_system->playSound(resource->GetSound(), nullptr, false, &audioSource->m_currentChannel);
+        }
+        audioSource->m_needStart = false;
+
+        if (audioSource->m_currentChannel != nullptr)
+        {
+            if (audioSource->m_needStop)
+            {
+                FmodCheck(audioSource->m_currentChannel->stop(), "failed to stop sound");
+            }
+            audioSource->m_needStop = false;
+
+            if (audioSource->m_needPause)
+            {
+                FmodCheck(audioSource->m_currentChannel->setPaused(true), "failed to pause sound");
+            }
+            audioSource->m_needPause = false;
+
+            if (audioSource->m_needUnpause)
+            {
+                FmodCheck(audioSource->m_currentChannel->setPaused(false), "failed to un-pause sound");
+            }
+            audioSource->m_needUnpause = false;
+        }
     }
+
+    FmodCheck(m_system->update(), "FMOD system update");
+}
+
+FMOD::System* AudioSystem::GetFmodSystem()
+{
+    return m_system;
 }
 
 }  // namespace red

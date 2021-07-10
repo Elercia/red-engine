@@ -21,6 +21,7 @@ enum class ResourceType
 {
     LEVEL,
     SPRITE,
+    SOUND,
     TEXTURE2D,
     AUDIO,
 };

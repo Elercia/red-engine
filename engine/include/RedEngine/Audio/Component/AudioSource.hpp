@@ -4,22 +4,44 @@
 #include "RedEngine/Core/Components/Component.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <vector>
+namespace FMOD
+{
+class Channel;
+}
 
 namespace red
 {
+class SoundResource;
+
 class AudioSource : public Component
 {
     friend class AudioSystem;
 
 public:
-    AudioSource(Entity* owner);
+    AudioSource(Entity* owner, SoundDesc desc);
     ~AudioSource() = default;
 
-    void PlaySound(const SoundDesc& sound);
+    void Play();
+    void Stop();
+    void Pause();
+    void UnPause();
+    void Loop(int loopCount = -1);
+
+    std::shared_ptr<SoundResource> GetResource()
+    {
+        return m_sound;
+    }
 
 private:
-    std::vector<SoundDesc> m_soundPlayQueue;
+    SoundDesc m_desc;
+
+    std::shared_ptr<SoundResource> m_sound = nullptr;
+    FMOD::Channel* m_currentChannel = nullptr;
+
+    bool m_needStart = false;
+    bool m_needStop = false;
+    bool m_needPause = false;
+    bool m_needUnpause = false;
 };
 
 }  // namespace red
