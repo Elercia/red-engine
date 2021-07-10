@@ -12,5 +12,7 @@ public:
     virtual ~LevelResourceLoader();
 
     std::shared_ptr<Level> LoadResource(const std::string& name);
+
+    void FreeResource(std::shared_ptr<red::Level> resource) override;
 };
 }  // namespace red

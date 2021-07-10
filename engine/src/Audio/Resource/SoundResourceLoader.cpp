@@ -69,4 +69,11 @@ std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const std::stri
     return soundResource;
 }
 
+
+void SoundResourceLoader::FreeResource(std::shared_ptr<red::SoundResource> resource)
+{
+    resource->SetLoadState(LoadState::STATE_RELEASED);
+    FmodCheck(resource->GetSound()->release(), "Error releasing sound");
+}
+
 }  // namespace red

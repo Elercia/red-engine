@@ -14,5 +14,7 @@ public:
     ~TextureResourceLoader();
 
     std::shared_ptr<Texture2D> LoadResource(const std::string& name);
+
+    void FreeResource(std::shared_ptr<red::Texture2D> resource) override;
 };
 }  // namespace red

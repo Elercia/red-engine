@@ -3,7 +3,7 @@ namespace red
 template <typename LoaderType>
 LoaderType* ResourceHolderComponent::GetResourceLoader()
 {
-    ResourceType resourceType = LoaderType::Type::GetResourceType();
+    ResourceType resourceType = LoaderType::ThisType::GetResourceType();
 
     auto it = m_resourceLoaders.find(resourceType);
 

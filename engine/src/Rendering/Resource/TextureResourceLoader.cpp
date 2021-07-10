@@ -75,4 +75,11 @@ std::shared_ptr<Texture2D> TextureResourceLoader::LoadResource(const std::string
     return texture;
 }
 
+void TextureResourceLoader::FreeResource(std::shared_ptr<red::Texture2D> resource)
+{
+    SDL_DestroyTexture(resource->m_sdlTexture);
+
+    resource->SetLoadState(LoadState::STATE_RELEASED);
+}
+
 }  // namespace red

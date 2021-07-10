@@ -97,4 +97,10 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const st
     return spriteResource;
 }
 
+
+void SpriteResourceLoader::FreeResource(std::shared_ptr<red::SpriteResource> resource)
+{
+    resource->SetLoadState(LoadState::STATE_RELEASED);
+}
+
 }  // namespace red

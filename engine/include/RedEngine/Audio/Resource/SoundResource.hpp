@@ -18,7 +18,7 @@ public:
     ~SoundResource();
 
     FMOD::Sound* GetSound();
-    void SoundResource::SetSound(FMOD::Sound* sound);
+    void SetSound(FMOD::Sound* sound);
 
 private:
     FMOD::Sound* m_sound;

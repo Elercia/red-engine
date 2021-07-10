@@ -14,6 +14,7 @@ enum class LoadState
 {
     STATE_NOT_LOADED,
     STATE_LOADED,
+    STATE_RELEASED,
     STATE_ERROR
 };
 

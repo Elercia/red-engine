@@ -75,6 +75,13 @@ bool Engine::Create()
 
 bool Engine::Destroy()
 {
+    auto* singletonEntity = m_world->GetSingletonEntity();
+
+    auto* resourceHolder = singletonEntity->GetComponent<ResourceHolderComponent>();
+
+    resourceHolder->RemoveAllLoaders();
+
+
     m_world->Finalize();
 
     delete m_world;
