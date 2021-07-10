@@ -19,16 +19,16 @@ void AudioSystem::Init()
 {
     System::Init();
 
-    FmodCheck(FMOD::Studio::System::create(&m_studioSystem), "Creating FMOD studio system");
-    FmodCheck(m_studioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL),
+    FmodUtils::FmodCheck(FMOD::Studio::System::create(&m_studioSystem), "Creating FMOD studio system");
+    FmodUtils::FmodCheck(m_studioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL),
               "Initializing FMOD studio system");
-    FmodCheck(m_studioSystem->getCoreSystem(&m_system), "Get core system");
+    FmodUtils::FmodCheck(m_studioSystem->getCoreSystem(&m_system), "Get core system");
 }
 
 void AudioSystem::Finalise()
 {
-    FmodCheck(m_studioSystem->unloadAll(), "Unloading");
-    FmodCheck(m_studioSystem->release(), "Release");
+    FmodUtils::FmodCheck(m_studioSystem->unloadAll(), "Unloading");
+    FmodUtils::FmodCheck(m_studioSystem->release(), "Release");
 }
 
 void AudioSystem::Update()
@@ -39,8 +39,8 @@ void AudioSystem::Update()
         auto* audioListener = audioListenerEntity->GetComponent<AudioListener>();
         auto* audioListenerTransform = audioListenerEntity->GetComponent<Transform>();
 
-        FMOD_VECTOR oldPos = Convert(audioListener->m_lastFramePos);
-        FMOD_VECTOR currentPos = Convert(audioListenerTransform->GetPosition());
+        FMOD_VECTOR oldPos = FmodUtils::Convert(audioListener->m_lastFramePos);
+        FMOD_VECTOR currentPos = FmodUtils::Convert(audioListenerTransform->GetPosition());
         audioListener->m_lastFramePos = audioListenerTransform->GetPosition();
 
         FMOD_VECTOR velocity;
@@ -63,7 +63,7 @@ void AudioSystem::Update()
         attributes.velocity = velocity;
         attributes.forward = forward;
         attributes.up = up;
-        FmodCheck(m_studioSystem->setListenerAttributes(audioListener->m_listenerId, &attributes),
+        FmodUtils::FmodCheck(m_studioSystem->setListenerAttributes(audioListener->m_listenerId, &attributes),
                   "Set listener attributes");
     }
 
@@ -88,25 +88,25 @@ void AudioSystem::Update()
         {
             if (audioSource->m_needStop)
             {
-                FmodCheck(audioSource->m_currentChannel->stop(), "failed to stop sound");
+                FmodUtils::FmodCheck(audioSource->m_currentChannel->stop(), "failed to stop sound");
             }
             audioSource->m_needStop = false;
 
             if (audioSource->m_needPause)
             {
-                FmodCheck(audioSource->m_currentChannel->setPaused(true), "failed to pause sound");
+                FmodUtils::FmodCheck(audioSource->m_currentChannel->setPaused(true), "failed to pause sound");
             }
             audioSource->m_needPause = false;
 
             if (audioSource->m_needUnpause)
             {
-                FmodCheck(audioSource->m_currentChannel->setPaused(false), "failed to un-pause sound");
+                FmodUtils::FmodCheck(audioSource->m_currentChannel->setPaused(false), "failed to un-pause sound");
             }
             audioSource->m_needUnpause = false;
         }
     }
 
-    FmodCheck(m_system->update(), "FMOD system update");
+    FmodUtils::FmodCheck(m_system->update(), "FMOD system update");
 }
 
 FMOD::System* AudioSystem::GetFmodSystem()

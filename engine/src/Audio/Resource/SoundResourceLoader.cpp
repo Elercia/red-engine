@@ -61,7 +61,8 @@ std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const std::stri
 
     FMOD::Sound* fmodSound;
 
-    FmodCheck(fmodSystem->createSound(soundPath.c_str(), FMOD_2D, nullptr, &fmodSound), "Error creating sound");
+    FmodUtils::FmodCheck(fmodSystem->createSound(soundPath.c_str(), FMOD_2D, nullptr, &fmodSound),
+                         "Error creating sound");
 
     soundResource->SetSound(fmodSound);
     soundResource->SetLoadState(LoadState::STATE_LOADED);
@@ -73,7 +74,7 @@ std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const std::stri
 void SoundResourceLoader::FreeResource(std::shared_ptr<red::SoundResource> resource)
 {
     resource->SetLoadState(LoadState::STATE_RELEASED);
-    FmodCheck(resource->GetSound()->release(), "Error releasing sound");
+    FmodUtils::FmodCheck(resource->GetSound()->release(), "Error releasing sound");
 }
 
 }  // namespace red
