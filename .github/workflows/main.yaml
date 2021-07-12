@@ -25,7 +25,7 @@ jobs:
     - name: Install dependancies
       run: sudo apt install libsdl2-dev libsdl2-image-dev
     - name: Build
-      run: cd scripts && chmod a+x GenerateProject.sh && chmod a+x bin/premake5 && ./GenerateProject.sh && cd projects/gmake2 && make config=debug_linux64 
+      run: cd scripts && chmod a+x GenerateProject.sh && chmod a+x bin/premake5 && ./GenerateProject.sh && cd projects/gmake2 && make config=${{ matrix.config }}_${{ matrix.platform }} 
     # - name: Test
     #   run: scripts/bin/premake5 test --test-all
   windows:
