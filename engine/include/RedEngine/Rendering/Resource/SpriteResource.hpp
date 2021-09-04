@@ -16,7 +16,7 @@ class SpriteResource : public IResource
 public:
     RED_RESOURCE(ResourceType::SPRITE);
 
-    SpriteResource(ResourceId resourceId);
+    SpriteResource(const Path& path);
     ~SpriteResource() = default;
 
 private:

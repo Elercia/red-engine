@@ -21,7 +21,7 @@ TEST_CASE("Sprite test", "[RENDERING]")
     holder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(&world));
 
     auto* e = world.CreateEntity();
-    auto* spriteComponent = e->AddComponent<Sprite>("sprite_test/sprite_test");
+    auto* spriteComponent = e->AddComponent<Sprite>(red::Path::Resource("sprite_test/sprite_test"));
 
     REQUIRE(spriteComponent->GetAnimations().size() == 2);
 

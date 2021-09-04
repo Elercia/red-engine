@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Core/Components/Component.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
@@ -19,7 +20,7 @@ class Sprite : public Component
     friend class Renderer;
 
 public:
-    Sprite(Entity* entity, const std::string& resourceId);
+    Sprite(Entity* entity, const Path& resourceId);
 
     /// Compute the modifications to do for the next frame
     void NextFrame();

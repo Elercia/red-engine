@@ -15,4 +15,10 @@ bool PongEngine::Create()
 
     return init;
 }
+
+std::string_view PongEngine::GetGameName() const
+{
+    return "Pong Template";
+}
+
 }  // namespace pong

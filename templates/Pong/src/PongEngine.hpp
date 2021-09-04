@@ -7,6 +7,8 @@ namespace pong
 class PongEngine : public red::Engine
 {
 public:
-	virtual bool Create() override;
+	bool Create() override;
+
+	std::string_view GetGameName() const;
 };
 }  // namespace pong

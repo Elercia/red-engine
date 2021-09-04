@@ -10,7 +10,10 @@
 namespace red
 {
 Level::Level(std::string name, World* world)
-    : IResource("", ResourceType::LEVEL), m_levelName(std::move(name)), m_world(world), m_rootEntity(nullptr)
+    : IResource(Path::Resource(name), ResourceType::LEVEL)
+    , m_levelName(std::move(name))
+    , m_world(world)
+    , m_rootEntity(nullptr)
 {
 }
 

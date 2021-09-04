@@ -38,6 +38,11 @@ workspace "RedEngine"
 		system "windows"
 		architecture "x64"
 
+		defines
+		{
+			"_CRT_SECURE_NO_WARNINGS"
+		}
+
 	filter { "platforms:Linux64" }
 		system "linux"
 		architecture "x64"

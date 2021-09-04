@@ -14,7 +14,7 @@ public:
     SpriteResourceLoader(World* world);
     ~SpriteResourceLoader();
 
-    std::shared_ptr<SpriteResource> LoadResource(const std::string& name);
+    std::shared_ptr<SpriteResource> LoadResource(const Path& path);
 
     void FreeResource(std::shared_ptr<red::SpriteResource> resource) override;
 };

@@ -2,6 +2,7 @@
 
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/Resource.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
 
 #include <map>
 #include <memory>
@@ -38,15 +39,15 @@ public:
     ResourceLoader(ResourceType resourceType, World* world);
     virtual ~ResourceLoader() = default;
 
-    std::shared_ptr<Type> GetFromCache(const std::string& name);
-    std::shared_ptr<Type> GetOrCreateFromCache(const std::string& name);
+    std::shared_ptr<Type> GetFromCache(const Path& path);
+    std::shared_ptr<Type> GetOrCreateFromCache(const Path& path);
 
     virtual void FreeResource(std::shared_ptr<Type> resource) = 0;
     virtual void FreeUnusedResources() override;
     virtual void FreeAllResources() override;
 
 protected:
-    std::map<ResourceId, std::shared_ptr<Type>> m_loadedResources;
+    std::map<Path, std::shared_ptr<Type>> m_loadedResources;
 };
 
 }  // namespace red

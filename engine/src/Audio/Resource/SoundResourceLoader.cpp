@@ -22,30 +22,28 @@ SoundResourceLoader::~SoundResourceLoader()
 {
 }
 
-std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const std::string& name)
+std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const Path& path)
 {
     namespace fs = std::filesystem;
     using json = nlohmann::json;
 
-    auto soundResource = GetOrCreateFromCache(name);
+    auto soundResource = GetOrCreateFromCache(path);
 
     if (soundResource->GetLoadState() == LoadState::STATE_LOADED)
         return soundResource;
 
-    fs::path p = "RESOURCES/" + name + ".json";
-
-    if (!fs::exists(p) || fs::is_directory(p))
+    if (!path.Exist() || path.IsDirectory())
     {
-        RED_LOG_WARNING("Cannot load sound for path {}", p.string());
+        RED_LOG_WARNING("Cannot load sound for path {}", path.GetAscciiPath());
         soundResource->SetLoadState(LoadState::STATE_ERROR);
         return soundResource;
     }
 
-    auto parsedJson = json::parse(ReadFile(p.string()), nullptr, false);
+    auto parsedJson = json::parse(ReadFile(path), nullptr, false);
 
     if (parsedJson.is_discarded() || !parsedJson.is_object())
     {
-        RED_LOG_WARNING("Path {} is not a valid JSON", p.string());
+        RED_LOG_WARNING("Path {} is not a valid JSON", path.GetAscciiPath());
         soundResource->SetLoadState(LoadState::STATE_ERROR);
         return soundResource;
     }

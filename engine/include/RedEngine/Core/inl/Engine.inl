@@ -8,6 +8,8 @@ EngineClass* CreateEngineFrom(int argc, char** argv)
 
     static EngineClass engine;
 
+    Engine::s_engine = &engine;
+
     engine.m_argc = argc;
     engine.m_argv = argv;
 

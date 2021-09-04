@@ -21,6 +21,7 @@
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Audio/AudioEvent.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
 
 void PongLevel::Init()
 {
@@ -55,7 +56,7 @@ void PongLevel::Init()
     ballbounding.name = "ball_bouncing";
 
     auto* ball = CreateEntity("Ball");
-    ball->AddComponent<red::Sprite>("ball");
+    ball->AddComponent<red::Sprite>(red::Path::Resource("ball"));
     ball->GetComponent<red::Transform>()->SetPosition(center);
     auto* ballPhysicBody = ball->AddComponent<red::PhysicBody>(ballBodyDesc);
     ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
@@ -64,14 +65,14 @@ void PongLevel::Init()
     auto slot = ballPhysicBody->m_collisionSignal.Connect(onCollision);
 
     auto* paddleOne = CreateEntity("PaddleOne");
-    paddleOne->AddComponent<red::Sprite>("paddle");
+    paddleOne->AddComponent<red::Sprite>(red::Path::Resource("paddle"));
     paddleOne->GetComponent<red::Transform>()->SetPosition({100.F, paddlePosHeight});
 
     paddleOne->AddComponent<red::PhysicBody>(paddleBodyDesc);
     paddleOne->AddComponent<red::ColliderList>()->AddPolygonCollider(paddleColliderDesc);
 
     auto* paddleTwo = CreateEntity("PaddleTwo");
-    paddleTwo->AddComponent<red::Sprite>("paddle");
+    paddleTwo->AddComponent<red::Sprite>(red::Path::Resource("paddle"));
     paddleTwo->GetComponent<red::Transform>()->SetPosition(
         red::Vector2(info.width - 100.F - (30.F / 2.F), paddlePosHeight));
 

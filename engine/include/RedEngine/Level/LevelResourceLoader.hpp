@@ -11,7 +11,7 @@ public:
     LevelResourceLoader(World* world);
     virtual ~LevelResourceLoader();
 
-    std::shared_ptr<Level> LoadResource(const std::string& name);
+    std::shared_ptr<Level> LoadResource(const Path& path);
 
     void FreeResource(std::shared_ptr<red::Level> resource) override;
 };

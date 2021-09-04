@@ -1,5 +1,6 @@
 #include "RedEngine/Utils/StringUtils.hpp"
 
+#include <algorithm>
 #include <sstream>
 
 namespace red::utils
@@ -41,4 +42,26 @@ std::vector<std::string> Split(const std::string& str, const char delim)
 
     return ret;
 }
+
+std::wstring ToUnicodeString(const std::string_view str)
+{
+    if (str.empty())
+        return L"";
+
+    std::wstring unicodeStr(str.size(), L'#');
+    mbstowcs(&unicodeStr[0], &(str.front()), str.size());
+
+    return unicodeStr;
+}
+
+void ToUpperCase(std::string& str)
+{
+    std::for_each(str.begin(), str.end(), [](char& c) { c = std::toupper(c); });
+}
+
+void ToUpperCase(std::wstring& str)
+{
+    std::for_each(str.begin(), str.end(), [](wchar_t& c) { c = std::toupper(c); });
+}
+
 }  // namespace red::utils

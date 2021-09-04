@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/Resource.hpp"
@@ -17,13 +18,11 @@ class Texture2D : public IResource
 public:
     RED_RESOURCE(ResourceType::TEXTURE2D);
 
-    explicit Texture2D(ResourceId resourceId);
+    explicit Texture2D(const Path& resourceId);
     ~Texture2D() override = default;
 
     [[nodiscard]] Vector2i GetTextureSize() const;
     void ChangeTextureSize(const Vector2i& newSize);
-
-    static ResourceId GetResourceIdFromPath(const std::string& resourceId);
 
 private:
     SDL_Texture* m_sdlTexture{nullptr};

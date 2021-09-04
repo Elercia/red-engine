@@ -13,7 +13,7 @@ AudioSource::AudioSource(Entity* owner, SoundDesc desc) : Component(owner), m_de
     m_sound = m_owner->GetWorld()
                   ->GetSingletonComponent<ResourceHolderComponent>()
                   ->GetResourceLoader<SoundResourceLoader>()
-                  ->LoadResource(desc.name);
+                  ->LoadResource(Path::Resource(desc.name));
 }
 
 void AudioSource::Play()

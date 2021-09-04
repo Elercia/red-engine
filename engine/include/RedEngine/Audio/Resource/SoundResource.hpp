@@ -14,7 +14,7 @@ class SoundResource : public IResource
 public:
     RED_RESOURCE(ResourceType::SOUND);
 
-    SoundResource(ResourceId resourceId);
+    SoundResource(const Path& path);
     ~SoundResource();
 
     FMOD::Sound* GetSound();

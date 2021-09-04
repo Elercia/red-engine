@@ -2,14 +2,14 @@
 
 namespace red
 {
-IResource::IResource(ResourceId resourceId, ResourceType m_resourceType)
-    : m_resourceId(std::move(resourceId)), m_resourceType(m_resourceType), m_loadState(LoadState::STATE_NOT_LOADED)
+IResource::IResource(const Path& path, ResourceType m_resourceType)
+    : m_resourcePath(path), m_resourceType(m_resourceType), m_loadState(LoadState::STATE_NOT_LOADED)
 {
 }
 
 IResource::~IResource() = default;
 
-ResourceId IResource::GetResourceId() const { return m_resourceId; }
+const Path& IResource::GetResourcePath() const { return m_resourcePath; }
 
 ResourceType IResource::GetResourceType() const { return m_resourceType; }
 

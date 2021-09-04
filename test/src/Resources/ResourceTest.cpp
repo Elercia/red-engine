@@ -16,7 +16,7 @@ TEST_CASE("LEVEL loading", "[Resource]")
 
     REQUIRE(loader != nullptr);
 
-    auto level = loader->LoadResource("leveltest");
+    auto level = loader->LoadResource(Path::Resource("leveltest"));
 
     //REQUIRE(level != nullptr);
 }

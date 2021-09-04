@@ -14,7 +14,7 @@ public:
     SoundResourceLoader(World* world);
     ~SoundResourceLoader();
 
-    std::shared_ptr<SoundResource> LoadResource(const std::string& name);
+    std::shared_ptr<SoundResource> LoadResource(const Path& path);
 
     void FreeResource(std::shared_ptr<red::SoundResource> resource) override;
 };

@@ -22,6 +22,12 @@ namespace Math
     constexpr bool Between(T value, T lValue, T rValue);
 
     constexpr int NextPowerOf2(int n);
+
+    template <typename T>
+    void SetBit(T& value, T bit);
+
+    template <typename T>
+    bool HasBit(const T& value, T bit);
 };  // namespace Math
 }  // namespace red
 

@@ -12,7 +12,7 @@
 
 namespace red
 {
-Sprite::Sprite(Entity* entity, const std::string& resourceId) : Component(entity)
+Sprite::Sprite(Entity* entity, const Path& resourceId) : Component(entity)
 {
     m_spriteResource = m_owner->GetWorld()
                            ->GetSingletonComponent<ResourceHolderComponent>()

@@ -6,9 +6,9 @@ ResourceLoader<Type>::ResourceLoader(ResourceType resourceType, World* world) : 
 }
 
 template <typename Type>
-std::shared_ptr<Type> ResourceLoader<Type>::GetFromCache(const std::string& name)
+std::shared_ptr<Type> ResourceLoader<Type>::GetFromCache(const Path& path)
 {
-    auto it = m_loadedResources.find(name);
+    auto it = m_loadedResources.find(path);
 
     if (it != m_loadedResources.end())
     {
@@ -19,16 +19,16 @@ std::shared_ptr<Type> ResourceLoader<Type>::GetFromCache(const std::string& name
 }
 
 template <typename Type>
-std::shared_ptr<Type> ResourceLoader<Type>::GetOrCreateFromCache(const std::string& name)
+std::shared_ptr<Type> ResourceLoader<Type>::GetOrCreateFromCache(const Path& path)
 {
-    auto ptr = GetFromCache(name);
+    auto ptr = GetFromCache(path);
 
     if (ptr)
         return ptr;
 
-    ptr = std::make_shared<Type>(name);
+    ptr = std::make_shared<Type>(path);
 
-    m_loadedResources.insert({name, ptr});
+    m_loadedResources.insert({path, ptr});
 
     return ptr;
 }

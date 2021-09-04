@@ -2,7 +2,7 @@
 
 namespace red
 {
-SoundResource::SoundResource(ResourceId resourceId) : IResource(resourceId, ResourceType::AUDIO), m_sound(nullptr)
+SoundResource::SoundResource(const Path& path) : IResource(path, ResourceType::AUDIO), m_sound(nullptr)
 {
 }
 

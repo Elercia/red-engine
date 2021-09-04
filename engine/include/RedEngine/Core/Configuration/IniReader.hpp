@@ -1,8 +1,8 @@
 #pragma once
 
+#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
-#include <filesystem>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -17,7 +17,7 @@ namespace utils
     class IniReader
     {
     public:
-        [[nodiscard]] static std::vector<iniCatKeyValue> ReadFromFile(const std::filesystem::path& path);
+        [[nodiscard]] static std::vector<iniCatKeyValue> ReadFromFile(const Path& path);
 
     private:
         IniReader();

@@ -20,6 +20,13 @@
 
 namespace red
 {
+Engine* Engine::s_engine = nullptr;
+
+Engine* Engine::GetInstance()
+{
+    return s_engine;
+}
+
 Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr) {}
 
 Engine::~Engine() {}
@@ -87,6 +94,11 @@ bool Engine::Destroy()
     delete m_world;
 
     return true;
+}
+
+std::string_view Engine::GetGameName() const
+{
+    return "RedEngine";
 }
 
 }  // namespace red
