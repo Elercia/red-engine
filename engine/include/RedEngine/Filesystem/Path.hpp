@@ -4,7 +4,6 @@
 
 #include <string_view>
 #include <string>
-#include <xstddef>
 
 namespace red
 {
