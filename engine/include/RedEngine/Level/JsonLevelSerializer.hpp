@@ -1,7 +1,8 @@
 #pragma once
 
-#include "RedEngine/Level/JsonLevelData.hpp"
 #include "RedEngine/Level/LevelSerializer.hpp"
+
+#include <nlohmann/json.hpp>
 
 namespace red
 {
@@ -10,17 +11,23 @@ class Entity;
 
 class JsonLevelSerializer : public ILevelSerializer
 {
+    using json = nlohmann::json;
+
 public:
-    explicit JsonLevelSerializer(Level* level);
+    static constexpr char* LEVEL_ENTITIES = "entities";
 
-    bool SerializeToFile(const std::string& path) override;
-    bool DeserializeFromFile(const std::string& path) override;
+    static constexpr char* ENTITY_CHILDREN = "children";
+    static constexpr char* ENTITY_COMPONENTS = "components";
+    static constexpr char* ENTITY_NAME = "name";
+    static constexpr char* ENTITY_ID = "id";
 
-    bool SerializeEntity(const Entity* entity, JsonLevelEntityData* entityData);
-    bool SerializeComponent(const Component* comp, JsonLevelComponentData* compData);
+public:
+    explicit JsonLevelSerializer(const Level* level);
+
+    virtual std::string SerializeData(const LevelData& levelData) override;
 
 private:
-    void CreateEntityFrom(const JsonLevelEntityData& jsonEntity, Array<JsonLevelComponentData>& entityComponents);
-    void CreateComponentFrom(const JsonLevelComponentData& jsonComp);
+    json SerializeEntity(const EntityData& entityData);
+    json SerializeComponent(const ComponentData& componentData);
 };
 }  // namespace red

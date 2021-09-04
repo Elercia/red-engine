@@ -1,15 +1,38 @@
 #pragma once
 
 #include "RedEngine/Core/Container/Array.hpp"
-
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
+#include "RedEngine/Core/Container/Map.hpp"
 
 namespace red
 {
 using EntityId = uint32;
 
+struct KeyValue
+{
+    std::string key;
+    std::string value;
+};
+
+struct ComponentData
+{
+    Array<KeyValue> m_serializedMembers;
+    std::string m_name;
+};
+
+struct EntityData
+{
+    Array<EntityData> m_children;
+    Map<std::string, ComponentData> m_components;
+    std::string m_name;
+    EntityId m_id;
+};
+
+struct LevelData
+{
+    Array<EntityData> m_entities;
+};
+
+/*
 class JsonLevelComponentData
 {
     friend class Level;
@@ -74,5 +97,5 @@ public:
 
     Array<JsonLevelEntityData> m_entities;
     json m_levelObject;
-};
+};*/
 }  // namespace red

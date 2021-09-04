@@ -1,21 +1,61 @@
 #include "RedEngine/Level/JsonLevelSerializer.hpp"
 
-#include "RedEngine/Core/Entity/Components/Component.hpp"
-#include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
-#include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/Level/JsonLevelData.hpp"
-#include "RedEngine/Level/Level.hpp"
-#include "RedEngine/Level/LevelSerializer.hpp"
-
-#include <fstream>
-#include <iostream>
-#include <utility>
 namespace red
 {
-JsonLevelSerializer::JsonLevelSerializer(Level* level) : ILevelSerializer(level)
+JsonLevelSerializer::JsonLevelSerializer(const Level* level) : ILevelSerializer(level)
 {
 }
 
+std::string JsonLevelSerializer::SerializeData(const LevelData& levelData)
+{
+    json levelJson;
+
+    levelJson[LEVEL_ENTITIES] = {};
+
+    for (auto entityData : levelData.m_entities)
+    {
+        levelJson[LEVEL_ENTITIES].push_back(SerializeEntity(entityData));
+    }
+
+    return levelJson.dump(1, '\t');
+}
+
+JsonLevelSerializer::json JsonLevelSerializer::SerializeEntity(const EntityData& entityData)
+{
+    json entityJson;
+
+    entityJson[ENTITY_ID] = entityData.m_id;
+    entityJson[ENTITY_NAME] = entityData.m_name;
+
+    entityJson[ENTITY_CHILDREN] = json::array();
+    for (auto& childData : entityData.m_children)
+    {
+        entityJson[LEVEL_ENTITIES].push_back(SerializeEntity(childData));
+    }
+
+    json componentsJson = json::object();
+    for (auto& component : entityData.m_components)
+    {
+        componentsJson[component.first] = SerializeComponent(component.second);
+    }
+    entityJson[ENTITY_COMPONENTS] = componentsJson;
+
+    return entityJson;
+}
+
+JsonLevelSerializer::json JsonLevelSerializer::SerializeComponent(const ComponentData& componentData)
+{
+    json componentJson = json::object();
+
+    for (auto& member : componentData.m_serializedMembers)
+    {
+        componentJson[member.key] = member.value;
+    }
+
+    return componentJson;
+}
+
+/*
 bool JsonLevelSerializer::SerializeToFile(const std::string& path)
 {
     bool status = true;
@@ -40,6 +80,7 @@ bool JsonLevelSerializer::SerializeToFile(const std::string& path)
 
 bool JsonLevelSerializer::DeserializeFromFile(const std::string& path)
 {
+    // TODO replace with file utils
     std::string levelStr;
     std::filebuf fb;
     fb.open(path, std::ios::out);
@@ -93,7 +134,7 @@ bool JsonLevelSerializer::SerializeComponent(const Component* comp, JsonLevelCom
 {
     auto* compRegistry = comp->GetWorld()->GetComponentRegistry();
 
-    const auto* compTypeTraits = compRegistry->GetComponentData(std::string(comp->GetComponentName()));
+    const auto* compTypeTraits = compRegistry->GetComponentTraits(std::string(comp->GetComponentName()));
 
     if (compTypeTraits == nullptr)
     {
@@ -104,9 +145,9 @@ bool JsonLevelSerializer::SerializeComponent(const Component* comp, JsonLevelCom
 
     for (auto& memberIt : compTypeTraits->members)
     {
-        auto str = memberIt.second.serializationFunction(comp);
+        auto serializedMember = memberIt.second.serializationFunction(comp);
 
-        compData->AddPairOfValue(memberIt.second.name, str);
+        compData->AddPairOfValue(memberIt.second.name, serializedMember);
     }
 
     return true;
@@ -120,10 +161,15 @@ void JsonLevelSerializer::CreateEntityFrom(const JsonLevelEntityData& jsonEntity
 
     auto* entity = m_level->CreateEntity(id, name);
 
+    for (auto& compData : entityComponents)
+    {
+        CreateComponentFrom(entity, compData);
+    }
 }
 
-void JsonLevelSerializer::CreateComponentFrom(const JsonLevelComponentData& /*jsonComp*/)
+void JsonLevelSerializer::CreateComponentFrom(Entity* entity, const JsonLevelComponentData& jsonComp)
 {
+    jsonComp.
 }
-
+*/
 }  // namespace red

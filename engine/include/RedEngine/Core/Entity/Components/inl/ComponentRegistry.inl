@@ -4,10 +4,10 @@
 namespace red
 {
 template <typename ComponentTypeT, typename MemberTypeT>
-void ComponentData::AddMember(const std::string& name, MemberTypeT ComponentTypeT::*memberAddr,
+void ComponentTraits::AddMember(const std::string& name, MemberTypeT ComponentTypeT::*memberAddr,
                               const std::string& tooltip, uint32 flags)
 {
-    ComponentMemberData member;
+    ComponentMemberTraits member;
     member.name = name;
     member.tooltip = tooltip;
     member.flags = flags;

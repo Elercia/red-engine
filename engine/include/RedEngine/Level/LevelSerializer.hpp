@@ -1,5 +1,11 @@
 #pragma once
 
+
+#include "RedEngine/Level/LevelData.hpp"
+
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
+
 #include <string>
 
 namespace red
@@ -9,12 +15,19 @@ class Level;
 class ILevelSerializer
 {
 public:
-    explicit ILevelSerializer(Level* level);
+    explicit ILevelSerializer(const Level* level);
 
-    virtual bool SerializeToFile(const std::string& path) = 0;
-    virtual bool DeserializeFromFile(const std::string& path) = 0;
+    bool Serialize(const Path& path);
+    bool WriteToFile(const Path& path, std::string str);
 
-protected:
-    Level* m_level;
+    virtual std::string SerializeData(const LevelData& levelData) = 0;
+
+private:
+    LevelData GenerateLevelData(bool& success);
+    ComponentData SerializeComponent(bool& success, const Component* component);
+    EntityData SerializeEntity(bool& success, const Entity* entity);
+
+private:
+    const Level* m_level;
 };
 }  // namespace red

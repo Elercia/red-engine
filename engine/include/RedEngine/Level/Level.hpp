@@ -34,8 +34,9 @@ public:
     Entity* CreateEntity(const std::string& name);
 
     Entity* GetRootEntity();
+    const Entity* GetRootEntity() const;
 
-    void Serialize(const std::string& path);
+    void Serialize(const Path& path) const;
     void Deserialize(const std::string& path);
 
 protected:

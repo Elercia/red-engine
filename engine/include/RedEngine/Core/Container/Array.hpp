@@ -37,34 +37,34 @@ public:
     Array& operator=(Array&& other) = default;
 
     /// Accessors
-    FORCEINLINE const_reference operator[](size_type index) const;
-    FORCEINLINE reference operator[](size_type index);
+    RED_FORCEINLINE const_reference operator[](size_type index) const;
+    RED_FORCEINLINE reference operator[](size_type index);
 
-    FORCEINLINE const_reference at(size_type index) const;
-    FORCEINLINE reference at(size_type index);
+    RED_FORCEINLINE const_reference at(size_type index) const;
+    RED_FORCEINLINE reference at(size_type index);
 
-    FORCEINLINE reference front();
-    FORCEINLINE const_reference front() const;
+    RED_FORCEINLINE reference front();
+    RED_FORCEINLINE const_reference front() const;
 
-    FORCEINLINE reference back();
-    FORCEINLINE const_reference back() const;
+    RED_FORCEINLINE reference back();
+    RED_FORCEINLINE const_reference back() const;
 
-    FORCEINLINE T* data();
-    FORCEINLINE const T* data() const;
+    RED_FORCEINLINE T* data();
+    RED_FORCEINLINE const T* data() const;
 
-    FORCEINLINE iterator begin();
-    FORCEINLINE const_iterator begin() const;
-    FORCEINLINE const_iterator cbegin() const;
+    RED_FORCEINLINE iterator begin();
+    RED_FORCEINLINE const_iterator begin() const;
+    RED_FORCEINLINE const_iterator cbegin() const;
 
-    FORCEINLINE iterator end();
-    FORCEINLINE const_iterator end() const;
-    FORCEINLINE const_iterator cend() const;
+    RED_FORCEINLINE iterator end();
+    RED_FORCEINLINE const_iterator end() const;
+    RED_FORCEINLINE const_iterator cend() const;
 
     /// Capacity and size
-    FORCEINLINE bool empty() const;
+    RED_FORCEINLINE bool empty() const;
 
-    FORCEINLINE size_type size() const;
-    FORCEINLINE size_type capacity() const;
+    RED_FORCEINLINE size_type size() const;
+    RED_FORCEINLINE size_type capacity() const;
 
     void reserve(size_type capacity);
     void shrink_to_fit();
@@ -95,11 +95,11 @@ public:
     void pop_back();
 
 private:
-    FORCEINLINE void SetCapacity(size_type newCapacity);
-    FORCEINLINE void SmartReserve(size_type capacity);
-    FORCEINLINE void Resize(size_type count, const T& t);
-    FORCEINLINE void Destroy(size_type from, size_type to);
-    FORCEINLINE void Destroy(iterator from, iterator to);
+    RED_FORCEINLINE void SetCapacity(size_type newCapacity);
+    RED_FORCEINLINE void SmartReserve(size_type capacity);
+    RED_FORCEINLINE void Resize(size_type count, const T& t);
+    RED_FORCEINLINE void Destroy(size_type from, size_type to);
+    RED_FORCEINLINE void Destroy(iterator from, iterator to);
 
     size_type m_size;
     size_type m_capacity;

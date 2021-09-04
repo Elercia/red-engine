@@ -1,7 +1,8 @@
-#include "RedEngine/Level/JsonLevelData.hpp"
+#include "RedEngine/Level/LevelData.hpp"
 
 namespace red
 {
+/*
 ///--- Components
 ///---------------------------------------------
 
@@ -123,6 +124,6 @@ void JsonLevelData::UpdateInternalDataForEntity(json& jsonEntity, JsonLevelEntit
     {
         entity->AddLevelComponentData(it.key(), it.value());
     }
-}
+}*/
 
 }  // namespace red

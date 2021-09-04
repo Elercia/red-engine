@@ -12,7 +12,7 @@
     {                                                                     \
         return TypeInfo<CompClass>().name;                                \
     }                                                                     \
-    static void RegisterComponentTypeTraits(red::ComponentData* compData) \
+    static void RegisterComponentTypeTraits(red::ComponentTraits* compData) \
     {                                                                     \
         RED_STATIC_COMPONENT_REGISTER_DATA(CompClass)
 
@@ -21,7 +21,7 @@
     {                                                                          \
         return TypeInfo<CompClass>().name;                                     \
     }                                                                          \
-    static void RegisterComponentTypeTraits(red::ComponentData* compData)      \
+    static void RegisterComponentTypeTraits(red::ComponentTraits* compData)      \
     {                                                                          \
         InheritedCompClass::RegisterComponentTypeTraits(compData);             \
         RED_STATIC_COMPONENT_REGISTER_DATA(CompClass)                          \

@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
-#include "RedEngine/Level/JsonLevelData.hpp"
 #include "RedEngine/Level/JsonLevelSerializer.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/Resource.hpp"
@@ -58,25 +57,27 @@ red::Entity* Level::CreateEntity(EntityId id, const std::string& name, Entity* p
     return m_world->CreateEntity(id, name, parent);
 }
 
-red::Entity* Level::GetRootEntity()
+red::Entity* Level::GetRootEntity() 
 {
     return m_rootEntity;
 }
 
-void Level::Serialize(const std::string& path)  // TODO Make const
+const Entity* Level::GetRootEntity() const
 {
-    JsonLevelSerializer serializer(this);
-
-    if (serializer.SerializeToFile(path) == false)
-        RED_LOG_ERROR("Failed to serialize level to \"{}\"", path);
+    return m_rootEntity;
 }
 
-void Level::Deserialize(const std::string& path)
+void Level::Serialize(const Path& path) const
 {
     JsonLevelSerializer serializer(this);
 
-    if (serializer.DeserializeFromFile(path) == false)
-        RED_LOG_ERROR("Failed to load level from \"{}\"", path);
+    if (serializer.Serialize(path) == false)
+        RED_LOG_ERROR("Failed to serialize level to \"{}\"", path.GetAscciiPath());
+}
+
+void Level::Deserialize(const std::string& /*path*/)
+{
+    
 }
 
 }  // namespace red

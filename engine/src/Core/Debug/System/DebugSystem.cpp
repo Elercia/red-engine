@@ -70,7 +70,7 @@ void DebugSystem::Update()
 
     if (events->GetKey(KeyCodes::KEY_B) && events->GetKey(KeyCodes::KEY_LCTRL))
     {
-        m_world->GetCurrentLevel()->Serialize("resources/serializedLevel.json");
+        m_world->GetCurrentLevel()->Serialize(Path::Resource("serializedLevel.json"));
     }
 
     if (events->GetKey(KeyCodes::KEY_L) && events->GetKey(KeyCodes::KEY_LCTRL))
