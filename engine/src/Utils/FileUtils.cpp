@@ -5,7 +5,7 @@
 
 std::string red::ReadFile(const Path& fullPath)
 {
-    std::ifstream in;
+    std::wifstream in;
     in.open(fullPath.GetPath().data());
 
     if (!in.is_open())
