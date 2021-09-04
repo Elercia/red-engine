@@ -65,9 +65,11 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const Pa
         {
             RED_LOG_WARNING("Path {} has no spritesheet attribute", activePath.GetAscciiPath());
         }
+        
+        std::string spriteSheetPathStr = spriteSheetJson.value();
 
         animationDesc.texture =
-            textureResourceLoader->LoadResource(Path::Resource(utils::ToUnicodeString(spriteSheetJson.value())));
+            textureResourceLoader->LoadResource(Path::Resource(utils::ToUnicodeString(spriteSheetPathStr)));
 
         animationDesc.loop = animationJson["loop"];
 

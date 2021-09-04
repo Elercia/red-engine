@@ -5,8 +5,10 @@
 
 std::string red::ReadFile(const Path& fullPath)
 {
-    std::wifstream in;
-    in.open(fullPath.GetPath().data());
+    std::ifstream in;
+    std::string asciiString = fullPath.GetAscciiPath();
+    
+    in.open(asciiString);
 
     if (!in.is_open())
         return "";

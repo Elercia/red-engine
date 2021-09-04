@@ -11,9 +11,8 @@
 #include <windows.h>
 #endif
 
-#include <codecvt>
 #include <filesystem>
-#include <locale>
+#include <algorithm>
 
 namespace red
 {
@@ -28,7 +27,7 @@ std::wstring Path::GetUserBasePath()
     std::wstring unicodeStr(my_documents);
 
 #elif defined(RED_LINUX)
-    std::wstring unicodeStr = "~";
+    std::wstring unicodeStr = L"~";
 #endif
 
     return unicodeStr + L"/" + utils::ToUnicodeString(Engine::GetInstance()->GetGameName());
