@@ -3,10 +3,10 @@
 #include <fstream>
 #include <sstream>
 
-std::string red::ReadFile(const std::string& fullPath)
+std::string red::ReadFile(const Path& fullPath)
 {
     std::ifstream in;
-    in.open(fullPath);
+    in.open(fullPath.GetPath().data());
 
     if (!in.is_open())
         return "";

@@ -1,15 +1,17 @@
+#include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
-#include <catch2/catch.hpp>
 #include "RedEngine/Core/Configuration/IniReader.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
+
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <string>
-#include "RedEngine/Core/Configuration/CVar.hpp"
 
 TEST_CASE("INI file parsing", "[Configuration]")
 {
     SECTION("Reading from ini file")
     {
-        auto catKeyValues = red::utils::IniReader::ReadFromFile("resources/config.ini");
+        auto catKeyValues = red::utils::IniReader::ReadFromFile(red::Path::Resource("config.ini"));
 
         REQUIRE(std::find_if(catKeyValues.begin(), catKeyValues.end(), [](auto tuple) {
                     return std::get<0>(tuple) == "default" && std::get<1>(tuple) == "ouioui" &&
@@ -31,7 +33,7 @@ TEST_CASE("Config variable are loaded when declared before", "[Configuration]")
     red::CVar<int> intVar{"int", "cat1", 1};
     red::CVar<std::string> str{"str", "cat1", "non"};
 
-    red::CVarManager::LoadConfigFile("resources/config.ini");
+    red::CVarManager::LoadConfigFile(red::Path::Resource("config.ini"));
 
     REQUIRE(testBool1.GetValue() == true);
     REQUIRE(testBool2.GetValue() == false);
@@ -42,7 +44,7 @@ TEST_CASE("Config variable are loaded when declared before", "[Configuration]")
 
 TEST_CASE("Config variable are loaded when declared after", "[Configuration]")
 {
-    red::CVarManager::LoadConfigFile("resources/config.ini");
+    red::CVarManager::LoadConfigFile(red::Path::Resource("config.ini"));
 
     red::CVar<bool> testBool1{"bool1", "cat1", false};
     red::CVar<bool> testBool2{"bool2", "cat1", true};

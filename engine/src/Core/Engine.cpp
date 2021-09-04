@@ -2,6 +2,8 @@
 
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 #include "RedEngine/Audio/Component/AudioSource.hpp"
+#include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
+#include "RedEngine/Audio/System/AudioSystem.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
@@ -27,6 +29,13 @@
 
 namespace red
 {
+Engine* Engine::s_engine = nullptr;
+
+Engine* Engine::GetInstance()
+{
+    return s_engine;
+}
+
 Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr)
 {
 }
@@ -103,16 +112,38 @@ bool Engine::InternalCreate()
     resourceHolder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::LEVEL, new LevelResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::SOUND, new SoundResourceLoader(m_world));
 
     m_world->AddSystem<RenderingSystem>();
     m_world->AddSystem<PhysicSystem>();
     m_world->AddSystem<DebugSystem>();
     m_world->AddSystem<EventSystem>();
     m_world->AddSystem<UserInputSystem>();
+    m_world->AddSystem<AudioSystem>();
 
     m_world->Init();
 
     return Create();
+}
+
+bool Engine::Destroy()
+{
+    auto* singletonEntity = m_world->GetSingletonEntity();
+
+    auto* resourceHolder = singletonEntity->GetComponent<ResourceHolderComponent>();
+
+    resourceHolder->RemoveAllLoaders();
+
+    m_world->Finalize();
+
+    delete m_world;
+
+    return true;
+}
+
+std::string_view Engine::GetGameName() const
+{
+    return "RedEngine";
 }
 
 }  // namespace red

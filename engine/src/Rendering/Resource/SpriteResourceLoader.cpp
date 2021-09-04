@@ -3,43 +3,50 @@
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
+#include "RedEngine/Utils/StringUtils.hpp"
 
 #include <filesystem>
 #include <nlohmann/json.hpp>
 
 namespace red
 {
-SpriteResourceLoader::SpriteResourceLoader(World* world) : ResourceLoader(ResourceType::SPRITE, world) {}
+SpriteResourceLoader::SpriteResourceLoader(World* world) : ResourceLoader(ResourceType::SPRITE, world)
+{
+}
 
-SpriteResourceLoader::~SpriteResourceLoader() {}
+SpriteResourceLoader::~SpriteResourceLoader()
+{
+}
 
-std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const std::string& name)
+std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const Path& path)
 {
     namespace fs = std::filesystem;
     using json = nlohmann::json;
 
-    auto spriteResource = GetOrCreateFromCache(name);
+    Path activePath = path;
+    activePath.Append(L".json");
+
+    auto spriteResource = GetOrCreateFromCache(activePath);
 
     if (spriteResource->GetLoadState() == LoadState::STATE_LOADED)
         return spriteResource;
 
-    fs::path p = "RESOURCES/" + name + ".json";
-
-    if (!fs::exists(p) || fs::is_directory(p))
+    if (!activePath.Exist() || activePath.IsDirectory())
     {
-        RED_LOG_WARNING("Cannot load sprite for path {}", p.string());
+        RED_LOG_WARNING("Cannot load sprite for path {}", activePath.GetAscciiPath());
         return nullptr;
     }
 
-    auto parsedJson = json::parse(ReadFile(p.string()), nullptr, false);
+    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false);
 
     if (parsedJson.is_discarded() || !parsedJson.is_array())
     {
-        RED_LOG_WARNING("Path {} is not a valid JSON", p.string());
+        RED_LOG_WARNING("Path {} is not a valid JSON", activePath.GetAscciiPath());
         return nullptr;
     }
 
@@ -56,10 +63,11 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const st
         auto spriteSheetJson = animationJson.find("spritesheet");
         if (spriteSheetJson == animationJson.end())
         {
-            RED_LOG_WARNING("Path {} has no spritesheet attribute", p.string());
+            RED_LOG_WARNING("Path {} has no spritesheet attribute", activePath.GetAscciiPath());
         }
 
-        animationDesc.texture = textureResourceLoader->LoadResource(spriteSheetJson.value());
+        animationDesc.texture =
+            textureResourceLoader->LoadResource(Path::Resource(utils::ToUnicodeString(spriteSheetJson.value())));
 
         animationDesc.loop = animationJson["loop"];
 
@@ -95,6 +103,11 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const st
     spriteResource->SetLoadState(LoadState::STATE_LOADED);
 
     return spriteResource;
+}
+
+void SpriteResourceLoader::FreeResource(std::shared_ptr<red::SpriteResource> resource)
+{
+    resource->SetLoadState(LoadState::STATE_RELEASED);
 }
 
 }  // namespace red

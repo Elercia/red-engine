@@ -19,6 +19,8 @@ public:
 
     virtual void Update() override;
 
+    FMOD::System* GetFmodSystem();
+
 private:
     FMOD::Studio::System* m_studioSystem;
     FMOD::System* m_system;

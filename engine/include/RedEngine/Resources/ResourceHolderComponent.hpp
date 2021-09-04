@@ -24,6 +24,7 @@ public:
     LoaderType* GetResourceLoader();
 
     bool RegisterResourceLoader(ResourceType resourceType, IResourceLoader* loader);
+    void RemoveAllLoaders();
 
 private:
     std::map<ResourceType, IResourceLoader*> m_resourceLoaders;

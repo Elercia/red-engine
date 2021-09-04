@@ -1,8 +1,8 @@
 #include "RedEngine/Core/Entity/World.hpp"
 
-#include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
@@ -63,10 +63,9 @@ Entity* World::CreateEntity(const std::string& name, Entity* root)
     return entityPtr;
 }
 
-
 red::Entity* World::CreateEntity(EntityId id, const std::string& name, Entity* root /*= nullptr*/)
 {
-    auto* entityPtr = new Entity(this, id, name); //TODO check if there is a entity with this id 
+    auto* entityPtr = new Entity(this, id, name);  // TODO check if there is a entity with this id
 
     m_entities.push_back(entityPtr);
 
@@ -160,9 +159,10 @@ void World::Clean()
 
 void World::LoadLevel(const std::string& levelName)
 {
-    auto* levelResourceLoader = GetSingletonComponent<ResourceHolderComponent>()->GetResourceLoader<LevelResourceLoader>();
+    auto* levelResourceLoader =
+        GetSingletonComponent<ResourceHolderComponent>()->GetResourceLoader<LevelResourceLoader>();
 
-    levelResourceLoader->LoadResource(levelName);
+    levelResourceLoader->LoadResource(Path::Resource(levelName));
 }
 
 void World::ChangeLevel(Level* newLevel)
@@ -204,7 +204,6 @@ ComponentManager* World::GetComponentManager()
     return m_componentManager;
 }
 
-
 red::ComponentRegistry* World::GetComponentRegistry()
 {
     return m_componentRegistry;
@@ -214,7 +213,6 @@ PhysicsWorld* World::GetPhysicsWorld()
 {
     return &m_physicsWorld;
 }
-
 
 red::Level* World::GetCurrentLevel()
 {

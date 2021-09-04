@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Configuration/IniReader.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
 
 #include <filesystem>
 #include <string>
@@ -13,7 +14,7 @@ namespace utils
 {
     red::UserActionMapping UserInputHelper::LoadActionMapping()
     {
-        std::string p = "resources/userInput.ini";
+        Path p = Path::Resource(L"userInput.ini");
         auto iniConfig = utils::IniReader::ReadFromFile(p);
 
         UserActionMapping mappings{};

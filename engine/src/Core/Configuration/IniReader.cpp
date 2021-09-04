@@ -9,17 +9,17 @@ namespace red
 {
 namespace utils
 {
-    std::vector<iniCatKeyValue> IniReader::ReadFromFile(const std::filesystem::path& path)
+    std::vector<iniCatKeyValue> IniReader::ReadFromFile(const Path& path)
     {
         namespace fs = std::filesystem;
 
         std::ifstream stream;
 
-        stream.open(path);
+        stream.open(path.GetPath().data());
 
-        if (!fs::exists(path) || fs::status(path).type() != fs::file_type::regular || !stream.is_open())
+        if (!path.Exist() || path.IsDirectory() || !stream.is_open())
         {
-            RED_LOG_WARNING("IniReader cannot load file {} because it doesn't exists", path.string());
+            RED_LOG_WARNING("IniReader cannot load file {} because it doesn't exists", path.GetAscciiPath());
             return {};
         }
 

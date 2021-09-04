@@ -16,4 +16,8 @@ bool PongEngine::Destroy()
     return true;
 }
 
+std::string_view PongEngine::GetGameName() const
+{
+    return "Pong Template";
+}
 }  // namespace pong

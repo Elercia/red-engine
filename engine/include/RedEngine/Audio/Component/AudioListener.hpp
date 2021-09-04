@@ -3,6 +3,7 @@
 #include "fmod_common.h"
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Math/Vector.hpp"
 
 namespace red
 {
@@ -18,10 +19,8 @@ public:
     ~AudioListener();
 
 private:
-    FMOD_VECTOR m_fmodVect;
     int m_listenerId;
-
-    static int s_listenerId;
+    Vector2 m_lastFramePos;
 };
 
 }  // namespace red

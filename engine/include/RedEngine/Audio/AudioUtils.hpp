@@ -7,15 +7,15 @@
 
 namespace red
 {
-FORCEINLINE bool FmodCheck(FMOD_RESULT result, const char* errorMsg);
+struct FmodUtils
+{
+    static bool FmodCheck(FMOD_RESULT result, const char* errorMsg);
 
-FORCEINLINE void ConvertRef(FMOD_VECTOR& out, const Vector2& vector);
-FORCEINLINE void ConvertRef(Vector2& out, const FMOD_VECTOR& fmodVector);
+    static void ConvertRef(FMOD_VECTOR& out, const Vector2& vector);
+    static void ConvertRef(Vector2& out, const FMOD_VECTOR& fmodVector);
 
-FORCEINLINE FMOD_VECTOR Convert(const Vector2& vector);
-FORCEINLINE Vector2 Convert(const FMOD_VECTOR& fmodVector);
+    static FMOD_VECTOR Convert(const Vector2& vector);
+    static Vector2 Convert(const FMOD_VECTOR& fmodVector);
+};
 
-FMOD_VECTOR FMOD_VEC_UP;
 }  // namespace red
-
-#include "inl/AudioUtils.inl"

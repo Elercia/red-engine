@@ -27,4 +27,14 @@ bool ResourceHolderComponent::RegisterResourceLoader(ResourceType resourceType, 
 
     return true;
 }
+
+void ResourceHolderComponent::RemoveAllLoaders()
+{
+    for (auto& loader : m_resourceLoaders)
+    {
+        loader.second->FreeAllResources();
+    }
+    m_resourceLoaders.clear();
+}
+
 }  // namespace red

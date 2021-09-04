@@ -27,9 +27,9 @@ CVarManager::~CVarManager()
     }
 }
 
-void CVarManager::LoadConfigFileInternal(std::filesystem::path path)
+void CVarManager::LoadConfigFileInternal(const Path& path)
 {
-    auto iniCatKeyValues = utils::IniReader::ReadFromFile(std::move(path));
+    auto iniCatKeyValues = utils::IniReader::ReadFromFile(path);
 
     for (auto& iniCatKeyValue : iniCatKeyValues)
     {
@@ -58,7 +58,7 @@ CVarValue* CVarManager::NewConsoleVariableDeclaration(const std::string& name, c
     return CVarManager::GetInstance().NewConsoleVariableDeclarationInternal(name, category, defaultValue);
 }
 
-void CVarManager::LoadConfigFile(const std::filesystem::path& path)
+void CVarManager::LoadConfigFile(const Path& path)
 {
     CVarManager::GetInstance().LoadConfigFileInternal(path);
 }

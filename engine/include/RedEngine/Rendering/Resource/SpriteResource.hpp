@@ -8,7 +8,7 @@
 
 namespace red
 {
-class SpriteResource : IResource
+class SpriteResource : public IResource
 {
     friend class Sprite;
     friend class SpriteResourceLoader;
@@ -16,7 +16,7 @@ class SpriteResource : IResource
 public:
     RED_RESOURCE(ResourceType::SPRITE);
 
-    SpriteResource(ResourceId resourceId);
+    SpriteResource(const Path& path);
     ~SpriteResource() = default;
 
 private:

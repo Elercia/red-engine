@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/RedEngineBase.hpp"
 
 #include <cstddef>
@@ -8,12 +9,11 @@
 
 namespace red
 {
-using ResourceId = std::string;
-
 enum class LoadState
 {
     STATE_NOT_LOADED,
     STATE_LOADED,
+    STATE_RELEASED,
     STATE_ERROR
 };
 
@@ -21,29 +21,33 @@ enum class ResourceType
 {
     LEVEL,
     SPRITE,
+    SOUND,
     TEXTURE2D,
     AUDIO,
 };
 
-#define RED_RESOURCE(Type) \
-    static ResourceType GetResourceType() { return Type; }
+#define RED_RESOURCE(Type)                \
+    static ResourceType GetResourceType() \
+    {                                     \
+        return Type;                      \
+    }
 
 class IResource
 {
     friend class IResourceLoader;
 
 public:
-    IResource(ResourceId resourceId, ResourceType m_resourceType);
+    IResource(const Path& resourceId, ResourceType m_resourceType);
     virtual ~IResource();
 
-    [[nodiscard]] ResourceId GetResourceId() const;
+    [[nodiscard]] const Path& GetResourcePath() const;
     [[nodiscard]] ResourceType GetResourceType() const;
     [[nodiscard]] LoadState GetLoadState() const;
 
     void SetLoadState(LoadState loadState);
 
 protected:
-    ResourceId m_resourceId;
+    Path m_resourcePath;
     ResourceType m_resourceType;
     LoadState m_loadState;
 };

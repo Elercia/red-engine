@@ -149,6 +149,5 @@ ExternalLibs("optick", true, "/optick/src")
 		"OPTICK_ENABLE_GPU_D3D12=0",
 		"OPTICK_ENABLE_GPU=0",
 		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS",
-		"_CRT_SECURE_NO_WARNINGS",
 	}
 
