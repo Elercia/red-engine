@@ -4,11 +4,9 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
-#include "RedEngine/RedEngineBase.hpp"
-#include "RedEngine/Utils/TypesInfo.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -17,6 +15,7 @@ namespace red
 class ComponentManager;
 class Component;
 class Level;
+class LevelLoader;
 
 class World : Uncopyable
 {
@@ -47,7 +46,7 @@ public:
     template <typename T>
     void LoadLevel();
 
-    void LoadLevel(const std::string& levelName);
+    void LoadLevel(const Path& levelPath);
 
     void ChangeLevel(Level* newLevel);
 
@@ -86,6 +85,7 @@ private:
     EntityId m_nextEntityId;
 
     Level* m_currentLevel;
+    LevelLoader* m_levelLoader;
 };
 
 }  // namespace red

@@ -13,6 +13,7 @@ namespace red
 {
 class Entity;
 class World;
+class Component;
 class ILevelComponentData;
 
 using ComponentId = uint32_t;
@@ -23,6 +24,8 @@ enum class ComponentStatus
     DIRTY,
     VALID
 };
+
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Component)
 
 class Component : public Uncopyable
 {

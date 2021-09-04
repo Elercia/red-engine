@@ -7,6 +7,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Transform)
+
 class Transform : public Component
 {
 public:
@@ -16,6 +18,7 @@ public:
     RED_MEMBER("rotation", m_rotation, "The local rotation of the entity", 0);
     RED_END_COMPONENT_REGISTER()
 
+    Transform(Entity* entity);
     Transform(Entity* entity, float x, float y);
     Transform(Entity* entity, Vector2 position);
     ~Transform() override = default;

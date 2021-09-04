@@ -7,6 +7,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(EventsComponent)
+
 class EventsComponent : public Component
 {
     friend class EventSystem;

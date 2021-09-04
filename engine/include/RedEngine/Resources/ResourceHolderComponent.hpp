@@ -11,6 +11,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(ResourceHolderComponent)
+
 class ResourceHolderComponent : public Component
 {
 public:

@@ -13,6 +13,8 @@ namespace red
 {
 class SoundResource;
 
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(AudioSource)
+
 class AudioSource : public Component
 {
     friend class AudioSystem;
@@ -21,6 +23,7 @@ public:
     RED_START_COMPONENT_REGISTER_INHERITHED(AudioSource, Component)
     RED_END_COMPONENT_REGISTER()
 
+    AudioSource(Entity* owner);
     AudioSource(Entity* owner, SoundDesc desc);
     ~AudioSource() = default;
 

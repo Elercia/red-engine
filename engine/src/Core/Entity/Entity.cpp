@@ -27,6 +27,23 @@ void Entity::Destroy()
     m_isDestroyed = true;
 }
 
+Component* Entity::AddComponent(std::string name)
+{
+    auto* componentManager = GetComponentManager();
+
+    if (componentManager->HasComponent(this, name))
+    {
+        RED_LOG_WARNING("Entity {} already has the component {}", m_name, name);
+        return componentManager->GetComponent(this, name);
+    }
+
+    auto componentPtr = componentManager->CreateComponent(this, name);
+
+    m_isDirty = true;
+
+    return componentPtr;
+}
+
 Array<Component*> Entity::GetComponents() const
 {
     return m_world->GetComponentManager()->GetComponents(this);

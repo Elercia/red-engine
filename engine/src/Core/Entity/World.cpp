@@ -1,15 +1,13 @@
 #include "RedEngine/Core/Entity/World.hpp"
 
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
-#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
+#include "RedEngine/Level/JsonLevelLoader.hpp"
 #include "RedEngine/Level/Level.hpp"
-#include "RedEngine/Level/LevelResourceLoader.hpp"
-#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -18,7 +16,7 @@ namespace red
 {
 World::World()
     : m_singletonEntity(nullptr)
-    , m_componentManager(new ComponentManager())
+    , m_componentManager(new ComponentManager(this))
     , m_componentRegistry(new ComponentRegistry())
     , m_nextEntityId(0)
     , m_currentLevel(nullptr)
@@ -86,6 +84,8 @@ red::Entity* World::CreateSingletonEntity()
 
 void World::Init()
 {
+    m_levelLoader = new JsonLevelLoader(this);
+
     std::sort(m_systems.begin(), m_systems.end(),
               [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
 
@@ -157,12 +157,14 @@ void World::Clean()
         m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), e), m_entities.end());
 }
 
-void World::LoadLevel(const std::string& levelName)
+void World::LoadLevel(const Path& levelName)
 {
-    auto* levelResourceLoader =
-        GetSingletonComponent<ResourceHolderComponent>()->GetResourceLoader<LevelResourceLoader>();
+    Level* level = m_levelLoader->LoadLevel(levelName);
 
-    levelResourceLoader->LoadResource(Path::Resource(levelName));
+    if (level != nullptr)
+    {
+        ChangeLevel(level);
+    }
 }
 
 void World::ChangeLevel(Level* newLevel)

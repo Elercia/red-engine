@@ -3,9 +3,6 @@
 #include "ScoreComponent.hpp"
 
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
-#include "RedEngine/Core/Engine.hpp"
-#include "RedEngine/Core/Time/Time.hpp"
-#include "RedEngine/Math/Math.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 

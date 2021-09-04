@@ -37,6 +37,8 @@ public:
 
     template <typename T, typename... Args>
     T* AddComponent(Args&&... args);
+    
+    Component* AddComponent(std::string name);
 
     template <typename T>
     void RemoveComponent();

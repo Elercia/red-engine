@@ -11,6 +11,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(ColliderList)
+
 ColliderList::ColliderList(Entity* entity) : Component(entity), m_attachedPhysicBody(nullptr) {}
 
 int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)

@@ -14,6 +14,8 @@ class Transform;
 
 constexpr std::size_t MAX_CAMERA_COUNT = 10;
 
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(CameraComponent)
+
 class CameraComponent : public Component
 {
     friend class Renderer;
@@ -23,6 +25,7 @@ public:
     RED_START_COMPONENT_REGISTER_INHERITHED(CameraComponent, Component)
     RED_END_COMPONENT_REGISTER()
 
+    CameraComponent(Entity* entity);
     CameraComponent(Entity* entity, const Vector2& center);
     ~CameraComponent() override = default;
 

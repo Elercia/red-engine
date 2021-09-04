@@ -5,6 +5,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(Component);
+
 Component::Component(Entity* entity) : m_owner(entity), m_status()
 {
 }

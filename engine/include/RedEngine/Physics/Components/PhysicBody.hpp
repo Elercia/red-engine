@@ -29,6 +29,8 @@ struct PhysicBodyCreationDesc
     float gravityScale{1.f};
 };
 
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(PhysicBody)
+
 class PhysicBody : public Component
 {
     friend class PhysicSystem;
@@ -41,6 +43,7 @@ public:
     using OnCollisionSignalType = Signal<const CollisionInfo&>;
     using OnTriggerSignalType = Signal<const TriggerInfo&>;
 
+    PhysicBody(Entity* entity);
     PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc);
     ~PhysicBody();
 

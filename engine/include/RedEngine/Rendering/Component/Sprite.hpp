@@ -15,6 +15,8 @@ namespace red
 {
 class SpriteResource;
 
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Sprite)
+
 class Sprite : public Component
 {
     friend class Renderer;
@@ -23,6 +25,7 @@ public:
     RED_START_COMPONENT_REGISTER_INHERITHED(Sprite, Component)
     RED_END_COMPONENT_REGISTER()
 
+    Sprite(Entity* entity);
     Sprite(Entity* entity, const Path& resourceId);
 
     /// Compute the modifications to do for the next frame

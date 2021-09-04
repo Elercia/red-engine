@@ -75,7 +75,7 @@ void DebugSystem::Update()
 
     if (events->GetKey(KeyCodes::KEY_L) && events->GetKey(KeyCodes::KEY_LCTRL))
     {
-        m_world->GetCurrentLevel()->Deserialize("resources/serializedLevel.json");
+        m_world->LoadLevel(Path::Resource("serializedLevel.json"));
     }
 
     // TODO add the management of the in-game console

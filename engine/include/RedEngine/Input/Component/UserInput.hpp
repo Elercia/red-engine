@@ -10,6 +10,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(UserInputComponent)
+
 // TODO handle joysticks and gamepads in general
 class UserInputComponent : public Component
 {

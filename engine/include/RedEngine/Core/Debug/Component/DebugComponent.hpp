@@ -48,8 +48,9 @@ struct DebugPoint : public DebugShape
     Vector2 coord;
 };
 
-// Add console component (add utilities like "console debug (OR should I make a 'log into console
-// bool ?')")
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(DebugComponent)
+
+// TODO Add console component (add utilities like "console debug (OR should I make a 'log into console bool ?')")
 class DebugComponent : public Component
 {
     friend class DebugSystem;

@@ -11,6 +11,7 @@
 
 namespace red
 {
+class World;
 class Component;
 class Entity;
 
@@ -22,12 +23,12 @@ constexpr int ComponentPoolSize = 2048;
 class ComponentManager
 {
 public:
-    ComponentManager();
+    ComponentManager(World* world);
     ~ComponentManager();
 
     template <typename ComponentType_t, typename... Args>
     ComponentType_t* CreateComponent(Entity* owner, Args&&... args);
-
+    
     template <typename ComponentType_t>
     void RemoveComponent(Entity* owner);
 
@@ -41,6 +42,10 @@ public:
 
     void MoveComponents(EntityId from, EntityId to);
 
+    Component* CreateComponent(Entity* owner, const std::string& name);
+    bool HasComponent(Entity* entity, const std::string& name);
+    Component* GetComponent(Entity* entity, const std::string& name);
+
     void UnloadTransientComponents();
 
 private:
@@ -53,6 +58,8 @@ private:
 
     Component* GetComponent(Entity* entity, std::size_t name);
 
+private:
+    World* m_world;
     std::map<std::size_t, ComponentPool_t> m_components;
 };
 }  // namespace red

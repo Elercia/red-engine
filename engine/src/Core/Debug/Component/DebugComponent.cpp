@@ -4,6 +4,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(DebugComponent)
+
 DebugComponent::DebugComponent(Entity* entity) : Component(entity), m_physicsDebugDrawer(nullptr)
 {
 }

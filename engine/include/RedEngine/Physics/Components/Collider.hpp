@@ -51,6 +51,8 @@ struct Collider
     bool IsTrigger() const { return m_fixtureDef.isSensor; }
 };
 
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(ColliderList)
+
 // TODO Collision layers
 class ColliderList : public Component
 {

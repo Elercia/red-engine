@@ -12,10 +12,14 @@ namespace red
 class Level : public IResource
 {
 public:
+    enum class State
+    {
+        Loading,
+        Ready
+    };
+    
     friend class ILevelSerializer;
     friend class JsonLevelSerializer;
-
-    RED_RESOURCE(ResourceType::LEVEL)
 
     explicit Level(std::string name, World* world);
     virtual ~Level() = default;
@@ -23,8 +27,8 @@ public:
     void InternInit();
     void InternFinalize();
 
-    virtual void Init() = 0;
-    virtual void Finalize() = 0;
+    virtual void Init(){};
+    virtual void Finalize(){};
 
     const std::string& GetName() const;
 
@@ -37,7 +41,8 @@ public:
     const Entity* GetRootEntity() const;
 
     void Serialize(const Path& path) const;
-    void Deserialize(const std::string& path);
+
+    void SetState(State state);
 
 protected:
     std::string m_levelName;
@@ -45,5 +50,7 @@ protected:
     World* m_world;
 
     Entity* m_rootEntity;
+
+    State m_state;
 };
 }  // namespace red

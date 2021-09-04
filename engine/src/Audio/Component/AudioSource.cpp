@@ -8,6 +8,13 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(AudioSource)
+
+AudioSource::AudioSource(Entity* owner) : Component(owner), m_desc(), m_currentChannel(nullptr)
+{
+
+}
+
 AudioSource::AudioSource(Entity* owner, SoundDesc desc) : Component(owner), m_desc(desc), m_currentChannel(nullptr)
 {
     m_sound = m_owner->GetWorld()

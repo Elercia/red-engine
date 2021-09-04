@@ -6,6 +6,8 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(EventsComponent)
+
 EventsComponent::EventsComponent(Entity* entity) : Component(entity), m_quitRequested(false)
 {
 }

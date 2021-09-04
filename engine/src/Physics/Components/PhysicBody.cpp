@@ -5,6 +5,12 @@
 
 namespace red
 {
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(PhysicBody)
+
+PhysicBody::PhysicBody(Entity* entity) : Component(entity), m_desc(), m_body(nullptr)
+{
+}
+
 PhysicBody::PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc)
     : Component(entity), m_desc(desc), m_body(nullptr)
 {

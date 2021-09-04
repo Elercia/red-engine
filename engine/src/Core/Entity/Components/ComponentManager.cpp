@@ -2,10 +2,11 @@
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 
 namespace red
 {
-ComponentManager::ComponentManager()
+ComponentManager::ComponentManager(World* world) : m_world(world)
 {
 }
 
@@ -21,6 +22,46 @@ ComponentManager::~ComponentManager()
 
         free(pool);
     }
+}
+
+Component* ComponentManager::CreateComponent(Entity* owner, const std::string& name)
+{
+    auto* registry = m_world->GetComponentRegistry();
+    auto* traits = registry->GetComponentTraits(name);
+
+    if (traits == nullptr)
+    {
+        RED_LOG_ERROR("Failed to create component with name {} because it is not registered", name);
+        return nullptr;
+    }
+
+    auto& componentPool = GetComponentPool(traits->componentTypeId);
+    Component* comp = traits->creator(owner);
+
+    componentPool[owner->GetId()] = comp;
+
+    return comp;
+}
+
+bool ComponentManager::HasComponent(Entity* entity, const std::string& name)
+{
+    return GetComponent(entity, name) != nullptr;
+}
+
+Component* ComponentManager::GetComponent(Entity* entity, const std::string& name)
+{
+    auto* registry = m_world->GetComponentRegistry();
+    auto* traits = registry->GetComponentTraits(name);
+
+    if (traits == nullptr)
+    {
+        RED_LOG_ERROR("Failed to create component with name {} because it is not registered", name);
+        return false;
+    }
+
+    auto& componentPool = GetComponentPool(traits->componentTypeId);
+
+    return componentPool[entity->GetId()];
 }
 
 Array<Component*> ComponentManager::GetComponents(const Entity* entity) const

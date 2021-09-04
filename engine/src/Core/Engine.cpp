@@ -14,10 +14,8 @@
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Input/System/UserInputSystem.hpp"
-#include "RedEngine/Level/LevelResourceLoader.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
-#include "RedEngine/Physics/PhysicsWorld.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
@@ -111,7 +109,6 @@ bool Engine::InternalCreate()
     auto* resourceHolder = singletonEntity->AddComponent<ResourceHolderComponent>();
     resourceHolder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(m_world));
-    resourceHolder->RegisterResourceLoader(ResourceType::LEVEL, new LevelResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SOUND, new SoundResourceLoader(m_world));
 
     m_world->AddSystem<RenderingSystem>();

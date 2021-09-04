@@ -14,14 +14,6 @@ class JsonLevelSerializer : public ILevelSerializer
     using json = nlohmann::json;
 
 public:
-    static constexpr char* LEVEL_ENTITIES = "entities";
-
-    static constexpr char* ENTITY_CHILDREN = "children";
-    static constexpr char* ENTITY_COMPONENTS = "components";
-    static constexpr char* ENTITY_NAME = "name";
-    static constexpr char* ENTITY_ID = "id";
-
-public:
     explicit JsonLevelSerializer(const Level* level);
 
     virtual std::string SerializeData(const LevelData& levelData) override;

@@ -25,6 +25,8 @@ struct WindowInfo
     int height;
 };
 
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(WindowComponent)
+
 class WindowComponent : public Component
 {
 public:

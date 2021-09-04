@@ -12,6 +12,7 @@
 namespace red
 {
 class Component;
+class Entity;
 
 enum class ComponentMemberFlag
 {
@@ -35,8 +36,10 @@ struct ComponentMemberTraits
 struct ComponentTraits
 {
     std::string_view componentName;
+    uint32 componentTypeId;
     std::string_view inheritedComponentName;
     Map<std::string, ComponentMemberTraits> members; // member name to Traits
+    std::function<Component*(Entity* owner)> creator;
 
     template <typename ComponentTypeT, typename MemberTypeT>
     void AddMember(const std::string& name, MemberTypeT ComponentTypeT::*memberAddr, const std::string& tooltip,

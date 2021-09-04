@@ -75,9 +75,8 @@ void Level::Serialize(const Path& path) const
         RED_LOG_ERROR("Failed to serialize level to \"{}\"", path.GetAscciiPath());
 }
 
-void Level::Deserialize(const std::string& /*path*/)
+void Level::SetState(State state)
 {
-    
+    m_state = state;
 }
-
 }  // namespace red
