@@ -15,7 +15,7 @@ namespace utils
 
         std::ifstream stream;
 
-        stream.open(path.GetPath().data());
+        stream.open(path.GetAscciiPath());
 
         if (!path.Exist() || path.IsDirectory() || !stream.is_open())
         {
