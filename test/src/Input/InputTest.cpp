@@ -6,9 +6,6 @@
 #include "RedEngine/Input/System/UserInputSystem.hpp"
 
 #include <SDL2/SDL_events.h>
-#include <SDL2/SDL_gamecontroller.h>
-#include <SDL2/SDL_keycode.h>
-#include <SDL2/SDL_mouse.h>
 #include <catch2/catch.hpp>
 
 using namespace red;

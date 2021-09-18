@@ -153,15 +153,7 @@ void EventSystem::PreUpdate()
 
 void EventSystem::PostUpdate()
 {
-    EventsComponent* events = GetComponent<EventsComponent>();
-
-    // Reset the inputs
-    // KeyDown and KeyUp only live for one frame
-    for (auto& state : events->m_keyStates)
-    {
-        state.isDown = false;
-        state.isUp = false;
-    }
+    
 }
 
 }  // namespace red

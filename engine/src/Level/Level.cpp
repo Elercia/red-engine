@@ -47,6 +47,11 @@ red::Entity* Level::CreateEntity(const std::string& name)
     return m_world->CreateEntity(name, m_rootEntity);
 }
 
+Entity* Level::CreateEntity(const std::string& name, Entity* parent)
+{
+    return m_world->CreateEntity(name, parent);
+}
+
 red::Entity* Level::CreateEntity(EntityId id, const std::string& name)
 {
     return m_world->CreateEntity(id, name, m_rootEntity);

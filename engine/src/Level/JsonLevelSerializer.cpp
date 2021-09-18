@@ -32,7 +32,7 @@ JsonLevelSerializer::json JsonLevelSerializer::SerializeEntity(const EntityData&
     entityJson[JsonNames::ENTITY_CHILDREN] = json::array();
     for (auto& childData : entityData.m_children)
     {
-        entityJson[JsonNames::LEVEL_ENTITIES].push_back(SerializeEntity(childData));
+        entityJson[JsonNames::ENTITY_CHILDREN].push_back(SerializeEntity(childData));
     }
 
     json componentsJson = json::object();

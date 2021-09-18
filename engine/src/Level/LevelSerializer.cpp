@@ -1,7 +1,9 @@
 #include "RedEngine/Level/LevelSerializer.hpp"
 
+#include "RedEngine/Filesystem/File.hpp"
 #include "RedEngine/Level/Level.hpp"
 
+#include <filesystem>
 #include <fstream>
 
 namespace red
@@ -28,16 +30,16 @@ bool ILevelSerializer::Serialize(const Path& path)
     return success;
 }
 
-bool ILevelSerializer::WriteToFile(const Path& path, std::string str)
+bool ILevelSerializer::WriteToFile(const Path& path, const std::string& str)
 {
-    std::filebuf fb;
-    fb.open(path.GetAscciiPath(), std::ios::out);
-    if (!fb.is_open())
+    File file(path, OpenMode::READ_WRITE_TC);
+
+    if (!file.Open())
         return false;
 
-    std::ostream os(&fb);
-    os << str;
-    fb.close();
+    file.Write(str);
+
+    file.Close();
 
     return true;
 }

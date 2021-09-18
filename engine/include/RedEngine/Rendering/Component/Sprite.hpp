@@ -2,11 +2,8 @@
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
-#include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
 
-#include <SDL2/SDL_render.h>
 #include <memory>
 #include <string>
 #include <vector>

@@ -11,8 +11,8 @@
 #include <windows.h>
 #endif
 
-#include <filesystem>
 #include <algorithm>
+#include <filesystem>
 
 namespace red
 {
@@ -36,6 +36,10 @@ std::wstring Path::GetUserBasePath()
 std::wstring Path::GetResourceBasePath()
 {
     return L"./resources/";
+}
+
+Path::Path() : m_states(0), m_hash((uint32) -1)
+{
 }
 
 Path Path::User(const std::wstring& path)
@@ -127,14 +131,20 @@ void Path::ForceRefreshStatus()
 
     m_states = 0;
 
-    if (fs::exists(internalPath))
+    bool exist = fs::exists(internalPath);
+
+    if (exist)
         SetBit(m_states, PathState::EXIST);
 
     if (fs::is_regular_file(internalPath))
         SetBit(m_states, PathState::TYPE_FILE);
 
-    if (fs::exists(internalPath) && fs::status_known(fs::status(internalPath)) &&
-        (fs::is_regular_file(internalPath) || fs::is_directory(internalPath) || fs::is_symlink(internalPath)))
+    if (exist && (fs::status_known(fs::status(internalPath)) || fs::is_regular_file(internalPath) ||
+                                      fs::is_directory(internalPath) || fs::is_symlink(internalPath)))
+    {
+        SetBit(m_states, PathState::VALID);
+    }
+    else if (!exist)
     {
         SetBit(m_states, PathState::VALID);
     }

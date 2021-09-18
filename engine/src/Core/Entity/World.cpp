@@ -63,7 +63,14 @@ Entity* World::CreateEntity(const std::string& name, Entity* root)
 
 red::Entity* World::CreateEntity(EntityId id, const std::string& name, Entity* root /*= nullptr*/)
 {
-    auto* entityPtr = new Entity(this, id, name);  // TODO check if there is a entity with this id
+    Entity* oldEntity = FindEntity(id);
+    if (oldEntity != nullptr)
+    {
+        RED_LOG_ERROR("Create a entity with a id that already exist (id: {}, name{})", id, name);
+        return oldEntity;
+    }
+
+    auto* entityPtr = new Entity(this, id, name);
 
     m_entities.push_back(entityPtr);
 
@@ -80,6 +87,17 @@ red::Entity* World::CreateSingletonEntity()
     m_singletonEntity = CreateEntity("__SingletonEntity__", nullptr);
 
     return m_singletonEntity;
+}
+
+Entity* World::FindEntity(EntityId id)
+{
+    for (Entity* e : m_entities)
+    {
+        if (e->GetId() == id)
+            return e;
+    }
+
+    return nullptr;
 }
 
 void World::Init()

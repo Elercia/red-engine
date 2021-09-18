@@ -44,21 +44,23 @@ std::shared_ptr<Texture2D> TextureResourceLoader::LoadResource(const Path& path)
 
     if (tempSurface == nullptr)
     {
-        RED_LOG_WARNING("Error creating surface from texture path {} with error {}", asciiPath,
-                        SDL_GetError());
+        RED_LOG_WARNING("Error creating surface from texture path {} with error {}", asciiPath, SDL_GetError());
 
         return texture;
     }
 
-    texture->m_sdlTexture = SDL_CreateTextureFromSurface(
-        m_world->GetSystem<RenderingSystem>()->GetRenderer()->GetSDLRenderer(), tempSurface);
+    texture->m_sdlTexture = nullptr;
+
+    auto* renderingSystem = m_world->GetSystem<RenderingSystem>();
+    if (renderingSystem != nullptr && renderingSystem->GetRenderer() != nullptr)
+        texture->m_sdlTexture =
+            SDL_CreateTextureFromSurface(renderingSystem->GetRenderer()->GetSDLRenderer(), tempSurface);
 
     SDL_FreeSurface(tempSurface);
 
     if (texture->m_sdlTexture == nullptr)
     {
-        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", asciiPath,
-                        SDL_GetError());
+        RED_LOG_WARNING("Error creating texture for sprite path {} with error {}", asciiPath, SDL_GetError());
 
         return texture;
     }

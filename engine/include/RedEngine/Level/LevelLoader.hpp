@@ -23,7 +23,7 @@ private:
     Level* ParseLevelData(const LevelData& levelData);
 
     void CreateEntity(Level* level, const EntityData& entityData, Entity* parent = nullptr);
-    void CreateComponent(Level* level, const ComponentData& componentData, Entity* owner);
+    void CreateComponent(const ComponentData& componentData, Entity* owner);
 
 protected:
     World* m_world;

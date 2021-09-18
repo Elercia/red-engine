@@ -46,11 +46,11 @@ void LevelLoader::CreateEntity(Level* level, const EntityData& entityData, Entit
 
     for (auto& componentDataIt : entityData.m_components)
     {
-        CreateComponent(level, componentDataIt.second, entity);
+        CreateComponent(componentDataIt.second, entity);
     }
 }
 
-void LevelLoader::CreateComponent(Level* level, const ComponentData& componentData, Entity* owner)
+void LevelLoader::CreateComponent(const ComponentData& componentData, Entity* owner)
 {
     const auto* compRegistry = m_world->GetComponentRegistry();
     const auto* compTypeTraits = compRegistry->GetComponentTraits(componentData.m_name);

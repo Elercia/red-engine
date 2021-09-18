@@ -36,6 +36,7 @@ public:
     Entity* CreateEntity(EntityId id, const std::string& name);
     Entity* CreateEntity(EntityId id, const std::string& name, Entity* parent);
     Entity* CreateEntity(const std::string& name);
+    Entity* CreateEntity(const std::string& name, Entity* parent);
 
     Entity* GetRootEntity();
     const Entity* GetRootEntity() const;

@@ -1,9 +1,15 @@
+#include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 #include <string>
 
 namespace red
 {
+template <typename T>
+std::string Serialize(const Array<T>& value);
+template <typename T>
+bool Deserialize(Array<T>& value, const std::string& str);
+
 std::string Serialize(const bool& value);
 bool Deserialize(bool& value, const std::string& str);
 
@@ -41,3 +47,5 @@ std::string Serialize(const std::string& value);
 bool Deserialize(std::string& value, const std::string& str);
 
 }  // namespace red
+
+#include "inl/SerializationFunction.inl"

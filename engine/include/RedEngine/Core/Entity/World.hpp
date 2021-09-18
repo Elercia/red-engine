@@ -36,6 +36,8 @@ public:
 
     Entity* CreateSingletonEntity();
 
+    Entity* FindEntity(EntityId id);
+
     template <class T, class... Args>
     T* AddSystem(Args... args);
     template <class T>

@@ -27,6 +27,8 @@ private:
     static std::wstring GetResourceBasePath();
 
 public:
+    Path();
+    explicit Path(std::wstring path);
     ~Path();
 
     std::wstring_view GetPath() const;
@@ -43,15 +45,14 @@ public:
     void ForceRefreshStatus();  // Force the refresh of the path
 
 private:
-    explicit Path(std::wstring path);
     void SetUnicodePath(const std::wstring& unicodeStr);
 
 private:
     enum PathState
     {
         VALID = 1 << 0,      // The Path is a valid physical path or a valid virtual path (doesn't guarantee existence)
-        EXIST = 1 << 3,      // The path exist on the disk
-        TYPE_FILE = 1 << 4,  // 1 => file, 0 => directory (folder). Invalid if not exist
+        EXIST = 1 << 1,      // The path exist on the disk
+        TYPE_FILE = 1 << 2,  // 1 => file, 0 => directory (folder). Invalid if not exist
     };
     using PathStates = uint32;
 

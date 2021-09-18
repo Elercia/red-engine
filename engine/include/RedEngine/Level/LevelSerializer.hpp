@@ -18,7 +18,7 @@ public:
     explicit ILevelSerializer(const Level* level);
 
     bool Serialize(const Path& path);
-    bool WriteToFile(const Path& path, std::string str);
+    bool WriteToFile(const Path& path, const std::string& str);
 
     virtual std::string SerializeData(const LevelData& levelData) = 0;
 

@@ -5,6 +5,8 @@
 
 using namespace red;
 
+#ifdef RED_USE_ARRAY
+
 TEST_CASE("Array push back", "[Container]")
 {
     Array<int> intArray;
@@ -300,3 +302,4 @@ TEST_CASE("Array performance", "[Container]")
     REQUIRE(arrayCtr.GetDuration() < stdCtr.GetDuration());
     */
 }
+#endif // RED_USE_ARRAY
