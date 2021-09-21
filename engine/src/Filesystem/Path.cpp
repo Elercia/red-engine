@@ -113,7 +113,7 @@ uint64 Path::GetHash() const
     return m_hash;
 }
 
-red::Path& Path::Append(const std::wstring& str)
+Path& Path::Append(const std::wstring& str)
 {
     SetUnicodePath(m_unicodePath += str);
     ForceRefreshStatus();

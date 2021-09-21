@@ -56,12 +56,12 @@ std::wstring ToUnicodeString(const std::string_view str)
 
 void ToUpperCase(std::string& str)
 {
-    std::for_each(str.begin(), str.end(), [](char& c) { c = std::toupper(c); });
+    std::for_each(str.begin(), str.end(), [](char& c) { c = (char) std::toupper(c); });
 }
 
 void ToUpperCase(std::wstring& str)
 {
-    std::for_each(str.begin(), str.end(), [](wchar_t& c) { c = std::toupper(c); });
+    std::for_each(str.begin(), str.end(), [](wchar_t& c) { c = (char) std::toupper(c); });
 }
 
 }  // namespace red::utils

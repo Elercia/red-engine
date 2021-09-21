@@ -12,7 +12,7 @@ namespace red
 {
 namespace utils
 {
-    red::UserActionMapping UserInputHelper::LoadActionMapping()
+    UserActionMapping UserInputHelper::LoadActionMapping()
     {
         Path p = Path::Resource(L"userInput.ini");
         auto iniConfig = utils::IniReader::ReadFromFile(p);
@@ -42,7 +42,7 @@ namespace utils
         return mappings;
     }
 
-    red::KeyMapping UserInputHelper::GetMappingFromConfigLine(const std::string& valueString)
+    KeyMapping UserInputHelper::GetMappingFromConfigLine(const std::string& valueString)
     {
         KeyMapping m;
 
@@ -62,9 +62,9 @@ namespace utils
         return m;
     }
 
-    red::ModifierKeyBitSet UserInputHelper::GetModifiersFromConfigLine(const std::string& modifierString)
+    ModifierKeyBitSet UserInputHelper::GetModifiersFromConfigLine(const std::string& modifierString)
     {
-        red::ModifierKeyBitSet modifiers;
+        ModifierKeyBitSet modifiers;
 
         if (modifierString.find("lctrl+") != std::string::npos)
         {
@@ -96,7 +96,7 @@ namespace utils
         return modifiers;
     }
 
-    red::KeyCodes::Enum UserInputHelper::GetKeyCode(const std::string& keyString)
+    KeyCodes::Enum UserInputHelper::GetKeyCode(const std::string& keyString)
     {
         auto codes = GetKeyCodeReadableDb();
 
@@ -105,7 +105,7 @@ namespace utils
             auto& readable = codes[i];
             if (keyString == readable)
             {
-                return static_cast<red::KeyCodes::Enum>(i);
+                return static_cast<KeyCodes::Enum>(i);
             }
         }
 

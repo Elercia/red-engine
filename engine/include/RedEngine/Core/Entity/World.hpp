@@ -3,15 +3,15 @@
 #include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/Physics/PhysicsWorld.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
+#include "RedEngine/Physics/PhysicsWorld.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <string>
-#include <vector>
 
 namespace red
 {
+class LevelChunk;
 class ComponentManager;
 class Component;
 class Level;
@@ -29,14 +29,15 @@ public:
     World(World&&) = delete;
     World& operator=(World&& world) = delete;
 
-    Entity* CreateRootEntity(Level* level);
-    Entity* CreateEntity(Entity* root = nullptr);
-    Entity* CreateEntity(EntityId id, const std::string& name, Entity* root = nullptr);
-    Entity* CreateEntity(const std::string& name, Entity* root = nullptr);
-
-    Entity* CreateSingletonEntity();
+    void OnAddEntity(Entity* entity);
+    void OnAddEntities(Array<Entity*>& entities);
+    void OnRemoveEntity(Entity* entity);
+    void OnRemoveEntities(Array<Entity*>& entities);
 
     Entity* FindEntity(EntityId id);
+    const Array<Entity*>& GetEntities() const;
+
+    Entity* CreateWorldEntity();
 
     template <class T, class... Args>
     T* AddSystem(Args... args);
@@ -52,12 +53,8 @@ public:
 
     void ChangeLevel(Level* newLevel);
 
-    template <class T>
-    T* GetSingletonComponent();
+    const Array<System*>& GetSystems() const;
 
-    const std::vector<System*>& GetSystems();
-    const std::vector<Entity*>& GetEntities();
-    Entity* GetSingletonEntity();
     ComponentManager* GetComponentManager();
     ComponentRegistry* GetComponentRegistry();
 
@@ -67,27 +64,39 @@ public:
     bool Update();
 
     void Clean();
+    void AddGarbageEntityId(EntityId entityId);
 
     PhysicsWorld* GetPhysicsWorld();
 
     template <typename T>
     bool RegisterComponentType();
 
+    template <typename T>
+    T* GetWorldComponent();
+
     Level* GetCurrentLevel();
 
-private:
-    Entity* m_singletonEntity;
+    EntityId GetNewEntityId();
 
-    std::vector<Entity*> m_entities;
-    std::vector<System*> m_systems;
+private:
+    // World chunk is used to store world entities such as resource loaders, window, rendering stuff
+    LevelChunk* m_worldChunk;
+
+    // aggregation of all the entities from all the level chunk loaded (not owned by the world)
+    Array<Entity*> m_entities;
+
+    // Collection of system working on the world
+    Array<System*> m_systems;
+
     ComponentManager* m_componentManager;
     ComponentRegistry* m_componentRegistry;
-    PhysicsWorld m_physicsWorld;
 
-    EntityId m_nextEntityId;
+    PhysicsWorld m_physicsWorld;
 
     Level* m_currentLevel;
     LevelLoader* m_levelLoader;
+
+    Array<EntityId> m_entityIdGarbage;
 };
 
 }  // namespace red

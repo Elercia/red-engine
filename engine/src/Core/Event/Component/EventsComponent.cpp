@@ -16,7 +16,7 @@ EventsComponent::~EventsComponent()
 {
 }
 
-bool EventsComponent::GetKey(red::KeyCodes::Enum key) const
+bool EventsComponent::GetKey(KeyCodes::Enum key) const
 {
     return m_keyStates.at(key).isPressed;
 }

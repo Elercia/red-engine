@@ -9,7 +9,6 @@
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
-#include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
 namespace red
 {
@@ -22,7 +21,7 @@ void RenderingSystem::Init()
 {
     System::Init();
 
-    auto* window = GetSingletonEntity()->AddComponent<WindowComponent>();
+    auto* window = m_world->CreateWorldEntity()->AddComponent<WindowComponent>();
     window->CreateNewWindow();
 
     m_renderer = new Renderer;
@@ -71,14 +70,14 @@ void RenderingSystem::PostUpdate()
 {
 }
 
-red::Renderer* RenderingSystem::GetRenderer()
+Renderer* RenderingSystem::GetRenderer()
 {
     return m_renderer;
 }
 
 void RenderingSystem::DrawDebug(CameraComponent* camera)
 {
-    auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
+    auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
     // Draw debug information
     for (auto& shape : debugComp->m_frameShapes)

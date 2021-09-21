@@ -3,11 +3,13 @@
 #include <fstream>
 #include <sstream>
 
-std::string red::ReadFile(const Path& fullPath)
+namespace red
+{
+std::string ReadFile(const Path& fullPath)
 {
     std::ifstream in;
     std::string asciiString = fullPath.GetAscciiPath();
-    
+
     in.open(asciiString);
 
     if (!in.is_open())
@@ -17,3 +19,4 @@ std::string red::ReadFile(const Path& fullPath)
     sstr << in.rdbuf();
     return sstr.str();
 }
+}  // namespace red

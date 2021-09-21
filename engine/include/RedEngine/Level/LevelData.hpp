@@ -2,11 +2,10 @@
 
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Container/Map.hpp"
+#include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 
 namespace red
 {
-using EntityId = uint32;
-
 struct KeyValue
 {
     std::string key;

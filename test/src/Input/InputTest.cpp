@@ -14,7 +14,7 @@ TEST_CASE("Raw input handling", "[Input]")
 {
     World world;
 
-    auto* e = world.CreateSingletonEntity();
+    auto* e = world.CreateWorldEntity();
     auto* eventsComonent = e->AddComponent<EventsComponent>();
     auto* eventSystem = world.AddSystem<EventSystem>();
 
@@ -38,7 +38,7 @@ TEST_CASE("Raw input handling", "[Input]")
 TEST_CASE("User input handling", "[Input]")
 {
     red::World world;
-    auto* singletonEntity = world.CreateSingletonEntity();
+    auto* singletonEntity = world.CreateWorldEntity();
 
     auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();
     world.AddSystem<red::UserInputSystem>();

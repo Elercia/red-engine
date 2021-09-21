@@ -16,7 +16,7 @@ public:
 
     std::shared_ptr<SoundResource> LoadResource(const Path& path);
 
-    void FreeResource(std::shared_ptr<red::SoundResource> resource) override;
+    void FreeResource(std::shared_ptr<SoundResource> resource) override;
 };
 
 }  // namespace red

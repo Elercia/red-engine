@@ -27,4 +27,8 @@ void PhysicBody::ApplyForce(const Vector2& force, const Vector2& relativePositio
 
 b2Body* PhysicBody::GetBody() { return m_body; }
 
+void PhysicBody::SetBody(b2Body* body)
+{
+    m_body = body;
+}
 }  // namespace red

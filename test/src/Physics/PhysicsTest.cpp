@@ -22,7 +22,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
 {
     using namespace red;
     World w;
-    Entity* e = w.CreateEntity();
+    Entity* e = w.CreateWorldEntity();
     PhysicSystem* system = w.AddSystem<PhysicSystem>();
 
     red::PhysicBodyCreationDesc desc = {red::PhysicsBodyType::DYNAMIC_BODY};

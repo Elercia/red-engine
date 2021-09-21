@@ -14,13 +14,12 @@ ComponentManager::~ComponentManager()
 {
     for (auto componentPoolPair : m_components)
     {
-        auto* pool = componentPoolPair.second;
-        for (int i = 0; i < ComponentPoolSize; ++i)
-        {
-            delete pool[i];
-        }
+        auto& pool = componentPoolPair.second;
 
-        free(pool);
+        for (auto& compIt : pool)
+        {
+            delete compIt.second;
+        }
     }
 }
 
@@ -70,13 +69,13 @@ Array<Component*> ComponentManager::GetComponents(const Entity* entity) const
 
     for (auto& compPoolPair : m_components)
     {
-        auto** compPool = compPoolPair.second;
+        auto& compPool = compPoolPair.second;
 
-        auto* comp = compPool[entity->GetId()];
+        auto compIt = compPool.find(entity->GetId());
 
-        if (comp != nullptr)
+        if (compIt != compPool.end())
         {
-            entityComponents.push_back(comp);
+            entityComponents.push_back(compIt->second);
         }
     }
 
@@ -89,25 +88,27 @@ void ComponentManager::StoreComponent(Entity* owner, Component* component, std::
     componentPool[owner->GetId()] = component;
 }
 
-ComponentPool_t& ComponentManager::GetComponentPool(std::size_t componentName)
+ComponentPoolType& ComponentManager::GetComponentPool(std::size_t componentTypeId)
 {
-    auto poolIt = m_components.find(componentName);
+    auto poolIt = m_components.find(componentTypeId);
     if (poolIt != m_components.end())
     {
         return poolIt->second;
     }
 
-    auto* pool = (ComponentPool_t) calloc(sizeof(Component*), ComponentPoolSize);
-    return m_components.insert({componentName, pool}).first->second;
+    auto [it, inserted] = m_components.insert({componentTypeId, {}});
+    RED_ASSERT(inserted, "Counldn't insert a new component pool")
+
+    return it->second;
 }
 
-void ComponentManager::RemoveComponent(Entity* owner, ComponentPool_t& pool)
+void ComponentManager::RemoveComponent(Entity* owner, ComponentPoolType& pool)
 {
     auto ptr = pool[owner->GetId()];
 
     delete ptr;
 
-    pool[owner->GetId()] = nullptr;
+    pool.erase(owner->GetId());
 }
 
 bool ComponentManager::HasComponent(Entity* entity, std::size_t name)
@@ -119,29 +120,4 @@ Component* ComponentManager::GetComponent(Entity* entity, std::size_t name)
 {
     return GetComponentPool(name)[entity->GetId()];
 }
-
-void ComponentManager::MoveComponents(EntityId from, EntityId to)
-{
-    for (auto componentPoolPair : m_components)
-    {
-        auto* pool = componentPoolPair.second;
-
-        pool[to] = pool[from];
-        pool[from] = nullptr;
-    }
-}
-
-void ComponentManager::UnloadTransientComponents()
-{
-    for (auto componentPoolPair : m_components)
-    {
-        auto* pool = componentPoolPair.second;
-
-        for (int i = 0; i < ComponentPoolSize; ++i)
-        {
-            delete pool[i];
-        }
-    }
-}
-
 }  // namespace red

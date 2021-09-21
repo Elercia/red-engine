@@ -106,8 +106,8 @@ void ColliderList::RemoveCollider(int id)
     m_status = ComponentStatus::DIRTY;
 }
 
-red::PhysicBody* ColliderList::GetAttachedPhysicBody() { return m_attachedPhysicBody; }
+PhysicBody* ColliderList::GetAttachedPhysicBody() { return m_attachedPhysicBody; }
 
-std::map<int, red::Collider>& ColliderList::GetColliders() { return m_colliders; }
+std::map<int, Collider>& ColliderList::GetColliders() { return m_colliders; }
 
 }  // namespace red

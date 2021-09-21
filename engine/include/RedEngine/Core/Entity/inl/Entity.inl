@@ -16,8 +16,6 @@ T* Entity::AddComponent(Args&&... args)
 
     auto componentPtr = componentManager->CreateComponent<T>(this, std::forward<Args>(args)...);
 
-    m_isDirty = true;
-
     return componentPtr;
 }
 
@@ -27,8 +25,6 @@ void Entity::RemoveComponent()
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
     GetComponentManager()->RemoveComponent<T>(this);
-
-    m_isDirty = true;
 }
 
 template <typename T>
@@ -59,7 +55,7 @@ T* Entity::GetComponentInParent(bool includeOwn /*= true*/)
             return comp;
     }
 
-    if (m_parent && !m_parent->IsRootEntity())
+    if (m_parent != nullptr)
     {
         return m_parent->GetComponentInParent<T>(true);
     }

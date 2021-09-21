@@ -17,7 +17,7 @@ CameraComponent::CameraComponent(Entity* entity) : CameraComponent(entity, {0.f,
 
 CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Component(entity), m_renderedTexture(nullptr)
 {
-    auto* window = entity->GetWorld()->GetSingletonEntity()->GetComponent<WindowComponent>();
+    auto* window = entity->GetWorld()->GetWorldComponent<WindowComponent>();
 
     if (window == nullptr)
     {

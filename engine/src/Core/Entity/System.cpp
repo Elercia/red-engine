@@ -9,14 +9,9 @@ System::System(World* world) : m_isInit(false), m_world(world), m_priority(0), m
 {
 }
 
-Entity* System::GetSingletonEntity()
-{
-    return m_world->GetSingletonEntity();
-}
-
 void System::DebugDrawLine(const Vector2& from, const Vector2& to)
 {
-    auto* debugComp = GetSingletonEntity()->GetComponent<DebugComponent>();
+    auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
     debugComp->AddLine(from, to);
 }

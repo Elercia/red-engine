@@ -13,7 +13,7 @@ EventSystem::EventSystem(World* world) : System(world) { m_priority = 1; }
 void EventSystem::Init()
 {
     System::Init();
-    GetSingletonEntity()->AddComponent<EventsComponent>();
+    m_world->CreateWorldEntity()->AddComponent<EventsComponent>();
 }
 
 void EventSystem::PreUpdate()

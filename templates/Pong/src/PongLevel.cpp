@@ -25,7 +25,7 @@
 
 void PongLevel::Init()
 {
-    auto* window = m_world->GetSingletonComponent<red::WindowComponent>();
+    auto* window = m_world->GetWorldComponent<red::WindowComponent>();
     auto info = window->GetWindowInfo();
 
     float paddlePosHeight = (info.height / 2.F) - (100.F / 2.F);
@@ -79,7 +79,7 @@ void PongLevel::Init()
     paddleTwo->AddComponent<red::PhysicBody>(paddleBodyDesc);
     paddleTwo->AddComponent<red::ColliderList>()->AddPolygonCollider(paddleColliderDesc);
 
-    auto* manager = m_world->GetSingletonEntity();
+    auto* manager = CreateEntity("Manager");
     manager->AddComponent<ScoreComponent>();
     manager->AddComponent<red::CameraComponent>(center);
     manager->AddComponent<red::AudioListener>();

@@ -24,7 +24,7 @@ public:
     RED_END_COMPONENT_REGISTER()
 
     AudioSource(Entity* owner);
-    AudioSource(Entity* owner, SoundDesc desc);
+    AudioSource(Entity* owner, const SoundDesc& desc);
     ~AudioSource() = default;
 
     void Play();

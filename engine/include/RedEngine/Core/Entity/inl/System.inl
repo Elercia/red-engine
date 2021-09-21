@@ -1,4 +1,6 @@
 
+#include "RedEngine/Core/Entity/World.hpp"
+
 namespace red
 {
 template <class... ComponentTypes>
@@ -24,7 +26,8 @@ std::vector<Entity*> System::GetComponents()
 template <typename CT>
 CT* System::GetComponent()
 {
-    return GetSingletonEntity()->GetComponent<CT>();
+    // TODO do somting better (at least rename System::GetComponent)
+    return m_world->GetWorldComponent<CT>();
 }
 
 }  // namespace red

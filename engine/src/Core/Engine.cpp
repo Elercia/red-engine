@@ -24,6 +24,7 @@
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
+#include "RedEngine/Utils/Random.hpp"
 
 namespace red
 {
@@ -99,14 +100,16 @@ bool Engine::InternalDestroy()
 
 bool Engine::InternalCreate()
 {
+    InitRandomEngine(42);
+
     m_world = new World;
 
     RegisterComponentTypes();
 
-    auto* singletonEntity = m_world->CreateSingletonEntity();
+    auto* worldEntity = m_world->CreateWorldEntity();
 
     // TODO Put it inside a resource loader system
-    auto* resourceHolder = singletonEntity->AddComponent<ResourceHolderComponent>();
+    auto* resourceHolder = worldEntity->AddComponent<ResourceHolderComponent>();
     resourceHolder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SOUND, new SoundResourceLoader(m_world));
@@ -125,9 +128,7 @@ bool Engine::InternalCreate()
 
 bool Engine::Destroy()
 {
-    auto* singletonEntity = m_world->GetSingletonEntity();
-
-    auto* resourceHolder = singletonEntity->GetComponent<ResourceHolderComponent>();
+    auto* resourceHolder = m_world->GetWorldComponent<ResourceHolderComponent>();
 
     resourceHolder->RemoveAllLoaders();
 

@@ -7,7 +7,7 @@
 TEST_CASE("System", "[ECS]")
 {
     red::World world;
-    auto* e = world.CreateSingletonEntity();
+    auto* e = world.CreateWorldEntity();
     e->AddComponent<red::EventsComponent>();
 
     size_t baseSystemCount = world.GetSystems().size();
@@ -28,9 +28,9 @@ TEST_CASE("System", "[ECS]")
 
     SECTION("System is fetching the right entities")
     {
-        auto e1 = world.CreateEntity();
-        auto e2 = world.CreateEntity();
-        auto e3 = world.CreateEntity();
+        auto e1 = world.CreateWorldEntity();
+        auto e2 = world.CreateWorldEntity();
+        auto e3 = world.CreateWorldEntity();
 
         e1->AddComponent<MockComponent1>();
         e2->AddComponent<MockComponent1>();

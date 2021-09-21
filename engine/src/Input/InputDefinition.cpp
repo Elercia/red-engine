@@ -277,7 +277,7 @@ SDLMouseButtonTranslationMap GetSDLMouseTranslationMap()
     return translationMap;
 }
 
-red::KeyCodeReadableDb GetKeyCodeReadableDb()
+KeyCodeReadableDb GetKeyCodeReadableDb()
 {
     KeyCodeReadableDb db{};
 

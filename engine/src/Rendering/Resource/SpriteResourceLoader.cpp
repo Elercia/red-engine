@@ -23,7 +23,7 @@ SpriteResourceLoader::~SpriteResourceLoader()
 {
 }
 
-std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const Path& path)
+std::shared_ptr<SpriteResource> SpriteResourceLoader::LoadResource(const Path& path)
 {
     namespace fs = std::filesystem;
     using json = nlohmann::json;
@@ -51,7 +51,7 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const Pa
     }
 
     auto* textureResourceLoader =
-        m_world->GetSingletonComponent<ResourceHolderComponent>()->GetResourceLoader<TextureResourceLoader>();
+        m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<TextureResourceLoader>();
 
     for (auto animationJson : parsedJson)
     {
@@ -107,7 +107,7 @@ std::shared_ptr<red::SpriteResource> SpriteResourceLoader::LoadResource(const Pa
     return spriteResource;
 }
 
-void SpriteResourceLoader::FreeResource(std::shared_ptr<red::SpriteResource> resource)
+void SpriteResourceLoader::FreeResource(std::shared_ptr<SpriteResource> resource)
 {
     resource->SetLoadState(LoadState::STATE_RELEASED);
 }

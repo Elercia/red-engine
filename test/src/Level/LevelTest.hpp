@@ -16,8 +16,7 @@ public:
             CreateEntity();
         }
 
-        auto* e = CreateEntity();
-        e->SetPersistent(true);
+        CreateEntity();
     };
 
     void Finalize() override{};
@@ -31,7 +30,6 @@ public:
     void Init() override
     {
         auto* e = CreateEntity();
-        e->SetPersistent(true);
 
         auto* c = CreateEntity();
         c->SetParent(e);

@@ -16,7 +16,7 @@ Entity* Component::GetOwner() const
     return m_owner;
 }
 
-red::World* Component::GetWorld() const
+World* Component::GetWorld() const
 {
     return m_owner->GetWorld();
 }

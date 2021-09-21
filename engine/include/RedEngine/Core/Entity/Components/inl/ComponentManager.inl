@@ -17,7 +17,7 @@ ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args
 template <typename ComponentType_t>
 void ComponentManager::RemoveComponent(Entity* owner)
 {
-    auto* pool = GetComponentPool(TypeInfo<ComponentType_t>().typeId);
+    auto& pool = GetComponentPool(TypeInfo<ComponentType_t>().typeId);
 
     RemoveComponent(owner, pool);
 }

@@ -2,31 +2,29 @@
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
-#include "RedEngine/Core/Entity/Components/Transform.hpp"
-#include "RedEngine/Core/Debug/DebugMacros.hpp"
-#include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/RedEngineBase.hpp"
-#include "RedEngine/Utils/TypesInfo.hpp"
+#include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
+#include "RedEngine/Core/Container/Array.hpp"
 
-#include <algorithm>
-#include <cassert>
-#include <set>
 #include <string>
-#include <vector>
 
 namespace red
 {
-using EntityId = uint32;
 
 class World;
-class ILevelEntityData;
+
+enum class EntityState
+{
+    PreCreation,
+    Created,
+    Destroyed
+};
 
 class Entity
 {
     friend World;
 
 public:
-    Entity(World* world, EntityId id, std::string name);
+    Entity(World* world, EntityId id);
     virtual ~Entity() = default;
 
     Entity(const Entity&) = delete;
@@ -55,21 +53,21 @@ public:
     bool HasComponent();
 
     [[nodiscard]] EntityId GetId() const;
-    [[nodiscard]] bool IsRootEntity() const;
     void SetId(EntityId id);
 
     const std::string& GetName() const;
+    void SetName(const std::string& name);
+
+    const EntityState GetState() const;
 
     void Destroy();
-
-    void SetPersistent(bool persistent);
 
     void SetParent(Entity* parent);
     void AddChild(Entity* child);
     void RemoveChild(Entity* child);
     Entity* GetParent();
     const Entity* GetParent() const;
-    std::vector<Entity*> GetChildren() const;
+    Array<Entity*> GetChildren() const;
 
     World* GetWorld();
 
@@ -80,12 +78,9 @@ protected:
     EntityId m_id;
     std::string m_name;
 
-    bool m_isPersistent;
-
     Entity* m_parent;
-    std::vector<Entity*> m_children;
-    bool m_isDirty{false};  // TODO Look at how to set it back to non-dirty
-    bool m_isDestroyed{false};
+    Array<Entity*> m_children;
+    EntityState m_state;
 };
 
 }  // namespace red

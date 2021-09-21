@@ -69,7 +69,7 @@ std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const Path& pat
 }
 
 
-void SoundResourceLoader::FreeResource(std::shared_ptr<red::SoundResource> resource)
+void SoundResourceLoader::FreeResource(std::shared_ptr<SoundResource> resource)
 {
     resource->SetLoadState(LoadState::STATE_RELEASED);
     FmodUtils::FmodCheck(resource->GetSound()->release(), "Error releasing sound");

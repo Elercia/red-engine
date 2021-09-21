@@ -21,7 +21,7 @@ Sprite::Sprite(Entity* entity) : Component(entity), m_spriteResource(nullptr)
 Sprite::Sprite(Entity* entity, const Path& resourceId) : Component(entity)
 {
     m_spriteResource = m_owner->GetWorld()
-                           ->GetSingletonComponent<ResourceHolderComponent>()
+                           ->GetWorldComponent<ResourceHolderComponent>()
                            ->GetResourceLoader<SpriteResourceLoader>()
                            ->LoadResource(resourceId);
 

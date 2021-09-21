@@ -1,4 +1,6 @@
 
+#include "RedEngine/Level/LevelChunk.hpp"
+
 namespace red
 {
 template <class T, class... Args>
@@ -40,14 +42,21 @@ T* World::GetSystem()
     return nullptr;
 }
 
-template <class T>
-T* World::GetSingletonComponent()
+template <typename T>
+T* World::GetWorldComponent()
 {
-    return m_singletonEntity->GetComponent<T>();
+    for (auto* e : m_worldChunk->GetEntities())
+    {
+        auto* comp = e->GetComponent<T>();
+        if (comp != nullptr)
+            return comp;
+    }
+
+    return nullptr;
 }
 
 template <typename T>
-bool red::World::RegisterComponentType()
+bool World::RegisterComponentType()
 {
     static_assert(std::is_base_of<Component, T>::value, "RegisterComponentType called on non component type");
 

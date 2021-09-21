@@ -34,7 +34,7 @@ std::shared_ptr<Type> ResourceLoader<Type>::GetOrCreateFromCache(const Path& pat
 }
 
 template <typename Type>
-void red::ResourceLoader<Type>::FreeUnusedResources()
+void ResourceLoader<Type>::FreeUnusedResources()
 {
     for (auto resourceIt = m_loadedResources.begin(); resourceIt != m_loadedResources.end();)
     {
@@ -52,7 +52,7 @@ void red::ResourceLoader<Type>::FreeUnusedResources()
 }
 
 template <typename Type>
-void red::ResourceLoader<Type>::FreeAllResources()
+void ResourceLoader<Type>::FreeAllResources()
 {
     for (auto resourceIt = m_loadedResources.begin(); resourceIt != m_loadedResources.end(); resourceIt++)
     {

@@ -9,22 +9,20 @@
 
 namespace red
 {
-Entity::Entity(World* world, EntityId id, std::string name)
-    : m_world(world), m_id(id), m_name(std::move(name)), m_isPersistent(false), m_parent(nullptr)
+Entity::Entity(World* world, EntityId id)
+    : m_world(world), m_id(id), m_parent(nullptr)
 {
     AddComponent<Transform>(0.F, 0.F);
 }
 
 void Entity::Destroy()
 {
+    m_state = EntityState::Destroyed;
+
     for (auto* child : m_children)
     {
         child->Destroy();
     }
-
-    // TODO Check if the component are really destroyed
-
-    m_isDestroyed = true;
 }
 
 Component* Entity::AddComponent(std::string name)
@@ -39,8 +37,6 @@ Component* Entity::AddComponent(std::string name)
 
     auto componentPtr = componentManager->CreateComponent(this, name);
 
-    m_isDirty = true;
-
     return componentPtr;
 }
 
@@ -54,11 +50,6 @@ EntityId Entity::GetId() const
     return m_id;
 }
 
-bool Entity::IsRootEntity() const
-{
-    return m_parent == nullptr;
-}
-
 void Entity::SetId(EntityId id)
 {
     m_id = id;
@@ -69,41 +60,14 @@ const std::string& Entity::GetName() const
     return m_name;
 }
 
-void Entity::SetPersistent(bool persistent)
+void Entity::SetName(const std::string& name)
 {
-    // Do we need to change the persitency
-    if (m_isPersistent != persistent)
-    {
-        // A child cant have a persitency different it parent
-        if (m_parent != nullptr && !m_parent->IsRootEntity() && m_parent->m_isPersistent != persistent)
-        {
-            m_parent->SetPersistent(persistent);
-            return;
-        }
+    m_name = name;
+}
 
-        // Set the parent persitency and the childs ones
-        m_isPersistent = persistent;
-
-        for (auto& child : m_children)
-        {
-            child->SetPersistent(persistent);
-        }
-
-        // Only change the parent of the top parent entity (to keep the child heritage)
-        if (m_parent == nullptr || m_parent->IsRootEntity())
-        {
-            if (m_isPersistent)
-            {
-                SetParent(m_world->GetSingletonEntity());
-            }
-            else
-            {
-                SetParent(nullptr);
-            }
-        }
-
-        // Change the parent of the current entity to be the singletonEntity
-    }
+const EntityState Entity::GetState() const
+{
+    return m_state;
 }
 
 void Entity::SetParent(Entity* parent)
@@ -121,18 +85,12 @@ void Entity::SetParent(Entity* parent)
         // Set the parent of this entity
         m_parent = parent;
         m_parent->AddChild(this);
-
-        if (!m_parent->IsRootEntity())
-            SetPersistent(m_parent->m_isPersistent);
     }
-
-    m_isDirty = true;
 }
 
 void Entity::AddChild(Entity* child)
 {
     m_children.push_back(child);
-    m_isDirty = true;
 }
 
 void Entity::RemoveChild(Entity* child)
@@ -143,11 +101,10 @@ void Entity::RemoveChild(Entity* child)
     {
         RED_LOG_WARNING("Entity RemoveChild child is not part of children (parent {}, child {})", m_name,
                         child->m_name);
+        return;
     }
 
     m_children.erase(it);
-
-    m_isDirty = true;
 }
 
 Entity* Entity::GetParent()
@@ -155,7 +112,7 @@ Entity* Entity::GetParent()
     return m_parent;
 }
 
-const red::Entity* Entity::GetParent() const
+const Entity* Entity::GetParent() const
 {
     return m_parent;
 }
@@ -170,7 +127,7 @@ World* Entity::GetWorld()
     return m_world;
 }
 
-red::ComponentManager* Entity::GetComponentManager()
+ComponentManager* Entity::GetComponentManager()
 {
     return m_world->GetComponentManager();
 }

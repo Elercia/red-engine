@@ -23,9 +23,7 @@ void UserInputSystem::Init()
 
     SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 
-    auto* singeltonEntity = GetSingletonEntity();
-
-    m_inputComponent = singeltonEntity->AddComponent<UserInputComponent>();
+    m_inputComponent = m_world->CreateWorldEntity()->AddComponent<UserInputComponent>();
 
     m_inputComponent->m_actionMapping = utils::UserInputHelper::LoadActionMapping();
 
@@ -77,7 +75,7 @@ void UserInputSystem::PreUpdate()
     }
 }
 
-red::KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, const std::vector<KeyState>& states)
+KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, const std::vector<KeyState>& states)
 {
     KeyState resultState = {false, false, false};
     resultState.isPressed = states[0].isPressed;

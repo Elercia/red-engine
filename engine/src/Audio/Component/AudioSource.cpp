@@ -15,10 +15,10 @@ AudioSource::AudioSource(Entity* owner) : Component(owner), m_desc(), m_currentC
 
 }
 
-AudioSource::AudioSource(Entity* owner, SoundDesc desc) : Component(owner), m_desc(desc), m_currentChannel(nullptr)
+AudioSource::AudioSource(Entity* owner, const SoundDesc& desc) : Component(owner), m_desc(desc), m_currentChannel(nullptr)
 {
     m_sound = m_owner->GetWorld()
-                  ->GetSingletonComponent<ResourceHolderComponent>()
+                  ->GetWorldComponent<ResourceHolderComponent>()
                   ->GetResourceLoader<SoundResourceLoader>()
                   ->LoadResource(Path::Resource(desc.name));
 }

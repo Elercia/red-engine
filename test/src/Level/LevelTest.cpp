@@ -1,5 +1,6 @@
 #include "LevelTest.hpp"
 
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Level/JsonLevelNames.hpp"
 #include "RedEngine/Level/JsonLevelSerializer.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
@@ -14,7 +15,6 @@ TEST_CASE("Level serialisation", "[LEVEL]")
     world.RegisterComponentType<Transform>();
 
     Level level("SerializedLevel", &world);
-    level.InternInit();
 
     Entity* e1 = level.CreateEntity("Test");
     Entity* e2 = level.CreateEntity("Test2");
@@ -23,6 +23,8 @@ TEST_CASE("Level serialisation", "[LEVEL]")
 
     Entity* child1 = level.CreateEntity("Test1", e1);
     level.CreateEntity("Test11", child1);
+
+    level.InternInit();
 
     Path p = Path::Resource("tmp_out/test_serialize_level.json");
 

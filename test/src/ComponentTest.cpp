@@ -12,7 +12,7 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock1;
         for (int i = 0; i < 100; ++i)
         {
-            auto* entity = world.CreateEntity();
+            auto* entity = world.CreateWorldEntity();
             entitiesWithMock1.push_back(entity);
             REQUIRE(entity != nullptr);
         }
@@ -20,7 +20,7 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock2;
         for (int i = 0; i < 100; ++i)
         {
-            auto* entity = world.CreateEntity();
+            auto* entity = world.CreateWorldEntity();
             entitiesWithMock2.push_back(entity);
             REQUIRE(entity != nullptr);
         }
@@ -78,13 +78,13 @@ TEST_CASE("Component", "[ECS]")
     {
         red::World world;
 
-        auto* entityA = world.CreateEntity();
+        auto* entityA = world.CreateWorldEntity();
         REQUIRE(entityA != nullptr);
 
         auto* componentAddedA = entityA->AddComponent<MockComponent1>();
         REQUIRE(componentAddedA != nullptr);
 
-        auto* entityB = world.CreateEntity();
+        auto* entityB = world.CreateWorldEntity();
         REQUIRE(entityB != nullptr);
 
         auto* componentAddedB = entityB->AddComponent<MockComponent1>();
@@ -104,14 +104,12 @@ TEST_CASE("Persistent entity", "[ECS]")
 {
     red::World world;
 
-    auto* entityA = world.CreateEntity();
+    auto* entityA = world.CreateWorldEntity();
     REQUIRE(entityA != nullptr);
 
     auto* componentAddedA = entityA->AddComponent<MockComponent1>();
     REQUIRE(componentAddedA != nullptr);
-
-    entityA->SetPersistent(true);
-
+    
     auto* componentGettedA = entityA->GetComponent<MockComponent1>();
     REQUIRE(componentAddedA == componentGettedA);
 }

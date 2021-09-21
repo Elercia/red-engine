@@ -41,7 +41,11 @@ void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreat
 
 void PhysicsWorld::DestroyPhysicsBody(PhysicBody* physicBody)
 {
+    if (physicBody->GetBody() == nullptr)
+        return;
+
     m_internalPhysicsWorld->DestroyBody(physicBody->GetBody());
+    physicBody->SetBody(nullptr);
 }
 
 void PhysicsWorld::Step(float timeStep, int32 velocityIterations, int32 positionIterations)
@@ -51,15 +55,30 @@ void PhysicsWorld::Step(float timeStep, int32 velocityIterations, int32 position
     m_internalPhysicsWorld->Step(timeStep, velocityIterations, positionIterations);
 }
 
-void PhysicsWorld::ClearForces() { m_internalPhysicsWorld->ClearForces(); }
+void PhysicsWorld::ClearForces()
+{
+    m_internalPhysicsWorld->ClearForces();
+}
 
-const std::vector<red::CollisionInfo>& PhysicsWorld::GetCollisions() const { return m_frameCollisionInfo; }
+const std::vector<CollisionInfo>& PhysicsWorld::GetCollisions() const
+{
+    return m_frameCollisionInfo;
+}
 
-const std::vector<red::TriggerInfo>& PhysicsWorld::GetTriggers() const { return m_frameTriggerInfo; }
+const std::vector<TriggerInfo>& PhysicsWorld::GetTriggers() const
+{
+    return m_frameTriggerInfo;
+}
 
-void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer) { m_internalPhysicsWorld->SetDebugDraw(drawer); }
+void PhysicsWorld::SetDebugDrawer(PhysicsDebugDrawer* drawer)
+{
+    m_internalPhysicsWorld->SetDebugDraw(drawer);
+}
 
-void PhysicsWorld::DrawDebug() { m_internalPhysicsWorld->DebugDraw(); }
+void PhysicsWorld::DrawDebug()
+{
+    m_internalPhysicsWorld->DebugDraw();
+}
 
 void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
 {

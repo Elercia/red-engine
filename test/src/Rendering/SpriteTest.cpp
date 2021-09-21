@@ -15,12 +15,12 @@ TEST_CASE("Sprite test", "[RENDERING]")
     using namespace red;
 
     World world;
-    Entity* sing = world.CreateSingletonEntity();
+    Entity* sing = world.CreateWorldEntity();
     ResourceHolderComponent* holder = sing->AddComponent<ResourceHolderComponent>();
     holder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(&world));
     holder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(&world));
 
-    auto* e = world.CreateEntity();
+    auto* e = world.CreateWorldEntity();
     auto* spriteComponent = e->AddComponent<Sprite>(red::Path::Resource("sprite_test/sprite_test"));
 
     REQUIRE(spriteComponent->GetAnimations().size() == 2);

@@ -16,7 +16,7 @@ public:
 
     std::shared_ptr<SpriteResource> LoadResource(const Path& path);
 
-    void FreeResource(std::shared_ptr<red::SpriteResource> resource) override;
+    void FreeResource(std::shared_ptr<SpriteResource> resource) override;
 };
 
 }  // namespace red

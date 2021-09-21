@@ -26,15 +26,9 @@ public:
     System& operator=(System&&) = default;
 
     // Update functions called in this order
-    virtual void Update()
-    {
-    }
-    virtual void PreUpdate()
-    {
-    }
-    virtual void PostUpdate()
-    {
-    }
+    virtual void Update(){};
+    virtual void PreUpdate(){};
+    virtual void PostUpdate(){};
 
     /// Called once the world is initializing to manager system-specific init
     virtual void Init()
@@ -43,21 +37,16 @@ public:
     }
 
     /// Called once the system is shutting down to manage system-specific shutdown
-    virtual void Finalise()
-    {
-    }
+    virtual void Finalise(){};
 
-    virtual void ManageEntities()
-    {
-    }
+    virtual void ManageEntities(){};
 
+    // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
 
     template <typename CT>
     CT* GetComponent();
-
-    Entity* GetSingletonEntity();
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

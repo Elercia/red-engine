@@ -50,6 +50,8 @@ public:
     void ApplyForce(const Vector2& force, const Vector2& relativePosition);
 
     b2Body* GetBody();
+    void SetBody(b2Body* body);
+
 
     OnTriggerSignalType m_triggerSignal;
     OnCollisionSignalType m_collisionSignal;

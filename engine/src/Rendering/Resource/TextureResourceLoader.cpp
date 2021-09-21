@@ -79,7 +79,7 @@ std::shared_ptr<Texture2D> TextureResourceLoader::LoadResource(const Path& path)
     return texture;
 }
 
-void TextureResourceLoader::FreeResource(std::shared_ptr<red::Texture2D> resource)
+void TextureResourceLoader::FreeResource(std::shared_ptr<Texture2D> resource)
 {
     SDL_DestroyTexture(resource->m_sdlTexture);
 

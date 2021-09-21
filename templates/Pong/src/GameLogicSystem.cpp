@@ -36,8 +36,13 @@ void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
 {
     auto info = GetComponent<red::WindowComponent>()->GetWindowInfo();
 
-    auto* score = GetComponent<ScoreComponent>();
+    auto scores = GetComponents<ScoreComponent>();
     bool scored = false;
+
+    if (scores.empty() || scores.size() > 1)
+        return;
+
+    auto* score = scores[0]->GetComponent<ScoreComponent>();
 
     if (ballPos.x < 0)
     {

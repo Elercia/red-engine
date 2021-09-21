@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
@@ -9,15 +8,19 @@
 
 namespace red
 {
-class Level : public IResource
+class LevelChunk;
+
+class Level : Uncopyable
 {
 public:
     enum class State
     {
+        Created,
         Loading,
-        Ready
+        Ready,
+        Finalized
     };
-    
+
     friend class ILevelSerializer;
     friend class JsonLevelSerializer;
 
@@ -30,7 +33,12 @@ public:
     virtual void Init(){};
     virtual void Finalize(){};
 
+    void Clean();
+
     const std::string& GetName() const;
+    World* GetWorld();
+
+    Entity* GetRootEntity() const;
 
     Entity* CreateEntity();
     Entity* CreateEntity(EntityId id, const std::string& name);
@@ -38,19 +46,22 @@ public:
     Entity* CreateEntity(const std::string& name);
     Entity* CreateEntity(const std::string& name, Entity* parent);
 
-    Entity* GetRootEntity();
-    const Entity* GetRootEntity() const;
+    Array<Entity*>& GetEntities();
+    const Array<Entity*>& GetEntities() const;
 
     void Serialize(const Path& path) const;
 
     void SetState(State state);
 
+private:
+    void OnEntityCreated(Entity* e);
+
 protected:
     std::string m_levelName;
 
-    World* m_world;
+    LevelChunk* m_mainLevelChunk;
 
-    Entity* m_rootEntity;
+    World* m_world;
 
     State m_state;
 };

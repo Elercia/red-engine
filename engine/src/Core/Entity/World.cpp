@@ -8,6 +8,8 @@
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/JsonLevelLoader.hpp"
 #include "RedEngine/Level/Level.hpp"
+#include "RedEngine/Level/LevelChunk.hpp"
+#include "RedEngine/Utils/Random.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -15,78 +17,64 @@
 namespace red
 {
 World::World()
-    : m_singletonEntity(nullptr)
+    : m_worldChunk(nullptr)
     , m_componentManager(new ComponentManager(this))
     , m_componentRegistry(new ComponentRegistry())
-    , m_nextEntityId(0)
     , m_currentLevel(nullptr)
+    , m_levelLoader(nullptr)
 {
+    m_worldChunk = new LevelChunk(this);
 }
 
 World::~World()
 {
     for (auto& system : m_systems)
     {
+        system->Finalise();
         delete system;
     }
 
-    for (auto& entity : m_entities)
-    {
-        delete entity;
-    }
+    m_systems.clear();
+
+    m_worldChunk->Finalize();
+
+    Clean();
 
     delete m_componentManager;
+    delete m_worldChunk;
 }
 
-red::Entity* World::CreateRootEntity(Level* level)
+void World::OnAddEntity(Entity* entity)
 {
-    auto* entityPtr = CreateEntity("root_" + level->GetName(), nullptr);
-
-    return entityPtr;
-}
-
-Entity* World::CreateEntity(Entity* root)
-{
-    return CreateEntity("Entity_" + std::to_string(m_nextEntityId), root);
-}
-
-Entity* World::CreateEntity(const std::string& name, Entity* root)
-{
-    auto* entityPtr = new Entity(this, m_nextEntityId++, name);
-
-    m_entities.push_back(entityPtr);
-
-    entityPtr->SetParent(root);
-
-    return entityPtr;
-}
-
-red::Entity* World::CreateEntity(EntityId id, const std::string& name, Entity* root /*= nullptr*/)
-{
-    Entity* oldEntity = FindEntity(id);
+    Entity* oldEntity = FindEntity(entity->GetId());
     if (oldEntity != nullptr)
     {
-        RED_LOG_ERROR("Create a entity with a id that already exist (id: {}, name{})", id, name);
-        return oldEntity;
+        RED_LOG_ERROR("Create a entity with a id that already exist (id: {}, name{})", entity->GetId(),
+                      entity->GetName());
+        return;
     }
 
-    auto* entityPtr = new Entity(this, id, name);
-
-    m_entities.push_back(entityPtr);
-
-    entityPtr->SetParent(root);
-
-    return entityPtr;
+    m_entities.push_back(entity);
 }
 
-red::Entity* World::CreateSingletonEntity()
+void World::OnAddEntities(Array<Entity*>& entities)
 {
-    if (m_singletonEntity != nullptr)
-        return m_singletonEntity;
+    m_entities.insert(m_entities.end(), entities.begin(), entities.end());
+}
 
-    m_singletonEntity = CreateEntity("__SingletonEntity__", nullptr);
+void World::OnRemoveEntity(Entity* entity)
+{
+    auto it = std::find(m_entities.begin(), m_entities.end(), entity);
 
-    return m_singletonEntity;
+    if (it != m_entities.end())
+        m_entities.erase(it);
+}
+
+void World::OnRemoveEntities(Array<Entity*>& entities)
+{
+    m_entities.erase(remove_if(m_entities.begin(), m_entities.end(),
+                               [&](auto x) { return find(entities.begin(), entities.end(), x) != entities.end(); }),
+                     m_entities.end());
 }
 
 Entity* World::FindEntity(EntityId id)
@@ -102,12 +90,14 @@ Entity* World::FindEntity(EntityId id)
 
 void World::Init()
 {
+    m_worldChunk->Init();
+
     m_levelLoader = new JsonLevelLoader(this);
 
     std::sort(m_systems.begin(), m_systems.end(),
               [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
 
-    for (auto& system : m_systems)
+    for (const auto& system : m_systems)
     {
         if (!system->m_isInit)
             system->Init();
@@ -117,6 +107,8 @@ void World::Init()
 void World::Finalize()
 {
     ChangeLevel(nullptr);
+
+    m_worldChunk->Finalize();
 
     for (auto& entity : m_entities)
     {
@@ -134,7 +126,7 @@ bool World::Update()
     std::sort(m_systems.begin(), m_systems.end(),
               [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
 
-    EventsComponent* events = GetSingletonComponent<EventsComponent>();
+    EventsComponent* events = GetWorldComponent<EventsComponent>();
 
     bool quit = events->QuitRequested();
 
@@ -161,23 +153,23 @@ bool World::Update()
 
 void World::Clean()
 {
-    std::vector<Entity*> entitiesToRemove;
-    for (auto* entity : m_entities)
-    {
-        if (entity->m_isDestroyed)
-        {
-            entitiesToRemove.push_back(entity);
-            delete entity;
-        }
-    }
+    if (m_currentLevel != nullptr)
+        m_currentLevel->Clean();
 
-    for (auto* e : entitiesToRemove)
-        m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), e), m_entities.end());
+    if (m_worldChunk != nullptr)
+        m_worldChunk->Clean();
 }
 
-void World::LoadLevel(const Path& levelName)
+void World::AddGarbageEntityId(EntityId entityId)
 {
-    Level* level = m_levelLoader->LoadLevel(levelName);
+    RED_ASSERT(std::find(m_entityIdGarbage.begin(), m_entityIdGarbage.end(), entityId) == m_entityIdGarbage.end(), "EntityId is already inside entity garbage, this may lead to 2 entities with the same ID");
+
+    m_entityIdGarbage.push_back(entityId);
+}
+
+void World::LoadLevel(const Path& levelPath)
+{
+    Level* level = m_levelLoader->LoadLevel(levelPath);
 
     if (level != nullptr)
     {
@@ -204,19 +196,23 @@ void World::ChangeLevel(Level* newLevel)
     }
 }
 
-const std::vector<System*>& World::GetSystems()
+const std::vector<System*>& World::GetSystems() const
 {
     return m_systems;
 }
 
-const std::vector<Entity*>& World::GetEntities()
+const std::vector<Entity*>& World::GetEntities() const
 {
     return m_entities;
 }
 
-Entity* World::GetSingletonEntity()
+Entity* World::CreateWorldEntity()
 {
-    return m_singletonEntity;
+    Entity* e = m_worldChunk->CreateEntity();
+
+    OnAddEntity(e);
+
+    return e;
 }
 
 ComponentManager* World::GetComponentManager()
@@ -224,7 +220,7 @@ ComponentManager* World::GetComponentManager()
     return m_componentManager;
 }
 
-red::ComponentRegistry* World::GetComponentRegistry()
+ComponentRegistry* World::GetComponentRegistry()
 {
     return m_componentRegistry;
 }
@@ -234,9 +230,21 @@ PhysicsWorld* World::GetPhysicsWorld()
     return &m_physicsWorld;
 }
 
-red::Level* World::GetCurrentLevel()
+Level* World::GetCurrentLevel()
 {
     return m_currentLevel;
 }
 
+EntityId World::GetNewEntityId()
+{
+    if (!m_entityIdGarbage.empty())
+    {
+        const auto id = m_entityIdGarbage.back();
+        m_entityIdGarbage.pop_back();
+
+        return id;
+    }
+
+    return (EntityId) RandomUint64();
+}
 }  // namespace red
