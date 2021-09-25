@@ -1,4 +1,6 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
 
 namespace red
 {
@@ -7,31 +9,43 @@ ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args
 {
     static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
 
-    auto component = new ComponentType_t(owner, std::forward<Args>(args)...);
+    auto* comp = GetComponent<ComponentType_t>(owner);
+    if (comp)
+    {
+        RED_LOG_WARNING("Entity {} already have a component of type {} (strict type is {})", owner->GetId(),
+                        TypeInfo<ComponentType_t>().name, comp->GetComponentName());
+        return comp;
+    }
 
-    StoreComponent(owner, component, TypeInfo<ComponentType_t>().typeId);
+    auto* createdComponent = new ComponentType_t(owner, std::forward<Args>(args)...);
 
-    return component;
+    AddComponent(owner, createdComponent);
+
+    return createdComponent;
 }
 
 template <typename ComponentType_t>
-void ComponentManager::RemoveComponent(Entity* owner)
+bool ComponentManager::RemoveComponent(Entity* owner)
 {
-    auto& pool = GetComponentPool(TypeInfo<ComponentType_t>().typeId);
+    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
 
-    RemoveComponent(owner, pool);
+    return RemoveComponent(owner, std::string(TypeInfo<ComponentType_t>().name));
 }
 
 template <class ComponentType_t>
 bool ComponentManager::HasComponent(Entity* entity)
 {
-    return HasComponent(entity, TypeInfo<ComponentType_t>().typeId);
+    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
+
+    return HasComponent(entity, std::string(TypeInfo<ComponentType_t>().name));
 }
 
 template <typename ComponentType_t>
 ComponentType_t* ComponentManager::GetComponent(Entity* entity)
 {
-    auto* componentPtr = GetComponent(entity, TypeInfo<ComponentType_t>().typeId);
+    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
+
+    auto* componentPtr = GetComponent(entity, std::string(TypeInfo<ComponentType_t>().name));
     return reinterpret_cast<ComponentType_t*>(componentPtr);
 }
 }  // namespace red

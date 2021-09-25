@@ -20,11 +20,11 @@ T* Entity::AddComponent(Args&&... args)
 }
 
 template <typename T>
-void Entity::RemoveComponent()
+bool Entity::RemoveComponent()
 {
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
-    GetComponentManager()->RemoveComponent<T>(this);
+    return GetComponentManager()->RemoveComponent<T>(this);
 }
 
 template <typename T>

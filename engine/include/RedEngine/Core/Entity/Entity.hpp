@@ -36,10 +36,10 @@ public:
     template <typename T, typename... Args>
     T* AddComponent(Args&&... args);
     
-    Component* AddComponent(std::string name);
+    Component* AddComponent(const std::string& name);
 
     template <typename T>
-    void RemoveComponent();
+    bool RemoveComponent();
 
     template <typename T>
     T* GetComponent();

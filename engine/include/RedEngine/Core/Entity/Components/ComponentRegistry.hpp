@@ -2,11 +2,9 @@
 
 #include "RedEngine/Core//Container/Map.hpp"
 #include "RedEngine/Core/Container/Array.hpp"
-#include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 #include <functional>
-#include <string_view>
 #include <variant>
 
 namespace red
@@ -38,6 +36,7 @@ struct ComponentTraits
     std::string_view componentName;
     uint32 componentTypeId;
     std::string_view inheritedComponentName;
+    Array<ComponentTraits*> childComponentTraits;
     Map<std::string, ComponentMemberTraits> members; // member name to Traits
     std::function<Component*(Entity* owner)> creator;
 
@@ -48,13 +47,18 @@ struct ComponentTraits
 
 class ComponentRegistry
 {
+    friend class World;
+
 public:
     ComponentRegistry() = default;
     ~ComponentRegistry() = default;
 
-    ComponentTraits* CreateNewComponentTraits(const std::string& componentName);
+    std::pair<bool, ComponentTraits*> CreateNewComponentTraits(const std::string& componentName);
 
     const ComponentTraits* GetComponentTraits(const std::string& componentName) const;
+
+private:
+    ComponentTraits* GetComponentTraitsInternal(const std::string& componentName);
 
 private:
     Map<std::string, ComponentTraits> m_componentDatas;

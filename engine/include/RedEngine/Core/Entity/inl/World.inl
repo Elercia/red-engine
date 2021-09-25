@@ -60,9 +60,29 @@ bool World::RegisterComponentType()
 {
     static_assert(std::is_base_of<Component, T>::value, "RegisterComponentType called on non component type");
 
-    auto* compData = m_componentRegistry->CreateNewComponentTraits(std::string(TypeInfo<T>().name));
+    auto [inserted, compData] = m_componentRegistry->CreateNewComponentTraits(std::string(TypeInfo<T>().name));
 
-    T::RegisterComponentTypeTraits(compData);
+    // component may have been already registered
+    if (inserted)
+    {
+        T::RegisterComponentTypeTraits(compData);
+
+        if (!compData->inheritedComponentName.empty() && compData->inheritedComponentName != "red::Component")
+        {
+            auto* inheritedCompTraits =
+                m_componentRegistry->GetComponentTraitsInternal(std::string(compData->inheritedComponentName));
+
+            if (inheritedCompTraits == nullptr)
+            {
+                RED_LOG_ERROR("Failed to find inherited component {}. Please make sure to register {} before {}",
+                              compData->inheritedComponentName, compData->inheritedComponentName, TypeInfo<T>().name);
+                return false;
+            }
+
+            inheritedCompTraits->childComponentTraits.push_back(compData);
+        }
+    }
+
 
     return true;
 }

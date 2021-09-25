@@ -1,7 +1,13 @@
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+
 #include <SystemTest.hpp>
+
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent1)
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent11)
+RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent2)
+
 #include <catch2/catch.hpp>
-#include <iostream>
 #include <vector>
 
 TEST_CASE("Component", "[ECS]")
@@ -9,6 +15,11 @@ TEST_CASE("Component", "[ECS]")
     SECTION("Bulk add remove")
     {
         red::World world;
+
+        world.RegisterComponentType<MockComponent1>();
+        world.RegisterComponentType<MockComponent11>();
+        world.RegisterComponentType<MockComponent2>();
+
         std::vector<red::Entity*> entitiesWithMock1;
         for (int i = 0; i < 100; ++i)
         {
@@ -78,6 +89,10 @@ TEST_CASE("Component", "[ECS]")
     {
         red::World world;
 
+        world.RegisterComponentType<MockComponent1>();
+        world.RegisterComponentType<MockComponent11>();
+        world.RegisterComponentType<MockComponent2>();
+
         auto* entityA = world.CreateWorldEntity();
         REQUIRE(entityA != nullptr);
 
@@ -100,16 +115,39 @@ TEST_CASE("Component", "[ECS]")
     }
 }
 
-TEST_CASE("Persistent entity", "[ECS]")
+TEST_CASE("Component inheritance", "[ECS]")
 {
     red::World world;
+
+    world.RegisterComponentType<MockComponent1>();
+    world.RegisterComponentType<MockComponent11>();
 
     auto* entityA = world.CreateWorldEntity();
     REQUIRE(entityA != nullptr);
 
-    auto* componentAddedA = entityA->AddComponent<MockComponent1>();
-    REQUIRE(componentAddedA != nullptr);
-    
-    auto* componentGettedA = entityA->GetComponent<MockComponent1>();
-    REQUIRE(componentAddedA == componentGettedA);
+    SECTION("Hierarchy working")
+    {
+        auto* componentAddedA = entityA->AddComponent<MockComponent11>();
+        REQUIRE(componentAddedA != nullptr);
+
+        auto* componentGettedA = entityA->GetComponent<MockComponent1>();
+        REQUIRE(componentAddedA == componentGettedA);
+
+        REQUIRE(entityA->RemoveComponent<MockComponent1>());
+        REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
+    }
+
+    SECTION("Inverse hierarchy not working")
+    {
+        auto* componentAddedA = entityA->AddComponent<MockComponent1>();
+        REQUIRE(componentAddedA != nullptr);
+
+        auto* mock11 = entityA->GetComponent<MockComponent11>();
+        REQUIRE(mock11 == nullptr);
+
+        REQUIRE(entityA->RemoveComponent<MockComponent11>() == false);
+        REQUIRE(entityA->GetComponent<MockComponent1>() != nullptr);
+        REQUIRE(entityA->RemoveComponent<MockComponent1>());
+        REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
+    }
 }

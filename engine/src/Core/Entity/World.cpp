@@ -2,6 +2,7 @@
 
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
@@ -23,6 +24,8 @@ World::World()
     , m_currentLevel(nullptr)
     , m_levelLoader(nullptr)
 {
+    RegisterComponentType<Transform>();
+
     m_worldChunk = new LevelChunk(this);
 }
 
@@ -162,7 +165,8 @@ void World::Clean()
 
 void World::AddGarbageEntityId(EntityId entityId)
 {
-    RED_ASSERT(std::find(m_entityIdGarbage.begin(), m_entityIdGarbage.end(), entityId) == m_entityIdGarbage.end(), "EntityId is already inside entity garbage, this may lead to 2 entities with the same ID");
+    RED_ASSERT(std::find(m_entityIdGarbage.begin(), m_entityIdGarbage.end(), entityId) == m_entityIdGarbage.end(),
+               "EntityId is already inside entity garbage, this may lead to 2 entities with the same ID");
 
     m_entityIdGarbage.push_back(entityId);
 }

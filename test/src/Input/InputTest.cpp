@@ -13,6 +13,7 @@ using namespace red;
 TEST_CASE("Raw input handling", "[Input]")
 {
     World world;
+    world.RegisterComponentType<EventsComponent>();
 
     auto* e = world.CreateWorldEntity();
     auto* eventsComonent = e->AddComponent<EventsComponent>();
@@ -38,6 +39,10 @@ TEST_CASE("Raw input handling", "[Input]")
 TEST_CASE("User input handling", "[Input]")
 {
     red::World world;
+    world.RegisterComponentType<EventsComponent>();
+    world.RegisterComponentType<UserInputComponent>();
+
+
     auto* singletonEntity = world.CreateWorldEntity();
 
     auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();

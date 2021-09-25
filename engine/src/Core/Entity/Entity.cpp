@@ -25,7 +25,7 @@ void Entity::Destroy()
     }
 }
 
-Component* Entity::AddComponent(std::string name)
+Component* Entity::AddComponent(const std::string& name)
 {
     auto* componentManager = GetComponentManager();
 
@@ -35,7 +35,7 @@ Component* Entity::AddComponent(std::string name)
         return componentManager->GetComponent(this, name);
     }
 
-    auto componentPtr = componentManager->CreateComponent(this, name);
+    auto componentPtr = componentManager->CreateComponentFromName(this, name);
 
     return componentPtr;
 }

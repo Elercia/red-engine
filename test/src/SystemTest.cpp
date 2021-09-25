@@ -7,6 +7,10 @@
 TEST_CASE("System", "[ECS]")
 {
     red::World world;
+    world.RegisterComponentType<red::EventsComponent>();
+    world.RegisterComponentType<MockComponent1>();
+    world.RegisterComponentType<MockComponent2>();
+
     auto* e = world.CreateWorldEntity();
     e->AddComponent<red::EventsComponent>();
 

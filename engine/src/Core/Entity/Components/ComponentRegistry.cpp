@@ -4,17 +4,19 @@
 
 namespace red
 {
-ComponentTraits* ComponentRegistry::CreateNewComponentTraits(const std::string& componentName)
+std::pair<bool, ComponentTraits*> ComponentRegistry::CreateNewComponentTraits(const std::string& componentName)
 {
-    if (GetComponentTraits(componentName) != nullptr)
+    auto* otherCompTraits = GetComponentTraitsInternal(componentName);
+    
+    if (otherCompTraits != nullptr)
     {
         RED_LOG_ERROR("ComponentRegistry already have registered a component named {}", componentName);
-        RED_ABORT("ComponentRegistry CreateNewComponentData failed");
+        return {false, otherCompTraits};
     }
 
     m_componentDatas.insert(std::make_pair(componentName, ComponentTraits()));
 
-    return &m_componentDatas[componentName];
+    return {true, &m_componentDatas[componentName]};
 }
 
 const ComponentTraits* ComponentRegistry::GetComponentTraits(const std::string& componentName) const
@@ -28,4 +30,14 @@ const ComponentTraits* ComponentRegistry::GetComponentTraits(const std::string& 
     return &foundIt->second;
 }
 
+ComponentTraits* ComponentRegistry::GetComponentTraitsInternal(const std::string& componentName)
+{
+    auto foundIt = m_componentDatas.find(componentName);
+    if (foundIt == m_componentDatas.end())
+    {
+        return nullptr;
+    }
+
+    return &foundIt->second;
+}
 }  // namespace red

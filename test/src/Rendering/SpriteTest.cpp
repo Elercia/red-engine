@@ -15,6 +15,9 @@ TEST_CASE("Sprite test", "[RENDERING]")
     using namespace red;
 
     World world;
+    world.RegisterComponentType<ResourceHolderComponent>();
+    world.RegisterComponentType<Sprite>();
+
     Entity* sing = world.CreateWorldEntity();
     ResourceHolderComponent* holder = sing->AddComponent<ResourceHolderComponent>();
     holder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(&world));
