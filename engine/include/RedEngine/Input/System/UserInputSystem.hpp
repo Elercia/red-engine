@@ -2,7 +2,7 @@
 
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
-#include "RedEngine/RedEngineBase.hpp"
+
 
 namespace red
 {

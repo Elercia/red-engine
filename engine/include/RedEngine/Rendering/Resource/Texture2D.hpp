@@ -2,7 +2,7 @@
 
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
+
 #include "RedEngine/Resources/Resource.hpp"
 
 #include <SDL2/SDL_render.h>

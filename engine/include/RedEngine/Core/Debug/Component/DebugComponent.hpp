@@ -3,7 +3,7 @@
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
+
 #include "RedEngine/Rendering/Color.hpp"
 
 #include <memory>

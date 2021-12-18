@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RedEngine/Audio/Resource/SoundResource.hpp"
-#include "RedEngine/RedEngineBase.hpp"
+
 #include "RedEngine/Resources/ResourceLoader.hpp"
 
 namespace red

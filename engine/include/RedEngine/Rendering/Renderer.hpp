@@ -4,7 +4,7 @@
 
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
+
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 
 #include <memory>
