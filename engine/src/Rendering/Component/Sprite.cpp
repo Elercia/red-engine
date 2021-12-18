@@ -14,11 +14,11 @@ namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(Sprite)
 
-Sprite::Sprite(Entity* entity) : Component(entity), m_spriteResource(nullptr)
+Sprite::Sprite(Entity* entity) : Renderable(entity), m_spriteResource(nullptr)
 {
 }
 
-Sprite::Sprite(Entity* entity, const Path& resourceId) : Component(entity)
+Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
 {
     m_spriteResource = m_owner->GetWorld()
                            ->GetWorldComponent<ResourceHolderComponent>()

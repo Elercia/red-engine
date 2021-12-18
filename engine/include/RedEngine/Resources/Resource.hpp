@@ -23,6 +23,8 @@ enum class ResourceType
     SPRITE,
     SOUND,
     TEXTURE2D,
+    SHADER_PROGRAM,
+    MATERIAL,
     AUDIO,
 };
 

@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 
 #include <memory>
 #include <string>
@@ -14,12 +15,12 @@ class SpriteResource;
 
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Sprite)
 
-class Sprite : public Component
+class Sprite : public Renderable
 {
     friend class Renderer;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(Sprite, Component)
+    RED_START_COMPONENT_REGISTER_INHERITHED(Sprite, Renderable)
     RED_END_COMPONENT_REGISTER()
 
     Sprite(Entity* entity);

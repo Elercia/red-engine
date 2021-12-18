@@ -22,10 +22,9 @@ public:
     ~Texture2D() override = default;
 
     [[nodiscard]] Vector2i GetTextureSize() const;
-    void ChangeTextureSize(const Vector2i& newSize);
 
 private:
-    SDL_Texture* m_sdlTexture{nullptr};
-    SDL_Rect m_textureSize{0, 0, 0, 0};
+    uint32 m_textureHandle;
+    Vector2i m_size;
 };
 }  // namespace red

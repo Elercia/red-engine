@@ -12,112 +12,123 @@
 
 namespace red
 {
-RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
-{
-    RED_LOG_INFO("Adding Rendering system");
-}
+	RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
+	{
+		RED_LOG_INFO("Adding Rendering system");
+	}
 
-void RenderingSystem::Init()
-{
-    System::Init();
+	void RenderingSystem::Init()
+	{
+		System::Init();
 
-    auto* window = m_world->CreateWorldEntity()->AddComponent<WindowComponent>();
-    window->CreateNewWindow();
+		auto* window = m_world->CreateWorldEntity()->AddComponent<WindowComponent>();
+		window->CreateNewWindow();
 
-    m_renderer = new Renderer;
+		m_renderer = new Renderer;
 
-    m_renderer->InitRenderer(window);
-}
+		m_renderer->InitRenderer(window);
+	}
 
-void RenderingSystem::Update()
-{
-    PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
+	void RenderingSystem::Update()
+	{
+		PROFILER_CATEGORY("Update render data", Optick::Category::Rendering)
 
-    m_renderer->BeginRenderFrame();
+			auto sprites = GetComponents<Sprite>();
 
-    // Draw frame for each camera
-    for (auto& camera : GetComponents<CameraComponent>())
-    {
-        auto* cameraComponent = camera->GetComponent<CameraComponent>();
-        m_renderer->BeginCameraRendering(cameraComponent);
+		for (auto* sprite : sprites)
+		{
+			if (!sprite->IsValid())
+				continue;
 
-        // Draw each sprite
-        for (auto& entity : GetComponents<Sprite>())
-        {
-            auto* sprite = entity->GetComponent<Sprite>();
-            auto* transform = entity->GetComponent<Transform>();
+			sprite->NextFrame();
+		}
+	}
 
-            if (!sprite->IsValid())
-                continue;
+	void RenderingSystem::BeginRender()
+	{
+		m_renderer->BeginRenderFrame();
+	}
 
-            sprite->NextFrame();
+	void RenderingSystem::EndRender()
+	{
+		m_renderer->EndRenderFrame();
+	}
 
-            DrawDebug(cameraComponent);
+	void RenderingSystem::Render()
+	{
+		PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
 
-            m_renderer->Render(cameraComponent, sprite, *transform);
-        }
+			auto renderables = GetComponents<Renderable>();
 
-        m_renderer->EndCameraRendering();
-    }
+		// Draw frame for each camera
+		for (auto& cameraEntity : GetComponents<CameraComponent>())
+		{
+			auto* cameraComponent = cameraEntity->GetComponent<CameraComponent>();
+			m_renderer->BeginCameraRendering(cameraComponent);
 
-    m_renderer->EndRenderFrame();
-}
+			// Draw each sprite
+			for (auto& entity : renderables)
+			{
+				auto* renderable = entity->GetComponent<Renderable>();
+				auto* transform = entity->GetComponent<Transform>();
 
-void RenderingSystem::PreUpdate()
-{
-}
-void RenderingSystem::PostUpdate()
-{
-}
+				m_renderer->Render(cameraComponent, renderable, *transform);
+			}
 
-Renderer* RenderingSystem::GetRenderer()
-{
-    return m_renderer;
-}
+			DrawDebug(cameraComponent);
 
-void RenderingSystem::DrawDebug(CameraComponent* camera)
-{
-    auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+			m_renderer->EndCameraRendering();
+		}
+	}
 
-    // Draw debug information
-    for (auto& shape : debugComp->m_frameShapes)
-    {
-        switch (shape->type)
-        {
-            case DebugShapeType::CIRCLE:
-            {
-                auto* circle = static_cast<DebugCircle*>(shape.get());
+	Renderer* RenderingSystem::GetRenderer()
+	{
+		return m_renderer;
+	}
 
-                m_renderer->DrawCircle(camera, circle->center, circle->radius, circle->color);
-            }
-            break;
-            case DebugShapeType::POLYGON:
-            {
-                auto* polygon = static_cast<DebugPolygon*>(shape.get());
+	void RenderingSystem::DrawDebug(CameraComponent* camera)
+	{
+		auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
-                m_renderer->DrawLines(camera, polygon->points, polygon->color);
-            }
-            break;
-            case DebugShapeType::SEGMENT:
-            {
-                auto* segment = static_cast<DebugSegment*>(shape.get());
+		m_world->GetPhysicsWorld()->DrawDebug();
 
-                m_renderer->DrawLine(camera, segment->point1, segment->point2, segment->color);
-            }
-            break;
-            case DebugShapeType::POINT:
-            {
-                auto* point = static_cast<DebugPoint*>(shape.get());
+		// Draw debug information
+		for (auto& shape : debugComp->m_frameShapes)
+		{
+			switch (shape->type)
+			{
+				case DebugShapeType::CIRCLE:
+				{
+					auto* circle = static_cast<DebugCircle*>(shape.get());
 
-                m_renderer->DrawPoint(camera, point->coord, point->color);
-            }
-            break;
-        }
-    }
+					m_renderer->DrawCircle(camera, circle->center, circle->radius, circle->color);
+				}
+				break;
+				case DebugShapeType::POLYGON:
+				{
+					auto* polygon = static_cast<DebugPolygon*>(shape.get());
 
-    debugComp->m_frameShapes.clear();
+					m_renderer->DrawLines(camera, polygon->points, polygon->color);
+				}
+				break;
+				case DebugShapeType::SEGMENT:
+				{
+					auto* segment = static_cast<DebugSegment*>(shape.get());
 
-    m_world->GetPhysicsWorld()->DrawDebug();
-}
+					m_renderer->DrawLine(camera, segment->point1, segment->point2, segment->color);
+				}
+				break;
+				case DebugShapeType::POINT:
+				{
+					auto* point = static_cast<DebugPoint*>(shape.get());
+
+					m_renderer->DrawPoint(camera, point->coord, point->color);
+				}
+				break;
+			}
+		}
+
+		debugComp->m_frameShapes.clear();
+	}
 
 }  // namespace red

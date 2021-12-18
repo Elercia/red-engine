@@ -4,13 +4,12 @@
 
 namespace red
 {
-Texture2D::Texture2D(const Path& resourceId) : IResource(resourceId, ResourceType::TEXTURE2D) {}
-
-Vector2i Texture2D::GetTextureSize() const { return Vector2i{m_textureSize.w, m_textureSize.h}; }
-
-void Texture2D::ChangeTextureSize(const Vector2i& newSize)
+Texture2D::Texture2D(const Path& resourceId) : IResource(resourceId, ResourceType::TEXTURE2D), m_textureHandle(0)
 {
-    m_textureSize.w = newSize.x;
-    m_textureSize.h = newSize.y;
-};
+}
+
+Vector2i Texture2D::GetTextureSize() const
+{
+    return m_size;
+}
 }  // namespace red

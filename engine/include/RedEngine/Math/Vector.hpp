@@ -10,8 +10,12 @@ template <typename T>
 class Vector2T
 {
 public:
-    Vector2T() : Vector2T(T(), T()) {}
-    Vector2T(T px, T py) : x(px), y(py) {}
+    Vector2T() : Vector2T(T(), T())
+    {
+    }
+    Vector2T(T px, T py) : x(px), y(py)
+    {
+    }
 
     Vector2T(const Vector2T<T>&) = default;
     Vector2T(Vector2T<T>&&) = default;
@@ -27,15 +31,29 @@ public:
 
     Vector2T<T> operator*(T scalar) const;
 
-    T x, y;
+    union
+    {
+        T x;
+        T width;
+    };
+
+    union
+    {
+        T y;
+        T height;
+    };
 };
 
 template <typename T>
 class Vector3T
 {
 public:
-    Vector3T() : Vector3T(T(), T(), T()) {}
-    Vector3T(T x, T y, T z) : m_x(x), m_y(y), m_z(z) {}
+    Vector3T() : Vector3T(T(), T(), T())
+    {
+    }
+    Vector3T(T x, T y, T z) : m_x(x), m_y(y), m_z(z)
+    {
+    }
 
     Vector3T(const Vector3T&) = default;
     Vector3T(Vector3T&&) = default;
@@ -52,8 +70,12 @@ template <typename T>
 class Vector4T
 {
 public:
-    Vector4T() : Vector4T(T(), T(), T(), T()) {}
-    Vector4T(T px, T py, T pz, T pw) : x(px), y(py), z(pz), w(pw) {}
+    Vector4T() : Vector4T(T(), T(), T(), T())
+    {
+    }
+    Vector4T(T px, T py, T pz, T pw) : x(px), y(py), z(pz), w(pw)
+    {
+    }
 
     Vector4T(const Vector4T<T>&) = default;
     Vector4T(Vector4T<T>&&) = default;

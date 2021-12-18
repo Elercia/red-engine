@@ -42,13 +42,13 @@ function TemplateProject(Name)
 	{
 		"RedEngineLib",
 		"SDL2",
-		"SDL2_image",
 		"Box2D",
 		"fmt",
 		"fmod",
 		"fsbank",
 		"fmodstudio",
 		"optick",
+		"GL3W",
 	}
 
 	defines

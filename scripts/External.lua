@@ -17,19 +17,6 @@ if os.istarget("windows") then
 	filter { "system:windows" }
 		postbuildcommands { "{COPY} ../../../external/SDL2/lib/x64/SDL2.dll %{cfg.buildtarget.directory}" }	
 	filter {}
-
-	-- SDL Image
-	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL_image/include")
-	table.insert(ExternalLibDirs, externalDirectoryPath .. "/SDL_image/lib/x64")
-
-	filter { "system:windows" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libjpeg-9.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libpng16-16.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libtiff-5.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libwebp-7.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/SDL2_image.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/zlib1.dll %{cfg.buildtarget.directory}" }
-	filter {}
 end
 
 
@@ -151,3 +138,26 @@ ExternalLibs("optick", true, "/optick/src")
 		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS",
 	}
 
+ExternalLibs("GL3W", true, "/gl3w/include")
+	files
+	{
+		externalDirectoryPath .. "/gl3w/src/**.c",
+		externalDirectoryPath .. "/gl3w/include/**.h",
+	}
+
+	includedirs
+	{
+		externalDirectoryPath .. "/gl3w/include/"
+	}
+
+ExternalLibs("STBI", true, "/stbi/include")
+	files
+	{
+		externalDirectoryPath .. "/stbi/src/**.c",
+		externalDirectoryPath .. "/stbi/include/**.h",
+	}
+
+	includedirs
+	{
+		externalDirectoryPath .. "/stbi/include/"
+	}
