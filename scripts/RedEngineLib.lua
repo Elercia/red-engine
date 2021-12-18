@@ -2,7 +2,7 @@ group "RedEngine"
 project "RedEngineLib"
 	kind("StaticLib")
 	language("C++")
-	cppdialect("C++17")
+	cppdialect(cppDialect)
 
 	rtti("Off")
 	exceptionhandling("Off")
@@ -50,13 +50,15 @@ project "RedEngineLib"
 		ExternalLibDirs
 	}
 
-	configuration { "linux", "gmake" }
+	filter{ "platforms:Linux64" }
   		buildoptions { "`wx-config --cxxflags`", "-ansi", "-pedantic" }
+	filter {}
 
-	configuration { "vs2019" }
+	filter { "toolset:msc" }
   		buildoptions { "" }
+	filter {}
 
-	filter "system:windows"
+	filter { "platforms:Win64" }
 		systemversion "latest"
 
 		defines
@@ -73,21 +75,23 @@ project "RedEngineLib"
 		{
 			"/NODEFAULTLIB:library"
 		}
+	filter {}
 
-	filter "system:Linux"
+	filter { "platforms:Linux64" }
 		defines
 		{
 			"RED_LINUX"
 		}
+	filter {}
 
-	filter "configurations:Debug"
+	filter { "configurations:Debug" }
 		defines "RED_DEBUG"
 		runtime "Debug"
 		symbols "on"
+	filter {}
 
-	filter "configurations:Release"
+	filter { "configurations:Release" }
 		defines "RED_RELEASE"
 		runtime "Release"
 		optimize "on"
-
 	filter {}

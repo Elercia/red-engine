@@ -3,10 +3,7 @@ group("Tests")
 project ("RedEngineTest")
     kind "ConsoleApp"
     language("C++")
-    cppdialect("C++17")
-
-    --rtti("Off")
-    --exceptionhandling("Off")
+    cppdialect(cppDialect)
     warnings("Extra")
     flags("NoPCH")
     staticruntime("Off")
@@ -53,10 +50,11 @@ project ("RedEngineTest")
         defines "RED_DEBUG"
         runtime "Debug"
         symbols "on"
+    filter {}
 
     filter "configurations:Release"
         defines "RED_RELEASE"
         runtime "Release"
         optimize "on"
-
+        symbols "on"
     filter {}

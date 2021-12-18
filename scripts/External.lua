@@ -38,15 +38,13 @@ elseif os.istarget("linux") then
 	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/studio/lib/x86_64")
 end
 
-if os.istarget("windows") then
-	filter { "system:windows" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/core/lib/x64/fmod.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/fsbank.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/libfsbvorbis64.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/opus.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/studio/lib/x64/fmodstudio.dll %{cfg.buildtarget.directory}" }
-	filter {}
-end
+filter { "platforms:Win64" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/core/lib/x64/fmod.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/fsbank.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/libfsbvorbis64.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/opus.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/studio/lib/x64/fmodstudio.dll %{cfg.buildtarget.directory}" }
+filter {}
 
 -- Json
 table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/nlohmann_json/single_include")
@@ -63,7 +61,7 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 	project(Name)
 
 	language("C++")
-	cppdialect("C++17")
+	cppdialect(cppDialect)
 
 	staticruntime("Off")
 
@@ -89,12 +87,13 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 		defines "RED_DEBUG"
 		runtime "Debug"
 		symbols "on"
+	filter {}
 
 	filter "configurations:Release"
 		defines "RED_RELEASE"
 		runtime "Release"
 		optimize "on"
-
+		symbols "on"
 	filter {}
 
 end

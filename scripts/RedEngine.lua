@@ -5,6 +5,8 @@ enginePath = rootPath .. "engine/"
 externalPath = rootPath .. "external/"
 projectsFilesLocation = "./projects/" .. _ACTION
 
+cppDialect = "C++20"
+
 availablePlatforms={}
 if os.istarget("linux") then
 	table.insert(availablePlatforms, "Linux64")
@@ -12,16 +14,14 @@ elseif os.istarget("windows") then
 	table.insert(availablePlatforms, "Win64")
 end
 
-print ( "RootPath : " .. rootPath )
-
 workspace "RedEngine"
 	startproject "Pong"
-	buildmessage ("message")
 
 	configurations
 	{
 		"Debug",
-		"Release"
+		"Release",
+		""
 	}
 
 	platforms 
