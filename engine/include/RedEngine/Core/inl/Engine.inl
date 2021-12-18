@@ -5,18 +5,15 @@ template <typename EngineClass>
 EngineClass* CreateEngineFrom(int argc, char** argv)
 {
     static_assert(std::is_base_of<Engine, EngineClass>::value,
-                  "EngineClass must be inherited from Engine class");
+                  "CreateEngineFrom called on a non-Engine class");
 
     SetLogLevel(LogLevel::LEVEL_DEBUG);
 
     static EngineClass engine;
-
-    Engine::s_engine = &engine;
-
     engine.m_argc = argc;
     engine.m_argv = argv;
 
-    bool created = engine.InternalCreate();
+    bool created = engine.Create();
 
     if (!created)
     {
@@ -24,6 +21,8 @@ EngineClass* CreateEngineFrom(int argc, char** argv)
         return nullptr;
     }
 
-    return &engine;
+    Engine::s_engine = &engine;
+
+    return Engine::s_engine;
 }
 }  // namespace red

@@ -10,5 +10,9 @@ int main(int argc, char* argv[])
 {
     auto* engine = CreateEngineFrom<PongEngine>(argc, argv);
 
-    return engine->MainLoop();
+    bool mainLoopError = engine->MainLoop();
+
+    engine->Destroy();
+
+    return mainLoopError ? EXIT_SUCCESS : EXIT_FAILURE;
 }
