@@ -1,0 +1,21 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"build_systems":
+    [
+        {
+            "name": "Build debug",
+            "cmd": ["\"scripts/VS2019Build.bat\"", "Debug"],
+            "working_dir" : "$project_path"
+        },
+        {
+            "name": "Build release",
+            "cmd": ["\"scripts/VS2019Build.bat\"", "Release"],
+            "working_dir" : "$project_path"
+        }
+    ]
+}
