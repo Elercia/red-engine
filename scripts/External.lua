@@ -122,7 +122,7 @@ ExternalLibs("fmt", true, "/fmt/include")
 		externalDirectoryPath .. "/fmt/include/**.h",
 	}
 
-ExternalLibs("optick", true, "/optick/src")
+--[[ExternalLibs("optick", true, "/optick/src")
 	files
 	{
 		externalDirectoryPath .. "/optick/src/**.cpp",
@@ -135,7 +135,7 @@ ExternalLibs("optick", true, "/optick/src")
 		"OPTICK_ENABLE_GPU_D3D12=0",
 		"OPTICK_ENABLE_GPU=0",
 		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS",
-	}
+	}--]]
 
 ExternalLibs("GL3W", true, "/gl3w/include")
 	files
