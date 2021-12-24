@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Memory/MemoryManager.hpp"
 
 #include "RedEngine/Core/Engine.hpp"

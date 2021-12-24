@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"

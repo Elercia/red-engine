@@ -1,3 +1,4 @@
+#include "RedEngine/Utils/UtilsModule.hpp"
 #include <cstdint>
 
 namespace red

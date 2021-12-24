@@ -1,3 +1,4 @@
+#include "RedEngine/Physics/PhysicsModule.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"

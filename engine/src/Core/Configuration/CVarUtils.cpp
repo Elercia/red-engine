@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Configuration/CVarUtils.hpp"
 
 #include "RedEngine/Core/Configuration/CVar.hpp"

@@ -1,3 +1,4 @@
+#include "RedEngine/Input/InputModule.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 
 namespace red

@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"

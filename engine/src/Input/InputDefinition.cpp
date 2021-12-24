@@ -1,3 +1,4 @@
+#include "RedEngine/Input/InputModule.hpp"
 #include "RedEngine/Input/InputDefinition.hpp"
 
 #include "RedEngine/Input/InputDefinitionTranslationUnit.hpp"

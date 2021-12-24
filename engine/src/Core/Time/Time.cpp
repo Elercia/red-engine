@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 
 #include "RedEngine/Math/Math.hpp"

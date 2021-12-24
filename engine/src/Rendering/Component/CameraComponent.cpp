@@ -1,3 +1,4 @@
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 

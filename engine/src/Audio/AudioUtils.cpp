@@ -1,3 +1,4 @@
+#include "RedEngine/Audio/AudioModule.hpp"
 #include "fmod_errors.h"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"

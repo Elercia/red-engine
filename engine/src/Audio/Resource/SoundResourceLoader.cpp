@@ -1,3 +1,4 @@
+#include "RedEngine/Audio/AudioModule.hpp"
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
 
 #include "RedEngine/Audio/AudioUtils.hpp"

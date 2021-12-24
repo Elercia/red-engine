@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 
 #include "RedEngine/Core/Configuration/IniReader.hpp"

@@ -1,3 +1,4 @@
+#include "RedEngine/Audio/AudioModule.hpp"
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 
 namespace red

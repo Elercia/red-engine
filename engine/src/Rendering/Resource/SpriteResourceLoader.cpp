@@ -1,3 +1,4 @@
+#include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"

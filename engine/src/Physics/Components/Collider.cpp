@@ -1,3 +1,4 @@
+#include "RedEngine/Physics/PhysicsModule.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 
 #include "RedEngine/Core/Entity/Entity.hpp"

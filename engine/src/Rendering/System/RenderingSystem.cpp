@@ -1,3 +1,4 @@
+#include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"

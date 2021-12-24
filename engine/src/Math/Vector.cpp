@@ -1,3 +1,4 @@
+#include "RedEngine/Math/MathModule.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
 namespace red

@@ -1,3 +1,4 @@
+#include "RedEngine/Level/LevelModule.hpp"
 #include "RedEngine/Level/Level.hpp"
 
 #include "RedEngine/Core/Entity/World.hpp"

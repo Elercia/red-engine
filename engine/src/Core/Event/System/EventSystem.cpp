@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Event/System/EventSystem.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"

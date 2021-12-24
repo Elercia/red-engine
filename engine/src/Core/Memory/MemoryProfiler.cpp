@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 
 #include <iostream>

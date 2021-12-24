@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 
 #include <SDL2/SDL_messagebox.h>

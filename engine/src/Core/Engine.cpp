@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Engine.hpp"
 
 #include "RedEngine/Audio/Component/AudioListener.hpp"

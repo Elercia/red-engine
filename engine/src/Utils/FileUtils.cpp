@@ -1,3 +1,4 @@
+#include "RedEngine/Utils/UtilsModule.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
 
 #include <fstream>

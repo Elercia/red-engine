@@ -1,3 +1,4 @@
+#include "RedEngine/Resources/ResourcesModule.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
 namespace red

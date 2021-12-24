@@ -1,3 +1,4 @@
+#include "RedEngine/Filesystem/FilesystemModule.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 
 #include "RedEngine/Core/Debug/DebugMacros.hpp"

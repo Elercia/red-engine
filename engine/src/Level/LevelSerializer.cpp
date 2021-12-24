@@ -1,3 +1,4 @@
+#include "RedEngine/Level/LevelModule.hpp"
 #include "RedEngine/Level/LevelSerializer.hpp"
 
 #include "RedEngine/Filesystem/File.hpp"

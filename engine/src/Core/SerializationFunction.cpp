@@ -1,3 +1,4 @@
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/SerializationFunction.hpp"
 
