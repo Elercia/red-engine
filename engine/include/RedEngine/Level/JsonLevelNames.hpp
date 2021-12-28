@@ -4,11 +4,11 @@ namespace red
 {
 struct JsonNames
 {
-    static constexpr char* LEVEL_ENTITIES = "entities";
+    static constexpr const char* LEVEL_ENTITIES = "entities";
 
-    static constexpr char* ENTITY_CHILDREN = "children";
-    static constexpr char* ENTITY_COMPONENTS = "components";
-    static constexpr char* ENTITY_NAME = "name";
-    static constexpr char* ENTITY_ID = "id";
+    static constexpr const char* ENTITY_CHILDREN = "children";
+    static constexpr const char* ENTITY_COMPONENTS = "components";
+    static constexpr const char* ENTITY_NAME = "name";
+    static constexpr const char* ENTITY_ID = "id";
 };
 }

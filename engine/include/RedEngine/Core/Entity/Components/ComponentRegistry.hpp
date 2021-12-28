@@ -1,11 +1,12 @@
 #pragma once
 
-#include "RedEngine/Core//Container/Map.hpp"
 #include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 #include <functional>
-#include <variant>
+#include <string>
+#include <string_view>
 
 namespace red
 {
@@ -37,7 +38,7 @@ struct ComponentTraits
     uint32 componentTypeId;
     std::string_view inheritedComponentName;
     Array<ComponentTraits*> childComponentTraits;
-    Map<std::string, ComponentMemberTraits> members; // member name to Traits
+    Map<std::string, ComponentMemberTraits> members;  // member name to Traits
     std::function<Component*(Entity* owner)> creator;
 
     template <typename ComponentTypeT, typename MemberTypeT>

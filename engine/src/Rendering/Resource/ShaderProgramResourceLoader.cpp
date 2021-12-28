@@ -12,10 +12,10 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>
 
-constexpr char* SHADER_TYPE = "type";
-constexpr char* VERTEX_SHADER_PATH = "vertex_path";
-constexpr char* PIXEL_SHADER_PATH = "pixel_path";
-constexpr char* COMPUTE_SHADER_PATH = "compute_path";
+constexpr const char* SHADER_TYPE = "type";
+constexpr const char* VERTEX_SHADER_PATH = "vertex_path";
+constexpr const char* PIXEL_SHADER_PATH = "pixel_path";
+constexpr const char* COMPUTE_SHADER_PATH = "compute_path";
 
 namespace red
 {

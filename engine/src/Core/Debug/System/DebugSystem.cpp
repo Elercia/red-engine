@@ -32,8 +32,8 @@ void DebugSystem::Update()
 {
     PROFILER_CATEGORY("Debug", Optick::Category::Debug);
 
-    auto* events = GetComponent<EventsComponent>();
-    auto* debugComp = GetComponent<DebugComponent>();
+    auto* events = m_world->GetWorldComponent<EventsComponent>();
+    auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
     if (events->GetKeyDown(KeyCodes::KEY_F1))
     {

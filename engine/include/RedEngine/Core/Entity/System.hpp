@@ -49,9 +49,6 @@ public:
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
 
-    template <typename CT>
-    CT* GetComponent(); // TODO Remove this
-
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);
 

@@ -34,7 +34,7 @@ namespace red
 	{
 		PROFILER_CATEGORY("Update render data", Optick::Category::Rendering)
 
-			auto sprites = GetComponents<Sprite>();
+			/*auto sprites = GetComponents<Sprite>();
 
 		for (auto* sprite : sprites)
 		{
@@ -42,7 +42,7 @@ namespace red
 				continue;
 
 			sprite->NextFrame();
-		}
+		}*/
 	}
 
 	void RenderingSystem::BeginRender()

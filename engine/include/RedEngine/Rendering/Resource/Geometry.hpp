@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Resources/Resource.hpp"
 
 namespace red
 {

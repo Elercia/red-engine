@@ -19,7 +19,7 @@ void EventSystem::Init()
 
 void EventSystem::PreUpdate()
 {
-    EventsComponent* events = GetComponent<EventsComponent>();
+    EventsComponent* events = m_world->GetWorldComponent<EventsComponent>();
 
     auto codes = GetKeyCodeReadableDb();
     auto mouseCodes = GetSDLMouseTranslationMap();

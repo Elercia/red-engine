@@ -1,5 +1,6 @@
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/SerializationFunction.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
 
 namespace red
