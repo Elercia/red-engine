@@ -20,8 +20,7 @@ workspace "RedEngine"
 	configurations
 	{
 		"Debug",
-		"Release",
-		""
+		"Release"
 	}
 
 	platforms 
