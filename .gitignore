@@ -177,7 +177,11 @@ redcppcheck-cppcheck-build-dir
 !scripts/bin/*
 scripts/projects/
 
-todo.todo
+**/todo.todo
+**/buildlog.log
+**/buildlog.txt
+**/msbuild.log
+*.sublime-workspace
 
 test/RedEngineTest
 test/RESOURCES/TMP_OUT/
