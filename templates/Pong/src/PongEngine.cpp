@@ -6,7 +6,7 @@ namespace pong
 {
 bool PongEngine::Create()
 {
-    CheckReturn(Engine::Create(), false);
+    CheckReturn(Engine::Create());
 
     m_world->LoadLevel<PongLevel>();
 
@@ -15,7 +15,7 @@ bool PongEngine::Create()
 
 bool PongEngine::Destroy()
 {
-    CheckReturn(Engine::Destroy(), false);
+    CheckReturn(Engine::Destroy());
 
     return true;
 }

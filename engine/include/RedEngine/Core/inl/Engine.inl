@@ -23,6 +23,6 @@ EngineClass* CreateEngineFrom(int argc, char** argv)
 
     Engine::s_engine = &engine;
 
-    return Engine::s_engine;
+    return &engine;
 }
 }  // namespace red
