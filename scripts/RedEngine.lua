@@ -1,11 +1,24 @@
 outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 
-rootPath = "%{wks.location}/../../../"
-enginePath = rootPath .. "engine/"
-externalPath = rootPath .. "external/"
-projectsFilesLocation = "./projects/" .. _ACTION
+rootPath 				= "%{wks.location}/../../../"
+enginePath 				= rootPath .. "engine/"
+externalPath 			= rootPath .. "external/"
+projectsFilesLocation 	= "./projects/" .. _ACTION
 
-cppDialect = "C++20"
+cppDialect 				= "C++20"
+
+libsToLink 				= {
+							"GL3W",
+							"SDL2",
+							"Box2D",
+							"fmt",
+							"fmod",
+							"fsbank",
+							"fmodstudio",
+							--"optick",
+							"dl",
+							"STBI",
+						}
 
 availablePlatforms={}
 if os.istarget("linux") then

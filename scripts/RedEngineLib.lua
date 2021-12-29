@@ -35,14 +35,7 @@ project "RedEngineLib"
 
 	links
 	{
-		"SDL2",
-		"Box2D",
-		"fmt",
-		"fmod",
-		"fsbank",
-		"fmodstudio",
-		"optick",
-		"GL3W",
+		libsToLink
 	}
 
 	libdirs
@@ -51,7 +44,7 @@ project "RedEngineLib"
 	}
 
 	filter{ "platforms:Linux64" }
-  		buildoptions { "`wx-config --cxxflags`", "-ansi", "-pedantic" }
+  		buildoptions {}
 	filter {}
 
 	filter { "toolset:msc" }

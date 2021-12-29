@@ -36,14 +36,7 @@ project ("RedEngineTest")
     {
         "RedEngineLib",
         "SDL2main",
-        "SDL2",
-        "Box2D",
-        "fmt",
-        "fmod",
-        "fsbank",
-        "fmodstudio",
-        "optick",
-        "GL3W",
+        libsToLink
     }
 
     filter "configurations:Debug"
