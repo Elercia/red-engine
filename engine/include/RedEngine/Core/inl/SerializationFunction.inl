@@ -1,5 +1,7 @@
 #include <nlohmann/json.hpp>
 
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+
 namespace red
 {
 template <typename T>
