@@ -8,9 +8,9 @@
 namespace red
 {
 template <typename... Args>
-void Logger::LogInternal(LogLevel::Enum level, int line, const char* file, const std::string& format, Args... args)
+void Logger::LogInternal(LogLevel level, int line, const char* file, const std::string& format, Args... args)
 {
-    const std::map<LogLevel::Enum, std::string> logLevelAsString{
+    const std::map<LogLevel, std::string> logLevelAsString{
         {LogLevel::LEVEL_TRACE, "TRACE"},     {LogLevel::LEVEL_DEBUG, "DEBUG"}, {LogLevel::LEVEL_INFO, "INFO"},
         {LogLevel::LEVEL_WARNING, "WARNING"}, {LogLevel::LEVEL_ERROR, "ERROR"}, {LogLevel::LEVEL_FATAL, "FATAL"},
     };

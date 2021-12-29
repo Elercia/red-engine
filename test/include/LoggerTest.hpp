@@ -2,15 +2,15 @@
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
-class LoggerTest : public red::Logger
+class Logger4Test : public red::Logger
 {
 public:
-    LoggerTest() = default;
-    virtual ~LoggerTest() = default;
+    Logger4Test() = default;
+    virtual ~Logger4Test() = default;
 
 protected:
 
-    void Out(const std::string& data) override { lastLog = data; }
+    virtual void Out(const std::string& data) override { lastLog = data; }
 
 public:
     std::string lastLog;
