@@ -1,3 +1,4 @@
+#include "TestModule.hpp"
 #include <catch2/catch.hpp>
 #include "RedEngine/Core/Event/Signal.hpp"
 #include <SignalTest.hpp>

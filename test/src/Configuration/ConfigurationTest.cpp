@@ -1,3 +1,4 @@
+#include "TestModule.hpp"
 #include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
 #include "RedEngine/Core/Configuration/IniReader.hpp"

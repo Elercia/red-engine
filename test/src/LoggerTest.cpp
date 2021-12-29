@@ -1,9 +1,11 @@
+#include "TestModule.hpp"
+
 #include <LoggerTest.hpp>
 #include <catch2/catch.hpp>
 
 TEST_CASE("Logger", "[Debug]")
 {
-    LoggerTest logger;
+    Logger4Test logger;
 
     SECTION("Logging trace")
     {

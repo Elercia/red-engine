@@ -1,3 +1,5 @@
+#include "TestModule.hpp"
+
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"

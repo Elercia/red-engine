@@ -1,3 +1,5 @@
+#include "TestModule.hpp"
+
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 
 #include <SystemTest.hpp>
