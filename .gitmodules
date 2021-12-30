@@ -13,4 +13,8 @@
 [submodule "external/Box2D"]
 	path = external/Box2D
 	url = https://github.com/erincatto/box2d.git
+[submodule "scripts/bin/export-compile-commands"]
+	path = scripts/bin/export-compile-commands
+	url = https://github.com/tarruda/premake-export-compile-commands.git
+
 
