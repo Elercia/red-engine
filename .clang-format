@@ -23,14 +23,16 @@ AlignTrailingComments: true
 SortIncludes  : true
 IncludeBlocks : Regroup
 IncludeCategories:
+  - Regex:           '.*'
+    Priority:        1
+  - Regex:           'RedEngine.*Module\.hpp'
+    Priority:        1
   - Regex:           'RedEngine'
     Priority:        2
   - Regex:           '^<.*\.(?:h|hpp)>'
     Priority:        3
   - Regex:           '^<.*>'
     Priority:        4
-  - Regex:           '.*'
-    Priority:        1
 
 SpaceAfterCStyleCast: true
 CommentPragmas: '^ NO-FORMAT:'
