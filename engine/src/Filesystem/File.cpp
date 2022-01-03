@@ -1,6 +1,6 @@
 #include "RedEngine/Filesystem/File.hpp"
 
-#include "RedEngine/Filesystem/FilesystemModule.hpp"
+#include "RedEngine/Filesystem/FileSystemModule.hpp"
 
 #include "RedEngine/Utils/BitfieldUtils.hpp"
 

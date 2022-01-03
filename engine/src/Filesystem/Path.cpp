@@ -1,6 +1,6 @@
 #include "RedEngine/Filesystem/Path.hpp"
 
-#include "RedEngine/Filesystem/FilesystemModule.hpp"
+#include "RedEngine/Filesystem/FileSystemModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Engine.hpp"
