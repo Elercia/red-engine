@@ -23,9 +23,9 @@ jobs:
       with:
         submodules: 'recursive'
     - name: Install dependancies
-      run: sudo apt install libsdl2-dev libsdl2-image-dev
+      run:  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && sudo apt install libsdl2-dev gcc-11
     - name: Build
-      run: cd scripts && chmod a+x GenerateMakeProject.sh && chmod a+x bin/premake5 && ./GenerateMakeProject.sh && make -C projects/gmake2 -j8 config=${{ matrix.config }}_${{ matrix.platform }} 
+      run: cd scripts && chmod a+x GenerateMakeProject.sh && chmod a+x bin/premake5 && ./GenerateMakeProject.sh && make -C projects/gmake2 -j8 config=${{ matrix.config }}_${{ matrix.platform }} CC=g++-11 
     # - name: Test
     #   run: scripts/bin/premake5 test --test-all
   windows:
