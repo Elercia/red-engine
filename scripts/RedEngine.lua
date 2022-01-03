@@ -16,13 +16,14 @@ libsToLink 				= {
 							"fsbank",
 							"fmodstudio",
 							--"optick",
-							"dl",
 							"STBI",
 						}
 
 availablePlatforms={}
+
 if os.istarget("linux") then
 	table.insert(availablePlatforms, "Linux64")
+	table.insert(libsToLink, "dl")
 elseif os.istarget("windows") then
 	table.insert(availablePlatforms, "Win64")
 end
@@ -60,7 +61,11 @@ workspace "RedEngine"
 		architecture "x64"
 	filter {}
 
-	location(projectsFilesLocation);
+	location(projectsFilesLocation)
+
+	filter { "platforms:Win64" }
+		buildoptions { "/Zc:hiddenFriend-" } -- Bug in MSVC : https://github.com/catchorg/Catch2/issues/2174
+	filter {}
 
 
 include "External.lua"

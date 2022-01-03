@@ -1,53 +1,52 @@
 group("Tests")
 
 project ("RedEngineTest")
-    kind "ConsoleApp"
-    language("C++")
-    cppdialect(cppDialect)
-    warnings("Extra")
-    flags("NoPCH")
-    staticruntime("Off")
+	kind "ConsoleApp"
+	language("C++")
+	cppdialect(cppDialect)
+	warnings("Extra")
+	flags("NoPCH")
+	staticruntime("Off")
 
-    targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
-    objdir(rootPath .. "/output/obj/" .. outputDirSementic)
+	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
+	objdir(rootPath .. "/output/obj/" .. outputDirSementic)
 
-    location(projectsFilesLocation)
+	location(projectsFilesLocation)
 
-    local testPath = rootPath .. "test/"
-    files {
-        testPath .. "src/**.cpp",
-        testPath .. "include/**.hpp",
-        externalDirectoryPath .. "/Catch2/src/*.cpp"
-    }
-    
-    includedirs
-    {
-        enginePath .. "include/",
-        testPath .. "include/",
-        ExternalIncludeDirs,
-    }
+	local testPath = rootPath .. "test/"
+	files {
+		testPath .. "src/**.cpp",
+		testPath .. "include/**.hpp",
+		externalDirectoryPath .. "/Catch2/src/*.cpp"
+	}
 
-    libdirs
-    {
-        ExternalLibDirs
-    }
+	includedirs
+	{
+		enginePath .. "include/",
+		testPath .. "include/",
+		ExternalIncludeDirs,
+	}
 
-    links
-    {
-        "RedEngineLib",
-        "SDL2main",
-        libsToLink
-    }
+	libdirs
+	{
+		ExternalLibDirs
+	}
 
-    filter "configurations:Debug"
-        defines "RED_DEBUG"
-        runtime "Debug"
-        symbols "on"
-    filter {}
+	links
+	{
+		"RedEngineLib",
+		libsToLink
+	}
 
-    filter "configurations:Release"
-        defines "RED_RELEASE"
-        runtime "Release"
-        optimize "on"
-        symbols "on"
-    filter {}
+	filter "configurations:Debug"
+		defines "RED_DEBUG"
+		runtime "Debug"
+		symbols "on"
+	filter {}
+
+	filter "configurations:Release"
+		defines "RED_RELEASE"
+		runtime "Release"
+		optimize "on"
+		symbols "on"
+	filter {}
