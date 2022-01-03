@@ -1,5 +1,6 @@
-#include "RedEngine/Audio/AudioModule.hpp"
 #include "RedEngine/Audio/Resource/SoundResource.hpp"
+
+#include "RedEngine/Audio/AudioModule.hpp"
 
 namespace red
 {

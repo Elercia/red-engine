@@ -1,20 +1,23 @@
-#include "RedEngine/Physics/PhysicsModule.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
+
+#include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 
+#include <algorithm>
 #include <box2d/b2_circle_shape.h>
 #include <box2d/b2_edge_shape.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
-#include <algorithm>
 
 namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(ColliderList)
 
-ColliderList::ColliderList(Entity* entity) : Component(entity), m_attachedPhysicBody(nullptr) {}
+ColliderList::ColliderList(Entity* entity) : Component(entity), m_attachedPhysicBody(nullptr)
+{
+}
 
 int ColliderList::AddCollider(Collider&& collider, const ColliderDesc& desc)
 {
@@ -107,8 +110,14 @@ void ColliderList::RemoveCollider(int id)
     m_status = ComponentStatus::DIRTY;
 }
 
-PhysicBody* ColliderList::GetAttachedPhysicBody() { return m_attachedPhysicBody; }
+PhysicBody* ColliderList::GetAttachedPhysicBody()
+{
+    return m_attachedPhysicBody;
+}
 
-std::map<int, Collider>& ColliderList::GetColliders() { return m_colliders; }
+std::map<int, Collider>& ColliderList::GetColliders()
+{
+    return m_colliders;
+}
 
 }  // namespace red

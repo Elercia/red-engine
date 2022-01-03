@@ -3,7 +3,6 @@
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 
-
 namespace red
 {
 class UserInputSystem : public System

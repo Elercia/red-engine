@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Vector.hpp"
-
 #include "RedEngine/Rendering/Color.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 

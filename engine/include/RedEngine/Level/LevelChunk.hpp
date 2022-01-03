@@ -3,6 +3,8 @@
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
+#include <string>
+
 namespace red
 {
 class Level;

@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
-
 #include <string_view>
 #include <type_traits>
 

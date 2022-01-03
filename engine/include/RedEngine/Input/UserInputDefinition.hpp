@@ -2,7 +2,6 @@
 
 #include "RedEngine/Input/InputDefinition.hpp"
 
-
 #include <array>
 #include <bitset>
 #include <map>

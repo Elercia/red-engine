@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <functional>

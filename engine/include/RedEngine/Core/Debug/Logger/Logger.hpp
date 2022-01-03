@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <iostream>
+#include <string>
 
 namespace red
 {
@@ -30,7 +30,10 @@ public:
     void LogInternal(LogLevel level, int line, const char* file, const std::string& format, Args... args);
 
 protected:
-    virtual void Out(const std::string& data){ std::cout << data << std::endl; }
+    virtual void Out(const std::string& data)
+    {
+        std::cout << data << std::endl;
+    }
 
 private:
     LogLevel m_logLevel;

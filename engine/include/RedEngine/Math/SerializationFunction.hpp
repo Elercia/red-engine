@@ -1,7 +1,7 @@
-#pragma once 
+#pragma once
 
-#include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Core/SerializationFunction.hpp"
+#include "RedEngine/Math/Vector.hpp"
 
 #include <string>
 

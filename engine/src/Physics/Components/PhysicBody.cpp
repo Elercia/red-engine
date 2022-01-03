@@ -1,5 +1,6 @@
-#include "RedEngine/Physics/PhysicsModule.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
+
+#include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
@@ -17,7 +18,9 @@ PhysicBody::PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc)
 {
 }
 
-PhysicBody::~PhysicBody() {}
+PhysicBody::~PhysicBody()
+{
+}
 
 void PhysicBody::ApplyForce(const Vector2& force, const Vector2& relativePosition)
 {
@@ -26,7 +29,10 @@ void PhysicBody::ApplyForce(const Vector2& force, const Vector2& relativePositio
     m_body->ApplyForce(ConvertToPhysicsVector(force), ConvertToPhysicsVector(worldPosition), true);
 }
 
-b2Body* PhysicBody::GetBody() { return m_body; }
+b2Body* PhysicBody::GetBody()
+{
+    return m_body;
+}
 
 void PhysicBody::SetBody(b2Body* body)
 {

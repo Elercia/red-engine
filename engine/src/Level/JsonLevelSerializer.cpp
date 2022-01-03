@@ -1,5 +1,6 @@
-#include "RedEngine/Level/LevelModule.hpp"
 #include "RedEngine/Level/JsonLevelSerializer.hpp"
+
+#include "RedEngine/Level/LevelModule.hpp"
 
 #include "RedEngine/Level/JsonLevelNames.hpp"
 

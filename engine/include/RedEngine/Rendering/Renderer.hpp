@@ -1,15 +1,14 @@
 #pragma once
 
-#include "Color.hpp"
-
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Math/Vector.hpp"
-
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "Color.hpp"
 
 namespace red
 {

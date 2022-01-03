@@ -1,9 +1,9 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
-#include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
-#include "RedEngine/Core/Container/Array.hpp"
 
 #include <string>
 
@@ -35,7 +35,7 @@ public:
 
     template <typename T, typename... Args>
     T* AddComponent(Args&&... args);
-    
+
     Component* AddComponent(const std::string& name);
 
     template <typename T>

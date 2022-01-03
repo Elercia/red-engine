@@ -1,5 +1,6 @@
-#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Event/System/EventSystem.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
@@ -9,7 +10,10 @@
 
 namespace red
 {
-EventSystem::EventSystem(World* world) : System(world) { m_priority = 1; }
+EventSystem::EventSystem(World* world) : System(world)
+{
+    m_priority = 1;
+}
 
 void EventSystem::Init()
 {
@@ -154,7 +158,6 @@ void EventSystem::PreUpdate()
 
 void EventSystem::PostUpdate()
 {
-    
 }
 
 }  // namespace red

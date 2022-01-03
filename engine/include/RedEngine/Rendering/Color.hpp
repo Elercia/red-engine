@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "RedEngine/Utils/Types.hpp"
 
 #include <cstdint>

@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/System.hpp"
 
-
 #include <array>
 
 namespace red

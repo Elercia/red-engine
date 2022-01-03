@@ -1,5 +1,6 @@
-#include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Renderer.hpp"
+
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"

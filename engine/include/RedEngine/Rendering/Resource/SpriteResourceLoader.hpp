@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "RedEngine/Rendering/Resource/SpriteResource.hpp"
 #include "RedEngine/Resources/ResourceLoader.hpp"
 

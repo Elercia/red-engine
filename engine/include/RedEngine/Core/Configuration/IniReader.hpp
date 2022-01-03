@@ -2,7 +2,6 @@
 
 #include "RedEngine/Filesystem/Path.hpp"
 
-
 #include <string>
 #include <tuple>
 #include <vector>

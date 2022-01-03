@@ -4,7 +4,6 @@
 #include "RedEngine/Core/Configuration/CVarUtils.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 
-
 #include <filesystem>
 #include <string>
 #include <unordered_map>

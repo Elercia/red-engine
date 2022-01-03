@@ -2,7 +2,6 @@
 
 #include "RedEngine/Input/UserInputDefinition.hpp"
 
-
 namespace red
 {
 namespace utils

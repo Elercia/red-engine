@@ -1,5 +1,6 @@
-#include "RedEngine/Level/LevelModule.hpp"
 #include "RedEngine/Level/Level.hpp"
+
+#include "RedEngine/Level/LevelModule.hpp"
 
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"

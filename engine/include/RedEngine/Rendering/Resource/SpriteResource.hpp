@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 

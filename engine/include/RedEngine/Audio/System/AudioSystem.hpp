@@ -1,7 +1,8 @@
 #pragma once
 
-#include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Audio/AudioModule.hpp"
+
+#include "RedEngine/Core/Entity/System.hpp"
 
 #include <fmod.hpp>
 #include <fmod_studio.hpp>

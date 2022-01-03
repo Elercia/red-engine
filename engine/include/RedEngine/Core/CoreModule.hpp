@@ -4,7 +4,6 @@
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Macros.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
-#include "RedEngine/Core/Memory/Macros.hpp"
 
 namespace red
 {

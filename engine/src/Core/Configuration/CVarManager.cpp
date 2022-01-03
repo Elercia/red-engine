@@ -1,5 +1,6 @@
-#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/IniReader.hpp"
@@ -18,7 +19,9 @@ CVarManager& CVarManager::GetInstance()
     return instance;
 }
 
-CVarManager::CVarManager() {}
+CVarManager::CVarManager()
+{
+}
 
 CVarManager::~CVarManager()
 {

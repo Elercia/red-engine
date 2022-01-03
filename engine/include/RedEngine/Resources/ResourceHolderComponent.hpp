@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
-
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Resources/ResourceLoader.hpp"
 

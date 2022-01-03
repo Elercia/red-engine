@@ -1,5 +1,6 @@
-#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Configuration/CVarUtils.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Configuration/CVar.hpp"
 
@@ -41,7 +42,13 @@ bool CVarUtils::IsDouble(const std::string& value, double& outValue)
     return true;
 }
 
-std::string CVarUtils::GetLongName(const std::string& category, const std::string& key) { return category + "_" + key; }
+std::string CVarUtils::GetLongName(const std::string& category, const std::string& key)
+{
+    return category + "_" + key;
+}
 
-std::string CVarUtils::GetLongName(const CVarValue* cVar) { return GetLongName(cVar->GetCategory(), cVar->GetName()); }
+std::string CVarUtils::GetLongName(const CVarValue* cVar)
+{
+    return GetLongName(cVar->GetCategory(), cVar->GetName());
+}
 }  // namespace red

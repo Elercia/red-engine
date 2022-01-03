@@ -4,9 +4,8 @@
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
-
-#include <box2d/b2_shape.h>
 #include <box2d/b2_fixture.h>
+#include <box2d/b2_shape.h>
 #include <map>
 #include <memory>
 
@@ -48,7 +47,10 @@ struct Collider
     b2Fixture* m_fixture;
     std::unique_ptr<b2Shape> m_shape{nullptr};
 
-    bool IsTrigger() const { return m_fixtureDef.isSensor; }
+    bool IsTrigger() const
+    {
+        return m_fixtureDef.isSensor;
+    }
 };
 
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(ColliderList)

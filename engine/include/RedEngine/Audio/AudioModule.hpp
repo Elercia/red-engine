@@ -8,4 +8,4 @@
 namespace red
 {
 
-} // namespace red
+}  // namespace red

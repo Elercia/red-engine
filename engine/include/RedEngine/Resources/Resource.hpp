@@ -2,7 +2,6 @@
 
 #include "RedEngine/Filesystem/Path.hpp"
 
-
 #include <cstddef>
 #include <cstdint>
 #include <string>

@@ -1,5 +1,6 @@
-#include "RedEngine/Utils/UtilityModule.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
+
+#include "RedEngine/Utils/UtilityModule.hpp"
 
 #include <fstream>
 #include <sstream>

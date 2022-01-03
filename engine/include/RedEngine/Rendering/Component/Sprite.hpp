@@ -2,8 +2,8 @@
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
-#include "RedEngine/Resources/AnnimationDescriptor.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
+#include "RedEngine/Resources/AnnimationDescriptor.hpp"
 
 #include <memory>
 #include <string>

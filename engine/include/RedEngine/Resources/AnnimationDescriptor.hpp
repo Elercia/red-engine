@@ -2,10 +2,9 @@
 
 #include "RedEngine/Math/Vector.hpp"
 
-
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace red
 {

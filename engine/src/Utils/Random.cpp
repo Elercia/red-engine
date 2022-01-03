@@ -1,5 +1,6 @@
-#include "RedEngine/Utils/UtilityModule.hpp"
 #include "RedEngine/Utils/Random.hpp"
+
+#include "RedEngine/Utils/UtilityModule.hpp"
 
 #include <random>
 

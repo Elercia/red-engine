@@ -1,6 +1,6 @@
-#include "RedEngine/Rendering/RenderingModule.hpp"
-
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
@@ -12,7 +12,7 @@ namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(CameraComponent)
 
-CameraComponent::CameraComponent(Entity* entity) : CameraComponent(entity, {0.f,0.f})
+CameraComponent::CameraComponent(Entity* entity) : CameraComponent(entity, {0.f, 0.f})
 {
 }
 

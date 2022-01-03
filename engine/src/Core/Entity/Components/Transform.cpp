@@ -1,5 +1,6 @@
-#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 namespace red
 {

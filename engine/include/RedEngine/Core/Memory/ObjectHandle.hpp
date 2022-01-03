@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 namespace red
 {
 template <class T>

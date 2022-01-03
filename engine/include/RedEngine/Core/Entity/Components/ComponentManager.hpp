@@ -41,7 +41,7 @@ public:
 
 private:
     ComponentPoolType& GetComponentPool(std::size_t componentTypeId);
-    
+
     void AddComponent(Entity* entity, Component* component);
 
 private:

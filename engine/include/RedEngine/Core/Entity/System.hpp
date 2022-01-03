@@ -3,7 +3,6 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
-
 #include <algorithm>
 #include <memory>
 #include <vector>
@@ -26,13 +25,13 @@ public:
     System& operator=(System&&) = default;
 
     // Update functions called in this order
-	virtual void PreUpdate(){};
-	virtual void Update(){};
+    virtual void PreUpdate(){};
+    virtual void Update(){};
     virtual void PostUpdate(){};
 
-	virtual void BeginRender() {};
-	virtual void Render() {};
-	virtual void EndRender() {};
+    virtual void BeginRender(){};
+    virtual void Render(){};
+    virtual void EndRender(){};
 
     /// Called once the world is initializing to manager system-specific init
     virtual void Init()

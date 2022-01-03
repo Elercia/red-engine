@@ -1,5 +1,6 @@
-#include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
+
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
@@ -66,7 +67,7 @@ std::shared_ptr<SpriteResource> SpriteResourceLoader::LoadResource(const Path& p
         {
             RED_LOG_WARNING("Path {} has no spritesheet attribute", activePath.GetAscciiPath());
         }
-        
+
         std::string spriteSheetPathStr = spriteSheetJson.value();
 
         animationDesc.texture =

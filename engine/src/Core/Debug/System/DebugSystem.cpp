@@ -1,6 +1,6 @@
-#include "RedEngine/Core/CoreModule.hpp"
-
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"

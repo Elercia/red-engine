@@ -14,4 +14,4 @@ public:
 private:
     Array<float> m_vertices;
 };
-}
+}  // namespace red

@@ -1,5 +1,6 @@
-#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Entity/World.hpp"

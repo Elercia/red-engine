@@ -1,5 +1,6 @@
-#include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
+
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Filesystem/Path.hpp"

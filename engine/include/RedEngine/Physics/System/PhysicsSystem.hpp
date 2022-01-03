@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/System.hpp"
 
-
 class b2Contact;
 
 namespace red

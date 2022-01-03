@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #ifdef RED_USE_PROFILER
 
 #include <optick.h>

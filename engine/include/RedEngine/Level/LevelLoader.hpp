@@ -1,8 +1,8 @@
 #pragma once
 
-#include "LevelData.hpp"
-
 #include "RedEngine/Filesystem/Path.hpp"
+
+#include "LevelData.hpp"
 
 namespace red
 {

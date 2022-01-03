@@ -29,4 +29,4 @@ private:
     ShaderProgramType m_type;
     int m_handle;
 };
-}
+}  // namespace red

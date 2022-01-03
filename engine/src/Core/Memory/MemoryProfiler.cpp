@@ -1,11 +1,12 @@
-#include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Memory/MemoryProfiler.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include <iostream>
 
 namespace red
 {
-// TODO what is this ? remake it completely 
+// TODO what is this ? remake it completely
 void MemoryProfiler::NewAllocation(std::size_t size, void* ptr, int /*line*/, const char* /*file*/)
 {
     for (auto& profile : m_allocatedMemory)

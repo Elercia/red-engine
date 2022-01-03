@@ -1,8 +1,7 @@
 #pragma once
 
-
-#include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
+#include "RedEngine/Resources/Resource.hpp"
 
 #include <map>
 #include <memory>

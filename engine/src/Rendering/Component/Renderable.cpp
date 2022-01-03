@@ -1,5 +1,6 @@
-#include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
+
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 namespace red
 {

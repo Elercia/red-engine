@@ -2,7 +2,6 @@
 
 #include "RedEngine/Input/InputDefinition.hpp"
 
-
 #include <SDL2/SDL_gamecontroller.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_mouse.h>

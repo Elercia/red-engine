@@ -1,5 +1,6 @@
-#include "RedEngine/Filesystem/FilesystemModule.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
+
+#include "RedEngine/Filesystem/FilesystemModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Engine.hpp"
@@ -141,7 +142,7 @@ void Path::ForceRefreshStatus()
         SetBit(m_states, PathState::TYPE_FILE);
 
     if (exist && (fs::status_known(fs::status(internalPath)) || fs::is_regular_file(internalPath) ||
-                                      fs::is_directory(internalPath) || fs::is_symlink(internalPath)))
+                  fs::is_directory(internalPath) || fs::is_symlink(internalPath)))
     {
         SetBit(m_states, PathState::VALID);
     }

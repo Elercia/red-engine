@@ -5,7 +5,6 @@
 #include "RedEngine/Input/UserInputDefinition.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
-
 #include <map>
 
 namespace red

@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 
-
 #include <cstddef>
 
 namespace red

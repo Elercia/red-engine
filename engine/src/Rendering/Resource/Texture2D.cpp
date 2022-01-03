@@ -1,5 +1,6 @@
-#include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
+
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Core/Engine.hpp"
 

@@ -1,5 +1,6 @@
-#include "RedEngine/Physics/PhysicsModule.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
+
+#include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include <algorithm>
 

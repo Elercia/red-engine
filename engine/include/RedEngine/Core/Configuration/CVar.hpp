@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
 
 #include <functional>

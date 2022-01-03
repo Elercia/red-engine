@@ -1,5 +1,6 @@
-#include "RedEngine/Level/LevelModule.hpp"
 #include "RedEngine/Level/LevelSerializer.hpp"
+
+#include "RedEngine/Level/LevelModule.hpp"
 
 #include "RedEngine/Filesystem/File.hpp"
 #include "RedEngine/Level/Level.hpp"

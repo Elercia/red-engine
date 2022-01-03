@@ -11,4 +11,4 @@ struct JsonNames
     static constexpr const char* ENTITY_NAME = "name";
     static constexpr const char* ENTITY_ID = "id";
 };
-}
+}  // namespace red

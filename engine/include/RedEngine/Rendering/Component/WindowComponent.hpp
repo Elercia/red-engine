@@ -1,8 +1,8 @@
 #pragma once
 
-#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Configuration/CVarSerialization.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 
 struct SDL_Window;
 #include <SDL2/SDL_syswm.h>

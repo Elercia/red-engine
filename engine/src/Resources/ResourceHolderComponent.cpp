@@ -1,11 +1,14 @@
-#include "RedEngine/Resources/ResourceModule.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
+
+#include "RedEngine/Resources/ResourceModule.hpp"
 
 namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(ResourceHolderComponent)
 
-ResourceHolderComponent::ResourceHolderComponent(Entity* owner) : Component(owner) {}
+ResourceHolderComponent::ResourceHolderComponent(Entity* owner) : Component(owner)
+{
+}
 ResourceHolderComponent::~ResourceHolderComponent()
 {
     for (auto& resourceLoaderPair : m_resourceLoaders)

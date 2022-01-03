@@ -1,5 +1,6 @@
-#include "RedEngine/Math/MathModule.hpp"
 #include "RedEngine/Math/SerializationFunction.hpp"
+
+#include "RedEngine/Math/MathModule.hpp"
 
 namespace red
 {

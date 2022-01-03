@@ -1,5 +1,6 @@
-#include "RedEngine/Level/LevelModule.hpp"
 #include "RedEngine/Level/LevelChunk.hpp"
+
+#include "RedEngine/Level/LevelModule.hpp"
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Level/Level.hpp"
@@ -69,7 +70,7 @@ void LevelChunk::Clean()
             entitiesToRemove.push_back(entity);
         }
     }
-    
+
     for (auto* e : entitiesToRemove)
     {
         m_ownedEntities.erase(std::remove(m_ownedEntities.begin(), m_ownedEntities.end(), e), m_ownedEntities.end());

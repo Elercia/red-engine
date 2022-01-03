@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/System.hpp"
 
-
 namespace red
 {
 class DebugSystem : public System

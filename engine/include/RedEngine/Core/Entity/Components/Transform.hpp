@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Component.hpp"
-
 #include "RedEngine/Math/Vector.hpp"
 
+#include "Component.hpp"
 
 namespace red
 {

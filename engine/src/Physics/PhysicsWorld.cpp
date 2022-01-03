@@ -1,5 +1,6 @@
-#include "RedEngine/Physics/PhysicsModule.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
+
+#include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
