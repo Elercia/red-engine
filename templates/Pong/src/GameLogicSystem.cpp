@@ -34,7 +34,7 @@ void GameLogicSystem::Init()
 
 void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
 {
-    auto info = GetComponent<red::WindowComponent>()->GetWindowInfo();
+    auto info = m_world->GetWorldComponent<red::WindowComponent>()->GetWindowInfo();
 
     auto scores = GetComponents<ScoreComponent>();
     bool scored = false;
@@ -57,6 +57,6 @@ void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
 
     if (scored)
     {
-        ballPos = {info.width / 2.f, info.height / 2.f};
+        ballPos = {(float)info.width / 2.f, (float)info.height / 2.f};
     }
 }

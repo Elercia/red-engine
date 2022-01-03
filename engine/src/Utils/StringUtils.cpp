@@ -1,5 +1,7 @@
 #include "RedEngine/Utils/StringUtils.hpp"
 
+#include "RedEngine/Utils/UtilityModule.hpp"
+
 #include <algorithm>
 #include <sstream>
 

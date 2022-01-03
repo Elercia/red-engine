@@ -1,5 +1,6 @@
-
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+
+#include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
@@ -11,7 +12,7 @@ namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(CameraComponent)
 
-CameraComponent::CameraComponent(Entity* entity) : CameraComponent(entity, {0.f,0.f})
+CameraComponent::CameraComponent(Entity* entity) : CameraComponent(entity, {0.f, 0.f})
 {
 }
 
@@ -27,9 +28,10 @@ CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Compon
 
     auto info = window->GetWindowInfo();
 
-    m_viewport = {0, 0, static_cast<float>(info.width), static_cast<float>(info.height)};
+    m_viewport = {0, 0, info.width, info.height};
 
-    m_cameraWorldPosition = Vector2(center.x - m_viewport.width / 2.F, center.y - m_viewport.height / 2.F);
+    m_cameraWorldPosition =
+        Vector2(center.x - (float) m_viewport.width / 2.F, center.y - (float) m_viewport.height / 2.F);
 }
 
 Vector2 CameraComponent::ViewportToWorldPoint(const Vector2& point) const
@@ -46,16 +48,16 @@ Vector2 CameraComponent::WorldToViewportPoint(const Vector2& point) const
 {
     Vector2 rt;
 
-    rt.x = point.x + m_viewport.x - m_cameraWorldPosition.x;
-    rt.y = point.y + m_viewport.y - m_cameraWorldPosition.y;
+    rt.x = point.x + (float) m_viewport.x - m_cameraWorldPosition.x;
+    rt.y = point.y + (float) m_viewport.y - m_cameraWorldPosition.y;
 
     return rt;
 }
 
 void CameraComponent::CenterOn(const Vector2& point)
 {
-    m_cameraWorldPosition.x = point.x - m_viewport.width / 2.F;
-    m_cameraWorldPosition.y = point.y - m_viewport.height / 2.F;
+    m_cameraWorldPosition.x = point.x - (float) m_viewport.width / 2.F;
+    m_cameraWorldPosition.y = point.y - (float) m_viewport.height / 2.F;
 }
 
 void CameraComponent::Follow(Vector2* /*followPosition*/)
@@ -73,19 +75,19 @@ const Vector2& CameraComponent::Position() const
     return m_cameraWorldPosition;
 }
 
-const Vector4& CameraComponent::Viewport() const
+const Vector4i& CameraComponent::Viewport() const
 {
     return m_viewport;
 }
 
-void CameraComponent::SetViewport(const Vector4& viewport)
+void CameraComponent::SetViewport(const Vector4i& viewport)
 {
     m_viewport = viewport;
 }
 
 float CameraComponent::AspectRatio() const
 {
-    return m_viewport.z / m_viewport.w;
+    return (float) m_viewport.width / (float) m_viewport.height;
 }
 
 int CameraComponent::Depth() const
@@ -98,7 +100,7 @@ void CameraComponent::SetDepth(int depth)
     m_depth = depth;
 }
 
-std::shared_ptr<const Texture2D> CameraComponent::GetRenderedTexture() const
+const Texture2D* CameraComponent::GetRenderedTexture() const
 {
     return m_renderedTexture;
 }

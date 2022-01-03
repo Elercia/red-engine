@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Resources/ResourceLoader.hpp"
 
@@ -24,6 +23,9 @@ public:
 
     template <typename LoaderType>
     LoaderType* GetResourceLoader();
+
+    template <typename T>
+    std::shared_ptr<T> LoadResource(const Path& path, ResourceType resourceType);
 
     bool RegisterResourceLoader(ResourceType resourceType, IResourceLoader* loader);
     void RemoveAllLoaders();

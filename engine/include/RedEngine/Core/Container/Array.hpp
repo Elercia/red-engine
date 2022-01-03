@@ -1,7 +1,5 @@
 #pragma once
 
-#include "RedEngine/RedEngineBase.hpp"
-
 #include <cstdlib>
 #include <initializer_list>
 #include <vector>

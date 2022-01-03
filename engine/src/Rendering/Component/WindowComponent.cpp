@@ -1,9 +1,10 @@
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
+#include "RedEngine/Rendering/RenderingModule.hpp"
+
 #include "RedEngine/Core/Entity/Entity.hpp"
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 namespace red
 {
@@ -14,33 +15,31 @@ CVar<FullScreenMode::Enum> m_fullscreen{"fullscreen_mode", "window", FullScreenM
 
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(WindowComponent)
 
-WindowComponent::WindowComponent(Entity* owner) : Component(owner), m_window(nullptr) {}
+WindowComponent::WindowComponent(Entity* owner) : Component(owner), m_window(nullptr)
+{
+}
 
-WindowComponent::~WindowComponent() {}
+WindowComponent::~WindowComponent()
+{
+    SDL_Quit();
+}
 
 void WindowComponent::Init()
 {
+    // TODO Surely move this to renderer
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
         SDL_Quit();
         RED_ABORT("Cannot initialize SDL2");
     }
-
-    int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
-    if (IMG_Init(flags) != flags)
-    {
-        RED_LOG_ERROR("Error initializing SDL image with error {}", IMG_GetError());
-        IMG_Quit();
-        SDL_Quit();
-        RED_ABORT("Cannot initialize SDL image");
-    }
 }
 
 void WindowComponent::CreateNewWindow()
 {
     m_window = SDL_CreateWindow(m_title.GetValue().c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                m_width.GetValue(), m_height.GetValue(), SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+                                m_width.GetValue(), m_height.GetValue(),
+                                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 
     if (m_window == nullptr)
     {
@@ -49,27 +48,29 @@ void WindowComponent::CreateNewWindow()
 
     RED_LOG_INFO("Created window");
 
-    m_height->OnValueChange(
-        [&](CVarValue* /*elem*/) { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
+    m_height->OnValueChange([&](CVarValue* /*elem*/)
+                            { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
 
-    m_width->OnValueChange(
-        [&](CVarValue* /*elem*/) { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
+    m_width->OnValueChange([&](CVarValue* /*elem*/)
+                           { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
 
-    m_fullscreen->OnValueChange([&](CVarValue* /*elem*/) {
-        int flag = 0;
-        switch (m_fullscreen.GetValue())
+    m_fullscreen->OnValueChange(
+        [&](CVarValue* /*elem*/)
         {
-            case FullScreenMode::FULLSCREEN:
-            case FullScreenMode::BORDER_LESS:
-                flag = SDL_WINDOW_FULLSCREEN;
-                break;
-            case FullScreenMode::WINDOWED:
-                flag = 0;
-                break;
-        }
+            int flag = 0;
+            switch (m_fullscreen.GetValue())
+            {
+                case FullScreenMode::FULLSCREEN:
+                case FullScreenMode::BORDER_LESS:
+                    flag = SDL_WINDOW_FULLSCREEN;
+                    break;
+                case FullScreenMode::WINDOWED:
+                    flag = 0;
+                    break;
+            }
 
-        SDL_SetWindowFullscreen(this->m_window, flag);
-    });
+            SDL_SetWindowFullscreen(this->m_window, flag);
+        });
 }
 
 #ifdef RED_WINDOWS
@@ -109,7 +110,7 @@ SDL_SysWMinfo WindowComponent::GetSDLSysInfo()
     return sysInfo;
 }
 
-WindowInfo WindowComponent::GetWindowInfo() const 
+WindowInfo WindowComponent::GetWindowInfo() const
 {
     int width;
     int height;
@@ -120,6 +121,9 @@ WindowInfo WindowComponent::GetWindowInfo() const
     return info;
 }
 
-SDL_Window* WindowComponent::GetSDLWindow() { return m_window; }
+SDL_Window* WindowComponent::GetSDLWindow()
+{
+    return m_window;
+}
 
 }  // namespace red

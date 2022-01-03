@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
 
+#include "RedEngine/Core/CoreModule.hpp"
+
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
 namespace red
@@ -7,7 +9,7 @@ namespace red
 std::pair<bool, ComponentTraits*> ComponentRegistry::CreateNewComponentTraits(const std::string& componentName)
 {
     auto* otherCompTraits = GetComponentTraitsInternal(componentName);
-    
+
     if (otherCompTraits != nullptr)
     {
         RED_LOG_ERROR("ComponentRegistry already have registered a component named {}", componentName);

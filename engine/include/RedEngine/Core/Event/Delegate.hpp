@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <cstdint>

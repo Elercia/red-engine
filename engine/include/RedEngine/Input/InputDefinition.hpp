@@ -1,7 +1,5 @@
 #pragma once
 
-#include "RedEngine/RedEngineBase.hpp"
-
 #include <array>
 
 namespace red

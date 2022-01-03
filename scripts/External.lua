@@ -17,19 +17,6 @@ if os.istarget("windows") then
 	filter { "system:windows" }
 		postbuildcommands { "{COPY} ../../../external/SDL2/lib/x64/SDL2.dll %{cfg.buildtarget.directory}" }	
 	filter {}
-
-	-- SDL Image
-	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/SDL_image/include")
-	table.insert(ExternalLibDirs, externalDirectoryPath .. "/SDL_image/lib/x64")
-
-	filter { "system:windows" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libjpeg-9.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libpng16-16.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libtiff-5.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/libwebp-7.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/SDL2_image.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/SDL_image/lib/x64/zlib1.dll %{cfg.buildtarget.directory}" }
-	filter {}
 end
 
 
@@ -51,15 +38,13 @@ elseif os.istarget("linux") then
 	table.insert(ExternalLibDirs, externalDirectoryPath .. "/Fmod/studio/lib/x86_64")
 end
 
-if os.istarget("windows") then
-	filter { "system:windows" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/core/lib/x64/fmod.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/fsbank.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/libfsbvorbis64.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/opus.dll %{cfg.buildtarget.directory}" }
-		postbuildcommands { "{COPY} ../../../external/Fmod/studio/lib/x64/fmodstudio.dll %{cfg.buildtarget.directory}" }
-	filter {}
-end
+filter { "platforms:Win64" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/core/lib/x64/fmod.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/fsbank.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/libfsbvorbis64.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/fsbank/lib/x64/opus.dll %{cfg.buildtarget.directory}" }
+	postbuildcommands { "{COPY} ../../../external/Fmod/studio/lib/x64/fmodstudio.dll %{cfg.buildtarget.directory}" }
+filter {}
 
 -- Json
 table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/nlohmann_json/single_include")
@@ -76,7 +61,7 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 	project(Name)
 
 	language("C++")
-	cppdialect("C++17")
+	cppdialect(cppDialect)
 
 	staticruntime("Off")
 
@@ -102,12 +87,13 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 		defines "RED_DEBUG"
 		runtime "Debug"
 		symbols "on"
+	filter {}
 
 	filter "configurations:Release"
 		defines "RED_RELEASE"
 		runtime "Release"
 		optimize "on"
-
+		symbols "on"
 	filter {}
 
 end
@@ -136,7 +122,7 @@ ExternalLibs("fmt", true, "/fmt/include")
 		externalDirectoryPath .. "/fmt/include/**.h",
 	}
 
-ExternalLibs("optick", true, "/optick/src")
+--[[ExternalLibs("optick", true, "/optick/src")
 	files
 	{
 		externalDirectoryPath .. "/optick/src/**.cpp",
@@ -149,5 +135,28 @@ ExternalLibs("optick", true, "/optick/src")
 		"OPTICK_ENABLE_GPU_D3D12=0",
 		"OPTICK_ENABLE_GPU=0",
 		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS",
+	}--]]
+
+ExternalLibs("GL3W", true, "/gl3w/include")
+	files
+	{
+		externalDirectoryPath .. "/gl3w/src/**.c",
+		externalDirectoryPath .. "/gl3w/include/**.h",
 	}
 
+	includedirs
+	{
+		externalDirectoryPath .. "/gl3w/include/"
+	}
+
+ExternalLibs("STBI", true, "/stbi/include")
+	files
+	{
+		externalDirectoryPath .. "/stbi/src/**.c",
+		externalDirectoryPath .. "/stbi/include/**.h",
+	}
+
+	includedirs
+	{
+		externalDirectoryPath .. "/stbi/include/"
+	}

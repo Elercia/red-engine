@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Rendering/Color.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
@@ -42,24 +41,24 @@ public:
     /// Accessors and Setters
     [[nodiscard]] const Vector2& Position() const;
 
-    [[nodiscard]] const Vector4& Viewport() const;
-    void SetViewport(const Vector4& viewport);
+    [[nodiscard]] const Vector4i& Viewport() const;
+    void SetViewport(const Vector4i& viewport);
 
     [[nodiscard]] float AspectRatio() const;
 
     [[nodiscard]] int Depth() const;
     void SetDepth(int depth);
 
-    [[nodiscard]] std::shared_ptr<const Texture2D> GetRenderedTexture() const;
+    [[nodiscard]] const Texture2D* GetRenderedTexture() const;
 
     [[nodiscard]] const Color& BackgroundColor() const;
     void SetBackgroundColor(const Color& color);
 
 private:
-    std::shared_ptr<Texture2D> m_renderedTexture;
+    Texture2D* m_renderedTexture;
 
     /// The camera viewport (position in the window and size)
-    Vector4 m_viewport;
+    Vector4i m_viewport;
 
     Vector2 m_cameraWorldPosition;
 

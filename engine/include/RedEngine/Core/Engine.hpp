@@ -1,11 +1,8 @@
 #pragma once
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
-#include <memory>
 #include <string_view>
-#include <tuple>
 #include <type_traits>
 
 namespace red
@@ -26,16 +23,12 @@ public:
 
     int MainLoop();
 
-    virtual bool Create() = 0;
-    virtual bool Destroy() = 0;
+    virtual bool Create();
+    virtual bool Destroy();
 
     virtual std::string_view GetGameName() const;
 
     virtual bool RegisterComponentTypes();
-
-private:
-    bool InternalCreate();
-    bool InternalDestroy();
 
 protected:
     int m_argc;

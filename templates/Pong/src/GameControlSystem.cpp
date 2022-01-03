@@ -22,7 +22,7 @@ void GameControlSystem::Update()
 {
     constexpr float velocity = 300.F;
 
-    auto* userInputComponent = GetComponent<UserInputComponent>();
+    auto* userInputComponent = m_world->GetWorldComponent<UserInputComponent>();
     auto& paddleOnePos = m_paddleOne->GetComponent<Transform>()->GetPosition();
     auto& paddleTwoPos = m_paddleTwo->GetComponent<Transform>()->GetPosition();
 
@@ -50,7 +50,7 @@ void GameControlSystem::Update()
 
 void GameControlSystem::KeepInBound(red::Vector2& pos)
 {
-    auto info = GetComponent<red::WindowComponent>()->GetWindowInfo();
+    auto info = m_world->GetWorldComponent<red::WindowComponent>()->GetWindowInfo();
 
     if (pos.y < 0)
         pos.y = 0;

@@ -4,7 +4,6 @@
 #include "RedEngine/Core/Entity/Components/ComponentRegistryFunction.hpp"
 #include "RedEngine/Core/SerializationFunction.hpp"
 #include "RedEngine/Math/SerializationFunction.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <memory>

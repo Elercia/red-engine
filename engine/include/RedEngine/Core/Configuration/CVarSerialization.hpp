@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 #include <sstream>
 
@@ -89,8 +88,14 @@ RED_NEW_CONFIG_TYPE_DESERIALIZATOR(bool)
     typeValue = false;
 }
 
-RED_NEW_CONFIG_TYPE_SERIALIZATOR(std::string) { return typeValue; }
-RED_NEW_CONFIG_TYPE_DESERIALIZATOR(std::string) { typeValue = stringValue; }
+RED_NEW_CONFIG_TYPE_SERIALIZATOR(std::string)
+{
+    return typeValue;
+}
+RED_NEW_CONFIG_TYPE_DESERIALIZATOR(std::string)
+{
+    typeValue = stringValue;
+}
 
 template <typename T>
 class has_serialization_overload

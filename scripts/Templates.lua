@@ -5,7 +5,7 @@ function TemplateProject(Name)
 	project(Name)
 	kind("ConsoleApp")
 	language("C++")
-	cppdialect("C++17")
+	cppdialect(cppDialect)
 	
 	rtti("Off")
 	exceptionhandling("Off")
@@ -41,14 +41,7 @@ function TemplateProject(Name)
 	links
 	{
 		"RedEngineLib",
-		"SDL2",
-		"SDL2_image",
-		"Box2D",
-		"fmt",
-		"fmod",
-		"fsbank",
-		"fmodstudio",
-		"optick",
+		libsToLink
 	}
 
 	defines
@@ -56,7 +49,7 @@ function TemplateProject(Name)
 		-- "RED_USE_PROFILER",
 	}
 
-	filter "system:windows"
+	filter "platforms:Win64"
 		systemversion "latest"
 
 		defines
@@ -68,23 +61,26 @@ function TemplateProject(Name)
 		{
 			"SDL2main",
 		}
+	filter {}
 
-	filter "system:linux"
+	filter "platforms:Linux64"
 		defines
 		{
 			"RED_LINUX"
 		}
+	filter {}
 
 	filter "configurations:Debug"
 		defines "RED_DEBUG"
 		runtime "Debug"
 		symbols "on"
+	filter {}
 
 	filter "configurations:Release"
 		defines "RED_RELEASE"
 		runtime "Release"
 		optimize "on"
-
+		symbols "on"
 	filter {}
 end
 

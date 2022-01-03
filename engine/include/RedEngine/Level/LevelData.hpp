@@ -4,6 +4,8 @@
 #include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 
+#include <string>
+
 namespace red
 {
 struct KeyValue

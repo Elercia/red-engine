@@ -1,10 +1,8 @@
 #pragma once
 
-
-#include "RedEngine/Level/LevelData.hpp"
-
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
+#include "RedEngine/Level/LevelData.hpp"
 
 #include <string>
 

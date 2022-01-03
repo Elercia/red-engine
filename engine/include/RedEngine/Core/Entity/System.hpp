@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -26,9 +25,13 @@ public:
     System& operator=(System&&) = default;
 
     // Update functions called in this order
-    virtual void Update(){};
     virtual void PreUpdate(){};
+    virtual void Update(){};
     virtual void PostUpdate(){};
+
+    virtual void BeginRender(){};
+    virtual void Render(){};
+    virtual void EndRender(){};
 
     /// Called once the world is initializing to manager system-specific init
     virtual void Init()
@@ -44,9 +47,6 @@ public:
     // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
     std::vector<Entity*> GetComponents();
-
-    template <typename CT>
-    CT* GetComponent();
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

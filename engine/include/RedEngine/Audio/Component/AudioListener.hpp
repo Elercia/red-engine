@@ -1,9 +1,9 @@
 #pragma once
 
-#include "fmod_common.h"
-
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Vector.hpp"
+
+#include "fmod_common.h"
 
 namespace red
 {

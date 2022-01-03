@@ -1,5 +1,7 @@
 #include "RedEngine/Audio/Component/AudioSource.hpp"
 
+#include "RedEngine/Audio/AudioModule.hpp"
+
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
@@ -12,10 +14,10 @@ RED_COMPONENT_BASIC_FUNCTIONS_IMPL(AudioSource)
 
 AudioSource::AudioSource(Entity* owner) : Component(owner), m_desc(), m_currentChannel(nullptr)
 {
-
 }
 
-AudioSource::AudioSource(Entity* owner, const SoundDesc& desc) : Component(owner), m_desc(desc), m_currentChannel(nullptr)
+AudioSource::AudioSource(Entity* owner, const SoundDesc& desc)
+    : Component(owner), m_desc(desc), m_currentChannel(nullptr)
 {
     m_sound = m_owner->GetWorld()
                   ->GetWorldComponent<ResourceHolderComponent>()

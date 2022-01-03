@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 
+#include "RedEngine/Core/CoreModule.hpp"
+
 namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(Transform)

@@ -1,3 +1,4 @@
+#include "TestModule.hpp"
 
 #include <RedEngine/Utils/TypesInfo.hpp>
 

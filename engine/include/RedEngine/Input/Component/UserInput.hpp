@@ -4,7 +4,6 @@
 #include "RedEngine/Input/InputDefinition.hpp"
 #include "RedEngine/Input/UserInputDefinition.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 #include <map>
 

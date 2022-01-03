@@ -4,7 +4,6 @@
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 #include <box2d/b2_body.h>
 #include <vector>
@@ -51,7 +50,6 @@ public:
 
     b2Body* GetBody();
     void SetBody(b2Body* body);
-
 
     OnTriggerSignalType m_triggerSignal;
     OnCollisionSignalType m_collisionSignal;

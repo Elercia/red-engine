@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Input/InputDefinition.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 #include <array>
 #include <bitset>

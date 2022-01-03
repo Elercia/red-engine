@@ -1,25 +1,22 @@
 #pragma once
 
-#include "RedEngine/RedEngineBase.hpp"
-
+#include <iostream>
 #include <string>
 
 namespace red
 {
-struct LogLevel
+
+enum class LogLevel
 {
-    enum Enum
-    {
-        LEVEL_TRACE,
-        LEVEL_DEBUG,
-        LEVEL_INFO,
-        LEVEL_WARNING,
-        LEVEL_ERROR,
-        LEVEL_FATAL
-    };
+    LEVEL_TRACE,
+    LEVEL_DEBUG,
+    LEVEL_INFO,
+    LEVEL_WARNING,
+    LEVEL_ERROR,
+    LEVEL_FATAL
 };
 
-void SetLogLevel(LogLevel::Enum level);
+void SetLogLevel(LogLevel level);
 
 class Logger
 {
@@ -27,16 +24,19 @@ public:
     Logger();
     virtual ~Logger() = default;
 
-    void SetLogLevel(LogLevel::Enum level);
+    void SetLogLevel(LogLevel level);
 
     template <typename... Args>
-    void LogInternal(LogLevel::Enum level, int line, const char* file, const std::string& format, Args... args);
+    void LogInternal(LogLevel level, int line, const char* file, const std::string& format, Args... args);
 
 protected:
-    virtual void Out(const std::string& data);
+    virtual void Out(const std::string& data)
+    {
+        std::cout << data << std::endl;
+    }
 
 private:
-    LogLevel::Enum m_logLevel;
+    LogLevel m_logLevel;
 };
 
 }  // namespace red

@@ -1,5 +1,6 @@
-
 #include "RedEngine/Core/Time/FrameCounter.hpp"
+
+#include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
@@ -7,7 +8,9 @@
 
 namespace red
 {
-FrameCounter::FrameCounter() : _lastFrameTimePoint(Clock::now()), m_frameBuffer(), m_currentFrameBufferIndex(0) {}
+FrameCounter::FrameCounter() : _lastFrameTimePoint(Clock::now()), m_frameBuffer(), m_currentFrameBufferIndex(0)
+{
+}
 
 float FrameCounter::Update()
 {

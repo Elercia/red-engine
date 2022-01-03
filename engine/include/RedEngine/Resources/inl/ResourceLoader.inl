@@ -62,4 +62,10 @@ void ResourceLoader<Type>::FreeAllResources()
     }
 }
 
+template <typename Type>
+std::shared_ptr<red::IResource> red::ResourceLoader<Type>::LoadAbstractResource(const Path& path)
+{
+    return LoadResource(path);
+}
+
 }  // namespace red

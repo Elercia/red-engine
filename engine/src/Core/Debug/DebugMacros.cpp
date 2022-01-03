@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 
+#include "RedEngine/Core/CoreModule.hpp"
+
 #include <SDL2/SDL_messagebox.h>
 #include <filesystem>
 #include <fmt/format.h>

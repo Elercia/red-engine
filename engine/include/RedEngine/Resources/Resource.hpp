@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Filesystem/Path.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -23,6 +22,8 @@ enum class ResourceType
     SPRITE,
     SOUND,
     TEXTURE2D,
+    SHADER_PROGRAM,
+    MATERIAL,
     AUDIO,
 };
 

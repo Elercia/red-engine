@@ -1,5 +1,7 @@
 #include "RedEngine/Utils/Random.hpp"
 
+#include "RedEngine/Utils/UtilityModule.hpp"
+
 #include <random>
 
 static std::random_device rd;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Filesystem/Path.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 #include <string>
 #include <tuple>

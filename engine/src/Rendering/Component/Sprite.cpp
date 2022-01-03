@@ -1,7 +1,9 @@
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 
-#include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Rendering/RenderingModule.hpp"
+
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
@@ -14,11 +16,11 @@ namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(Sprite)
 
-Sprite::Sprite(Entity* entity) : Component(entity), m_spriteResource(nullptr)
+Sprite::Sprite(Entity* entity) : Renderable(entity), m_spriteResource(nullptr)
 {
 }
 
-Sprite::Sprite(Entity* entity, const Path& resourceId) : Component(entity)
+Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
 {
     m_spriteResource = m_owner->GetWorld()
                            ->GetWorldComponent<ResourceHolderComponent>()

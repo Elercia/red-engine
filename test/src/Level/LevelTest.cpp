@@ -1,3 +1,4 @@
+#include "TestModule.hpp"
 #include "LevelTest.hpp"
 
 #include "RedEngine/Core/Entity/Components/Transform.hpp"

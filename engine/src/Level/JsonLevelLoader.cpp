@@ -1,5 +1,7 @@
 #include "RedEngine/Level/JsonLevelLoader.hpp"
 
+#include "RedEngine/Level/LevelModule.hpp"
+
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Level/JsonLevelNames.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"

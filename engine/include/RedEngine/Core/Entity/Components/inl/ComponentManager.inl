@@ -1,6 +1,5 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/Core/Entity/Entity.hpp"
 
 namespace red
 {
@@ -12,8 +11,9 @@ ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args
     auto* comp = GetComponent<ComponentType_t>(owner);
     if (comp)
     {
-        RED_LOG_WARNING("Entity {} already have a component of type {} (strict type is {})", owner->GetId(),
-                        TypeInfo<ComponentType_t>().name, comp->GetComponentName());
+        // Fixme should reduce includes by removing Entity dereference from here
+        /*RED_LOG_WARNING("Entity {} already have a component of type {} (strict type is {})", owner->GetId(),
+                        TypeInfo<ComponentType_t>().name, comp->GetComponentName());*/
         return comp;
     }
 

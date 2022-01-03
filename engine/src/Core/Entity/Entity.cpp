@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 
+#include "RedEngine/Core/CoreModule.hpp"
+
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
@@ -9,8 +11,7 @@
 
 namespace red
 {
-Entity::Entity(World* world, EntityId id)
-    : m_world(world), m_id(id), m_parent(nullptr)
+Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id), m_parent(nullptr)
 {
     AddComponent<Transform>(0.F, 0.F);
 }

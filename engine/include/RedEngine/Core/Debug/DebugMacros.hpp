@@ -53,9 +53,9 @@ ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filena
 #define RED_ERROR(MSG) RED_ASSERT(false, MSG)
 #define RED_ASSERT_S(expr) RED_ASSERT(expr, "Assert triggered")
 
-#define CHECK_RETURN(EXPR) \
-    {                      \
-        auto expr = EXPR;  \
-        if (!expr)         \
-            return expr;   \
+#define CheckReturn(EXPR)      \
+    {                          \
+        auto exprValue = EXPR; \
+        if (!exprValue)        \
+            return exprValue;  \
     }

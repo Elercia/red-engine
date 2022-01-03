@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Configuration/CVar.hpp"
 
+#include "RedEngine/Core/CoreModule.hpp"
+
 #include <utility>
 
 namespace red
@@ -21,13 +23,25 @@ void CVarValue::ChangeValue(std::string newValue)
     }
 }
 
-void CVarValue::Reset() { ChangeValue(m_defaultValue); }
+void CVarValue::Reset()
+{
+    ChangeValue(m_defaultValue);
+}
 
-std::string CVarValue::GetName() const { return m_name; }
+std::string CVarValue::GetName() const
+{
+    return m_name;
+}
 
-std::string CVarValue::GetCategory() const { return m_category; }
+std::string CVarValue::GetCategory() const
+{
+    return m_category;
+}
 
-std::string CVarValue::GetLongName() const { return CVarUtils::GetLongName(m_category, m_name); }
+std::string CVarValue::GetLongName() const
+{
+    return CVarUtils::GetLongName(m_category, m_name);
+}
 size_t CVarValue::OnValueChange(std::function<void(CVarValue*)> callback)
 {
     auto index = m_valueChangeCallback.size();

@@ -23,11 +23,4 @@ std::vector<Entity*> System::GetComponents()
     return selectedEntities;
 }
 
-template <typename CT>
-CT* System::GetComponent()
-{
-    // TODO do somting better (at least rename System::GetComponent)
-    return m_world->GetWorldComponent<CT>();
-}
-
 }  // namespace red

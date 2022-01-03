@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Rendering/Renderer.hpp"
 
 namespace red
@@ -15,9 +14,11 @@ public:
 
     virtual void Init() override;
 
-    void PreUpdate() override;
     void Update() override;
-    void PostUpdate() override;
+
+    virtual void BeginRender() override;
+    virtual void Render() override;
+    virtual void EndRender() override;
 
     Renderer* GetRenderer();
 

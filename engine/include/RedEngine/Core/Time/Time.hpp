@@ -1,7 +1,5 @@
 #pragma once
 
-#include "RedEngine/RedEngineBase.hpp"
-
 namespace red
 {
 /// Class responsible of the engine time.

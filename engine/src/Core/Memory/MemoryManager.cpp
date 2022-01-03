@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Memory/MemoryManager.hpp"
 
+#include "RedEngine/Core/CoreModule.hpp"
+
 #include "RedEngine/Core/Engine.hpp"
 
 #include <cstdio>
@@ -7,9 +9,13 @@
 
 namespace red
 {
-MemoryManager::MemoryManager() : m_memoryProfiler() {}
+MemoryManager::MemoryManager() : m_memoryProfiler()
+{
+}
 
-MemoryManager::~MemoryManager() {}
+MemoryManager::~MemoryManager()
+{
+}
 
 void* MemoryManager::Allocate(std::size_t size, int /*line*/, const char* /*file*/)
 {

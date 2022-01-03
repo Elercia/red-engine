@@ -1,5 +1,7 @@
 #include "RedEngine/Input/Component/UserInput.hpp"
 
+#include "RedEngine/Input/InputModule.hpp"
+
 namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(UserInputComponent)

@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Engine.hpp"
 
+#include "RedEngine/Core/CoreModule.hpp"
+
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 #include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
@@ -57,48 +59,33 @@ int Engine::MainLoop()
 
         Time::SetDeltaTime(deltaTime);
 
-        // RED_LOG_DEBUG("FPS {}", 1 / deltaTime);
-
         continueExec = m_world->Update();
 
         m_world->Clean();
     }
-
-    InternalDestroy();
 
     return 0;
 }
 
 bool Engine::RegisterComponentTypes()
 {
-    CHECK_RETURN(m_world->RegisterComponentType<Transform>());
-    CHECK_RETURN(m_world->RegisterComponentType<DebugComponent>());
-    CHECK_RETURN(m_world->RegisterComponentType<EventsComponent>());
-    CHECK_RETURN(m_world->RegisterComponentType<UserInputComponent>());
-    CHECK_RETURN(m_world->RegisterComponentType<ColliderList>());
-    CHECK_RETURN(m_world->RegisterComponentType<PhysicBody>());
-    CHECK_RETURN(m_world->RegisterComponentType<Sprite>());
-    CHECK_RETURN(m_world->RegisterComponentType<WindowComponent>());
-    CHECK_RETURN(m_world->RegisterComponentType<CameraComponent>());
-    CHECK_RETURN(m_world->RegisterComponentType<ResourceHolderComponent>());
-    CHECK_RETURN(m_world->RegisterComponentType<AudioSource>());
-    CHECK_RETURN(m_world->RegisterComponentType<AudioListener>());
+    CheckReturn(m_world->RegisterComponentType<Transform>());
+    CheckReturn(m_world->RegisterComponentType<DebugComponent>());
+    CheckReturn(m_world->RegisterComponentType<EventsComponent>());
+    CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
+    CheckReturn(m_world->RegisterComponentType<ColliderList>());
+    CheckReturn(m_world->RegisterComponentType<PhysicBody>());
+    CheckReturn(m_world->RegisterComponentType<Sprite>());
+    CheckReturn(m_world->RegisterComponentType<WindowComponent>());
+    CheckReturn(m_world->RegisterComponentType<CameraComponent>());
+    CheckReturn(m_world->RegisterComponentType<ResourceHolderComponent>());
+    CheckReturn(m_world->RegisterComponentType<AudioSource>());
+    CheckReturn(m_world->RegisterComponentType<AudioListener>());
 
     return true;
 }
 
-bool Engine::InternalDestroy()
-{
-    Destroy();
-
-    m_world->Finalize();
-
-    delete m_world;
-
-    return true;
-}
-
-bool Engine::InternalCreate()
+bool Engine::Create()
 {
     InitRandomEngine(42);
 
@@ -123,7 +110,7 @@ bool Engine::InternalCreate()
 
     m_world->Init();
 
-    return Create();
+    return true;
 }
 
 bool Engine::Destroy()

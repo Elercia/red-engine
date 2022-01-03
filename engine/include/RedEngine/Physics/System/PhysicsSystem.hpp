@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 
 class b2Contact;
 

@@ -1,10 +1,12 @@
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 
-#include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Rendering/RenderingModule.hpp"
+
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
@@ -31,43 +33,54 @@ void RenderingSystem::Init()
 
 void RenderingSystem::Update()
 {
-    PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
+    PROFILER_CATEGORY("Update render data", Optick::Category::Rendering)
 
+    /*auto sprites = GetComponents<Sprite>();
+
+for (auto* sprite : sprites)
+{
+    if (!sprite->IsValid())
+            continue;
+
+    sprite->NextFrame();
+}*/
+}
+
+void RenderingSystem::BeginRender()
+{
     m_renderer->BeginRenderFrame();
+}
 
-    // Draw frame for each camera
-    for (auto& camera : GetComponents<CameraComponent>())
-    {
-        auto* cameraComponent = camera->GetComponent<CameraComponent>();
-        m_renderer->BeginCameraRendering(cameraComponent);
-
-        // Draw each sprite
-        for (auto& entity : GetComponents<Sprite>())
-        {
-            auto* sprite = entity->GetComponent<Sprite>();
-            auto* transform = entity->GetComponent<Transform>();
-
-            if (!sprite->IsValid())
-                continue;
-
-            sprite->NextFrame();
-
-            DrawDebug(cameraComponent);
-
-            m_renderer->Render(cameraComponent, sprite, *transform);
-        }
-
-        m_renderer->EndCameraRendering();
-    }
-
+void RenderingSystem::EndRender()
+{
     m_renderer->EndRenderFrame();
 }
 
-void RenderingSystem::PreUpdate()
+void RenderingSystem::Render()
 {
-}
-void RenderingSystem::PostUpdate()
-{
+    PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
+
+    auto renderables = GetComponents<Renderable>();
+
+    // Draw frame for each camera
+    for (auto& cameraEntity : GetComponents<CameraComponent>())
+    {
+        auto* cameraComponent = cameraEntity->GetComponent<CameraComponent>();
+        m_renderer->BeginCameraRendering(cameraComponent);
+
+        // Draw each sprite
+        for (auto& entity : renderables)
+        {
+            auto* renderable = entity->GetComponent<Renderable>();
+            auto* transform = entity->GetComponent<Transform>();
+
+            m_renderer->Render(cameraComponent, renderable, *transform);
+        }
+
+        DrawDebug(cameraComponent);
+
+        m_renderer->EndCameraRendering();
+    }
 }
 
 Renderer* RenderingSystem::GetRenderer()
@@ -78,6 +91,8 @@ Renderer* RenderingSystem::GetRenderer()
 void RenderingSystem::DrawDebug(CameraComponent* camera)
 {
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+
+    m_world->GetPhysicsWorld()->DrawDebug();
 
     // Draw debug information
     for (auto& shape : debugComp->m_frameShapes)
@@ -116,8 +131,6 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
     }
 
     debugComp->m_frameShapes.clear();
-
-    m_world->GetPhysicsWorld()->DrawDebug();
 }
 
 }  // namespace red

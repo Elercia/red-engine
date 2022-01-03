@@ -1,3 +1,5 @@
+#include "TestModule.hpp"
+
 #include "RedEngine/Utils/StringUtils.hpp"
 #include <catch2/catch.hpp>
 #include <algorithm>

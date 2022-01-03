@@ -1,7 +1,10 @@
-#include "fmod_errors.h"
+#include "RedEngine/Audio/AudioUtils.hpp"
+
+#include "RedEngine/Audio/AudioModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/Audio/AudioUtils.hpp"
+
+#include "fmod_errors.h"
 
 namespace red
 {

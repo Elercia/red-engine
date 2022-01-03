@@ -174,10 +174,17 @@ redcppcheck-cppcheck-build-dir
 !external/**/*.lib
 !external/**/*.a
 
+# Must not ignore premake binaries but ignore generated project files 
 !scripts/bin/*
 scripts/projects/
 
-todo.todo
+# Misc ignores ()
+**/todo.todo
+**/buildlog.log
+**/buildlog.txt
+**/msbuild.log
+*.sublime-workspace
+.cache
 
 test/RedEngineTest
 test/RESOURCES/TMP_OUT/

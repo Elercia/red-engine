@@ -1,3 +1,5 @@
+#include "TestModule.hpp"
+
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 

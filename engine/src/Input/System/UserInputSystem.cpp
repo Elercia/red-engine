@@ -1,5 +1,7 @@
 #include "RedEngine/Input/System/UserInputSystem.hpp"
 
+#include "RedEngine/Input/InputModule.hpp"
+
 #include "RedEngine/Core/Configuration/IniReader.hpp"
 #include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
@@ -37,7 +39,7 @@ void UserInputSystem::PreUpdate()
 {
     PROFILER_CATEGORY("Input Update", Optick::Category::Input);
 
-    auto* eventsSystem = GetComponent<EventsComponent>();
+    auto* eventsSystem = m_world->GetWorldComponent<EventsComponent>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)
     {
         const auto& actionName = actionMapping.first;

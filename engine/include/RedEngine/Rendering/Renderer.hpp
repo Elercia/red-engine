@@ -1,23 +1,22 @@
 #pragma once
 
-#include "Color.hpp"
-
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/RedEngineBase.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 
 #include <memory>
 #include <string>
 #include <vector>
 
-struct SDL_Renderer;
+#include "Color.hpp"
 
 namespace red
 {
 class WindowComponent;
-class Sprite;
+class Renderable;
 class CameraComponent;
+
+using OpenGlContext = void*;
 
 class Renderer
 {
@@ -27,10 +26,11 @@ public:
 
     void BeginCameraRendering(CameraComponent* cameraComponent);
     void EndCameraRendering();
+
     void BeginRenderFrame();
     void EndRenderFrame();
 
-    void Render(CameraComponent* camera, Sprite* sprite, const Transform& transform);
+    void Render(CameraComponent* camera, Renderable* renderable, const Transform& transform);
 
     void DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
                   const Color& color = ColorConstant::RED);
@@ -44,10 +44,10 @@ public:
     void DrawPoint(CameraComponent* camera, const Vector2& coord, const Color& color = ColorConstant::RED);
 
     void InitRenderer(WindowComponent* window);
-    SDL_Renderer* GetSDLRenderer();
 
 private:
-    SDL_Renderer* m_renderer;
+    OpenGlContext m_glContext;
+    WindowComponent* m_window;
 };
 
 }  // namespace red

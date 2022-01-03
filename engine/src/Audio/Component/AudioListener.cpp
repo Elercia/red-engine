@@ -1,5 +1,7 @@
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 
+#include "RedEngine/Audio/AudioModule.hpp"
+
 namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(AudioListener)
