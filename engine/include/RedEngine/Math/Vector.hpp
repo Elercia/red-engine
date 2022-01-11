@@ -81,6 +81,9 @@ public:
     Vector4T<T>& operator=(const Vector4T<T>&) = default;
     Vector4T<T>& operator=(Vector4T&&) = default;
 
+    T& operator[](uint8 i);
+    const T& operator[](uint8 i) const;
+
     ~Vector4T() = default;
 
     T x;
@@ -105,6 +108,7 @@ using Vector2i = Vector2T<int>;
 using Vector4 = Vector4T<float>;
 using Vector4i = Vector4T<int>;
 
+// TODO move this to a physics header
 b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
 Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2);
 
