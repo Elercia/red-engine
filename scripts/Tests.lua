@@ -50,3 +50,5 @@ project ("RedEngineTest")
 		optimize "on"
 		symbols "on"
 	filter {}
+
+	postbuildcommands { "{COPY} %{cfg.buildtarget.directory}/* " .. rootPath .. "test" }
