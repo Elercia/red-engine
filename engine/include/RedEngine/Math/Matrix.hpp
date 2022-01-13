@@ -20,14 +20,27 @@ public:
     constexpr T& operator()(uint8 i, uint8 j);
     constexpr const T& operator()(uint8 i, uint8 j) const;
 
+    T Det() const;
+    ThisType Inverse() const;
+
     static constexpr ThisType Identity();
 };
 
+using Matrix22 = MatrixT<float, 2, 2>;
+using Matrix33 = MatrixT<float, 3, 3>;
 using Matrix44 = MatrixT<float, 4, 4>;
 
-Matrix44 operator*(const Matrix44& mat, Matrix44::DataType v);
-Matrix44 operator*(const Matrix44& l, const Matrix44& r);
-Matrix44 operator*(const Matrix44& l, const Vector4& r);
+template<typename T, uint8 L, uint8 C>
+MatrixT<T, L, C> operator+(const MatrixT<T, L, C>& l, const MatrixT<T, L, C>& r);
+template<typename T, uint8 L, uint8 C>
+MatrixT<T, L, C> operator-(const MatrixT<T, L, C>& l, const MatrixT<T, L, C>& r);
+
+template<typename T, uint8 L, uint8 C>
+MatrixT<T, L, C> operator*(const MatrixT<T, L, C>& mat, typename MatrixT<T, L, C>::DataType v);
+template<typename T, uint8 L, uint8 C>
+MatrixT<T, L, C> operator*(const MatrixT<T, L, C>& l, const MatrixT<T, L, C>& r);
+template<typename T, uint8 L, uint8 C>
+MatrixT<T, L, C> operator*(const MatrixT<T, L, C>& l, const MatrixT<T, L, C>& r);
 
 }  // namespace red
 

@@ -8,6 +8,16 @@
 
 TEST_CASE("Matrix initialization", "[MATH]")
 {
+    SECTION("Identity Constexpr")
+    {
+        constexpr Matrix44 matrix = Matrix44::Identity();
+
+        REQUIRE(matrix(0, 0) == 1.0f);
+        REQUIRE(matrix(1, 1) == 1.0f);
+        REQUIRE(matrix(2, 2) == 1.0f);
+        REQUIRE(matrix(3, 3) == 1.0f);
+    }
+
     SECTION("Identity")
     {
         Matrix44 matrix = Matrix44::Identity();
@@ -79,12 +89,48 @@ TEST_CASE("Matrix-vector mul", "[MATH]")
 TEST_CASE("Matrix-matrix mul", "[MATH]")
 {
     Matrix44 matrix1 = Matrix44::Identity();
-    Matrix44 matrix2 = Matrix44::Identity();
+    Matrix44 matrix2 = Matrix44::Identity() * 2.f;
 
     Matrix44 m2 = matrix1 * matrix2;
 
-    REQUIRE(m2(0, 0) == 1.0f);
-    REQUIRE(m2(1, 1) == 1.0f);
-    REQUIRE(m2(2, 2) == 1.0f);
-    REQUIRE(m2(3, 3) == 1.0f);
+    REQUIRE(m2(0, 0) == 2.0f);
+    REQUIRE(m2(1, 1) == 2.0f);
+    REQUIRE(m2(2, 2) == 2.0f);
+    REQUIRE(m2(3, 3) == 2.0f);
+}
+
+TEST_CASE("Matrix det", "[MATH]")
+{
+    SECTION("2x2")
+    {
+        // clang-format off
+    	Matrix22 a = {	1.f, 2.f,
+    					3.f, 4.f};
+        // clang-format on
+
+        REQUIRE(a.Det() == -2.f);
+    }
+
+    SECTION("3x3")
+    {
+        // clang-format off
+    	Matrix33 a = {	1.f, 	3.f, 	5.f,
+    					7.f, 	1.f, 	11.f,
+    					13.f, 	15.f, 	17.f, };
+        // clang-format on
+
+        REQUIRE(a.Det() == 384.f);
+    }
+
+    SECTION("4x4")
+    {
+        // clang-format off
+    	Matrix44 a = {	9.f, 	2.f, 	2.f,	3.f,
+    					7.f, 	6.f, 	1.f,	7.f,
+    					9.f, 	4.f, 	7.f, 	3.f,
+    					8.f, 	8.f, 	4.f, 	0.f, };
+        // clang-format on
+
+        REQUIRE(a.Det() == -1680.f);
+    }
 }
