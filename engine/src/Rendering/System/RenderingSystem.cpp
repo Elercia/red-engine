@@ -16,7 +16,6 @@ namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
 {
-    RED_LOG_INFO("Adding Rendering system");
 }
 
 void RenderingSystem::Init()

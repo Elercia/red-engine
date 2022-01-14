@@ -10,7 +10,7 @@ T* World::AddSystem(Args... args)
 
     auto* ptr = new T(this, std::forward<Args>(args)...);
 
-    ptr->SetTypeId(TypeInfo<T>().typeId);
+    ptr->SetTypeTraits(TypeInfo<T>());
 
     m_systems.push_back(ptr);
 

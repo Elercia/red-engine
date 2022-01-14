@@ -9,7 +9,7 @@ namespace red
 struct TypeTraits
 {
     std::string_view name;
-    const uint32 typeId;
+    uint32 typeId;
 };
 
 #ifdef _MSC_VER

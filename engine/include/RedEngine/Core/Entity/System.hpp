@@ -2,6 +2,7 @@
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/Utils/TypesInfo.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -34,13 +35,10 @@ public:
     virtual void EndRender(){};
 
     /// Called once the world is initializing to manager system-specific init
-    virtual void Init()
-    {
-        m_isInit = true;
-    }
+    virtual void Init();
 
     /// Called once the system is shutting down to manage system-specific shutdown
-    virtual void Finalise(){};
+    virtual void Finalise();
 
     virtual void ManageEntities(){};
 
@@ -51,8 +49,8 @@ public:
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);
 
-    void SetTypeId(std::size_t typeId);
-    std::size_t GetTypeId();
+    void SetTypeTraits(TypeTraits typeTraits);
+    std::size_t GetTypeId() const;
 
     int GetPriority() const;
 
@@ -62,7 +60,7 @@ protected:
     bool m_isInit;
     World* m_world;
     int m_priority;
-    std::size_t m_typeId;
+    TypeTraits m_typeTraits;
 };
 }  // namespace red
 
