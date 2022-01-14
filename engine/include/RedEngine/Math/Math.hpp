@@ -1,9 +1,14 @@
 #pragma once
 
+#include <cmath>
+
 namespace red
 {
 namespace Math
 {
+    constexpr float PI = 3.14159265358979323846f;
+    constexpr double PId = 3.14159265358979323846;
+
     template <typename T>
     constexpr T Min(T l, T r);
 
@@ -19,10 +24,20 @@ namespace Math
     template <typename T>
     constexpr bool Between(T value, T lValue, T rValue);
 
+    inline float Sqrt(float f);
     constexpr int NextPowerOf2(int n);
 
     template <typename T>
     constexpr bool EqualsEpsilon(T a, T b, T epsilon);
+
+    inline float ToRadians(float degrees);
+    inline float ToDegrees(float radians);
+
+    inline float Cos(float f);
+    inline float Sin(float f);
+    inline float Tan(float f);
+
+
 }  // namespace Math
 }  // namespace red
 

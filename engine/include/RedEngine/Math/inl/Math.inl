@@ -55,4 +55,35 @@ constexpr bool Math::EqualsEpsilon(T a, T b, T epsilon)
     return (b - a) <= epsilon;
 }
 
+float Math::ToRadians(float degrees)
+{
+    return degrees * Math::PI / 180;
+}
+
+float Math::ToDegrees(float radians)
+{
+    return radians * 180 / Math::PI;
+}
+
+float Math::Sqrt(float f)
+{
+    return sqrt(f);
+}
+
+float Math::Cos(float f)
+{
+    return cos(f);
+}
+
+float Math::Sin(float f)
+{
+    return sin(f);
+}
+
+float Math::Tan(float f)
+{
+    return tan(f);
+}
+
+
 }  // namespace red

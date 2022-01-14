@@ -11,6 +11,7 @@ public:
     Vector2T() : Vector2T(T(), T())
     {
     }
+
     Vector2T(T px, T py) : x(px), y(py)
     {
     }
@@ -49,7 +50,12 @@ public:
     Vector3T() : Vector3T(T(), T(), T())
     {
     }
-    Vector3T(T x, T y, T z) : m_x(x), m_y(y), m_z(z)
+
+    Vector3T(T xx, T yy, T zz) : x(xx), y(yy), z(zz)
+    {
+    }
+
+    Vector3T(const Vector2T<T>& o, T z) : x(o.x), y(o.y), z(z)
     {
     }
 
@@ -61,7 +67,7 @@ public:
 
     ~Vector3T() = default;
 
-    T m_x, m_y, m_z;
+    T x, y, z;
 };
 
 template <typename T>
@@ -104,6 +110,9 @@ public:
 
 using Vector2 = Vector2T<float>;
 using Vector2i = Vector2T<int>;
+
+using Vector3 = Vector3T<float>;
+using Vector3i = Vector3T<int>;
 
 using Vector4 = Vector4T<float>;
 using Vector4i = Vector4T<int>;

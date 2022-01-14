@@ -1,4 +1,5 @@
 #include "RedEngine/Math/Matrix.hpp"
+#include "RedEngine/Math/MatrixFunction.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
 #include <catch2/catch.hpp>
