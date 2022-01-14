@@ -20,6 +20,7 @@
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
@@ -47,7 +48,7 @@ Engine::~Engine()
 
 int Engine::MainLoop()
 {
-    m_world->Init();
+   
 
     bool continueExec = true;
 
@@ -70,15 +71,28 @@ int Engine::MainLoop()
 bool Engine::RegisterComponentTypes()
 {
     CheckReturn(m_world->RegisterComponentType<Transform>());
-    CheckReturn(m_world->RegisterComponentType<DebugComponent>());
-    CheckReturn(m_world->RegisterComponentType<EventsComponent>());
-    CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
-    CheckReturn(m_world->RegisterComponentType<ColliderList>());
-    CheckReturn(m_world->RegisterComponentType<PhysicBody>());
+
+    // Rendering 
+    CheckReturn(m_world->RegisterComponentType<Renderable>());
     CheckReturn(m_world->RegisterComponentType<Sprite>());
     CheckReturn(m_world->RegisterComponentType<WindowComponent>());
     CheckReturn(m_world->RegisterComponentType<CameraComponent>());
+
+    // Debug
+    CheckReturn(m_world->RegisterComponentType<DebugComponent>());
+
+    // Inputs
+    CheckReturn(m_world->RegisterComponentType<EventsComponent>());
+    CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
+
+    // Physics
+    CheckReturn(m_world->RegisterComponentType<ColliderList>());
+    CheckReturn(m_world->RegisterComponentType<PhysicBody>());
+    
+    // Resources
     CheckReturn(m_world->RegisterComponentType<ResourceHolderComponent>());
+
+    // Audio
     CheckReturn(m_world->RegisterComponentType<AudioSource>());
     CheckReturn(m_world->RegisterComponentType<AudioListener>());
 
@@ -92,6 +106,8 @@ bool Engine::Create()
     m_world = new World;
 
     RegisterComponentTypes();
+
+    m_world->Init();
 
     auto* worldEntity = m_world->CreateWorldEntity();
 

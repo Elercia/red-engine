@@ -26,9 +26,6 @@ World::World()
     , m_currentLevel(nullptr)
     , m_levelLoader(nullptr)
 {
-    RegisterComponentType<Transform>();
-
-    m_worldChunk = new LevelChunk(this);
 }
 
 World::~World()
@@ -95,6 +92,8 @@ Entity* World::FindEntity(EntityId id)
 
 void World::Init()
 {
+    m_worldChunk = new LevelChunk(this);
+    
     m_worldChunk->Init();
 
     m_levelLoader = new JsonLevelLoader(this);
