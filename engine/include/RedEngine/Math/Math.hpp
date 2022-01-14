@@ -20,7 +20,10 @@ namespace Math
     constexpr bool Between(T value, T lValue, T rValue);
 
     constexpr int NextPowerOf2(int n);
-};  // namespace Math
+
+    template <typename T>
+    constexpr bool EqualsEpsilon(T a, T b, T epsilon);
+}  // namespace Math
 }  // namespace red
 
 #include "inl/Math.inl"

@@ -18,8 +18,14 @@ constexpr T Math::Max(T l, T r)
     return l > r ? l : r;
 }
 
-constexpr float Math::Clamp01(float value) { return Clamp(value, 0.F, 1.F); }
-constexpr double Math::Clamp01(double value) { return Clamp(value, 0., 1.); }
+constexpr float Math::Clamp01(float value)
+{
+    return Clamp(value, 0.F, 1.F);
+}
+constexpr double Math::Clamp01(double value)
+{
+    return Clamp(value, 0., 1.);
+}
 
 template <typename T>
 constexpr bool Math::Between(T value, T lValue, T rValue)
@@ -38,6 +44,15 @@ constexpr int Math::NextPowerOf2(int n)
     n++;
 
     return n;
+}
+
+template <typename T>
+constexpr bool Math::EqualsEpsilon(T a, T b, T epsilon)
+{
+    if (a > b)
+        return (a - b) <= epsilon;
+
+    return (b - a) <= epsilon;
 }
 
 }  // namespace red

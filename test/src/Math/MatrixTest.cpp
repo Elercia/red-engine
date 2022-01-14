@@ -134,3 +134,130 @@ TEST_CASE("Matrix det", "[MATH]")
         REQUIRE(a.Det() == -1680.f);
     }
 }
+
+TEST_CASE("Matrix inverse", "[MATH]")
+{
+    SECTION("2x2")
+    {
+        // clang-format off
+    	Matrix22 a = {	1.f, 2.f,
+    					3.f, 4.f};
+
+		Matrix22 res = {	-2.f, 		1.f,
+    						3.f/2.f, 	-1.f/2.f};
+        // clang-format on
+
+    	Matrix22 inv = a.Inverse();
+
+        REQUIRE(inv.EqualsEpsilon(res, 0.1f));
+    }
+
+    SECTION("3x3")
+    {
+        // clang-format off
+    	Matrix33 a = {	1.f, 	3.f, 	5.f,
+    					7.f, 	1.f, 	11.f,
+    					13.f, 	15.f, 	17.f, };
+
+    	Matrix33 res = {	-37.f/96.f, 	1.f/16.f, 	7.f/96.f,
+    						1.f/16.f, 		-1.f/8.f, 	1.f/16.f,
+    						23.f/96.f, 		1.f/16.f, 	-5.f/96.f };
+        // clang-format on
+
+        Matrix33 inv = a.Inverse();
+
+        REQUIRE(inv.EqualsEpsilon(res, 0.1f));
+    }
+
+    SECTION("4x4")
+    {
+        // clang-format off
+    	Matrix44 a = {	9.f, 	2.f, 	2.f,	3.f,
+    					7.f, 	6.f, 	1.f,	7.f,
+    					9.f, 	4.f, 	7.f, 	3.f,
+    					8.f, 	8.f, 	4.f, 	0.f, };
+
+    	Matrix44 res = {	41.f/210.f, 	-2.f/35.f, 		-13.f/210.f,	1.f/40.f,
+    						-5.f/42.f, 		1.f/14.f, 		-1.f/21.f,		1.f/8.f,
+    						-16.f/105.f, 	-1.f/35.f, 		23.f/105.f, 	-1.f/20.f,
+    						-1.f/14.f, 		1.f/17.f, 		1.f/14.f, 		-1.f/8.f };
+        // clang-format on
+
+        Matrix44 inv = a.Inverse();
+
+        REQUIRE(inv.EqualsEpsilon(res, 0.1f));
+    }
+
+    SECTION("InvInv")
+    {
+    	// clang-format off
+    	Matrix22 a = {	1.f, 2.f,
+    					3.f, -4.f};
+    	Matrix33 b = {	1.f, 	3.f, 	5.f,
+    					7.f, 	1.f, 	-11.f,
+    					13.f, 	15.f, 	17.f, };				
+    	Matrix44 c = {	9.f, 	-2.f, 	2.f,	3.f,
+    					7.f, 	6.f, 	1.f,	-7.f,
+    					-9.f, 	4.f, 	-7.f, 	3.f,
+    					8.f, 	8.f, 	4.f, 	0.f, };
+    	// clang-format on
+
+        REQUIRE(a.Inverse().Inverse().EqualsEpsilon(a, 0.1f));
+        REQUIRE(b.Inverse().Inverse().EqualsEpsilon(b, 0.1f));
+        REQUIRE(c.Inverse().Inverse().EqualsEpsilon(c, 0.1f));
+    }
+}
+
+TEST_CASE("Matrix transpose", "[MATH]")
+{
+    SECTION("2x2")
+    {
+        // clang-format off
+    	Matrix22 a = {	1.f, 2.f,
+    					3.f, 4.f };
+
+		Matrix22 res = {	1.f, 	3.f,
+    						2.f, 	4.f };
+        // clang-format on
+
+    	Matrix22 tra = a.Transpose();
+
+        REQUIRE(tra == res);
+    }
+
+    SECTION("3x3")
+    {
+        // clang-format off
+    	Matrix33 a = {	1.f, 	2.f, 	3.f,
+    					4.f, 	5.f, 	6.f,
+    					7.f, 	8.f, 	9.f, };
+
+    	Matrix33 res = {	1.f, 	4.f, 	7.f,
+    						2.f, 	5.f, 	8.f,
+    						3.f, 	6.f, 	9.f };
+        // clang-format on
+
+        Matrix33 tra = a.Transpose();
+
+        REQUIRE(tra == res);
+    }
+
+    SECTION("4x4")
+    {
+        // clang-format off
+    	Matrix44 a = {	1.f, 	2.f, 	3.f,	4.f,
+    					5.f, 	6.f, 	7.f,	8.f,
+    					9.f, 	10.f, 	11.f, 	12.f,
+    					13.f, 	14.f, 	15.f, 	16.f, };
+
+    	Matrix44 res = {	1.f, 	5.f, 	9.f,	13.f,
+    						2.f, 	6.f, 	10.f,	14.f,
+    						3.f, 	7.f, 	11.f, 	15.f,
+    						4.f, 	8.f, 	12.f, 	16.f };
+        // clang-format on
+
+        Matrix44 tra = a.Transpose();
+
+        REQUIRE(tra == res);
+    }
+}
