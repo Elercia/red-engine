@@ -80,7 +80,7 @@ project "RedEngineLib"
 	filter { "configurations:Debug" }
 		defines "RED_DEBUG"
 		runtime "Debug"
-		symbols "on"
+		symbols "Full"
 	filter {}
 
 	filter { "configurations:Release" }
