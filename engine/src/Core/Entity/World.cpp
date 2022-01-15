@@ -105,7 +105,7 @@ void World::InitSystems()
     std::sort(m_systems.begin(), m_systems.end(),
               [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
 
-    for (const auto& system : m_systems)
+    for (auto* system : m_systems)
     {
         if (!system->m_isInit)
             system->Init();
