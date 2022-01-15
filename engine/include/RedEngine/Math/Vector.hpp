@@ -8,27 +8,21 @@ template <typename T>
 class Vector2T
 {
 public:
-    Vector2T() : Vector2T(T(), T())
+    constexpr Vector2T() : Vector2T(T(), T())
     {
     }
 
-    Vector2T(T px, T py) : x(px), y(py)
+    constexpr Vector2T(T px, T py) : x(px), y(py)
     {
     }
 
-    Vector2T(const Vector2T<T>&) = default;
-    Vector2T(Vector2T<T>&&) = default;
+    constexpr Vector2T(const Vector2T<T>&) = default;
+    constexpr Vector2T(Vector2T<T>&&) = default;
 
     ~Vector2T() = default;
 
-    Vector2T<T>& operator=(const Vector2T<T>&) = default;
-    Vector2T<T>& operator=(Vector2T<T>&&) = default;
-
-    Vector2T<T> operator+(const Vector2T<T>& other) const;
-    Vector2T<T> operator-(const Vector2T<T>& other) const;
-    Vector2T<T> operator*(const Vector2T<T>& other) const;
-
-    Vector2T<T> operator*(T scalar) const;
+    constexpr Vector2T<T>& operator=(const Vector2T<T>&) = default;
+    constexpr Vector2T<T>& operator=(Vector2T<T>&&) = default;
 
     union
     {
@@ -47,23 +41,23 @@ template <typename T>
 class Vector3T
 {
 public:
-    Vector3T() : Vector3T(T(), T(), T())
+    constexpr Vector3T() : Vector3T(T(), T(), T())
     {
     }
 
-    Vector3T(T xx, T yy, T zz) : x(xx), y(yy), z(zz)
+    constexpr Vector3T(T xx, T yy, T zz) : x(xx), y(yy), z(zz)
     {
     }
 
-    Vector3T(const Vector2T<T>& o, T z) : x(o.x), y(o.y), z(z)
+    constexpr Vector3T(const Vector2T<T>& o, T z) : x(o.x), y(o.y), z(z)
     {
     }
 
-    Vector3T(const Vector3T&) = default;
-    Vector3T(Vector3T&&) = default;
+    constexpr Vector3T(const Vector3T&) = default;
+    constexpr Vector3T(Vector3T&&) = default;
 
-    Vector3T<T>& operator=(const Vector3T<T>&) = default;
-    Vector3T<T>& operator=(Vector3T<T>&&) = default;
+    constexpr Vector3T<T>& operator=(const Vector3T<T>&) = default;
+    constexpr Vector3T<T>& operator=(Vector3T<T>&&) = default;
 
     ~Vector3T() = default;
 
@@ -74,21 +68,22 @@ template <typename T>
 class Vector4T
 {
 public:
-    Vector4T() : Vector4T(T(), T(), T(), T())
-    {
-    }
-    Vector4T(T px, T py, T pz, T pw) : x(px), y(py), z(pz), w(pw)
+    constexpr Vector4T() : Vector4T(T(), T(), T(), T())
     {
     }
 
-    Vector4T(const Vector4T<T>&) = default;
-    Vector4T(Vector4T<T>&&) = default;
+    constexpr Vector4T(T px, T py, T pz, T pw) : x(px), y(py), z(pz), w(pw)
+    {
+    }
 
-    Vector4T<T>& operator=(const Vector4T<T>&) = default;
-    Vector4T<T>& operator=(Vector4T&&) = default;
+    constexpr Vector4T(const Vector4T<T>&) = default;
+    constexpr Vector4T(Vector4T<T>&&) = default;
 
-    T& operator[](uint8 i);
-    const T& operator[](uint8 i) const;
+    constexpr Vector4T<T>& operator=(const Vector4T<T>&) = default;
+    constexpr Vector4T<T>& operator=(Vector4T&&) = default;
+
+    constexpr T& operator[](uint8 i);
+    constexpr const T& operator[](uint8 i) const;
 
     ~Vector4T() = default;
 
@@ -116,6 +111,30 @@ using Vector3i = Vector3T<int>;
 
 using Vector4 = Vector4T<float>;
 using Vector4i = Vector4T<int>;
+
+template <typename T>
+constexpr Vector2T<T> operator+(const Vector2T<T>& l, const Vector2T<T>& r);
+template <typename T>
+constexpr Vector2T<T> operator-(const Vector2T<T>& l, const Vector2T<T>& r);
+template <typename T>
+constexpr Vector2T<T> operator*(const Vector2T<T>& l, const Vector2T<T>& r);
+template <typename T>
+constexpr Vector2T<T> operator*(const Vector2T<T>& l, T scalar);
+
+template <typename T>
+constexpr Vector2T<T> operator-(const Vector2T<T>& l);
+template <typename T>
+constexpr Vector2T<T> operator+(const Vector2T<T>& l);
+
+template <typename T>
+constexpr Vector3T<T> operator-(const Vector3T<T>& l);
+template <typename T>
+constexpr Vector3T<T> operator+(const Vector3T<T>& l);
+
+template <typename T>
+constexpr Vector4T<T> operator-(const Vector4T<T>& l);
+template <typename T>
+constexpr Vector4T<T> operator+(const Vector4T<T>& l);
 
 // TODO move this to a physics header
 b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
