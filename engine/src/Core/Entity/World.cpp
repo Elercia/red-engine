@@ -94,11 +94,14 @@ Entity* World::FindEntity(EntityId id)
 void World::Init()
 {
     m_worldChunk = new LevelChunk(this);
-    
     m_worldChunk->Init();
 
     m_levelLoader = new JsonLevelLoader(this);
+}
 
+
+void World::InitSystems()
+{
     std::sort(m_systems.begin(), m_systems.end(),
               [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
 
@@ -128,8 +131,7 @@ void World::Finalize()
 
 bool World::Update()
 {
-    std::sort(m_systems.begin(), m_systems.end(),
-              [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
+    Clean();
 
     EventsComponent* events = GetWorldComponent<EventsComponent>();
 
@@ -163,6 +165,8 @@ void World::Clean()
 
     if (m_worldChunk != nullptr)
         m_worldChunk->Clean();
+
+    InitSystems();
 }
 
 void World::AddGarbageEntityId(EntityId entityId)

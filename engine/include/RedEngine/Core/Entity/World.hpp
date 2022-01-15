@@ -61,6 +61,8 @@ public:
     void Init();
     void Finalize();
 
+    void InitSystems();
+
     bool Update();
 
     void Clean();

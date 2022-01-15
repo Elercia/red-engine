@@ -58,9 +58,7 @@ void Engine::MainLoop()
 
         Time::SetDeltaTime(deltaTime);
 
-        continueExec = m_world->Update();
-
-        m_world->Clean();
+        continueExec = m_world->Update();   
     }
 }
 
@@ -118,7 +116,7 @@ bool Engine::Create()
     m_world->AddSystem<UserInputSystem>();
     m_world->AddSystem<AudioSystem>();
 
-    m_world->Init();
+    m_world->InitSystems();
 
     return true;
 }
