@@ -17,17 +17,17 @@ public:
     // Publicly available data structure
     T m_data[C * L] = {0};
 
-    constexpr T& operator()(uint8 i, uint8 j);
-    constexpr const T& operator()(uint8 i, uint8 j) const;
+    constexpr inline T& operator()(uint8 i, uint8 j);
+    constexpr inline const T& operator()(uint8 i, uint8 j) const;
 
-    constexpr bool EqualsEpsilon(const ThisType& other, const T& epsilon) const;
+    constexpr inline bool EqualsEpsilon(const ThisType& other, const T& epsilon) const;
 
-    constexpr bool operator==(const ThisType& other) const;
-    constexpr bool operator!=(const ThisType& other) const;
+    constexpr inline bool operator==(const ThisType& other) const;
+    constexpr inline bool operator!=(const ThisType& other) const;
 
-    constexpr T Det() const;
-    constexpr ThisType Inverse() const;
-    constexpr ThisType Transpose() const;
+    constexpr inline T Det() const;
+    constexpr inline ThisType Inverse() const;
+    constexpr inline ThisType Transpose() const;
 
     static constexpr ThisType Identity();
 };

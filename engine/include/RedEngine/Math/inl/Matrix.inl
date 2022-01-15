@@ -183,13 +183,13 @@ constexpr MatrixT<T, L, C> MatrixT<T, L, C>::Transpose() const
 }
 
 template <>
-constexpr float MatrixT<float, 2, 2>::Det() const
+constexpr inline float MatrixT<float, 2, 2>::Det() const
 {
     return operator()(0, 0) * operator()(1, 1) - operator()(0, 1) * operator()(1, 0);
 }
 
 template <>
-constexpr MatrixT<float, 2, 2>::ThisType MatrixT<float, 2, 2>::Inverse() const
+constexpr inline MatrixT<float, 2, 2>::ThisType MatrixT<float, 2, 2>::Inverse() const
 {
     float det = Det();
 
@@ -212,7 +212,7 @@ constexpr MatrixT<float, 2, 2>::ThisType MatrixT<float, 2, 2>::Inverse() const
 }
 
 template <>
-constexpr float MatrixT<float, 3, 3>::Det() const
+constexpr inline float MatrixT<float, 3, 3>::Det() const
 {
     const float& a = operator()(0, 0);
     const float& b = operator()(0, 1);
@@ -237,7 +237,7 @@ constexpr float MatrixT<float, 3, 3>::Det() const
 }
 
 template <>
-constexpr MatrixT<float, 3, 3>::ThisType MatrixT<float, 3, 3>::Inverse() const
+constexpr inline MatrixT<float, 3, 3>::ThisType MatrixT<float, 3, 3>::Inverse() const
 {
     float det = Det();
     if (det == 0)
@@ -277,7 +277,7 @@ constexpr MatrixT<float, 3, 3>::ThisType MatrixT<float, 3, 3>::Inverse() const
 }
 
 template <>
-constexpr float MatrixT<float, 4, 4>::Det() const
+constexpr inline float MatrixT<float, 4, 4>::Det() const
 {
     const float& a = operator()(0, 0);
     const float& b = operator()(0, 1);
@@ -321,7 +321,7 @@ constexpr float MatrixT<float, 4, 4>::Det() const
 }
 
 template <>
-constexpr MatrixT<float, 4, 4>::ThisType MatrixT<float, 4, 4>::Inverse() const
+constexpr inline MatrixT<float, 4, 4>::ThisType MatrixT<float, 4, 4>::Inverse() const
 {
     float det = Det();
     if (det == 0)
