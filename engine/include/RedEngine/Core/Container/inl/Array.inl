@@ -29,6 +29,7 @@ void Array<T>::resize(size_type count, T value /*= T()*/)
 template <typename T>
 void Array<T>::Resize(size_type count, const T& t)
 {
+    
     if (m_size < count)
     {
         for (int i = m_size; i < count; i++)
@@ -111,44 +112,6 @@ typename Array<T>::iterator Array<T>::erase(iterator pos)
 {
     return erase((const_iterator) pos);
 }
-
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, std::initializer_list<T> ilist)
-//{
-//    SmartReserve(m_size + ilist.size());
-//
-//    m_size++;
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, size_type count, const T& value)
-//{
-//    SmartReserve(m_size + count);
-//}
-//
-// template <typename T>
-// void Array<T>::insert(iterator pos, size_type count, const T& value)
-//{
-//    return insert((const_iterator) pos, count, value);
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, T&& value)
-//{
-//    SmartReserve(m_size + 1);
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, const T& value)
-//{
-//    SmartReserve(m_size + 1);
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(iterator pos, const T& value)
-//{
-//    SmartReserve(m_size + 1);
-//}
 
 template <typename T>
 void Array<T>::clear()
@@ -336,6 +299,8 @@ Array<T>::Array() : m_size(0), m_capacity(0), m_data(nullptr)
 template <typename T>
 Array<T>::Array(std::initializer_list<T> list) : m_size(0), m_capacity(0), m_data(nullptr)
 {
+    reserve(list.size());
+
     for (auto it = list.begin(); it != list.end(); it++)
         push_back(*it);
 }
