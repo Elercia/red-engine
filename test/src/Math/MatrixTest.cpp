@@ -1,5 +1,5 @@
 #include "RedEngine/Math/Matrix.hpp"
-#include "RedEngine/Math/MatrixFunction.hpp"
+#include "RedEngine/Math/MatrixFunctions.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
 #include <catch2/catch.hpp>
@@ -148,7 +148,7 @@ TEST_CASE("Matrix inverse", "[MATH]")
     						3.f/2.f, 	-1.f/2.f};
         // clang-format on
 
-    	Matrix22 inv = a.Inverse();
+        Matrix22 inv = a.Inverse();
 
         REQUIRE(inv.EqualsEpsilon(res, 0.1f));
     }
@@ -191,7 +191,7 @@ TEST_CASE("Matrix inverse", "[MATH]")
 
     SECTION("InvInv")
     {
-    	// clang-format off
+        // clang-format off
     	Matrix22 a = {	1.f, 2.f,
     					3.f, -4.f};
     	Matrix33 b = {	1.f, 	3.f, 	5.f,
@@ -201,7 +201,7 @@ TEST_CASE("Matrix inverse", "[MATH]")
     					7.f, 	6.f, 	1.f,	-7.f,
     					-9.f, 	4.f, 	-7.f, 	3.f,
     					8.f, 	8.f, 	4.f, 	0.f, };
-    	// clang-format on
+        // clang-format on
 
         REQUIRE(a.Inverse().Inverse().EqualsEpsilon(a, 0.1f));
         REQUIRE(b.Inverse().Inverse().EqualsEpsilon(b, 0.1f));
@@ -221,7 +221,7 @@ TEST_CASE("Matrix transpose", "[MATH]")
     						2.f, 	4.f };
         // clang-format on
 
-    	Matrix22 tra = a.Transpose();
+        Matrix22 tra = a.Transpose();
 
         REQUIRE(tra == res);
     }
