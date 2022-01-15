@@ -46,13 +46,16 @@ TEST_CASE("User input handling", "[Input]")
     world.RegisterComponentType<EventsComponent>();
     world.RegisterComponentType<UserInputComponent>();
 
-    auto* singletonEntity = world.CreateWorldEntity("a");
-
-    auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();
+    // Add input & event system (responsible of creating UserInputComponent & EventsComponent)
     world.AddSystem<red::UserInputSystem>();
-
-    auto* eventsComponent = singletonEntity->AddComponent<EventsComponent>();
     world.AddSystem<red::EventSystem>();
+
+    // Update the world to init the systems (could have init individually the systems by calling .Init() on them)
+    world.Update();
+
+    // Get the components created by the systems
+    auto* comp = world.GetWorldComponent<red::UserInputComponent>();
+    auto* eventsComponent = world.GetWorldComponent<red::EventsComponent>();
 
     SECTION("Single input without modifiers")
     {
