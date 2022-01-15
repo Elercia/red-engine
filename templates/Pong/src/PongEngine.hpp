@@ -11,5 +11,7 @@ public:
 	bool Destroy() override;
 
 	std::string_view GetGameName() const;
+
+	virtual bool RegisterComponentTypes() override;
 };
 }  // namespace pong
