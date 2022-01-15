@@ -4,6 +4,7 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
@@ -20,6 +21,7 @@ TEST_CASE("Sprite test", "[RENDERING]")
     world.Init();
     
     world.RegisterComponentType<ResourceHolderComponent>();
+    world.RegisterComponentType<Renderable>();
     world.RegisterComponentType<Sprite>();
 
     Entity* sing = world.CreateWorldEntity("a");
