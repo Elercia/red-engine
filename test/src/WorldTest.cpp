@@ -11,6 +11,8 @@ using namespace red;
 TEST_CASE("Create world entities", "[ECS]")
 {
     World world;
+    world.Init();
+    
     const size_t entityCountStart = world.GetEntities().size();
 
     SECTION("Adding entity")
@@ -30,6 +32,7 @@ TEST_CASE("Create level entities", "[ECS]")
     SECTION("Adding entity before level init")
     {
         World world;
+        world.Init();
 
         Level level("Test level", &world);
 
@@ -51,6 +54,7 @@ TEST_CASE("Create level entities", "[ECS]")
     SECTION("Adding entity after level init")
     {
         World world;
+        world.Init();
 
         Level level("Test level", &world);
         level.InternInit();

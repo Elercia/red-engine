@@ -24,6 +24,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
 {
     using namespace red;
     World w;
+    w.Init();
     w.RegisterComponentType<PhysicBody>();
     w.RegisterComponentType<ColliderList>();
 

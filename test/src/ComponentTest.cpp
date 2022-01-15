@@ -17,6 +17,7 @@ TEST_CASE("Component", "[ECS]")
     SECTION("Bulk add remove")
     {
         red::World world;
+        world.Init();
 
         world.RegisterComponentType<MockComponent1>();
         world.RegisterComponentType<MockComponent11>();
@@ -90,6 +91,7 @@ TEST_CASE("Component", "[ECS]")
     SECTION("Check component validity")
     {
         red::World world;
+        world.Init();
 
         world.RegisterComponentType<MockComponent1>();
         world.RegisterComponentType<MockComponent11>();
@@ -120,6 +122,7 @@ TEST_CASE("Component", "[ECS]")
 TEST_CASE("Component inheritance", "[ECS]")
 {
     red::World world;
+    world.Init();
 
     world.RegisterComponentType<MockComponent1>();
     world.RegisterComponentType<MockComponent11>();

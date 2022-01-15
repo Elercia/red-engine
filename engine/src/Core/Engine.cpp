@@ -70,8 +70,6 @@ int Engine::MainLoop()
 
 bool Engine::RegisterComponentTypes()
 {
-    CheckReturn(m_world->RegisterComponentType<Transform>());
-
     // Rendering 
     CheckReturn(m_world->RegisterComponentType<Renderable>());
     CheckReturn(m_world->RegisterComponentType<Sprite>());

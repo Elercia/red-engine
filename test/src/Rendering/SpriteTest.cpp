@@ -17,6 +17,8 @@ TEST_CASE("Sprite test", "[RENDERING]")
     using namespace red;
 
     World world;
+    world.Init();
+    
     world.RegisterComponentType<ResourceHolderComponent>();
     world.RegisterComponentType<Sprite>();
 

@@ -26,6 +26,7 @@ World::World()
     , m_currentLevel(nullptr)
     , m_levelLoader(nullptr)
 {
+    RegisterComponentType<Transform>();
 }
 
 World::~World()
