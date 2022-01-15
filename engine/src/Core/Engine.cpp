@@ -46,10 +46,8 @@ Engine::~Engine()
 {
 }
 
-int Engine::MainLoop()
+void Engine::MainLoop()
 {
-   
-
     bool continueExec = true;
 
     FrameCounter fc;
@@ -64,8 +62,6 @@ int Engine::MainLoop()
 
         m_world->Clean();
     }
-
-    return 0;
 }
 
 bool Engine::RegisterComponentTypes()

@@ -21,7 +21,7 @@ public:
     Engine();
     virtual ~Engine();
 
-    int MainLoop();
+    void MainLoop();
 
     virtual bool Create();
     virtual bool Destroy();
