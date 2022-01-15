@@ -55,12 +55,12 @@ constexpr bool Math::EqualsEpsilon(T a, T b, T epsilon)
     return (b - a) <= epsilon;
 }
 
-float Math::ToRadians(float degrees)
+constexpr float Math::ToRadians(float degrees)
 {
     return degrees * Math::PI / 180;
 }
 
-float Math::ToDegrees(float radians)
+constexpr float Math::ToDegrees(float radians)
 {
     return radians * 180 / Math::PI;
 }

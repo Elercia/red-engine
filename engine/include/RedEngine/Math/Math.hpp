@@ -30,8 +30,8 @@ namespace Math
     template <typename T>
     constexpr bool EqualsEpsilon(T a, T b, T epsilon);
 
-    inline float ToRadians(float degrees);
-    inline float ToDegrees(float radians);
+    inline constexpr float ToRadians(float degrees);
+    inline constexpr float ToDegrees(float radians);
 
     inline float Cos(float f);
     inline float Sin(float f);
