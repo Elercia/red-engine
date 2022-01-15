@@ -22,12 +22,12 @@ TEST_CASE("Sprite test", "[RENDERING]")
     world.RegisterComponentType<ResourceHolderComponent>();
     world.RegisterComponentType<Sprite>();
 
-    Entity* sing = world.CreateWorldEntity();
+    Entity* sing = world.CreateWorldEntity("a");
     ResourceHolderComponent* holder = sing->AddComponent<ResourceHolderComponent>();
     holder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(&world));
     holder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(&world));
 
-    auto* e = world.CreateWorldEntity();
+    auto* e = world.CreateWorldEntity("a");
     auto* spriteComponent = e->AddComponent<Sprite>(red::Path::Resource("sprite_test/sprite_test"));
 
     REQUIRE(spriteComponent->GetAnimations().size() == 2);

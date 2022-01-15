@@ -20,7 +20,7 @@ TEST_CASE("Create world entities", "[ECS]")
         constexpr size_t entityCreated = 100;
         for (size_t i = 0; i < entityCreated; i++)
         {
-            world.CreateWorldEntity();
+            world.CreateWorldEntity("a");
         }
 
         REQUIRE(world.GetEntities().size() - entityCountStart == entityCreated);

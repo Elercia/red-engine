@@ -18,7 +18,7 @@ TEST_CASE("Raw input handling", "[Input]")
     world.Init();
     world.RegisterComponentType<EventsComponent>();
 
-    auto* e = world.CreateWorldEntity();
+    auto* e = world.CreateWorldEntity("a");
     auto* eventsComonent = e->AddComponent<EventsComponent>();
     auto* eventSystem = world.AddSystem<EventSystem>();
 
@@ -46,16 +46,13 @@ TEST_CASE("User input handling", "[Input]")
     world.RegisterComponentType<EventsComponent>();
     world.RegisterComponentType<UserInputComponent>();
 
-
-    auto* singletonEntity = world.CreateWorldEntity();
+    auto* singletonEntity = world.CreateWorldEntity("a");
 
     auto* comp = singletonEntity->AddComponent<red::UserInputComponent>();
     world.AddSystem<red::UserInputSystem>();
 
     auto* eventsComponent = singletonEntity->AddComponent<EventsComponent>();
     world.AddSystem<red::EventSystem>();
-   
-    world.Init();
 
     SECTION("Single input without modifiers")
     {

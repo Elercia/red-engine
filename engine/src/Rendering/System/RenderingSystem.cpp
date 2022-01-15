@@ -22,7 +22,7 @@ void RenderingSystem::Init()
 {
     System::Init();
 
-    auto* window = m_world->CreateWorldEntity()->AddComponent<WindowComponent>();
+    auto* window = m_world->CreateWorldEntity("Window")->AddComponent<WindowComponent>();
     window->CreateNewWindow();
 
     m_renderer = new Renderer;

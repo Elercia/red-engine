@@ -25,7 +25,7 @@ DebugSystem::DebugSystem(World* world) : System(world)
 void DebugSystem::Init()
 {
     System::Init();
-    m_world->CreateWorldEntity()->AddComponent<DebugComponent>();
+    m_world->CreateWorldEntity("DebugSystemEntity")->AddComponent<DebugComponent>();
 }
 
 void DebugSystem::Update()

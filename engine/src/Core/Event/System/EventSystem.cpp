@@ -12,13 +12,13 @@ namespace red
 {
 EventSystem::EventSystem(World* world) : System(world)
 {
-    m_priority = 1;
+    m_priority = 100;
 }
 
 void EventSystem::Init()
 {
     System::Init();
-    m_world->CreateWorldEntity()->AddComponent<EventsComponent>();
+    m_world->CreateWorldEntity("EventSystemEntity")->AddComponent<EventsComponent>();
 }
 
 void EventSystem::PreUpdate()

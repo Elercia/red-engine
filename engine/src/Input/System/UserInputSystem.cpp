@@ -14,7 +14,7 @@ namespace red
 {
 UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
 {
-    m_priority = 9;
+    m_priority = 1;
 }
 
 void UserInputSystem::Init()
@@ -25,7 +25,7 @@ void UserInputSystem::Init()
 
     SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 
-    m_inputComponent = m_world->CreateWorldEntity()->AddComponent<UserInputComponent>();
+    m_inputComponent = m_world->CreateWorldEntity("UserInputSystemEntity")->AddComponent<UserInputComponent>();
 
     m_inputComponent->m_actionMapping = utils::UserInputHelper::LoadActionMapping();
 

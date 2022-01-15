@@ -37,7 +37,7 @@ public:
     Entity* FindEntity(EntityId id);
     const Array<Entity*>& GetEntities() const;
 
-    Entity* CreateWorldEntity();
+    Entity* CreateWorldEntity(const std::string& name);
 
     template <class T, class... Args>
     T* AddSystem(Args... args);

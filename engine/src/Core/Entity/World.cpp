@@ -212,9 +212,9 @@ const std::vector<Entity*>& World::GetEntities() const
     return m_entities;
 }
 
-Entity* World::CreateWorldEntity()
+Entity* World::CreateWorldEntity(const std::string& name)
 {
-    Entity* e = m_worldChunk->CreateEntity();
+    Entity* e = m_worldChunk->CreateEntity(name);
 
     OnAddEntity(e);
 

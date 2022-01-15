@@ -103,7 +103,7 @@ bool Engine::Create()
 
     m_world->Init();
 
-    auto* worldEntity = m_world->CreateWorldEntity();
+    auto* worldEntity = m_world->CreateWorldEntity("ResourceHolder");
 
     // TODO Put it inside a resource loader system
     auto* resourceHolder = worldEntity->AddComponent<ResourceHolderComponent>();

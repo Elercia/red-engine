@@ -26,7 +26,7 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock1;
         for (int i = 0; i < 100; ++i)
         {
-            auto* entity = world.CreateWorldEntity();
+            auto* entity = world.CreateWorldEntity("a");
             entitiesWithMock1.push_back(entity);
             REQUIRE(entity != nullptr);
         }
@@ -34,7 +34,7 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock2;
         for (int i = 0; i < 100; ++i)
         {
-            auto* entity = world.CreateWorldEntity();
+            auto* entity = world.CreateWorldEntity("b");
             entitiesWithMock2.push_back(entity);
             REQUIRE(entity != nullptr);
         }
@@ -97,13 +97,13 @@ TEST_CASE("Component", "[ECS]")
         world.RegisterComponentType<MockComponent11>();
         world.RegisterComponentType<MockComponent2>();
 
-        auto* entityA = world.CreateWorldEntity();
+        auto* entityA = world.CreateWorldEntity("a");
         REQUIRE(entityA != nullptr);
 
         auto* componentAddedA = entityA->AddComponent<MockComponent1>();
         REQUIRE(componentAddedA != nullptr);
 
-        auto* entityB = world.CreateWorldEntity();
+        auto* entityB = world.CreateWorldEntity("b");
         REQUIRE(entityB != nullptr);
 
         auto* componentAddedB = entityB->AddComponent<MockComponent1>();
@@ -127,7 +127,7 @@ TEST_CASE("Component inheritance", "[ECS]")
     world.RegisterComponentType<MockComponent1>();
     world.RegisterComponentType<MockComponent11>();
 
-    auto* entityA = world.CreateWorldEntity();
+    auto* entityA = world.CreateWorldEntity("a");
     REQUIRE(entityA != nullptr);
 
     SECTION("Hierarchy working")
