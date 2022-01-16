@@ -2,6 +2,10 @@
 
 #include "RedEngine/Core/CoreModule.hpp"
 
+#include "RedEngine/Utils/StringUtils.hpp"
+
+using namespace red::utils;  // StringReader
+
 namespace red
 {
 template <>
@@ -30,13 +34,10 @@ std::string Serialize(const double& value)
 template <>
 bool Deserialize(double& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = strtod(str.c_str(), &endptr);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    CheckReturn(StringParser::ReadDouble(&it, end, value));
 
     return true;
 }
@@ -50,13 +51,10 @@ std::string Serialize(const float& value)
 template <>
 bool Deserialize(float& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = (float) strtod(str.c_str(), &endptr);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    CheckReturn(StringParser::ReadFloat(&it, end, value));
 
     return true;
 }
@@ -70,13 +68,12 @@ std::string Serialize(const int8& value)
 template <>
 bool Deserialize(int8& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = (int8) strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    int intValue = 0;
+    CheckReturn(StringParser::ReadInt(&it, end, intValue));
+    value = (int8) intValue;
 
     return true;
 }
@@ -90,13 +87,12 @@ std::string Serialize(const int16& value)
 template <>
 bool Deserialize(int16& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = (int16) strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    int intValue = 0;
+    CheckReturn(StringParser::ReadInt(&it, end, intValue));
+    value = (int16) intValue;
 
     return true;
 }
@@ -110,13 +106,12 @@ std::string Serialize(const int32& value)
 template <>
 bool Deserialize(int32& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    int intValue = 0;
+    CheckReturn(StringParser::ReadInt(&it, end, intValue));
+    value = (int32) intValue;
 
     return true;
 }
@@ -130,13 +125,10 @@ std::string Serialize(const int64& value)
 template <>
 bool Deserialize(int64& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    CheckReturn(StringParser::ReadLong(&it, end, value));
 
     return true;
 }
@@ -150,13 +142,12 @@ std::string Serialize(const uint8& value)
 template <>
 bool Deserialize(uint8& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = (uint8) strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    uint32 intValue = 0;
+    CheckReturn(StringParser::ReadUnsignedInt(&it, end, intValue));
+    value = (uint8) intValue;
 
     return true;
 }
@@ -170,13 +161,12 @@ std::string Serialize(const uint16& value)
 template <>
 bool Deserialize(uint16& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = (uint16) strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    uint32 intValue = 0;
+    CheckReturn(StringParser::ReadUnsignedInt(&it, end, intValue));
+    value = (uint16) intValue;
 
     return true;
 }
@@ -190,13 +180,12 @@ std::string Serialize(const uint32& value)
 template <>
 bool Deserialize(uint32& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    uint32 intValue = 0;
+    CheckReturn(StringParser::ReadUnsignedInt(&it, end, intValue));
+    value = (uint32) intValue;
 
     return true;
 }
@@ -210,13 +199,10 @@ std::string Serialize(const uint64& value)
 template <>
 bool Deserialize(uint64& value, const std::string& str)
 {
-    char* endptr = nullptr;
-    value = strtol(str.c_str(), &endptr, 10);
+    const char* it = str.data();
+    const char* end = (&str.back()) + 1;
 
-    if (*endptr != '\0')
-    {
-        return false;
-    }
+    CheckReturn(StringParser::ReadUnsignedLong(&it, end, value));
 
     return true;
 }
