@@ -66,4 +66,123 @@ void ToUpperCase(std::wstring& str)
     std::for_each(str.begin(), str.end(), [](wchar_t& c) { c = (char) std::toupper(c); });
 }
 
+namespace StringParser
+{
+    bool Expect(const char** it, const char* end, char c)
+    {
+        if (*it == end)
+            return false;
+
+        if (**it != c)
+            return false;
+
+        (*it)++;
+
+        return true;
+    }
+
+    bool ReadFloat(const char** it, const char* end, float& f)
+    {
+        if (*it == end)
+            return false;
+
+        char* endptr = nullptr;
+        float value = strtof(*it, &endptr);
+
+        if (endptr == *it)
+            return false;
+
+        f = value;
+        *it = endptr;
+
+        return true;
+    }
+
+    bool ReadDouble(const char** it, const char* end, double& f)
+    {
+        if (*it == end)
+            return false;
+
+        char* endptr = nullptr;
+        double value = strtod(*it, &endptr);
+
+        if (endptr == *it)
+            return false;
+
+        f = value;
+        *it = endptr;
+
+        return true;
+    }
+
+    bool ReadInt(const char** it, const char* end, int& i)
+    {
+        if (*it == end)
+            return false;
+
+        char* endptr = nullptr;
+        int value = strtol(*it, &endptr, 10);
+
+        if (endptr == *it)
+            return false;
+
+        i = value;
+        *it = endptr;
+
+        return true;
+    }
+
+    bool ReadLong(const char** it, const char* end, int64& i)
+    {
+        if (*it == end)
+            return false;
+
+        char* endptr = nullptr;
+        int64 value = strtol(*it, &endptr, 10);
+
+        if (endptr == *it)
+            return false;
+
+        i = value;
+        *it = endptr;
+
+        return true;
+    }
+
+    bool ReadUnsignedInt(const char** it, const char* end, uint32& i)
+    {
+        if (*it == end)
+            return false;
+
+        char* endptr = nullptr;
+        uint32 value = strtoul(*it, &endptr, 10);
+
+        if (endptr == *it)
+            return false;
+
+        i = value;
+        *it = endptr;
+
+        return true;
+    }
+
+    bool ReadUnsignedLong(const char** it, const char* end, uint64& i)
+    {
+        if (*it == end)
+            return false;
+
+        char* endptr = nullptr;
+        uint64 value = strtoul(*it, &endptr, 10);
+
+        if (endptr == *it)
+            return false;
+
+        i = value;
+        *it = endptr;
+
+        return true;
+    }
+
+};  // namespace StringParser
+
 }  // namespace red::utils
