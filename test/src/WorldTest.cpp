@@ -1,10 +1,10 @@
-#include "TestModule.hpp"
-
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Level/Level.hpp"
 
 #include <catch2/catch.hpp>
+
+#include "SystemTest.hpp"
 
 using namespace red;
 
@@ -12,7 +12,7 @@ TEST_CASE("Create world entities", "[ECS]")
 {
     World world;
     world.Init();
-    
+
     const size_t entityCountStart = world.GetEntities().size();
 
     SECTION("Adding entity")
@@ -71,4 +71,16 @@ TEST_CASE("Create level entities", "[ECS]")
 
         level.InternFinalize();
     }
+}
+
+TEST_CASE("Systems management", "[ECS]")
+{
+    World world;
+    world.Init();
+
+    REQUIRE( world.AddSystem<MockSystem>() != nullptr );
+    REQUIRE( world.GetSystem<MockSystem>() != nullptr);
+
+    REQUIRE( world.RemoveSystem<MockSystem>() );
+    REQUIRE( world.GetSystem<MockSystem>() == nullptr);
 }

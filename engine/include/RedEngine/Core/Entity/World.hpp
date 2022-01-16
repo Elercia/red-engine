@@ -42,7 +42,7 @@ public:
     template <class T, class... Args>
     T* AddSystem(Args... args);
     template <class T>
-    void RemoveSystem();
+    bool RemoveSystem();
     template <class T>
     T* GetSystem();
 

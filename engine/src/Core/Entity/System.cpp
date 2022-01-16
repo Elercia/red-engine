@@ -42,7 +42,7 @@ void System::Init()
 {
     m_isInit = true;
 
-    RED_LOG_INFO("Adding {} system", m_typeTraits.name);
+    RED_LOG_INFO("Init {} system", m_typeTraits.name);
 }
 
 void System::Finalise()
