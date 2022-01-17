@@ -62,8 +62,8 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
     glViewport(cameraComponent->m_viewport.x, cameraComponent->m_viewport.y, cameraComponent->m_viewport.width,
                cameraComponent->m_viewport.height);
 
-    glClearColor(cameraComponent->m_backgroundColor.r, cameraComponent->m_backgroundColor.g,
-                 cameraComponent->m_backgroundColor.b, cameraComponent->m_backgroundColor.a);
+    glClearColor(cameraComponent->m_cleanColor.r / 255.f, cameraComponent->m_cleanColor.g / 255.f,
+                 cameraComponent->m_cleanColor.b / 255.f, cameraComponent->m_cleanColor.a / 255.f);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -77,23 +77,23 @@ void Renderer::Render(CameraComponent* /*camera*/, Renderable* /*renderable*/, c
     // TODO
 }
 
-void Renderer::DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second, const Color& color)
-{
-    const auto& fPos = camera->WorldToViewportPoint(first);
-    const auto& sPos = camera->WorldToViewportPoint(second);
-}
-
-void Renderer::DrawLines(CameraComponent* camera, const std::vector<Vector2>& points,
-                         const Color& color /*= ColorConstant::RED*/, bool /*isFilled*/ /*= false*/)  // TODO isFilled
+void Renderer::DrawLine(CameraComponent* /*camera*/, const Vector2& /*first*/, const Vector2& /*second*/,
+                        const Color& /*color*/)
 {
 }
 
-void Renderer::DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
+void Renderer::DrawLines(CameraComponent* /*camera*/, const Array<Vector2>& /*points*/,
+                         const Color& /*color*/ /*= ColorConstant::RED*/,
+                         bool /*isFilled*/ /*= false*/)  // TODO isFilled
+{
+}
+
+void Renderer::DrawCircle(CameraComponent* /*camera*/, const Vector2& /*center*/, float /*radius*/,
                           const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
 {
 }
 
-void Renderer::DrawPoint(CameraComponent* camera, const Vector2& coord,
+void Renderer::DrawPoint(CameraComponent* /*camera*/, const Vector2& /*coord*/,
                          const Color& /*color*/ /*= ColorConstant::RED*/)  // TODO color
 {
 }
