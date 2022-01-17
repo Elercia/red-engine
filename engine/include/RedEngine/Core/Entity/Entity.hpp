@@ -58,7 +58,7 @@ public:
     const std::string& GetName() const;
     void SetName(const std::string& name);
 
-    const EntityState GetState() const;
+    EntityState GetState() const;
 
     void Destroy();
 
@@ -67,7 +67,7 @@ public:
     void RemoveChild(Entity* child);
     Entity* GetParent();
     const Entity* GetParent() const;
-    Array<Entity*> GetChildren() const;
+    const Array<Entity*>& GetChildren() const;
 
     World* GetWorld();
 

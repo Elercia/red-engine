@@ -33,7 +33,7 @@ constexpr bool Math::Between(T value, T lValue, T rValue)
     return value >= lValue && value <= rValue;
 }
 
-constexpr int Math::NextPowerOf2(int n)
+constexpr uint64 Math::NextPowerOf2(uint64 n)
 {
     n--;
     n |= n >> 1;

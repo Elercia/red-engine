@@ -36,6 +36,7 @@ public:
 
     Entity* FindEntity(EntityId id);
     const Array<Entity*>& GetEntities() const;
+    Array<Entity*>& GetEntities();
 
     Entity* CreateWorldEntity(const std::string& name);
 

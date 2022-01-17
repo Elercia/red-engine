@@ -1,6 +1,7 @@
 #include "RedEngine/Utils/StringUtils.hpp"
 
 #include "RedEngine/Utils/UtilityModule.hpp"
+#include "RedEngine/Core/Container/Array.hpp"
 
 #include <algorithm>
 #include <sstream>
@@ -30,11 +31,11 @@ std::string& Trim(std::string& str)
     return str;
 }
 
-std::vector<std::string> Split(const std::string& str, const char delim)
+Array<std::string> Split(const std::string& str, const char delim)
 {
     std::string tmp;
     std::stringstream stream;
-    std::vector<std::string> ret;
+    Array<std::string> ret;
 
     stream << str;
     while (std::getline(stream, tmp, delim))

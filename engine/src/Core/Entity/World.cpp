@@ -206,12 +206,17 @@ void World::ChangeLevel(Level* newLevel)
     }
 }
 
-const std::vector<System*>& World::GetSystems() const
+const Array<System*>& World::GetSystems() const
 {
     return m_systems;
 }
 
-const std::vector<Entity*>& World::GetEntities() const
+const Array<Entity*>& World::GetEntities() const
+{
+    return m_entities;
+}
+
+Array<Entity*>& World::GetEntities()
 {
     return m_entities;
 }

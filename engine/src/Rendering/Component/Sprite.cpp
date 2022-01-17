@@ -83,7 +83,7 @@ bool Sprite::StartAnimation(const std::string& name)
     return false;
 }
 
-const std::vector<AnimationDesc>& Sprite::GetAnimations() const
+const Array<AnimationDesc>& Sprite::GetAnimations() const
 {
     return m_spriteResource->m_animations;
 }

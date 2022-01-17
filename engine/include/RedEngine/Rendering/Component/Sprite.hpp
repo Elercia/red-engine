@@ -7,7 +7,7 @@
 
 #include <memory>
 #include <string>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -35,7 +35,7 @@ public:
     /// Return true if the animation is found false otherwise
     bool StartAnimation(const std::string& name);
 
-    const std::vector<AnimationDesc>& GetAnimations() const;
+    const Array<AnimationDesc>& GetAnimations() const;
 
     const CurrentAnimationDesc& GetCurrentAnimationInfo() const;
 

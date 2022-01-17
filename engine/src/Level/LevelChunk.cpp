@@ -59,7 +59,7 @@ void LevelChunk::Finalize()
 
 void LevelChunk::Clean()
 {
-    std::vector<Entity*> entitiesToRemove;
+    Array<Entity*> entitiesToRemove;
     for (auto* entity : m_ownedEntities)
     {
         if (entity->GetState() == EntityState::Destroyed)

@@ -4,7 +4,7 @@
 
 #include <memory>
 #include <string>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -26,13 +26,13 @@ struct AnimationDesc
     std::string name;
     bool loop{false};
     std::shared_ptr<Texture2D> texture;  ///< The animation spritesheet
-    std::vector<AnimationFrameDesc> frames;
+    Array<AnimationFrameDesc> frames;
 };
 
 struct CurrentAnimationDesc
 {
     float deltaTimeAccumulator{0};
-    std::vector<AnimationDesc>::iterator currentAnimation;
-    std::vector<AnimationFrameDesc>::iterator currentAnimationFrame;
+    Array<AnimationDesc>::iterator currentAnimation;
+    Array<AnimationFrameDesc>::iterator currentAnimationFrame;
 };
 }  // namespace red

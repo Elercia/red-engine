@@ -118,7 +118,7 @@ const Entity* Entity::GetParent() const
     return m_parent;
 }
 
-std::vector<Entity*> Entity::GetChildren() const
+const Array<Entity*>& Entity::GetChildren() const
 {
     return m_children;
 }

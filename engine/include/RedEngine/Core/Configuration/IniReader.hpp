@@ -4,7 +4,7 @@
 
 #include <string>
 #include <tuple>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -16,7 +16,7 @@ namespace utils
     class IniReader
     {
     public:
-        [[nodiscard]] static std::vector<iniCatKeyValue> ReadFromFile(const Path& path);
+        [[nodiscard]] static Array<iniCatKeyValue> ReadFromFile(const Path& path);
 
     private:
         IniReader();

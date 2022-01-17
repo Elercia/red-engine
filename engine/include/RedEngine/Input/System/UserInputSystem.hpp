@@ -15,7 +15,7 @@ public:
     void PreUpdate() override;
 
 private:
-    KeyState AglomerateKeyStates(const KeyState& oldState, const std::vector<KeyState>& states);
+    KeyState AglomerateKeyStates(const KeyState& oldState, const Array<KeyState>& states);
 
     UserInputComponent* m_inputComponent;
 };

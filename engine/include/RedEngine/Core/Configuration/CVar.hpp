@@ -5,7 +5,7 @@
 #include <functional>
 #include <string>
 #include <type_traits>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -35,7 +35,7 @@ private:
     std::string m_name;
     std::string m_category;
 
-    std::vector<std::function<void(CVarValue* variable)>> m_valueChangeCallback;
+    Array<std::function<void(CVarValue* variable)>> m_valueChangeCallback;
 };
 
 template <class Type>

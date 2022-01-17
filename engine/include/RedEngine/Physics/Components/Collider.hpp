@@ -36,7 +36,7 @@ struct EdgeColliderDesc : public ColliderDesc
 
 struct PolygonColliderDesc : public ColliderDesc
 {
-    std::vector<Vector2> points{};
+    Array<Vector2> points{};
 };
 
 struct Collider

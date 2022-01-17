@@ -33,7 +33,12 @@ int System::GetPriority() const
     return m_priority;
 }
 
-std::vector<Entity*> System::GetWorldEntities()
+Array<Entity*>& System::GetWorldEntities()
+{
+    return m_world->GetEntities();
+}
+
+const Array<Entity*>& System::GetWorldEntities() const
 {
     return m_world->GetEntities();
 }

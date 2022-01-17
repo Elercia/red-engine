@@ -6,7 +6,7 @@
 
 #include <algorithm>
 #include <memory>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -44,7 +44,7 @@ public:
 
     // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
-    std::vector<Entity*> GetComponents();
+    Array<Entity*>& GetComponents() const;
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);
@@ -54,7 +54,8 @@ public:
 
     int GetPriority() const;
 
-    std::vector<Entity*> GetWorldEntities();
+    Array<Entity*>& GetWorldEntities();
+    const Array<Entity*>& GetWorldEntities() const;
 
 protected:
     bool m_isInit;

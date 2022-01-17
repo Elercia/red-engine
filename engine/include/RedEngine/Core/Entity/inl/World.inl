@@ -104,7 +104,6 @@ bool World::RegisterComponentType()
         }
     }
 
-
     return true;
 }
 

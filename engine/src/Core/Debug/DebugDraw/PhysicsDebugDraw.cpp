@@ -4,7 +4,7 @@
 
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -16,7 +16,7 @@ PhysicsDebugDrawer::~PhysicsDebugDrawer() = default;
 
 void PhysicsDebugDrawer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    std::vector<Vector2> points;
+    Array<Vector2> points;
 
     points.reserve(vertexCount);
     for (int32 i = 0; i < vertexCount; i++)
@@ -29,7 +29,7 @@ void PhysicsDebugDrawer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, 
 
 void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    std::vector<Vector2> points;
+    Array<Vector2> points;
 
     points.reserve(vertexCount);
     for (int i = 0; i < vertexCount; i++)

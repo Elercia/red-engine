@@ -6,7 +6,7 @@
 
 #include <memory>
 #include <string>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 #include "Color.hpp"
 
@@ -35,7 +35,7 @@ public:
     void DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
                   const Color& color = ColorConstant::RED);
 
-    void DrawLines(CameraComponent* camera, const std::vector<Vector2>& points, const Color& color = ColorConstant::RED,
+    void DrawLines(CameraComponent* camera, const Array<Vector2>& points, const Color& color = ColorConstant::RED,
                    bool isFilled = false);
 
     void DrawCircle(CameraComponent* camera, const Vector2& center, float radius,

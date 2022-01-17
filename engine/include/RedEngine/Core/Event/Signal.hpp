@@ -87,7 +87,7 @@ public:
     void emit(SignalArgs... args);
 
 private:
-    std::vector<std::shared_ptr<Connection>> m_connections{};
+    Array<std::shared_ptr<Connection>> m_connections{};
     bool m_isActive{true};
     int m_nextSlotId{0};
 };

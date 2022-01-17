@@ -48,7 +48,7 @@ void UserInputSystem::PreUpdate()
         KeyState oldState = m_inputComponent->m_state[actionName];
         KeyState mappingState = eventsSystem->GetKeyState(mapping.mapping);
 
-        std::vector<KeyState> states;
+        Array<KeyState> states;
 
         for (size_t i = 0; i < g_modifierKeys.size(); i++)
         {
@@ -77,7 +77,7 @@ void UserInputSystem::PreUpdate()
     }
 }
 
-KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, const std::vector<KeyState>& states)
+KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, const Array<KeyState>& states)
 {
     KeyState resultState = {false, false, false};
     resultState.isPressed = states[0].isPressed;

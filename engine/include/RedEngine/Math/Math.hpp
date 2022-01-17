@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RedEngine/Utils/Types.hpp"
+
 #include <cmath>
 
 namespace red
@@ -25,7 +27,7 @@ namespace Math
     constexpr bool Between(T value, T lValue, T rValue);
 
     inline float Sqrt(float f);
-    constexpr int NextPowerOf2(int n);
+    constexpr uint64 NextPowerOf2(uint64 n);
 
     template <typename T>
     constexpr bool EqualsEpsilon(T a, T b, T epsilon);

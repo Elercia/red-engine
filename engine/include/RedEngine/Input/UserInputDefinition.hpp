@@ -6,7 +6,7 @@
 #include <bitset>
 #include <map>
 #include <variant>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {

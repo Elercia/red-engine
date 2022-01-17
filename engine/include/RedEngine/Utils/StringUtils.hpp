@@ -4,7 +4,7 @@
 
 #include <string>
 #include <string_view>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -12,7 +12,7 @@ namespace utils
 {
     std::string& Trim(std::string& str);
 
-    std::vector<std::string> Split(const std::string& str, char delim);
+    Array<std::string> Split(const std::string& str, char delim);
 
     std::wstring ToUnicodeString(const std::string_view str);
 

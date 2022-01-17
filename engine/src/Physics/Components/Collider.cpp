@@ -84,7 +84,7 @@ int ColliderList::AddPolygonCollider(const PolygonColliderDesc& desc)
     Collider collider;
 
     b2PolygonShape shape;
-    std::vector<b2Vec2> b2Points;
+    Array<b2Vec2> b2Points;
     b2Points.resize(desc.points.size());
     std::transform(desc.points.begin(), desc.points.end(), b2Points.begin(),
                    [](Vector2 v) -> b2Vec2 { return ConvertToPhysicsVector(v); });

@@ -62,12 +62,12 @@ void PhysicsWorld::ClearForces()
     m_internalPhysicsWorld->ClearForces();
 }
 
-const std::vector<CollisionInfo>& PhysicsWorld::GetCollisions() const
+const Array<CollisionInfo>& PhysicsWorld::GetCollisions() const
 {
     return m_frameCollisionInfo;
 }
 
-const std::vector<TriggerInfo>& PhysicsWorld::GetTriggers() const
+const Array<TriggerInfo>& PhysicsWorld::GetTriggers() const
 {
     return m_frameTriggerInfo;
 }

@@ -2,7 +2,7 @@
 
 #include "RedEngine/Math/Vector.hpp"
 
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -29,7 +29,7 @@ struct CollisionInfo
 
     Vector2 normal{0.f, 0.f};
 
-    std::vector<ContactPoint> contactPoints{};
+    Array<ContactPoint> contactPoints{};
 
     void SwapFirstSecond();
 };
