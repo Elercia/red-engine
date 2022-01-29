@@ -14,7 +14,6 @@ TEST_CASE("Level serialisation", "[LEVEL]")
 {
     World world;
     world.Init();
-    world.RegisterComponentType<Transform>();
 
     Level level("SerializedLevel", &world);
 

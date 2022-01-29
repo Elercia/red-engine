@@ -14,7 +14,7 @@ TEST_CASE("INI file parsing", "[Configuration]")
     {
         auto catKeyValues = red::utils::IniReader::ReadFromFile(red::Path::Resource("config.ini"));
 
-        REQUIRE(std::find_if(catKeyValues.begin(), catKeyValues.end(), [](auto tuple) {
+        REQUIRE(std::find_if(catKeyValues.begin(), catKeyValues.end(), [](auto& tuple) {
                     return std::get<0>(tuple) == "default" && std::get<1>(tuple) == "ouioui" &&
                            std::get<2>(tuple) == "son beau taxi";
                 }) != catKeyValues.end());
