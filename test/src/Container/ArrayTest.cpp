@@ -1,7 +1,8 @@
-#include "TestModule.hpp"
 #include "RedEngine/Core/Container/Array.hpp"
+
 #include <catch2/catch.hpp>
 
+#include "TestModule.hpp"
 #include "TestUtils/TestUtils.hpp"
 
 using namespace red;
@@ -110,8 +111,13 @@ int s_destructedCount = 0;
 class ArrayTestStruct
 {
 public:
-    explicit ArrayTestStruct(int i, int j = 0, const char* c = "") : value(i), j(j), c(c) {}
-    ~ArrayTestStruct() { s_destructedCount++; }
+    explicit ArrayTestStruct(int i, int j = 0, const char* c = "") : value(i), j(j), c(c)
+    {
+    }
+    ~ArrayTestStruct()
+    {
+        s_destructedCount++;
+    }
 
     ArrayTestStruct(const ArrayTestStruct&) = default;
     ArrayTestStruct& operator=(const ArrayTestStruct&) = default;
@@ -272,6 +278,35 @@ TEST_CASE("Array emplace", "[Container]")
     REQUIRE(s_destructedCount == 100);
 }
 
+Array<std::string> GetArray()
+{
+    Array<std::string> ar;
+
+    ar.push_back("Test1");
+    ar.emplace_back("TEST2");
+
+    return ar;
+}
+
+TEST_CASE("Array copy", "[Container]")
+{
+    Array<std::string> ar = GetArray();
+
+    SECTION("equals")
+    {
+        REQUIRE(ar[0] == "Test1");
+        REQUIRE(ar[1] == "TEST2");
+    }
+
+    SECTION("move")
+    {
+        Array<std::string> ar2 = std::move(ar);
+
+        REQUIRE(ar2[0] == "Test1");
+        REQUIRE(ar2[1] == "TEST2");
+    }
+}
+
 TEST_CASE("Array performance", "[Container]")
 {
     /*
@@ -303,4 +338,4 @@ TEST_CASE("Array performance", "[Container]")
     REQUIRE(arrayCtr.GetDuration() < stdCtr.GetDuration());
     */
 }
-#endif // RED_USE_ARRAY
+#endif  // RED_USE_ARRAY

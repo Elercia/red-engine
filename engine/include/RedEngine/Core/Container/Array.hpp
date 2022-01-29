@@ -1,13 +1,18 @@
 #pragma once
 
 #include "RedEngine/Utils/Types.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Core/Macros.hpp"
 
 #include <cstdlib>
 #include <initializer_list>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
+//#define RED_USE_ARRAY 
 #ifdef RED_USE_ARRAY
 
 template <typename T>
@@ -22,19 +27,17 @@ public:
 
     using size_type = uint64;
 
-    static constexpr size_t size_of_type = sizeof(T);
-
     /// Constructors
     Array();
     ~Array();
 
     Array(std::initializer_list<T> list);
 
-    Array(const Array& other) = delete;
-    void operator=(const Array& other) = delete;
+    Array(const Array<T>& other);
+    Array<T>& operator=(const Array<T>& other);
 
-    Array(Array&& other) = default;
-    Array& operator=(Array&& other) = default;
+    Array(Array<T>&& other);
+    Array<T>& operator=(Array<T>&& other);
 
     /// Accessors
     const_reference operator[](size_type index) const;
@@ -86,9 +89,11 @@ public:
 
     void pop_back();
 
+    template <class InputIterator>
+    iterator insert (const_iterator position, InputIterator first, InputIterator last);
+
 private:
-    void SetCapacity(size_type newCapacity);
-    void SmartReserve(size_type capacity);
+    void SetCapacity(size_type askedCapacity);
     void Resize(size_type count, const T& t);
     void Destroy(size_type from, size_type to);
     void Destroy(iterator from, iterator to);

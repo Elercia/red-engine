@@ -5,13 +5,74 @@ namespace red
 #ifdef RED_USE_ARRAY
 
 template <typename T>
+Array<T>::Array() : m_size(0), m_capacity(0), m_data(nullptr)
+{
+}
+
+template <typename T>
+Array<T>::Array(std::initializer_list<T> list) : m_size(0), m_capacity(0), m_data(nullptr)
+{
+    reserve(list.size());
+
+    for (auto it = list.begin(); it != list.end(); it++)
+        push_back(*it);
+}
+
+template <typename T>
+Array<T>::~Array()
+{
+    Destroy(begin(), end());
+    RED_SAFE_FREE(m_data);
+}
+
+template <typename T>
+Array<T>::Array(const Array<T>& other)
+{
+    reserve(other.m_size);
+
+    for (auto& it : other)
+    {
+        push_back(it);
+    }
+}
+
+template <typename T>
+Array<T>& Array<T>::operator=(const Array<T>& other)
+{
+    reserve(other.m_size);
+
+    for (auto& it : other)
+    {
+        push_back(it);
+    }
+
+    return *this;
+}
+
+template <typename T>
+Array<T>::Array(Array<T>&& other)
+    : m_size(std::move(other.m_size)), m_capacity(std::move(other.m_capacity)), m_data(std::move(other.m_data))
+{
+}
+
+template <typename T>
+Array<T>& Array<T>::operator=(Array<T>&& other)
+{
+    m_size = std::move(other.m_size);
+    m_capacity = std::move(other.m_capacity);
+    m_data = std::move(other.m_data);
+
+    return *this;
+}
+
+template <typename T>
 template <typename... Args>
 typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
 {
     size_type index = m_size;
     size_type newSize = m_size + 1;
 
-    SmartReserve(newSize);
+    reserve(newSize);
 
     m_size = newSize;
 
@@ -29,37 +90,32 @@ void Array<T>::resize(size_type count, T value /*= T()*/)
 template <typename T>
 void Array<T>::Resize(size_type count, const T& t)
 {
-    
-    if (m_size < count)
+    for (size_type i = m_size; i < count; i++)
     {
-        for (int i = m_size; i < count; i++)
-        {
-            push_back(t);
-        }
+        push_back(t);
     }
 }
 
 template <typename T>
 void Array<T>::pop_back()
 {
-    SmartReserve(m_size - 1);
-    m_size--;
-
     Destroy(m_size - 1, m_size);
+
+    m_size--;
 }
 
 template <typename T>
 void Array<T>::push_back(T&& value)
 {
-    SmartReserve(m_size + 1);
-    m_data[m_size] = std::move(value);
+    reserve(m_size + 1);
+    m_data[m_size] = value;
     m_size++;
 }
 
 template <typename T>
 void Array<T>::push_back(const T& value)
 {
-    SmartReserve(m_size + 1);
+    reserve(m_size + 1);
 
     m_data[m_size] = value;
     m_size++;
@@ -68,7 +124,7 @@ void Array<T>::push_back(const T& value)
 template <typename T>
 typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator last)
 {
-    RED_ASSERT_S(last > first);
+    RED_ASSERT_S(last >= first);
     RED_ASSERT_S(first >= begin());
     RED_ASSERT_S(last <= end());
 
@@ -81,16 +137,16 @@ typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator
 
     while (shift < endIt)
     {
-        *index = std::move(*shift);
+        *index = *shift;
         index++;
         shift++;
     }
 
-    size_type valueErased = (size_type)(last - first);
+    size_type valueErased = (size_type) (last - first);
 
     m_size -= valueErased;
 
-    SmartReserve(m_size);
+    reserve(m_size);
 
     return const_cast<iterator>(first);
 }
@@ -116,62 +172,50 @@ typename Array<T>::iterator Array<T>::erase(iterator pos)
 template <typename T>
 void Array<T>::clear()
 {
-    SetCapacity(0);
+    Destroy(begin(), end());
     m_size = 0;
 }
 
 template <typename T>
 void Array<T>::shrink_to_fit()
 {
-    reserve(m_size);
+    SetCapacity(m_size);
 }
 
 template <typename T>
 void Array<T>::reserve(size_type capacity)
 {
-    if (capacity < m_size)
+    if (capacity < m_size || capacity <= m_capacity)
     {
-        RED_ERROR("Couldnt reserve a size below size");
         return;
     }
+
+    capacity = Math::NextPowerOf2(capacity);
 
     SetCapacity(capacity);
 }
 
 template <typename T>
-void red::Array<T>::SmartReserve(size_type capacity)
-{
-    size_type newCapacity = m_capacity;
-
-    if (capacity > m_capacity)
-    {
-        newCapacity = Math::NextPowerOf2(capacity);
-    }
-
-    SetCapacity(newCapacity);
-}
-
-template <typename T>
 void Array<T>::SetCapacity(size_type askedCapacity)
 {
-    if (askedCapacity == m_capacity)
+    if (askedCapacity < m_size)
         return;
 
     T* tmp = nullptr;
 
     if (askedCapacity != 0)
     {
-        tmp = (T*) std::calloc(size_of_type, askedCapacity);
-        RED_ASSERT_S(tmp != nullptr);
+        auto capacitySize = askedCapacity * sizeof(T);
+        tmp = (T*)realloc(m_data, capacitySize);
 
-        for (int i = 0; i < m_size; i++)
+        if (tmp == NULL)
         {
-            tmp[i] = std::move(m_data[i]);
+            RED_LOG_ERROR("Not enough space to realloc {} bytes of memory", capacitySize);
+            RED_ABORT("OutOfMemory");
         }
     }
 
-    std::swap(m_data, tmp);
-    RED_SAFE_FREE(tmp);
+    m_data = tmp;
     m_capacity = askedCapacity;
 }
 
@@ -292,24 +336,26 @@ typename Array<T>::const_reference Array<T>::operator[](size_type index) const
 }
 
 template <typename T>
-Array<T>::Array() : m_size(0), m_capacity(0), m_data(nullptr)
+template <class InputIterator>
+typename Array<T>::iterator Array<T>::insert(const_iterator position, InputIterator first, InputIterator last)
 {
-}
+    size_type nbElem = (size_type) (last - first);
+    reserve(m_size + nbElem);
 
-template <typename T>
-Array<T>::Array(std::initializer_list<T> list) : m_size(0), m_capacity(0), m_data(nullptr)
-{
-    reserve(list.size());
+    // move elements from [position;end] to [position+nbElem; end+nbElem]
+    for (auto it = (iterator) position; it != end(); ++it)
+    {
+        *(it + nbElem) = *it;
+    }
 
-    for (auto it = list.begin(); it != list.end(); it++)
-        push_back(*it);
-}
+    // copy elements from [first;last] to [position; position+nbElem]
+    iterator itTo = (iterator) position;
+    for (auto itFrom = first; itFrom != last; ++itFrom, ++itTo)
+    {
+        *itTo = *itFrom;
+    }
 
-template <typename T>
-Array<T>::~Array()
-{
-    Destroy(0, m_size);
-    RED_SAFE_FREE(m_data);
+    return (iterator) position;
 }
 
 template <typename T>
