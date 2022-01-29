@@ -3,6 +3,8 @@ group("Tests")
 project ("RedEngineTest")
 	kind "ConsoleApp"
 	language("C++")
+	
+	rtti("Off")
 	cppdialect(cppDialect)
 	warnings("Extra")
 	flags("NoPCH")
