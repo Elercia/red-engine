@@ -7,7 +7,7 @@
 
 namespace red
 {
-System::System(World* world) : m_isInit(false), m_world(world), m_priority(0), m_typeTraits()
+System::System(World* world) : m_isInit(false), m_world(world), m_priority(0), m_typeTraits(EmptyTypeTraits)
 {
 }
 

@@ -14,7 +14,7 @@ class LevelLoader
 {
 public:
     LevelLoader(World* world);
-    ~LevelLoader();
+    virtual ~LevelLoader();
 
     Level* LoadLevel(const Path& path);
 

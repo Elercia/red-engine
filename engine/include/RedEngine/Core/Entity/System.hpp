@@ -44,7 +44,7 @@ public:
 
     // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
-    Array<Entity*>& GetComponents() const;
+    Array<Entity*> GetComponents() const;
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

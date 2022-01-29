@@ -66,7 +66,7 @@ void Entity::SetName(const std::string& name)
     m_name = name;
 }
 
-const EntityState Entity::GetState() const
+EntityState Entity::GetState() const
 {
     return m_state;
 }

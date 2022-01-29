@@ -12,6 +12,7 @@ public:
     ~UserInputSystem() = default;
 
     void Init() override;
+    void Finalise() override;
     void PreUpdate() override;
 
 private:

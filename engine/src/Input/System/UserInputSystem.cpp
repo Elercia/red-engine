@@ -23,6 +23,8 @@ void UserInputSystem::Init()
 
     PROFILER_CATEGORY("Input Init", Optick::Category::Input);
 
+    // TODO move this to the event system
+    // TODO add a call to SDL_QuitSubSystem to clean memory (or make sure SDL_Quit is called in every cases)
     SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 
     m_inputComponent = m_world->CreateWorldEntity("UserInputSystemEntity")->AddComponent<UserInputComponent>();
@@ -33,6 +35,11 @@ void UserInputSystem::Init()
     {
         RED_LOG_INFO("Loaded mapping {}", mapping.first);
     }
+}
+
+void UserInputSystem::Finalise()
+{
+    SDL_QuitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 }
 
 void UserInputSystem::PreUpdate()

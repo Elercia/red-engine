@@ -16,6 +16,7 @@ ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filena
 
 #ifndef RED_RETAIL_MODE
 
+// TODO Add a abort reason (out of memory for exemple)
 #define RED_ABORT(MSG)                                                             \
     do                                                                             \
     {                                                                              \

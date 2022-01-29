@@ -16,6 +16,11 @@ PhysicsWorld::PhysicsWorld() : m_internalPhysicsWorld(new b2World({0.f, 0.f}))
     m_internalPhysicsWorld->SetContactListener(this);
 }
 
+PhysicsWorld::~PhysicsWorld()
+{
+    m_internalPhysicsWorld.reset();
+}
+
 void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreationDesc& creationDesc)
 {
     b2BodyDef bodyDef;

@@ -33,7 +33,7 @@ public:
 
     CameraComponent(Entity* entity);
     CameraComponent(Entity* entity, const Vector2& center);
-    ~CameraComponent() override = default;
+    virtual ~CameraComponent() = default;
 
     /// View ports points
     [[nodiscard]] Vector2 ViewportToWorldPoint(const Vector2& point) const;

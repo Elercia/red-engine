@@ -8,6 +8,7 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/JsonLevelLoader.hpp"
 #include "RedEngine/Level/Level.hpp"
@@ -43,8 +44,10 @@ World::~World()
 
     Clean();
 
-    delete m_componentManager;
-    delete m_worldChunk;
+    RED_SAFE_DELETE(m_componentRegistry);
+    RED_SAFE_DELETE(m_componentManager);
+    RED_SAFE_DELETE(m_worldChunk);
+    RED_SAFE_DELETE(m_levelLoader);
 }
 
 void World::OnAddEntity(Entity* entity)
@@ -75,9 +78,10 @@ void World::OnRemoveEntity(Entity* entity)
 
 void World::OnRemoveEntities(Array<Entity*>& entities)
 {
-    m_entities.erase(remove_if(m_entities.begin(), m_entities.end(),
-                               [&](auto x) { return find(entities.begin(), entities.end(), x) != entities.end(); }),
-                     m_entities.end());
+    m_entities.erase(
+        std::remove_if(m_entities.begin(), m_entities.end(),
+                       [&](auto x) { return std::find(entities.begin(), entities.end(), x) != entities.end(); }),
+        m_entities.end());
 }
 
 Entity* World::FindEntity(EntityId id)
@@ -93,12 +97,18 @@ Entity* World::FindEntity(EntityId id)
 
 void World::Init()
 {
+    if (m_worldChunk != nullptr)
+    {
+        m_worldChunk->Finalize();
+        RED_SAFE_DELETE(m_worldChunk);
+    }
+
     m_worldChunk = new LevelChunk(this);
     m_worldChunk->Init();
 
+    RED_SAFE_DELETE(m_levelLoader);
     m_levelLoader = new JsonLevelLoader(this);
 }
-
 
 void World::InitSystems()
 {
@@ -116,8 +126,6 @@ void World::Finalize()
 {
     ChangeLevel(nullptr);
 
-    m_worldChunk->Finalize();
-
     for (auto& entity : m_entities)
     {
         entity->Destroy();
@@ -127,6 +135,10 @@ void World::Finalize()
     {
         system->Finalise();
     }
+
+    m_worldChunk->Finalize();
+    RED_SAFE_DELETE(m_worldChunk);
+    RED_SAFE_DELETE(m_levelLoader);
 }
 
 bool World::Update()

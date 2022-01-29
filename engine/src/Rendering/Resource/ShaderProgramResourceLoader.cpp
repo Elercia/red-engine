@@ -102,7 +102,8 @@ std::shared_ptr<ShaderProgram> ShaderProgramResourceLoader::LoadResource(const P
                 glGetProgramiv(programHandle, GL_INFO_LOG_LENGTH, &maxLength);
 
                 // The maxLength includes the NULL character
-                Array<GLchar> infoLog(maxLength);
+                Array<GLchar> infoLog;
+                infoLog.resize(maxLength);
                 glGetProgramInfoLog(programHandle, maxLength, &maxLength, &infoLog[0]);
 
                 RED_LOG_WARNING("Cannot compile shader for path {} because of the following error : {}",

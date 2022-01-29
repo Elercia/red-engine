@@ -16,7 +16,7 @@ class PhysicsWorld : public b2ContactListener
 {
 public:
     PhysicsWorld();
-    ~PhysicsWorld() = default;
+    ~PhysicsWorld();
 
     void InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreationDesc& creationDesc);
     void DestroyPhysicsBody(PhysicBody* physicBody);
