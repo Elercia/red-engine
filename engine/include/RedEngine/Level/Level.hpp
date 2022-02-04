@@ -25,7 +25,7 @@ public:
     friend class JsonLevelSerializer;
 
     explicit Level(std::string name, World* world);
-    virtual ~Level() = default;
+    virtual ~Level();
 
     void InternInit();
     void InternFinalize();
