@@ -11,11 +11,12 @@
 
 namespace red
 {
-Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id), m_parent(nullptr)
+Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id)
 {
     AddComponent<Transform>(0.F, 0.F);
 }
 
+//TODO remove this ? 
 void Entity::Destroy()
 {
     m_state = EntityState::Destroyed;
