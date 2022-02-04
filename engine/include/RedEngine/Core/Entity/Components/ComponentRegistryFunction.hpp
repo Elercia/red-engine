@@ -39,7 +39,7 @@
         RED_STATIC_COMPONENT_REGISTER_DATA(CompClass)                          \
         compData->inheritedComponentName = red::TypeInfo<InheritedCompClass>().name;
 
-#define RED_END_COMPONENT_REGISTER() }
+#define RED_END_COMPONENT_REGISTER() [[maybe_unused]]CompClassT* unused_but_suppress_warn_so_used=nullptr;}
 
 #define RED_MEMBER(name, memberAddr, tooltip, flags) compData->AddMember(name, &CompClassT::memberAddr, tooltip, flags);
 
