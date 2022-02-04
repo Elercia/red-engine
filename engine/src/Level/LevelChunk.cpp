@@ -53,8 +53,12 @@ void LevelChunk::Finalize()
 
     for (auto* e : m_ownedEntities)
     {
-        e->Destroy();
+        // TODO Destroy entities ? 
+        //e->Destroy();
+        delete e;
     }
+
+    m_ownedEntities.clear();
 }
 
 void LevelChunk::Clean()
