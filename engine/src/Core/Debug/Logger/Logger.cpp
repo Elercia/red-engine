@@ -18,7 +18,20 @@ void Logger::SetLogLevel(LogLevel level)
     m_logLevel = level;
 }
 
-// void Logger::Out(const std::string& data) { std::cout << data << std::endl; }
+void Logger::Out(const std::string& str)
+{
+    m_delegates(str);
+}
+
+Logger::OutputDelegate::FuncIndex Logger::AddOutput(OutputDelegate::FuncType output)
+{
+    return m_delegates.Add(std::move(output));
+}
+
+void Logger::LogToStandardOutputFun(const std::string& out)
+{
+    std::cout << out << "\n";
+}
 
 }  // namespace red
 

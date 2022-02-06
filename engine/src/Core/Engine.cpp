@@ -7,6 +7,7 @@
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
 #include "RedEngine/Audio/System/AudioSystem.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
@@ -93,6 +94,9 @@ bool Engine::RegisterComponentTypes()
 
 bool Engine::Create()
 {
+    // TODO Once we first parse a Config.ini, check if we want this behavior or output to file or others)
+    GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+
     InitRandomEngine(42);
 
     m_world = new World;

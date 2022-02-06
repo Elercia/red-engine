@@ -8,23 +8,25 @@
 
 namespace red
 {
-using FuncIndex = uint16_t;
 
 template <typename... Args>
 class Delegate : public Uncopyable
 {
 public:
+    using FuncIndex = uint16_t;
+    using FuncType = std::function<void(Args...)>;
+
     Delegate();
     ~Delegate();
 
-    FuncIndex Add(std::function<void(Args...)> func);
+    FuncIndex Add(FuncType func);
     void Remove(FuncIndex index);
 
     /// Invoke all
     void operator()(Args... args);
 
 private:
-    std::map<FuncIndex, std::function<void(Args...)>> m_functions;
+    std::map<FuncIndex, FuncType> m_functions;
     FuncIndex m_nextIndex;
 };
 
