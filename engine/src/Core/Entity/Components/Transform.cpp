@@ -93,10 +93,10 @@ void Transform::SetDepth(float depth)
 void Transform::UpdateWorldMatrixIfNeeded()
 {
     auto* parent = GetOwner()->GetParent();
-    Transform* parentTransform =  parent != nullptr ? parent->GetComponent<Transform>() : nullptr;
+    Transform* parentTransform = parent != nullptr ? parent->GetComponent<Transform>() : nullptr;
     bool parentDirty = parentTransform != nullptr ? parentTransform->m_dirtyWorldMatrix : false;
 
-    if (m_dirtyWorldMatrix || parentDirty) 
+    if (m_dirtyWorldMatrix || parentDirty)
     {
         m_dirtyWorldMatrix = false;
 
@@ -108,7 +108,7 @@ void Transform::UpdateWorldMatrixIfNeeded()
         m_worldMatrix = Math::Translate(m_worldMatrix, -Vector3(m_localRotationAnchor, 0.0f));
         m_worldMatrix = Math::Scale(m_worldMatrix, Vector3(m_localScale, 1.0f));
 
-        if ( parentTransform != nullptr)
+        if (parentTransform != nullptr)
         {
             parentTransform->UpdateWorldMatrixIfNeeded();
             m_worldMatrix = parentTransform->GetLocalWorldMatrix() * m_worldMatrix;
@@ -122,13 +122,25 @@ void Transform::UpdateWorldMatrixIfNeeded()
 
 const Matrix44& Transform::GetLocalWorldMatrix() const
 {
-    return m_worldMatrix;
+    return m_localWorldMatrix;
 }
 
 Matrix44& Transform::GetLocalWorldMatrix()
 {
     UpdateWorldMatrixIfNeeded();
 
+    return m_localWorldMatrix;
+}
+
+const Matrix44& Transform::GetWorldMatrix() const
+{
+    return m_worldMatrix;
+}
+
+Matrix44& Transform::GetWorldMatrix()
+{
+    UpdateWorldMatrixIfNeeded();
+    
     return m_worldMatrix;
 }
 

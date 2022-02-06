@@ -5,13 +5,52 @@
 
 namespace red
 {
-class Geometry : public IResource
+enum class PrimitiveType
 {
+    TRIANGLE,
+    QUAD,
+    LINES,
+    POINTS,
+    // GL_LINE_LOOP,
+    // GL_LINE_STRIP,
+    // GL_TRIANGLE_STRIP,
+    // GL_TRIANGLE_FAN,
+};
+
+class Geometry
+{
+    friend class GeometryResourceLoader;
+    friend class Renderer;
+
 public:
     Geometry();
     ~Geometry();
 
+    PrimitiveType GetPrimitiveType() const;
+
+    int GetIndexeCount() const;
+    int GetVertexCount() const;
+
 private:
-    Array<float> m_vertices;
+    uint32 m_gpuBufferHandle{(uint32)-1};// Vao handle
+
+    int m_indexCount{0};
+    int m_vertexCount{0};
+    PrimitiveType m_primitiveType{PrimitiveType::TRIANGLE};
+};
+
+// Wrapper class to handle resources as a geometry (to not duplicated geometry from resources) but that keep Geomtry
+// free from being manually created
+class GeometryResourceWrapper : public IResource
+{
+    friend class GeometryResourceLoader;
+
+public:
+    RED_RESOURCE(ResourceType::GEOMETRY);
+
+    GeometryResourceWrapper(const Path& resourceId);
+    ~GeometryResourceWrapper();
+
+    Geometry m_geom;
 };
 }  // namespace red

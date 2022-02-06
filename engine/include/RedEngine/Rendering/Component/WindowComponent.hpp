@@ -48,8 +48,7 @@ public:
     WindowInfo GetWindowInfo() const;
 
     SDL_Window* GetSDLWindow();
-
-    void Init();
+    
     void CreateNewWindow();
 
 private:

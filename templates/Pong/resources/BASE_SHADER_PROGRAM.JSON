@@ -1,0 +1,15 @@
+{
+	"vertex_path" : "BaseVertex.glsl",
+	"pixel_path" : "BaseFragment.glsl",
+
+	"vertex_input_layout" : [
+		"vertex",
+		"uv"
+	],
+	"pixel_uniforms" : [
+		{
+			"type" : "texture",
+			"name" : "texture_sampler"
+		}
+	]
+}

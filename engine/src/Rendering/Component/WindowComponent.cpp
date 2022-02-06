@@ -21,20 +21,8 @@ WindowComponent::WindowComponent(Entity* owner) : Component(owner), m_window(nul
 
 WindowComponent::~WindowComponent()
 {
-    SDL_Quit();
+   
 }
-
-void WindowComponent::Init()
-{
-    // TODO Surely move this to renderer
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-    {
-        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
-        SDL_Quit();
-        RED_ABORT("Cannot initialize SDL2");
-    }
-}
-
 void WindowComponent::CreateNewWindow()
 {
     m_window = SDL_CreateWindow(m_title.GetValue().c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,

@@ -7,10 +7,14 @@
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/Renderer.hpp"
 
 namespace red
 {
@@ -23,41 +27,59 @@ void RenderingSystem::Init()
     System::Init();
 
     auto* window = m_world->CreateWorldEntity("Window")->AddComponent<WindowComponent>();
-    window->CreateNewWindow();
 
     m_renderer = new Renderer;
-
     m_renderer->InitRenderer(window);
+}
+
+void RenderingSystem::Finalise()
+{
+    m_renderer->Finalise();
+    RED_SAFE_DELETE(m_renderer);
+
+    System::Finalise();
 }
 
 void RenderingSystem::Update()
 {
     PROFILER_CATEGORY("Update render data", Optick::Category::Rendering)
 
-    /*auto sprites = GetComponents<Sprite>();
+    UpdateWindowAsNeeded();
 
-for (auto* sprite : sprites)
-{
-    if (!sprite->IsValid())
+    auto spriteEntities = GetComponents<Sprite>();
+
+    for (auto* spriteEntity : spriteEntities)
+    {
+        auto* sprite = spriteEntity->GetComponent<Sprite>();
+        if (!sprite->IsValid())
             continue;
 
-    sprite->NextFrame();
-}*/
+        auto* transform = spriteEntity->GetComponent<Transform>();
+
+        sprite->NextFrame();
+
+        // Push this entity to the list of entity to render
+        m_renderer->Render(sprite, transform);
+    }
 }
 
 void RenderingSystem::BeginRender()
 {
+    PROFILER_CATEGORY("Begin rendering", Optick::Category::Rendering);
+
     m_renderer->BeginRenderFrame();
 }
 
 void RenderingSystem::EndRender()
 {
+    PROFILER_CATEGORY("End rendering", Optick::Category::Rendering);
+
     m_renderer->EndRenderFrame();
 }
 
 void RenderingSystem::Render()
 {
-    PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
+    PROFILER_CATEGORY("Render", Optick::Category::Rendering)
 
     auto renderables = GetComponents<Renderable>();
 
@@ -67,18 +89,11 @@ void RenderingSystem::Render()
         auto* cameraComponent = cameraEntity->GetComponent<CameraComponent>();
         m_renderer->BeginCameraRendering(cameraComponent);
 
-        // Draw each sprite
-        for (auto& entity : renderables)
-        {
-            auto* renderable = entity->GetComponent<Renderable>();
-            auto* transform = entity->GetComponent<Transform>();
+        m_renderer->RenderOpaque(cameraComponent);
+        m_renderer->RenderTransparency(cameraComponent);
+        m_renderer->RenderLights(cameraComponent);
 
-            m_renderer->Render(cameraComponent, renderable, *transform);
-        }
-
-        DrawDebug(cameraComponent);
-
-        m_renderer->EndCameraRendering();
+        m_renderer->EndCameraRendering(cameraComponent);
     }
 }
 
@@ -130,6 +145,18 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
     }
 
     debugComp->m_frameShapes.clear();
+}
+
+void RenderingSystem::UpdateWindowAsNeeded()
+{
+    auto windowEntities = GetComponents<WindowComponent>();
+    auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
+
+    for (auto* entity : windowEntities)
+    {
+        // TODO check if window as been resized
+        // TODO check for fullscreen change
+    }
 }
 
 }  // namespace red

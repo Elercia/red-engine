@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Math/AABB.hpp"
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Rendering/Color.hpp"
@@ -11,8 +12,7 @@
 namespace red
 {
 class Transform;
-
-constexpr std::size_t MAX_CAMERA_COUNT = 10;
+class Renderable;
 
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(CameraComponent)
 
@@ -39,9 +39,8 @@ public:
     [[nodiscard]] Vector2 ViewportToWorldPoint(const Vector2& point) const;
     [[nodiscard]] Vector2 WorldToViewportPoint(const Vector2& point) const;
 
-
-    // TODO change this to add dimensions like AABB
-    [[nodiscard]] bool IsVisibleFrom(const Transform* transform);
+    // Return true if the given AABB is visible from the given camera
+    [[nodiscard]] bool IsVisibleFrom(const AABB& aabb) const;
 
     /// Accessors and Setters
     [[nodiscard]] const Vector2& Center() const;
@@ -59,6 +58,8 @@ public:
     void SetClearColor(const Color& color);
 
     void UpdateMatricesIfNeeded();
+
+    const Matrix44& GetViewProjection() const;
 
 private:
     /// The camera viewport (position in the window and size)

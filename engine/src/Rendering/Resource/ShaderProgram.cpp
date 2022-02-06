@@ -1,6 +1,7 @@
 #include "RedEngine/Rendering/Resource/ShaderProgram.hpp"
 
 #include "RedEngine/Rendering/RenderingModule.hpp"
+#include "GL/gl3w.h"
 
 namespace red
 {

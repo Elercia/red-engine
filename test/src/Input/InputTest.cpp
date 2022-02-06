@@ -148,4 +148,6 @@ TEST_CASE("User input handling", "[Input]")
         REQUIRE(!comp->GetKeyDown(key));
         REQUIRE(comp->GetKeyUp(key));
     }
+    
+    world.Finalize();
 }

@@ -1,5 +1,0 @@
-{
-	"type" : "vertex_pixel",
-	"vertex_path" : "BaseVertex.glsl",
-	"pixel_path" : "BaseFragment.glsl",
-}

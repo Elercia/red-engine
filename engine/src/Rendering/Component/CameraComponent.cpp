@@ -9,6 +9,7 @@
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Math/MatrixFunctions.hpp"
 #include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
 namespace red
@@ -49,8 +50,9 @@ Vector2 CameraComponent::WorldToViewportPoint(const Vector2& /*point*/) const
     return {0.f, 0.f};
 }
 
-bool CameraComponent::IsVisibleFrom(const Transform* /*transform*/)
+bool CameraComponent::IsVisibleFrom(const AABB& /*aabb*/) const
 {
+    // TODO implement
     return true;
 }
 
@@ -102,6 +104,11 @@ void CameraComponent::SetClearColor(const Color& color)
     m_cleanColor = color;
 }
 
+const Matrix44& CameraComponent::GetViewProjection() const
+{
+    return m_viewProjectionMatrix;
+}
+
 void CameraComponent::UpdateMatricesIfNeeded()
 {
     if (m_bDirtyMatrix)
@@ -110,9 +117,9 @@ void CameraComponent::UpdateMatricesIfNeeded()
 
         m_projectionMatrix = Math::Ortho(0.0f, (float) m_viewport.x, 0.0f, (float) m_viewport.y, m_zNear, m_zFar);
 
-        const Vector2 midOffset = Vector2((float)m_viewport.x * 0.5f, (float)m_viewport.y * 0.5f);
+        const Vector2 midOffset = Vector2((float) m_viewport.x * 0.5f, (float) m_viewport.y * 0.5f);
         const Vector3 position =
-            Vector3(m_center.x - ((float)m_viewport.x * 0.5f), m_center.y - ((float)m_viewport.y * 0.5f), m_depth);
+            Vector3(m_center.x - ((float) m_viewport.x * 0.5f), m_center.y - ((float) m_viewport.y * 0.5f), m_depth);
 
         m_viewMatrix = Matrix44::Identity();
         m_viewMatrix = Math::Translate(m_viewMatrix, position);
