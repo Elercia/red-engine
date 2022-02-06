@@ -1,8 +1,8 @@
 #pragma once
 
 #include "RedEngine/Core/Configuration/CVar.hpp"
-#include "RedEngine/Core/Configuration/CVarSerialization.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Core/SerializationFunction.hpp"
 
 struct SDL_Window;
 #include <SDL2/SDL_syswm.h>
@@ -58,31 +58,9 @@ private:
     SDL_Window* m_window;
 };
 
-RED_NEW_CONFIG_TYPE_SERIALIZATOR(FullScreenMode::Enum)
-{
-    switch (typeValue)
-    {
-        case FullScreenMode::FULLSCREEN:
-            return "0";
-        case FullScreenMode::BORDER_LESS:
-            return "1";
-        default:
-            return "2";
-    }
-}
-RED_NEW_CONFIG_TYPE_DESERIALIZATOR(FullScreenMode::Enum)
-{
-    if (stringValue == "0")
-    {
-        typeValue = FullScreenMode::FULLSCREEN;
-    }
-    else if (stringValue == "1")
-    {
-        typeValue = FullScreenMode::BORDER_LESS;
-    }
-    else
-    {
-        typeValue = FullScreenMode::WINDOWED;
-    }
-}
+template <>
+std::string Serialize(const FullScreenMode::Enum& typeValue);
+
+template <>
+bool Deserialize(FullScreenMode::Enum& typeValue, const std::string& stringValue);
 }  // namespace red

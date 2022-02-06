@@ -114,4 +114,40 @@ SDL_Window* WindowComponent::GetSDLWindow()
     return m_window;
 }
 
+template <>
+std::string Serialize(const FullScreenMode::Enum& typeValue)
+{
+    switch (typeValue)
+    {
+        case FullScreenMode::FULLSCREEN:
+            return "0";
+        case FullScreenMode::BORDER_LESS:
+            return "1";
+        default:
+            return "2";
+    }
+}
+
+template <>
+bool Deserialize(FullScreenMode::Enum& typeValue, const std::string& stringValue)
+{
+    if (stringValue == "0")
+    {
+        typeValue = FullScreenMode::FULLSCREEN;
+        return true;
+    }
+    if (stringValue == "1")
+    {
+        typeValue = FullScreenMode::BORDER_LESS;
+        return true;
+    }
+    if (stringValue == "2")
+    {
+        typeValue = FullScreenMode::WINDOWED;
+        return true;
+    }
+
+    return false;
+}
+
 }  // namespace red

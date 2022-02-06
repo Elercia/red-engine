@@ -19,7 +19,7 @@ bool Deserialize(bool& value, const std::string& str)
 {
     value = false;
 
-    if (str == "1")
+    if (str == "1" || str == "true")
         value = true;
 
     return true;
