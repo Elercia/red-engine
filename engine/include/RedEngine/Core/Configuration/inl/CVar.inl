@@ -19,6 +19,12 @@ Type CVar<Type>::GetValue()
 }
 
 template <class Type>
+CVar<Type>::operator Type()
+{
+    return GetValue();
+}
+
+template <class Type>
 CVarValue* CVar<Type>::operator->()
 {
     return m_value;

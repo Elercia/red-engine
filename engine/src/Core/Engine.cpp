@@ -6,6 +6,7 @@
 #include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
 #include "RedEngine/Audio/System/AudioSystem.hpp"
+#include "RedEngine/Core/Configuration/CVarManager.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
@@ -39,6 +40,8 @@ Engine* Engine::GetInstance()
     return s_engine;
 }
 
+static CVar<bool> s_addStandardOutputLog{"AddStandardOutputlog", "Logger", false};
+
 Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr)
 {
 }
@@ -59,13 +62,13 @@ void Engine::MainLoop()
 
         Time::SetDeltaTime(deltaTime);
 
-        continueExec = m_world->Update();   
+        continueExec = m_world->Update();
     }
 }
 
 bool Engine::RegisterComponentTypes()
 {
-    // Rendering 
+    // Rendering
     CheckReturn(m_world->RegisterComponentType<Renderable>());
     CheckReturn(m_world->RegisterComponentType<Sprite>());
     CheckReturn(m_world->RegisterComponentType<WindowComponent>());
@@ -81,7 +84,7 @@ bool Engine::RegisterComponentTypes()
     // Physics
     CheckReturn(m_world->RegisterComponentType<ColliderList>());
     CheckReturn(m_world->RegisterComponentType<PhysicBody>());
-    
+
     // Resources
     CheckReturn(m_world->RegisterComponentType<ResourceHolderComponent>());
 
@@ -94,8 +97,19 @@ bool Engine::RegisterComponentTypes()
 
 bool Engine::Create()
 {
-    // TODO Once we first parse a Config.ini, check if we want this behavior or output to file or others)
-    GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+    int standarOutputFuncIndex = -1;
+
+#ifdef RED_DEBUG
+    // Always add standard output when debugging
+    standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+#endif
+
+    CVarManager::LoadConfigFile(Path::Resource("Config.ini"));
+
+    if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
+    {
+        standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+    }
 
     InitRandomEngine(42);
 

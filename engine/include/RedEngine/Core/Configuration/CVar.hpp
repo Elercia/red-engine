@@ -51,6 +51,8 @@ public:
     [[nodiscard]] inline Type GetValue();
     void ChangeValue(Type value);
 
+    operator Type();
+
     CVarValue* operator->();
 
 private:
