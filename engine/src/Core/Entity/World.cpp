@@ -32,22 +32,7 @@ World::World()
 
 World::~World()
 {
-    for (auto& system : m_systems)
-    {
-        system->Finalise();
-        delete system;
-    }
-
-    m_systems.clear();
-
-    m_worldChunk->Finalize();
-
-    Clean();
-
-    RED_SAFE_DELETE(m_componentRegistry);
-    RED_SAFE_DELETE(m_componentManager);
-    RED_SAFE_DELETE(m_worldChunk);
-    RED_SAFE_DELETE(m_levelLoader);
+    Finalize();
 }
 
 void World::OnAddEntity(Entity* entity)
@@ -124,21 +109,28 @@ void World::InitSystems()
 
 void World::Finalize()
 {
+    // Delete current level entities
     ChangeLevel(nullptr);
 
-    for (auto& entity : m_entities)
-    {
-        entity->Destroy();
-    }
+    // Delete current world level chunk entities   
+    if( m_worldChunk != nullptr)
+        m_worldChunk->Finalize();
 
     for (auto& system : m_systems)
     {
         system->Finalise();
+        RED_SAFE_DELETE(system);
     }
 
-    m_worldChunk->Finalize();
+    m_systems.clear();
+
+    Clean();
+
     RED_SAFE_DELETE(m_worldChunk);
     RED_SAFE_DELETE(m_levelLoader);
+
+    RED_SAFE_DELETE(m_componentManager);
+    RED_SAFE_DELETE(m_componentRegistry);
 }
 
 bool World::Update()

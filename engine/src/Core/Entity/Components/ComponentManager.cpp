@@ -147,6 +147,15 @@ bool ComponentManager::RemoveComponent(Entity* entity, const std::string& compon
     return false;
 }
 
+void ComponentManager::RemoveAllComponentsOf(Entity* owner)
+{
+    for(auto& itCompType : m_components)
+    {
+        auto& comonentPool = itCompType.second;
+        comonentPool.erase(owner->GetId());
+    }
+}
+
 Component* ComponentManager::CreateComponentFromName(Entity* entity, const std::string& componentName)
 {
     auto* registry = m_world->GetComponentRegistry();

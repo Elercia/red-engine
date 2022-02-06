@@ -26,6 +26,8 @@ public:
     template <typename ComponentType_t>
     bool RemoveComponent(Entity* owner);
 
+    void RemoveAllComponentsOf(Entity* owner);
+
     Array<Component*> GetComponents(const Entity* entity) const;
 
     template <class ComponentType_t>

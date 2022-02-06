@@ -16,9 +16,9 @@ Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id)
     AddComponent<Transform>(0.F, 0.F);
 }
 
-//TODO remove this ? 
 void Entity::Destroy()
 {
+    // Destroyed entities will be removed on the next World Update iteration
     m_state = EntityState::Destroyed;
 
     for (auto* child : m_children)

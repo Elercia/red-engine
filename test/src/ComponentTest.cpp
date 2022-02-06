@@ -1,9 +1,10 @@
-#include "TestModule.hpp"
-
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/System.hpp"
 
 #include <SystemTest.hpp>
+
+#include "TestModule.hpp"
 
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent1)
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent11)
@@ -155,4 +156,47 @@ TEST_CASE("Component inheritance", "[ECS]")
         REQUIRE(entityA->RemoveComponent<MockComponent1>());
         REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
     }
+}
+
+namespace EntityDestroyRemoveComp
+{
+class TestSystem : public red::System
+{
+public:
+    explicit TestSystem(red::World* world) : red::System(world)
+    {
+    }
+    virtual ~TestSystem() = default;
+
+    void Update() override
+    {
+        m_entityCount = (int) GetComponents<MockComponent1>().size();
+    }
+
+    int m_entityCount = 0;
+};
+}  // namespace EntityDestroyRemoveComp
+
+TEST_CASE("Entity destroy remove components", "[ECS]")
+{
+    using namespace red;
+    using namespace EntityDestroyRemoveComp;
+
+    red::World world;
+    world.Init();
+
+    world.RegisterComponentType<MockComponent1>();
+    auto* testSystem = world.AddSystem<TestSystem>();
+
+    auto* entityA = world.CreateWorldEntity("a");
+    entityA->AddComponent<MockComponent1>();
+
+    world.Update();
+
+    REQUIRE(testSystem->m_entityCount == 1);
+
+    entityA->Destroy();
+    world.Update();
+
+    REQUIRE(testSystem->m_entityCount == 0);
 }
