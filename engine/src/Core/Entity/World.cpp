@@ -139,7 +139,7 @@ bool World::Update()
 
     EventsComponent* events = GetWorldComponent<EventsComponent>();
 
-    bool quit = events->QuitRequested();
+    bool quit = events != nullptr ? events->QuitRequested() : false;
 
     if (quit)
         return false;
