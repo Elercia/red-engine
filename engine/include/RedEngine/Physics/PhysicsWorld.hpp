@@ -2,8 +2,6 @@
 
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 
-#include <memory>
-
 #include "box2d/b2_world_callbacks.h"
 
 class b2World;
@@ -40,7 +38,7 @@ private:
                              const b2Contact* contact);
 
 private:
-    std::unique_ptr<b2World> m_internalPhysicsWorld;
+    b2World* m_internalPhysicsWorld;
 
     Array<CollisionInfo> m_frameCollisionInfo;
     Array<TriggerInfo> m_frameTriggerInfo;

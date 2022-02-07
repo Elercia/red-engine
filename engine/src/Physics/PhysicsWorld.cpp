@@ -3,6 +3,7 @@
 #include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 
 #include <box2d/b2_contact.h>
@@ -18,7 +19,7 @@ PhysicsWorld::PhysicsWorld() : m_internalPhysicsWorld(new b2World({0.f, 0.f}))
 
 PhysicsWorld::~PhysicsWorld()
 {
-    m_internalPhysicsWorld.release();
+    RED_SAFE_DELETE(m_internalPhysicsWorld);
 }
 
 void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreationDesc& creationDesc)
