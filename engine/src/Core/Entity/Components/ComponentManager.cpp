@@ -5,6 +5,7 @@
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 
 namespace red
 {
@@ -152,7 +153,13 @@ void ComponentManager::RemoveAllComponentsOf(Entity* owner)
     for(auto& itCompType : m_components)
     {
         auto& comonentPool = itCompType.second;
-        comonentPool.erase(owner->GetId());
+        auto it = comonentPool.find(owner->GetId());
+
+        if( it != comonentPool.end())
+        {
+            RED_SAFE_DELETE(it->second);
+            comonentPool.erase(it);
+        }
     }
 }
 
