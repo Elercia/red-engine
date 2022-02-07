@@ -1,3 +1,5 @@
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Math/Math.hpp"
 
 namespace red
@@ -5,12 +7,12 @@ namespace red
 #ifdef RED_USE_ARRAY
 
 template <typename T>
-Array<T>::Array() : m_size(0), m_capacity(0), m_data(nullptr)
+Array<T>::Array()
 {
 }
 
 template <typename T>
-Array<T>::Array(std::initializer_list<T> list) : m_size(0), m_capacity(0), m_data(nullptr)
+Array<T>::Array(std::initializer_list<T> list)
 {
     reserve(list.size());
 
@@ -53,6 +55,9 @@ template <typename T>
 Array<T>::Array(Array<T>&& other)
     : m_size(std::move(other.m_size)), m_capacity(std::move(other.m_capacity)), m_data(std::move(other.m_data))
 {
+    other.m_size = 0;
+    other.m_capacity = 0;
+    other.m_data = nullptr;
 }
 
 template <typename T>
@@ -61,6 +66,10 @@ Array<T>& Array<T>::operator=(Array<T>&& other)
     m_size = std::move(other.m_size);
     m_capacity = std::move(other.m_capacity);
     m_data = std::move(other.m_data);
+
+    other.m_size = 0;
+    other.m_capacity = 0;
+    other.m_data = nullptr;
 
     return *this;
 }
@@ -108,7 +117,7 @@ template <typename T>
 void Array<T>::push_back(T&& value)
 {
     reserve(m_size + 1);
-    m_data[m_size] = value;
+    new (m_data + m_size) T(std::move(value));
     m_size++;
 }
 
@@ -116,8 +125,7 @@ template <typename T>
 void Array<T>::push_back(const T& value)
 {
     reserve(m_size + 1);
-
-    m_data[m_size] = value;
+    new (m_data + m_size) T(value);
     m_size++;
 }
 
@@ -201,21 +209,50 @@ void Array<T>::SetCapacity(size_type askedCapacity)
     if (askedCapacity < m_size)
         return;
 
-    T* tmp = nullptr;
-
     if (askedCapacity != 0)
     {
         auto capacitySize = askedCapacity * sizeof(T);
-        tmp = (T*)realloc(m_data, capacitySize);
-
-        if (tmp == NULL)
+        if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
         {
-            RED_LOG_ERROR("Not enough space to realloc {} bytes of memory", capacitySize);
-            RED_ABORT("OutOfMemory");
+            T* tmp = (T*) realloc(m_data, capacitySize);
+
+            if (tmp == NULL)
+            {
+                RED_LOG_ERROR("Not enough space to realloc {} bytes of memory", capacitySize);
+                RED_ABORT("OutOfMemory");
+            }
+
+            m_data = tmp;
+        }
+        else
+        {
+            T* tmp = (T*) malloc(capacitySize);
+
+            if (tmp == NULL)
+            {
+                RED_LOG_ERROR("Not enough space to realloc {} bytes of memory", capacitySize);
+                RED_ABORT("OutOfMemory");
+            }
+
+            // Copy members from old location to the new one
+            for (size_type i = 0; i < m_size; i++)
+            {
+                if constexpr (std::is_copy_constructible_v<T>)
+                {
+                    new (tmp + i) T(m_data[i]);
+                }
+                else
+                {
+                    new (tmp + i) T(std::move(m_data[i]));
+                }
+                m_data[i].~T();
+            }
+
+            RED_SAFE_FREE(m_data);
+            m_data = tmp;
         }
     }
 
-    m_data = tmp;
     m_capacity = askedCapacity;
 }
 

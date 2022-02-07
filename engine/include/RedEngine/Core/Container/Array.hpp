@@ -12,7 +12,7 @@
 
 namespace red
 {
-//#define RED_USE_ARRAY 
+#define RED_USE_ARRAY 
 #ifdef RED_USE_ARRAY
 
 template <typename T>
@@ -98,9 +98,9 @@ private:
     void Destroy(size_type from, size_type to);
     void Destroy(iterator from, iterator to);
 
-    size_type m_size;
-    size_type m_capacity;
-    T* m_data;
+    size_type m_size{0};
+    size_type m_capacity{0};
+    T* m_data{nullptr};
 };
 #else  // RED_USE_ARRAY
 

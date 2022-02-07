@@ -49,9 +49,10 @@ std::shared_ptr<GeometryResourceWrapper> GeometryResourceLoader::LoadResource(co
         return nullptr;
     }
 
-    auto jsonVertex = parsedJson["vertices"].get<Array<float>>();
-    auto jsonIndex = parsedJson["indexes"].get<Array<float>>();
-    auto jsonUvs = parsedJson["uv"].get<Array<float>>();
+    // FIXME : Use Array class 
+    auto jsonVertex = parsedJson["vertices"].get<std::vector<float>>();
+    auto jsonIndex = parsedJson["indexes"].get<std::vector<float>>();
+    auto jsonUvs = parsedJson["uv"].get<std::vector<float>>();
 
     auto& geom = geometryResource->m_geom;
 
