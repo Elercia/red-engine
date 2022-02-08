@@ -1,3 +1,4 @@
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Math/Math.hpp"
@@ -63,6 +64,9 @@ Array<T>::Array(Array<T>&& other)
 template <typename T>
 Array<T>& Array<T>::operator=(Array<T>&& other)
 {
+    Destroy(begin(), end());
+    RED_SAFE_FREE(m_data);
+
     m_size = std::move(other.m_size);
     m_capacity = std::move(other.m_capacity);
     m_data = std::move(other.m_data);
@@ -237,14 +241,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
             // Copy members from old location to the new one
             for (size_type i = 0; i < m_size; i++)
             {
-                if constexpr (std::is_copy_constructible_v<T>)
-                {
-                    new (tmp + i) T(m_data[i]);
-                }
-                else
-                {
-                    new (tmp + i) T(std::move(m_data[i]));
-                }
+                new (tmp + i) T(std::move(m_data[i]));
                 m_data[i].~T();
             }
 
@@ -376,21 +373,41 @@ template <typename T>
 template <class InputIterator>
 typename Array<T>::iterator Array<T>::insert(const_iterator position, InputIterator first, InputIterator last)
 {
-    size_type nbElem = (size_type) (last - first);
-    reserve(m_size + nbElem);
+    const size_type nbElem = (size_type) (last - first);
+    const size_type positionIndex = (size_type) (m_data - position);
+    if (nbElem == 0)
+        return (iterator) position;
 
-    // move elements from [position;end] to [position+nbElem; end+nbElem]
-    for (auto it = (iterator) position; it != end(); ++it)
+    RED_ASSERT(position >= begin() && position <= end(), "Position is out of range");
+    RED_ASSERT(first < last, "Invalid insertion");
+
+    reserve(m_size + nbElem);  // position interator is now invalid due to possible allocation change
+
+    if (m_size > 0)
     {
-        *(it + nbElem) = *it;
+        // move elements from [position;end] to [position+nbElem; end+nbElem]
+        for (auto it = (iterator) position; it != end(); ++it)
+        {
+            new (it + nbElem) T(std::move(*it));
+            it->~T();
+        }
+
+        for (size_type i = 0; i < nbElem; i++)
+        {
+            new (m_data + i + positionIndex + nbElem) T(std::move(*(m_data + i + positionIndex)));
+        }
     }
 
     // copy elements from [first;last] to [position; position+nbElem]
-    iterator itTo = (iterator) position;
-    for (auto itFrom = first; itFrom != last; ++itFrom, ++itTo)
+    iterator itFrom = (iterator) first;
+    for (size_type i = 0; i < nbElem; i++)
     {
-        *itTo = *itFrom;
+        new (m_data + i + positionIndex) T(*itFrom);
+
+        itFrom++;
     }
+
+    m_size += nbElem;
 
     return (iterator) position;
 }
