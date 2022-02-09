@@ -2,6 +2,7 @@
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
 #include <catch2/catch.hpp>
+#include <vector>
 
 #include "TestModule.hpp"
 #include "TestUtils/TestUtils.hpp"
@@ -301,6 +302,107 @@ TEST_CASE("Array copy", "[Container]")
         REQUIRE(ar2[0] == "Test1");
         REQUIRE(ar2[1] == "TEST2");
     }
+}
+
+TEST_CASE("Array benchmark", "[Container_Benchmark]")
+{
+    using namespace red;
+
+    DurationCounter counterArray;
+    DurationCounter counterVector;
+
+    struct A
+    {
+        A() : d(0.0), f(0.f), i(0)
+        {
+        }
+
+        A(double dd) : d(dd), f(0.f), i(0)
+        {
+        }
+
+        double d;
+        float f;
+        int i;
+    };
+
+    // Array part
+    {
+        DurationRAII profiler(counterArray);
+
+        Array<int> a;
+        for (int i = 0; i < 30000; i++)
+        {
+            a.push_back(i);
+            a.emplace_back(1);
+        }
+
+        Array<int> other = a;
+        other.push_back(1);
+        other = std::move(a);
+
+        Array<int> b = other;
+        Array<int> c(std::move(b));
+
+        (void)c;
+
+        Array<A> aaa;
+        for (int i = 0; i < 30000; i++)
+        {
+            aaa.push_back(A(0.0));
+            aaa.emplace_back(1.0);
+        }
+
+        Array<A> other2 = aaa;
+        other2.push_back(A());
+        other2 = std::move(aaa);
+
+        Array<A> bbb = other2;
+        Array<A> ccc(std::move(bbb));
+
+        (void)ccc;
+    }
+
+    // vector part
+    {
+        DurationRAII profiler(counterVector);
+
+        std::vector<int> a;
+        for (int i = 0; i < 300000; i++)
+        {
+            a.push_back(i);
+            a.emplace_back(1);
+        }
+
+        std::vector<int> other = a;
+        other.push_back(1);
+        other = std::move(a);
+
+        std::vector<int> b = other;
+        std::vector<int> c(std::move(b));
+
+        (void)c;
+
+        std::vector<A> aaa;
+        for (int i = 0; i < 300000; i++)
+        {
+            aaa.push_back(A(0.0));
+            aaa.emplace_back(1.0);
+        }
+
+        std::vector<A> other2 = aaa;
+        other2.push_back(A());
+        other2 = std::move(aaa);
+
+        std::vector<A> bbb = other2;
+        std::vector<A> ccc(std::move(bbb));
+
+        (void)ccc;
+    }
+
+    std::cout << "Array timing : " << counterArray.GetDuration()<< "\nstd::vector timing : " << counterVector.GetDuration() << std::endl;
+
+    REQUIRE(counterArray.GetDuration() <= counterVector.GetDuration());
 }
 
 #endif  // RED_USE_ARRAY

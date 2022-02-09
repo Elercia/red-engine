@@ -2,8 +2,6 @@
 
 #include <chrono>
 
-
-
 namespace red
 {
 class DurationCounter
@@ -23,6 +21,21 @@ private:
     Clock::time_point m_start{};
     Clock::time_point m_end{};
     bool m_isStarted{false};
+};
+
+struct DurationRAII
+{
+    DurationRAII(DurationCounter& dur) : m_dur(dur)
+    {
+        m_dur.Start();
+    }
+
+    ~DurationRAII()
+    {
+        m_dur.Stop();
+    }
+    
+    DurationCounter& m_dur;
 };
 }  // namespace red
 

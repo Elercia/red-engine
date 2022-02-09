@@ -1,20 +1,19 @@
 #pragma once
 
-#include "RedEngine/Utils/Types.hpp"
-#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#define RED_USE_ARRAY
+#ifdef RED_USE_ARRAY
+
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
-#include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Macros.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Utils/Types.hpp"
 
 #include <cstdlib>
 #include <initializer_list>
-#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
-#define RED_USE_ARRAY 
-#ifdef RED_USE_ARRAY
-
 template <typename T>
 class Array
 {
@@ -90,7 +89,7 @@ public:
     void pop_back();
 
     template <class InputIterator>
-    iterator insert (const_iterator position, InputIterator first, InputIterator last);
+    iterator insert(const_iterator position, InputIterator first, InputIterator last);
 
 private:
     void SetCapacity(size_type askedCapacity);
@@ -102,12 +101,17 @@ private:
     size_type m_capacity{0};
     T* m_data{nullptr};
 };
+}  // namespace red
 #else  // RED_USE_ARRAY
 
+#include <vector>
+
+namespace red
+{
 template <typename T>
 using Array = std::vector<T>;
+}  // namespace red
 
 #endif  // else RED_USE_ARRAY
-}  // namespace red
 
 #include "inl/Array.inl"
