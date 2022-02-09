@@ -1,9 +1,9 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 
-#include <map>
 #include <memory>
 #include <string>
 
@@ -51,7 +51,7 @@ public:
     virtual void FreeAllResources() override;
 
 protected:
-    std::map<Path, std::shared_ptr<Type>> m_loadedResources;
+    Map<Path, std::shared_ptr<Type>> m_loadedResources;
 };
 
 }  // namespace red

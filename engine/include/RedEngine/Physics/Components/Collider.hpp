@@ -1,12 +1,12 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Event/Signal.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_shape.h>
-#include <map>
 #include <memory>
 
 namespace red
@@ -75,12 +75,12 @@ public:
 
     PhysicBody* GetAttachedPhysicBody();
 
-    std::map<int, Collider>& GetColliders();
+    Map<int, Collider>& GetColliders();
 
 private:
     int AddCollider(Collider&& collider, const ColliderDesc& desc);
 
-    std::map<int, Collider> m_colliders;
+    Map<int, Collider> m_colliders;
     int m_nextIndex{0};
     PhysicBody* m_attachedPhysicBody;
 };

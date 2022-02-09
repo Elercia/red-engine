@@ -1,12 +1,12 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Resources/ResourceLoader.hpp"
 
-#include <map>
 #include <memory>
-#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -31,7 +31,7 @@ public:
     void RemoveAllLoaders();
 
 private:
-    std::map<ResourceType, IResourceLoader*> m_resourceLoaders;
+    Map<ResourceType, IResourceLoader*> m_resourceLoaders;
 };
 
 }  // namespace red

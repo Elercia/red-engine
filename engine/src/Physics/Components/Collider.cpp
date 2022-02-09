@@ -115,7 +115,7 @@ PhysicBody* ColliderList::GetAttachedPhysicBody()
     return m_attachedPhysicBody;
 }
 
-std::map<int, Collider>& ColliderList::GetColliders()
+Map<int, Collider>& ColliderList::GetColliders()
 {
     return m_colliders;
 }

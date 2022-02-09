@@ -1,10 +1,10 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <cstdint>
 #include <functional>
-#include <map>
 
 namespace red
 {
@@ -26,7 +26,7 @@ public:
     void operator()(Args... args);
 
 private:
-    std::map<FuncIndex, FuncType> m_functions;
+    Map<FuncIndex, FuncType> m_functions;
     FuncIndex m_nextIndex;
 };
 
