@@ -1,11 +1,12 @@
 #pragma once
 
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
+#include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
 #include <functional>
 #include <string>
 #include <type_traits>
-#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {

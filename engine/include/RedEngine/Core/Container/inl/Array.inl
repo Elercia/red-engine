@@ -1,7 +1,3 @@
-#include "RedEngine/Core/Debug/DebugMacros.hpp"
-#include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/Core/Memory/Macros.hpp"
-#include "RedEngine/Math/Math.hpp"
 
 namespace red
 {
@@ -222,7 +218,6 @@ void Array<T>::SetCapacity(size_type askedCapacity)
 
             if (tmp == NULL)
             {
-                RED_LOG_ERROR("Not enough space to realloc {} bytes of memory", capacitySize);
                 RED_ABORT("OutOfMemory");
             }
 
@@ -234,7 +229,6 @@ void Array<T>::SetCapacity(size_type askedCapacity)
 
             if (tmp == NULL)
             {
-                RED_LOG_ERROR("Not enough space to realloc {} bytes of memory", capacitySize);
                 RED_ABORT("OutOfMemory");
             }
 

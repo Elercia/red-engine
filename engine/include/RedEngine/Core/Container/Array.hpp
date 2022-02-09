@@ -4,9 +4,9 @@
 #ifdef RED_USE_ARRAY
 
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
-#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Macros.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Math/Math.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 #include <cstdlib>
