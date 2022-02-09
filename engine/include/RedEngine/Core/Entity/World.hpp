@@ -99,7 +99,7 @@ private:
     Level* m_currentLevel;
     LevelLoader* m_levelLoader;
 
-    Array<EntityId> m_entityIdGarbage;
+    Array<EntityId> m_entityIdGarbage; //TODO Remove when I found a good EntityId generation algo
 };
 
 }  // namespace red
