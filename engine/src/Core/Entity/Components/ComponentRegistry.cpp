@@ -16,7 +16,7 @@ std::pair<bool, ComponentTraits*> ComponentRegistry::CreateNewComponentTraits(co
         return {false, otherCompTraits};
     }
 
-    m_componentDatas.insert(std::make_pair(componentName, ComponentTraits()));
+    m_componentDatas.insert({componentName, ComponentTraits()});
 
     return {true, &m_componentDatas[componentName]};
 }
