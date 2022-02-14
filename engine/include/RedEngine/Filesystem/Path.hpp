@@ -44,6 +44,9 @@ public:
 
     void ForceRefreshStatus();  // Force the refresh of the path
 
+    bool operator==(const Path& other) const;
+    bool operator!=(const Path& other) const;
+
 private:
     void SetUnicodePath(const std::wstring& unicodeStr);
 

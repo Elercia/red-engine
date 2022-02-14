@@ -152,4 +152,20 @@ void Path::ForceRefreshStatus()
     }
 }
 
+bool Path::operator==(const Path& other) const
+{
+    return m_hash == other.m_hash;   
+}
+
+bool Path::operator!=(const Path& other) const
+{
+    return !(*this == other);
+}
+
+template<>
+uint64 Hash(const Path& value)
+{
+    return value.GetHash();
+}
+
 }  // namespace red
