@@ -12,10 +12,10 @@ public:
     DurationCounter() = default;
     ~DurationCounter() = default;
 
-    void Start();
-    double Stop();
+    inline void Start();
+    inline double Stop();
 
-    double GetDuration();
+    inline double GetDuration();
 
 private:
     Clock::time_point m_start{};
