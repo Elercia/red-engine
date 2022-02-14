@@ -1,5 +1,11 @@
 namespace red
 {
+template <typename T>
+uint64 Hash(const T& value)
+{
+    return Hash<uint64>((uint64) value);
+}
+    
 constexpr uint32 fnv1a32(const std::string_view& s)
 {
     return fnv1a32(s, s.length() - 1);

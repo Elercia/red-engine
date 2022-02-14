@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Utils/Types.hpp"
+#include "RedEngine/Math/Hash.hpp"
 
 #include <string>
 #include <string_view>
@@ -64,6 +65,9 @@ private:
     PathStates m_states;
     uint32 m_hash;
 };
+
+template<>
+uint64 Hash(const Path& value);
 }  // namespace red
 
 namespace std
