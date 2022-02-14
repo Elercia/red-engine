@@ -40,7 +40,7 @@ constexpr uint64 Math::NextPowerOf2(uint64 n)
     n |= n >> 2;
     n |= n >> 4;
     n |= n >> 8;
-    n |= n >> 16;
+    n |= n >> 16; //TODO is it working for uint64
     n++;
 
     return n;
