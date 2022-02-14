@@ -91,14 +91,22 @@ typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
 }
 
 template <typename T>
-void Array<T>::resize(size_type count, T value /*= T()*/)
+void Array<T>::resize(size_type count)
 {
-    Resize(count, value);
+    reserve(count);
+
+    for (size_type i = m_size; i < count; i++)
+    {
+        new (m_data + i) T();
+    }
+
+    m_size = count;
 }
 
 template <typename T>
-void Array<T>::Resize(size_type count, const T& t)
+void Array<T>::resize(size_type count, const T& t)
 {
+    reserve(count);
     for (size_type i = m_size; i < count; i++)
     {
         push_back(t);

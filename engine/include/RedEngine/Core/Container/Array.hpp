@@ -14,6 +14,8 @@
 
 namespace red
 {
+//TODO Add something like template <T> size_type GrowPolicy(neededCapacity) that default implementation is returning NextPowOf2 and allow other kind of grow policy (return 2x the cap etc etc)
+
 template <typename T>
 class Array
 {
@@ -73,7 +75,8 @@ public:
 
     void clear();
 
-    void resize(size_type count, T value = T());
+    void resize(size_type count);
+    void resize(size_type count, const T& t);
 
     iterator erase(iterator pos);
     iterator erase(const_iterator pos);
@@ -93,7 +96,6 @@ public:
 
 private:
     void SetCapacity(size_type askedCapacity);
-    void Resize(size_type count, const T& t);
     void Destroy(size_type from, size_type to);
     void Destroy(iterator from, iterator to);
 
