@@ -285,7 +285,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashO
 
         m_size--;
 
-        bucket.value.~pair();
+        bucket.value.~KeyValuePair();
     }
 
     return iterator(this, GetNext(index));
@@ -306,7 +306,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashO
         
         m_size--;
 
-        bucket.value.~pair();
+        bucket.value.~KeyValuePair();
     }
 
     return iterator(this, GetNext(index));
