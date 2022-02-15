@@ -145,4 +145,66 @@ TEST_CASE("Map erase", "[Container]")
     }
 }
 
+#define RED_TEST_BENCHMARK
+#ifdef RED_TEST_BENCHMARK
+TEST_CASE("Map benchmark", "[Container]")
+{
+    DurationCounter counterRed;
+    DurationCounter counterStd;
+
+    {
+        DurationRAII profiler(counterRed);
+
+        Map<std::string, int> m;
+
+        for (int i = 0; i < 6000; i++)
+        {
+            std::string s = fmt::format("{}", i);
+            m.insert({s, i});
+        }
+
+        for( auto& p : m )
+        {
+            std::string s = fmt::format("{}", p.second);
+            REQUIRE(s == p.first);
+        }
+
+        for (int i = 0; i < 6000; i++)
+        {
+            std::string s = fmt::format("{}", i);
+            m.erase(s);
+        }
+    }
+
+    {
+        DurationRAII profiler(counterStd);
+
+        std::map<std::string, int> m;
+
+        for (int i = 0; i < 6000; i++)
+        {
+            std::string s = fmt::format("{}", i);
+            m.insert({s, i});
+        }
+
+        for( auto& p : m )
+        {
+            std::string s = fmt::format("{}", p.second);
+            REQUIRE(s == p.first);
+        }
+
+        for (int i = 0; i < 6000; i++)
+        {
+            std::string s = fmt::format("{}", i);
+            m.erase(s);
+        }
+    }
+
+    std::cout << "red::Map timing : " << counterRed.GetDuration()
+              << "\nstd::map timing : " << counterStd.GetDuration() << std::endl;
+
+    REQUIRE(counterRed.GetDuration() <= counterStd.GetDuration());
+}
+#endif
+
 #endif  // RED_USE_ARRAY
