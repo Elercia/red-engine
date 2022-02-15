@@ -15,8 +15,6 @@ using Map = std::map<KeyT, ValueT>;
 #include "RedEngine/Math/Hash.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
-#include <iostream>
-
 namespace red
 {
 template <typename T>
@@ -42,8 +40,14 @@ template <typename KeyT, typename ValueT, typename HashOpT = HashT<KeyT>, typena
 class Map
 {
 public:
+    struct KeyValuePair
+    {
+        KeyT first;
+        ValueT second;
+    };
+
     using size_type = uint64;
-    using value_type = std::pair<KeyT, ValueT>;
+    using value_type = KeyValuePair;
     using ThisType = Map<KeyT, ValueT, HashOpT, EqualsOpT>;
 
     class const_iterator;
