@@ -14,7 +14,7 @@ ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filena
                          int line);  // TODO add the possibility to add arguments to the message (, ...)
 }  // namespace red
 
-#ifndef RED_RETAIL_MODE
+#ifdef RED_DEBUG
 
 // TODO Add a abort reason (out of memory for exemple)
 #define RED_ABORT(MSG)                                                             \
@@ -34,22 +34,11 @@ ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filena
     } while (0);
 
 #else
-#define RED_ABORT(MSG) \
-    do                 \
-    {                  \
-        abort();       \
-    } while (0);
+    
+#define RED_ABORT(MSG)
+#define RED_ASSERT(expr, MSG)
 
-#define RED_ASSERT(expr, MSG) \
-    do                        \
-    {                         \
-        if (!(expr))          \
-        {                     \
-            abort();          \
-        }                     \
-    } while (0);
-
-#endif  // DEBUG
+#endif  // RED_DEBUG
 
 #define RED_ERROR(MSG) RED_ASSERT(false, MSG)
 #define RED_ASSERT_S(expr) RED_ASSERT(expr, "Assert triggered")
