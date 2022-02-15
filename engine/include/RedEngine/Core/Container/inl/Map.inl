@@ -235,7 +235,7 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::find(const KeyT& key)
 {
     auto index = GetIndexOf(key, m_values);
-    if (index == (uint64) -1)
+    if (index == (size_type) -1)
         return end();
 
     auto& bucket = m_values[index];
@@ -253,7 +253,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator Map<KeyT, ValueT,
     const KeyT& key) const
 {
     auto index = GetIndexOf(key, m_values);
-    if (index == (uint64) -1)
+    if (index == (size_type) -1)
         return end();
 
     auto& bucket = m_values[index];
@@ -295,7 +295,7 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::erase(const KeyT& key)
 {
     auto index = GetIndexOf(key, m_values);
-    if (index == (uint64) -1)
+    if (index == (size_type) -1)
         return end();
 
     auto& bucket = m_values[index];
@@ -303,7 +303,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashO
     {
         bucket.used = false;
         bucket.erased = true;
-        
+
         m_size--;
 
         bucket.value.~pair();
@@ -430,7 +430,8 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, HashOpT, EqualsOpT>::GetIndexOf(
     const KeyT& key, const Array<Bucket>& inside) const
 {
-    RED_ASSERT_S(!inside.empty());
+    if (m_values.empty())
+        return (size_type) -1;
 
     auto hash = HashOpT::HashType(key);
 
