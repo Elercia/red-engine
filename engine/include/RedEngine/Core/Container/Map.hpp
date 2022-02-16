@@ -157,7 +157,7 @@ public:
     void clear();
 
 private:
-    static constexpr double MaxLoadFactor = 0.7f;
+    static constexpr double MaxLoadFactor = 0.75f;
 
     // Compare the current size with the capacity (currently numbers of elements inside the array)
     // May rehash the table if the load factor is too high or too low (and at this point, iterator are invalidated)

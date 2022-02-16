@@ -157,7 +157,7 @@ TEST_CASE("Map benchmark", "[Container]")
 
         Map<std::string, int> m;
 
-        for (int i = 0; i < 6000; i++)
+        for (int i = 0; i < 60000; i++)
         {
             std::string s = fmt::format("{}", i);
             m.insert({s, i});
@@ -169,7 +169,7 @@ TEST_CASE("Map benchmark", "[Container]")
             REQUIRE(s == p.first);
         }
 
-        for (int i = 0; i < 6000; i++)
+        for (int i = 0; i < 60000; i++)
         {
             std::string s = fmt::format("{}", i);
             m.erase(s);
@@ -181,7 +181,7 @@ TEST_CASE("Map benchmark", "[Container]")
 
         std::map<std::string, int> m;
 
-        for (int i = 0; i < 6000; i++)
+        for (int i = 0; i < 60000; i++)
         {
             std::string s = fmt::format("{}", i);
             m.insert({s, i});
@@ -193,7 +193,7 @@ TEST_CASE("Map benchmark", "[Container]")
             REQUIRE(s == p.first);
         }
 
-        for (int i = 0; i < 6000; i++)
+        for (int i = 0; i < 60000; i++)
         {
             std::string s = fmt::format("{}", i);
             m.erase(s);

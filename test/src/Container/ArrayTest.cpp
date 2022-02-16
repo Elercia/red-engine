@@ -304,6 +304,7 @@ TEST_CASE("Array copy", "[Container]")
     }
 }
 
+#ifdef RED_TEST_BENCHMARK
 TEST_CASE("Array benchmark", "[Container_Benchmark]")
 {
     using namespace red;
@@ -344,7 +345,7 @@ TEST_CASE("Array benchmark", "[Container_Benchmark]")
         Array<int> b = other;
         Array<int> c(std::move(b));
 
-        (void)c;
+        (void) c;
 
         Array<A> aaa;
         for (int i = 0; i < 30000; i++)
@@ -360,7 +361,7 @@ TEST_CASE("Array benchmark", "[Container_Benchmark]")
         Array<A> bbb = other2;
         Array<A> ccc(std::move(bbb));
 
-        (void)ccc;
+        (void) ccc;
     }
 
     // vector part
@@ -381,7 +382,7 @@ TEST_CASE("Array benchmark", "[Container_Benchmark]")
         std::vector<int> b = other;
         std::vector<int> c(std::move(b));
 
-        (void)c;
+        (void) c;
 
         std::vector<A> aaa;
         for (int i = 0; i < 300000; i++)
@@ -397,12 +398,14 @@ TEST_CASE("Array benchmark", "[Container_Benchmark]")
         std::vector<A> bbb = other2;
         std::vector<A> ccc(std::move(bbb));
 
-        (void)ccc;
+        (void) ccc;
     }
 
-    std::cout << "Array timing : " << counterArray.GetDuration()<< "\nstd::vector timing : " << counterVector.GetDuration() << std::endl;
+    std::cout << "Array timing : " << counterArray.GetDuration()
+              << "\nstd::vector timing : " << counterVector.GetDuration() << std::endl;
 
     REQUIRE(counterArray.GetDuration() <= counterVector.GetDuration());
 }
+#endif  // RED_TEST_BENCHMARK
 
 #endif  // RED_USE_ARRAY

@@ -442,6 +442,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
     while ((bucket->used || bucket->erased) && !EqualsOpT::Equals(bucket->value.first, key))
     {
         index = (index + (j * j)) % inside.size();  // Quadratic jumps
+        j++;
         bucket = &inside[index];
     }
 
