@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Core/Event/Delegate.hpp"
+#include "RedEngine/Core/SerializationFunction.hpp"
 
 #include <string>
 
@@ -17,11 +18,19 @@ enum class LogLevel
     LEVEL_FATAL
 };
 
+template <>
+std::string Serialize(const LogLevel &value);
+template <>
+bool Deserialize(LogLevel &value, const std::string &str);
+
 void SetLogLevel(LogLevel level);
 
 class Logger
 {
 public:
+
+    static const Map<LogLevel, std::string> logLevelAsString;
+
     using OutputDelegate = Delegate<const std::string& /*Log message*/>;
 
     Logger();

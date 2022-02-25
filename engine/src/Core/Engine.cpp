@@ -31,16 +31,27 @@
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/Random.hpp"
 
+#ifdef RED_WINDOWS
+#include <debugapi.h>
+#endif
+
 namespace red
 {
+#ifdef RED_DEBUG
+#define DefaultLogLevel LogLevel::LEVEL_DEBUG
+#else
+#define DefaultLogLevel LogLevel::LEVEL_INFO
+#endif
+
+static CVar<bool> s_addStandardOutputLog{"AddStandardOutputlog", "Logger", false};
+static CVar<LogLevel> s_logLevel{"LogLevel", "Logger", DefaultLogLevel};
+
 Engine* Engine::s_engine = nullptr;
 
 Engine* Engine::GetInstance()
 {
     return s_engine;
 }
-
-static CVar<bool> s_addStandardOutputLog{"AddStandardOutputlog", "Logger", false};
 
 Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr)
 {
@@ -95,21 +106,46 @@ bool Engine::RegisterComponentTypes()
     return true;
 }
 
-bool Engine::Create()
+#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+static void LogToDebugger(const std::string& out)
+{
+    OutputDebugStringA(out.c_str());
+    OutputDebugStringA("\n");
+}
+#endif
+
+void Engine::SetupLogger()
 {
     int standarOutputFuncIndex = -1;
+    int debugOutputFuncIndex = -1;
 
 #ifdef RED_DEBUG
     // Always add standard output when debugging
     standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
 #endif
 
-    CVarManager::LoadConfigFile(Path::Resource("Config.ini"));
+#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+    if (IsDebuggerPresent() != 0)
+    {
+        debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
+    }
+#endif
 
     if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
     {
         standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
     }
+
+    SetLogLevel(s_logLevel);
+
+    RED_LOG_INFO("Setup logger for output {}, debugger {}", standarOutputFuncIndex != -1, debugOutputFuncIndex != -1);
+}
+
+bool Engine::Create()
+{
+    CVarManager::LoadConfigFile(Path::Resource("Config.ini"));
+
+    SetupLogger();
 
     InitRandomEngine(42);
 

@@ -30,6 +30,8 @@ public:
 
     virtual bool RegisterComponentTypes();
 
+    virtual void SetupLogger();
+
 protected:
     int m_argc;
     char** m_argv;
