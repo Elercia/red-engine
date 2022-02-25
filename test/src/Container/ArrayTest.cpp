@@ -304,7 +304,24 @@ TEST_CASE("Array copy", "[Container]")
     }
 }
 
-#ifdef RED_TEST_BENCHMARK
+TEST_CASE("Array empty insert", "[Container]")
+{
+    Array<std::string> ar;
+    Array<std::string> ar2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
+
+    ar.insert(ar.begin(), ar2.begin(), ar2.end());
+
+    REQUIRE(ar.size() == ar2.size());
+    for (int i = 0; i < ar2.size(); i++)
+    {
+        REQUIRE(ar[i] == ar2[i]);
+    }
+
+    ar.insert(ar.begin(), ar2.begin(), ar2.end());
+    REQUIRE(ar.size() == ar2.size() * 2);
+}
+
+    #ifdef RED_TEST_BENCHMARK
 TEST_CASE("Array benchmark", "[Container_Benchmark]")
 {
     using namespace red;
@@ -406,6 +423,6 @@ TEST_CASE("Array benchmark", "[Container_Benchmark]")
 
     REQUIRE(counterArray.GetDuration() <= counterVector.GetDuration());
 }
-#endif  // RED_TEST_BENCHMARK
+    #endif  // RED_TEST_BENCHMARK
 
 #endif  // RED_USE_ARRAY
