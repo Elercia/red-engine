@@ -388,10 +388,10 @@ typename Array<T>::iterator Array<T>::insert(const_iterator position, InputItera
     if (m_size > 0)
     {
         // move elements from [position;end] to [position+nbElem; end+nbElem]
-        for (auto it = (iterator) position; it != end(); ++it)
+        for (auto i = positionIndex; i < m_size; ++i)
         {
-            new (it + nbElem) T(std::move(*it));
-            it->~T();
+            new (m_data + i + nbElem) T(std::move(*(m_data + i)));
+            (m_data + i)->~T();
         }
 
         for (size_type i = 0; i < nbElem; i++)
