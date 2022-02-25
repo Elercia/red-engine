@@ -145,7 +145,7 @@ TEST_CASE("Map erase", "[Container]")
     }
 }
 
-#define RED_TEST_BENCHMARK
+//#define RED_TEST_BENCHMARK
 #ifdef RED_TEST_BENCHMARK
 TEST_CASE("Map benchmark", "[Container]")
 {
