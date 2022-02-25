@@ -4,6 +4,11 @@
 
 namespace red
 {
+const Map<LogLevel, std::string> Logger::logLevelAsString{
+    {LogLevel::LEVEL_TRACE, "TRACE"},     {LogLevel::LEVEL_DEBUG, "DEBUG"}, {LogLevel::LEVEL_INFO, "INFO"},
+    {LogLevel::LEVEL_WARNING, "WARNING"}, {LogLevel::LEVEL_ERROR, "ERROR"}, {LogLevel::LEVEL_FATAL, "FATAL"},
+};
+
 void SetLogLevel(LogLevel level)
 {
     GetRedLogger()->SetLogLevel(level);
@@ -31,6 +36,33 @@ Logger::OutputDelegate::FuncIndex Logger::AddOutput(OutputDelegate::FuncType out
 void Logger::LogToStandardOutputFun(const std::string& out)
 {
     std::cout << out << "\n";
+}
+
+template <>
+std::string Serialize(const LogLevel& value)
+{
+    for (const auto& pair : Logger::logLevelAsString)
+    {
+        if (pair.first == value)
+            return pair.second;
+    }
+
+    return "UNKNOWN";
+}
+
+template <>
+bool Deserialize(LogLevel& value, const std::string& str)
+{
+    for (auto& pair : Logger::logLevelAsString)
+    {
+        if (pair.second == str)
+        {
+            value = pair.first;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }  // namespace red
