@@ -312,16 +312,21 @@ TEST_CASE("Array empty insert", "[Container]")
     ar.insert(ar.begin(), ar2.begin(), ar2.end());
 
     REQUIRE(ar.size() == ar2.size());
-    for (int i = 0; i < ar2.size(); i++)
+    for (auto i = 0u; i < ar2.size(); i++)
     {
         REQUIRE(ar[i] == ar2[i]);
     }
 
     ar.insert(ar.begin(), ar2.begin(), ar2.end());
     REQUIRE(ar.size() == ar2.size() * 2);
+
+    for (auto i = 0u; i < ar.size(); i++)
+    {
+        REQUIRE(ar[i] == ar2[i % ar2.size()]);
+    }
 }
 
-    #ifdef RED_TEST_BENCHMARK
+#ifdef RED_TEST_BENCHMARK
 TEST_CASE("Array benchmark", "[Container_Benchmark]")
 {
     using namespace red;
@@ -423,6 +428,6 @@ TEST_CASE("Array benchmark", "[Container_Benchmark]")
 
     REQUIRE(counterArray.GetDuration() <= counterVector.GetDuration());
 }
-    #endif  // RED_TEST_BENCHMARK
+#endif  // RED_TEST_BENCHMARK
 
 #endif  // RED_USE_ARRAY

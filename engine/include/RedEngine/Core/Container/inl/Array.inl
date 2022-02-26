@@ -393,11 +393,6 @@ typename Array<T>::iterator Array<T>::insert(const_iterator position, InputItera
             new (m_data + i + nbElem) T(std::move(*(m_data + i)));
             (m_data + i)->~T();
         }
-
-        for (size_type i = 0; i < nbElem; i++)
-        {
-            new (m_data + i + positionIndex + nbElem) T(std::move(*(m_data + i + positionIndex)));
-        }
     }
 
     // copy elements from [first;last] to [position; position+nbElem]
