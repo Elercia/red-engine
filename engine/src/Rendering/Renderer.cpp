@@ -4,6 +4,7 @@
 
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
@@ -19,7 +20,7 @@
 // clang-format on
 
 #define CheckGLReturnValue(expr, ...) \
-    if (!(expr))                      \
+    if ((expr) != 0)                  \
     {                                 \
         RED_LOG_ERROR(__VA_ARGS__);   \
     }
@@ -47,6 +48,15 @@ void Renderer::InitRenderer(WindowComponent* window)
         RED_ABORT("Cannot initialize Renderer");
     }
 
+    // Request OpenGL 4.3 context.
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) != 0,
+                       "Error setting gl context major version with error {}", SDL_GetError());
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) != 0,
+                       "Error setting gl context major version with error {}", SDL_GetError());
+
+    // set double buffer
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
     m_window = window;
     m_window->CreateNewWindow();
 
@@ -57,25 +67,22 @@ void Renderer::InitRenderer(WindowComponent* window)
         return;
     }
 
-    // Request OpenGL 4.3 context.
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) != 0,
-                       "Error setting gl context major version");
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) != 0,
-                       "Error setting gl context major version");
-
-    // set double buffer
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     if (gl3wInit() != 0)
     {
         RED_LOG_ERROR("Failed to query openGL context from SDL");
         return;
     }
 
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     RED_LOG_INFO("Init OpenGL renderer");
+}
+
+void Renderer::ReCreateWindow(WindowComponent* /*window*/)
+{
+    // TODO recreate frame buffer etc
 }
 
 void Renderer::Finalise()
@@ -118,20 +125,40 @@ void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
 {
 }
 
-void Renderer::Render(const Renderable* renderable, const Transform* transform)
+void Renderer::Draw(const Renderable* renderable, const Transform* transform)
 {
     RenderingData data;
     data.geometry = &(renderable->m_geometry->m_geom);
-    data.material = renderable->m_material;
+    data.materialInstance = renderable->m_material;
     data.worldMatrix = transform->GetWorldMatrix();
     data.aabb = renderable->m_aabb;
 
-    auto& renderDatasForCamera = m_renderingData[data.material->GetRenderType()];
+    auto& renderDatasForCamera = m_renderingData[data.materialInstance.material->GetRenderType()];
     renderDatasForCamera.push_back(std::move(data));
+}
+
+void Renderer::DrawDebugLine(const Vector2& /*first*/, const Vector2& /*second*/, const Color& /*color*/)
+{
+}
+
+void Renderer::DrawDebugLines(const Array<Vector2>& /*points*/, const Color& /*color*/ /*= ColorConstant::RED*/,
+                              bool /*isFilled*/ /*= false*/)  // TODO isFilled
+{
+}
+
+void Renderer::DrawDebugCircle(const Vector2& /*center*/, float /*radius*/,
+                               const Color& /*color*/ /*= ColorConstant::RED*/)
+{
+}
+
+void Renderer::DrawDebugPoint(const Vector2& /*coord*/, const Color& /*color*/ /*= ColorConstant::RED*/)
+{
 }
 
 void Renderer::RenderOpaque(CameraComponent* camera)
 {
+    PROFILER_CATEGORY("RenderOpaque", Optick::Category::Rendering);
+
     int count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(RenderEntityType::Opaque, camera, count);
 
@@ -144,61 +171,76 @@ void Renderer::RenderOpaque(CameraComponent* camera)
     {
         auto& renderData = datas[i];
 
-        UseMaterial(renderData.material);
+        UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);
 
-        const int worldLocation = renderData.material->GetInputLocation("world");
+        const int worldLocation = renderData.materialInstance.material->GetInputLocation("world");
         glUniformMatrix4fv(worldLocation, 1, GL_FALSE, renderData.worldMatrix.m_data);
 
-        const int viewProjLocation = renderData.material->GetInputLocation("view_projection");
+        const int viewProjLocation = renderData.materialInstance.material->GetInputLocation("view_projection");
         glUniformMatrix4fv(viewProjLocation, 1, GL_FALSE, projView.m_data);
 
         auto primitiveType = renderData.geometry->GetPrimitiveType();
 
-        glDrawElements(PrimitiveTypesAsGLTypes[(int)primitiveType], renderData.geometry->GetIndexeCount(), GL_UNSIGNED_INT,
-                       nullptr);
+        glDrawElements(PrimitiveTypesAsGLTypes[(int) primitiveType], renderData.geometry->GetIndexeCount(),
+                       GL_UNSIGNED_INT, nullptr);
     }
 
     glPopDebugGroup();
 }
 
+void Renderer::RenderDebug(CameraComponent* /*camera*/)
+{
+}
+
 void Renderer::RenderTransparency(CameraComponent* /*camera*/)
 {
+    PROFILER_CATEGORY("RenderTransparency", Optick::Category::Rendering);
 }
 
 void Renderer::RenderLights(CameraComponent* /*camera*/)
 {
+    PROFILER_CATEGORY("RenderLights", Optick::Category::Rendering);
 }
 
-void Renderer::DrawLine(CameraComponent* /*camera*/, const Vector2& /*first*/, const Vector2& /*second*/,
-                        const Color& /*color*/)
+void Renderer::UseMaterial(const MaterialInstance& materialInstance)
 {
-}
+    auto& material = materialInstance.material;
+    auto& parameters = materialInstance.parameters;
 
-void Renderer::DrawLines(CameraComponent* /*camera*/, const Array<Vector2>& /*points*/,
-                         const Color& /*color*/ /*= ColorConstant::RED*/,
-                         bool /*isFilled*/ /*= false*/)  // TODO isFilled
-{
-}
+    glUseProgram(material->GetShaderProgram()->m_handle);
 
-void Renderer::DrawCircle(CameraComponent* /*camera*/, const Vector2& /*center*/, float /*radius*/,
-                          const Color& /*color*/ /*= ColorConstant::RED*/)
-{
-}
+    // Bind textures and buffers
+    int i = 0;
+    for (auto& parameterIt : material->m_defaultMaterialData.parameters)
+    {
+        auto& name = parameterIt.first;
+        auto* value = &parameterIt.second;
 
-void Renderer::DrawPoint(CameraComponent* /*camera*/, const Vector2& /*coord*/,
-                         const Color& /*color*/ /*= ColorConstant::RED*/)
-{
-}
+        auto overidenParamValueIt = parameters.parameters.find(name);
+        if (overidenParamValueIt != parameters.parameters.end())
+            value = &overidenParamValueIt->second;
 
-void Renderer::UseMaterial(const std::shared_ptr<Material>& mat)
-{
-    glUseProgram(mat->GetShaderProgram()->m_handle);
+        if (value->type == ValueType::TEXTURE)
+        {
+            auto& texture = value->texture;
+
+            glActiveTexture(GL_TEXTURE0 + i);
+            glBindTexture(GL_TEXTURE_2D, texture->m_textureHandle);
+            glUniform1i(material->GetInputLocation(name.c_str()), i);
+        }
+        else if (value->type == ValueType::VECTOR4)
+        {
+            auto& vector = value->vector;
+            glUniform4fv(material->GetInputLocation(name.c_str()), 1, &vector.x);
+        }
+
+        i++;
+    }
 }
 
 void Renderer::UseGeometry(const Geometry* geom)
 {
-    // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindVertexArray(geom->m_gpuBufferHandle);
 }
@@ -208,7 +250,7 @@ Array<RenderingData>& Renderer::GetVisibleRenderDatasForType(RenderEntityType ty
 {
     Array<RenderingData>& ret = m_renderingData[type];
 
-    for (int i = (int)ret.size(); i >= 0; i--)
+    for (int i = (int) ret.size() - 1; i >= 0; i--)
     {
         if (!camera->IsVisibleFrom(ret[i].aabb))
             renderDataCount--;

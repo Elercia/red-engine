@@ -25,9 +25,8 @@ struct RenderingData
 {
     Matrix44 worldMatrix;
     Geometry* geometry;
-    std::shared_ptr<Material> material;
+    MaterialInstance materialInstance;
     AABB aabb;
-    CameraComponent* camera;
 };
 
 class Renderer
@@ -40,7 +39,18 @@ public:
     void EndRenderFrame();
 
     // Push the renderable to the corresponding render queue
-    void Render(const Renderable* renderable, const Transform* transform);
+    void Draw(const Renderable* renderable, const Transform* transform);
+
+    void DrawDebugLine(const Vector2& first, const Vector2& second,
+                  const Color& color = ColorConstant::RED);
+
+    void DrawDebugLines(const Array<Vector2>& points, const Color& color = ColorConstant::RED,
+                   bool isFilled = false);
+
+    void DrawDebugCircle(const Vector2& center, float radius,
+                    const Color& color = ColorConstant::RED);
+
+    void DrawDebugPoint(const Vector2& coord, const Color& color = ColorConstant::RED);
 
     // Draw passes
     void BeginCameraRendering(CameraComponent* camera);
@@ -49,26 +59,19 @@ public:
     void RenderOpaque(CameraComponent* camera);
     void RenderTransparency(CameraComponent* camera);
     void RenderLights(CameraComponent* camera);
+    void RenderDebug(CameraComponent* camera);
 
-    void DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
-                  const Color& color = ColorConstant::RED);
-
-    void DrawLines(CameraComponent* camera, const Array<Vector2>& points, const Color& color = ColorConstant::RED,
-                   bool isFilled = false);
-
-    void DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
-                    const Color& color = ColorConstant::RED);
-
-    void DrawPoint(CameraComponent* camera, const Vector2& coord, const Color& color = ColorConstant::RED);
-
+    // Rendering resource management
     void InitRenderer(WindowComponent* window);
     void Finalise();
+
+    void ReCreateWindow(WindowComponent* window);
 
 private:
     Array<RenderingData>& GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
                                                        int& renderDataCount);
 
-    void UseMaterial(const std::shared_ptr<Material>& mat);
+    void UseMaterial(const MaterialInstance& mat);
     void UseGeometry(const Geometry* geom);
 
 private:

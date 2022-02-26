@@ -37,7 +37,8 @@ void AudioSystem::Finalise()
 void AudioSystem::Update()
 {
     // Update listeners
-    for (auto* audioListenerEntity : GetComponents<AudioListener>())
+    auto audioListeners = GetComponents<AudioListener>();
+    for (auto* audioListenerEntity : audioListeners)
     {
         auto* audioListener = audioListenerEntity->GetComponent<AudioListener>();
         auto* audioListenerTransform = audioListenerEntity->GetComponent<Transform>();
@@ -71,7 +72,8 @@ void AudioSystem::Update()
     }
 
     // Update audio sources
-    for (auto* entity : GetComponents<AudioSource>())
+    auto audioSources = GetComponents<AudioSource>();
+    for (auto* entity : audioSources)
     {
         auto* audioSource = entity->GetComponent<AudioSource>();
         auto resource = audioSource->GetResource();

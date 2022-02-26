@@ -53,9 +53,17 @@ std::shared_ptr<Material> MaterialResourceLoader::LoadResource(const Path& path)
     auto* shaderResourceLoader =
         m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<ShaderProgramResourceLoader>();
 
-    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false);
+    auto content = ReadFile(activePath);
+    auto parsedJson = json::parse(content, nullptr, false, true);
 
-    resourcePtr->m_shaderProgram = shaderResourceLoader->LoadResource(Path(parsedJson["shader_program"]));
+    if (parsedJson.is_discarded() || !parsedJson.is_array())
+    {
+        RED_LOG_WARNING("Path {} is not a valid JSON", activePath.GetAscciiPath());
+        return nullptr;
+    }
+
+    std::wstring shaderPath = parsedJson["shader_program"];
+    resourcePtr->m_shaderProgram = shaderResourceLoader->LoadResource(Path::Resource(shaderPath));
 
     resourcePtr->m_type = parsedJson["rendering_type"];
 

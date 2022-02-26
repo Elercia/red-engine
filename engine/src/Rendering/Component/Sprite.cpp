@@ -7,6 +7,8 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Rendering/Resource/GeometryResourceLoader.hpp"
+#include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
@@ -26,6 +28,15 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
                            ->GetWorldComponent<ResourceHolderComponent>()
                            ->GetResourceLoader<SpriteResourceLoader>()
                            ->LoadResource(resourceId);
+
+    m_material.material = m_owner->GetWorld()
+                        ->GetWorldComponent<ResourceHolderComponent>()
+                        ->GetResourceLoader<MaterialResourceLoader>()
+                       ->LoadResource(Path::Resource("BASE_MATERIAL"));
+    m_geometry = m_owner->GetWorld()
+                        ->GetWorldComponent<ResourceHolderComponent>()
+                        ->GetResourceLoader<GeometryResourceLoader>()
+                       ->LoadResource(Path::Resource("BASE_GEOMETRY"));
 
     if (m_spriteResource)
     {
@@ -62,6 +73,8 @@ void Sprite::NextFrame()
             }
         }
     }
+
+    m_material.parameters.parameters["texture_sampler"].texture = m_currentAnimationInfo.currentAnimation->texture;
 }
 
 bool Sprite::StartAnimation(const std::string& name)
@@ -95,7 +108,7 @@ const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const
 
 bool Sprite::IsValid() const
 {
-    return m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
+    return m_material.material != nullptr && m_geometry != nullptr && m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
 }
 
 }  // namespace red

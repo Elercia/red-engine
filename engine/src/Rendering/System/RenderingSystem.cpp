@@ -16,6 +16,7 @@
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Renderer.hpp"
 
+#include <SDL2/SDL.h>
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
@@ -44,8 +45,6 @@ void RenderingSystem::Update()
 {
     PROFILER_CATEGORY("Update render data", Optick::Category::Rendering)
 
-    UpdateWindowAsNeeded();
-
     auto spriteEntities = GetComponents<Sprite>();
 
     for (auto* spriteEntity : spriteEntities)
@@ -59,13 +58,17 @@ void RenderingSystem::Update()
         sprite->NextFrame();
 
         // Push this entity to the list of entity to render
-        m_renderer->Render(sprite, transform);
+        m_renderer->Draw(sprite, transform);
     }
+
+    RenderDebug();
 }
 
 void RenderingSystem::BeginRender()
 {
     PROFILER_CATEGORY("Begin rendering", Optick::Category::Rendering);
+
+    UpdateWindowAsNeeded();
 
     m_renderer->BeginRenderFrame();
 }
@@ -74,17 +77,9 @@ void RenderingSystem::EndRender()
 {
     PROFILER_CATEGORY("End rendering", Optick::Category::Rendering);
 
-    m_renderer->EndRenderFrame();
-}
-
-void RenderingSystem::Render()
-{
-    PROFILER_CATEGORY("Render", Optick::Category::Rendering)
-
-    auto renderables = GetComponents<Renderable>();
-
     // Draw frame for each camera
-    for (auto& cameraEntity : GetComponents<CameraComponent>())
+    auto cameras = GetComponents<CameraComponent>();
+    for (auto& cameraEntity : cameras)
     {
         auto* cameraComponent = cameraEntity->GetComponent<CameraComponent>();
         m_renderer->BeginCameraRendering(cameraComponent);
@@ -93,8 +88,14 @@ void RenderingSystem::Render()
         m_renderer->RenderTransparency(cameraComponent);
         m_renderer->RenderLights(cameraComponent);
 
+#ifdef RED_DEBUG
+        m_renderer->RenderDebug(cameraComponent);
+#endif
+
         m_renderer->EndCameraRendering(cameraComponent);
     }
+
+    m_renderer->EndRenderFrame();
 }
 
 Renderer* RenderingSystem::GetRenderer()
@@ -102,7 +103,7 @@ Renderer* RenderingSystem::GetRenderer()
     return m_renderer;
 }
 
-void RenderingSystem::DrawDebug(CameraComponent* camera)
+void RenderingSystem::RenderDebug()
 {
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
@@ -117,28 +118,28 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
             {
                 auto* circle = static_cast<DebugCircle*>(shape.get());
 
-                m_renderer->DrawCircle(camera, circle->center, circle->radius, circle->color);
+                m_renderer->DrawDebugCircle(circle->center, circle->radius, circle->color);
             }
             break;
             case DebugShapeType::POLYGON:
             {
                 auto* polygon = static_cast<DebugPolygon*>(shape.get());
 
-                m_renderer->DrawLines(camera, polygon->points, polygon->color);
+                m_renderer->DrawDebugLines(polygon->points, polygon->color);
             }
             break;
             case DebugShapeType::SEGMENT:
             {
                 auto* segment = static_cast<DebugSegment*>(shape.get());
 
-                m_renderer->DrawLine(camera, segment->point1, segment->point2, segment->color);
+                m_renderer->DrawDebugLine(segment->point1, segment->point2, segment->color);
             }
             break;
             case DebugShapeType::POINT:
             {
                 auto* point = static_cast<DebugPoint*>(shape.get());
 
-                m_renderer->DrawPoint(camera, point->coord, point->color);
+                m_renderer->DrawDebugPoint(point->coord, point->color);
             }
             break;
         }
@@ -152,10 +153,15 @@ void RenderingSystem::UpdateWindowAsNeeded()
     auto windowEntities = GetComponents<WindowComponent>();
     auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
 
-    for (auto* entity : windowEntities)
+    for (auto* windowEntity : windowEntities)
     {
-        // TODO check if window as been resized
-        // TODO check for fullscreen change
+        // TODO what about window cvars ? 
+        auto* windowComp = windowEntity->GetComponent<WindowComponent>();
+
+        if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
+        {
+            m_renderer->ReCreateWindow(windowComp);
+        }
     }
 }
 

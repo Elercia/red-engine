@@ -37,6 +37,8 @@ void EventSystem::PreUpdate()
         state.isUp = false;
     }
 
+    events->m_windowIdResized.clear();
+
     // Update the inputs
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
@@ -51,14 +53,11 @@ void EventSystem::PreUpdate()
                 {
                     case SDL_WINDOWEVENT_CLOSE:
                         events->m_quitRequested = true;
-                        RED_LOG_DEBUG("Window event close");
+                        RED_LOG_DEBUG("Events : Window event close");
                         break;
-                    case SDL_WINDOWEVENT_MOVED:
-                        RED_LOG_DEBUG("Window event mooved");
-                        break;
-                    case SDL_WINDOWEVENT_RESIZED:
-                        events->m_windowResizeSignal(Vector2i(event.window.data1, event.window.data2));
-                        RED_LOG_DEBUG("Window event resized");
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        RED_LOG_DEBUG("Events : Window event size changed");
+                        events->m_windowIdResized.push_back(event.window.windowID);
                         break;
                 }
             }
@@ -66,7 +65,7 @@ void EventSystem::PreUpdate()
                 // -------- QUIT --------
             case SDL_QUIT:
                 events->m_quitRequested = true;
-                RED_LOG_DEBUG("Quit Requested");
+                RED_LOG_DEBUG("Events : Quit Requested");
                 break;
                 // -------- KEYS --------
             case SDL_KEYDOWN:
@@ -78,7 +77,7 @@ void EventSystem::PreUpdate()
                     keyState.isPressed = true;
                     keyState.isDown = true;
 
-                    RED_LOG_DEBUG("Key DOWN {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
+                    RED_LOG_DEBUG("Events : Key DOWN {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
                 }
             }
             break;
@@ -89,14 +88,13 @@ void EventSystem::PreUpdate()
                 keyState.isPressed = false;
                 keyState.isUp = true;
 
-                RED_LOG_DEBUG("Key UP {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
+                RED_LOG_DEBUG("Events : Key UP {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
             }
             break;
                 // -------- MOUSE --------
             case SDL_MOUSEMOTION:
             {
                 events->m_mousePosition = Vector2i{event.motion.x, event.motion.y};
-                RED_LOG_TRACE("Mouse motion {} {}", event.motion.x, event.motion.y);
             }
             break;
             case SDL_MOUSEBUTTONDOWN:

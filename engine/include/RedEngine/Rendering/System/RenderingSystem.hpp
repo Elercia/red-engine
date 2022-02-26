@@ -24,7 +24,7 @@ public:
     Renderer* GetRenderer();
 
 private:
-    void DrawDebug(CameraComponent* camera);
+    void RenderDebug();
     void UpdateWindowAsNeeded();
 
 private:

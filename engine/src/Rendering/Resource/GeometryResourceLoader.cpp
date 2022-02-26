@@ -41,7 +41,7 @@ std::shared_ptr<GeometryResourceWrapper> GeometryResourceLoader::LoadResource(co
         return nullptr;
     }
 
-    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false);
+    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false, true);
 
     if (parsedJson.is_discarded() || !parsedJson.is_array())
     {

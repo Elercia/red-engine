@@ -19,6 +19,8 @@ bool PongEngine::Destroy()
 {
     CheckReturn(Engine::Destroy());
 
+    getchar();
+
     return true;
 }
 

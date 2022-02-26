@@ -27,7 +27,8 @@ void PhysicSystem::Init()
 
 void PhysicSystem::ManageEntities()
 {
-    for (auto* entity : GetComponents<PhysicBody>())
+    auto bodies = GetComponents<PhysicBody>();
+    for (auto* entity : bodies)
     {
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
@@ -41,7 +42,8 @@ void PhysicSystem::ManageEntities()
         physicBody->m_status = ComponentStatus::VALID;
     }
 
-    for (auto* entity : GetComponents<ColliderList>())
+    auto colliders = GetComponents<ColliderList>();
+    for (auto* entity : colliders)
     {
         auto* colliderList = entity->GetComponent<ColliderList>();
         if (colliderList->m_status == ComponentStatus::VALID)
@@ -75,7 +77,8 @@ void PhysicSystem::ManageEntities()
 
 void PhysicSystem::Finalise()
 {
-    for (auto* entity : GetComponents<PhysicBody>())
+    auto bodies =  GetComponents<PhysicBody>();
+    for (auto* entity :bodies)
     {
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
@@ -89,7 +92,8 @@ void PhysicSystem::Update()
 
     ManageEntities();
 
-    for (auto* entity : GetComponents<PhysicBody>())
+    auto bodies =  GetComponents<PhysicBody>();
+    for (auto* entity : bodies)
     {
         auto* transform = entity->GetComponent<Transform>();
         auto* physicBody = entity->GetComponent<PhysicBody>();
@@ -99,7 +103,7 @@ void PhysicSystem::Update()
 
     m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 
-    for (auto* entity : GetComponents<PhysicBody>())
+    for (auto* entity : bodies)
     {
         auto* transform = entity->GetComponent<Transform>();
         auto* physicBody = entity->GetComponent<PhysicBody>();

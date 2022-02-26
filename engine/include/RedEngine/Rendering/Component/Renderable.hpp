@@ -24,9 +24,12 @@ public:
     Renderable(Entity* owner);
     ~Renderable();
 
-private:
+    MaterialInstance GetMaterial();
+    std::shared_ptr<GeometryResourceWrapper> GetGeometry();
+
+protected:
     AABB m_aabb;
     std::shared_ptr<GeometryResourceWrapper> m_geometry;
-    std::shared_ptr<Material> m_material;
+    MaterialInstance m_material;
 };
 }  // namespace red

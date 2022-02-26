@@ -5,12 +5,13 @@
 #include "RedEngine/Input/InputDefinitionTranslationUnit.hpp"
 
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_video.h>
 
 namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(EventsComponent)
 
-EventsComponent::EventsComponent(Entity* entity) : Component(entity), m_quitRequested(false)
+EventsComponent::EventsComponent(Entity* entity) : Component(entity)
 {
 }
 
@@ -41,6 +42,12 @@ KeyState EventsComponent::GetKeyState(KeyCodes::Enum key) const
 const Vector2i& EventsComponent::GetMousePosition() const
 {
     return m_mousePosition;
+}
+
+bool EventsComponent::IsWindowResized(SDL_Window* window) const
+{
+    uint32 id = SDL_GetWindowID(window);
+    return std::find(m_windowIdResized.begin(), m_windowIdResized.end(), id) != m_windowIdResized.end();
 }
 
 void EventsComponent::SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type)

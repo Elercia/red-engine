@@ -36,7 +36,7 @@ World::~World()
 }
 
 void World::OnAddEntity(Entity* entity)
-{
+{    
     Entity* oldEntity = FindEntity(entity->GetId());
     if (oldEntity != nullptr)
     {
@@ -112,8 +112,8 @@ void World::Finalize()
     // Delete current level entities
     ChangeLevel(nullptr);
 
-    // Delete current world level chunk entities   
-    if( m_worldChunk != nullptr)
+    // Delete current world level chunk entities
+    if (m_worldChunk != nullptr)
         m_worldChunk->Finalize();
 
     for (auto& system : m_systems)
@@ -146,6 +146,11 @@ bool World::Update()
 
     for (auto& system : m_systems)
     {
+        system->BeginRender();
+    }
+
+    for (auto& system : m_systems)
+    {
         system->PreUpdate();
     }
 
@@ -157,6 +162,11 @@ bool World::Update()
     for (auto& system : m_systems)
     {
         system->PostUpdate();
+    }
+
+    for (auto& system : m_systems)
+    {
+        system->EndRender();
     }
 
     return true;
@@ -202,11 +212,15 @@ void World::ChangeLevel(Level* newLevel)
     m_currentLevel = newLevel;
 
     if (m_currentLevel != nullptr)
+    {
+        RED_LOG_INFO("Change level {}", newLevel->GetName());
+
         m_currentLevel->InternInit();
 
-    for (auto* system : m_systems)
-    {
-        system->ManageEntities();
+        for (auto* system : m_systems)
+        {
+            system->ManageEntities();
+        }
     }
 }
 

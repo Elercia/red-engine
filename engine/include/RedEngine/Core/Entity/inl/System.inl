@@ -8,7 +8,8 @@ Array<Entity*> System::GetComponents() const
 {
     Array<Entity*> selectedEntities;
 
-    for (auto& entityPtr : GetWorldEntities())
+    auto& worldentities = GetWorldEntities();
+    for (auto& entityPtr : worldentities)
     {
         auto list = {entityPtr->HasComponent<ComponentTypes>()...};
 

@@ -1,5 +1,3 @@
-#include "TestModule.hpp"
-
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
@@ -7,8 +5,9 @@
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Input/System/UserInputSystem.hpp"
 
-#include <SDL2/SDL_events.h>
 #include <catch2/catch.hpp>
+
+#include "TestModule.hpp"
 
 using namespace red;
 
@@ -148,6 +147,6 @@ TEST_CASE("User input handling", "[Input]")
         REQUIRE(!comp->GetKeyDown(key));
         REQUIRE(comp->GetKeyUp(key));
     }
-    
+
     world.Finalize();
 }
