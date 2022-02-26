@@ -304,7 +304,7 @@ TEST_CASE("Array copy", "[Array]")
     }
 }
 
-TEST_CASE("Array empty insert", "[Array]")
+TEST_CASE("Array insert", "[Array]")
 {
     Array<std::string> ar;
     Array<std::string> ar2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
@@ -319,6 +319,9 @@ TEST_CASE("Array empty insert", "[Array]")
 
     ar.insert(ar.begin(), ar2.begin(), ar2.end());
     REQUIRE(ar.size() == ar2.size() * 2);
+
+    ar.insert(ar.end(), ar2.begin(), ar2.end());
+    REQUIRE(ar.size() == ar2.size() * 3);
 
     for (auto i = 0u; i < ar.size(); i++)
     {
