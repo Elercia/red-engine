@@ -16,10 +16,9 @@ public:
     virtual void Init() override;
     virtual void Finalise() override;
 
-    void Update() override;
+    virtual void Update() override;
 
     virtual void BeginRender() override;
-    virtual void Render() override;
     virtual void EndRender() override;
 
     Renderer* GetRenderer();

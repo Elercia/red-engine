@@ -29,9 +29,8 @@ public:
     virtual void PreUpdate(){};
     virtual void Update(){};
     virtual void PostUpdate(){};
-
+    
     virtual void BeginRender(){};
-    virtual void Render(){};
     virtual void EndRender(){};
 
     /// Called once the world is initializing to manager system-specific init
