@@ -11,7 +11,7 @@ using namespace red;
 
 #ifdef RED_USE_ARRAY
 
-TEST_CASE("Array push back", "[Container]")
+TEST_CASE("Array push back", "[Array]")
 {
     Array<int> intArray;
     REQUIRE(intArray.empty());
@@ -33,7 +33,7 @@ TEST_CASE("Array push back", "[Container]")
     REQUIRE(intArray.size() == 0);
 }
 
-TEST_CASE("Array accessors", "[Container]")
+TEST_CASE("Array accessors", "[Array]")
 {
     Array<int> arr;
     REQUIRE(arr.empty());
@@ -59,7 +59,7 @@ TEST_CASE("Array accessors", "[Container]")
     }
 }
 
-TEST_CASE("Array memory shrink/reserve", "[Container]")
+TEST_CASE("Array memory shrink/reserve", "[Array]")
 {
     Array<int> arr;
     REQUIRE(arr.empty());
@@ -86,7 +86,7 @@ TEST_CASE("Array memory shrink/reserve", "[Container]")
     REQUIRE(arr.size() == 200);
 }
 
-TEST_CASE("Array resize", "[Container]")
+TEST_CASE("Array resize", "[Array]")
 {
     Array<int> arr;
     REQUIRE(arr.empty());
@@ -133,7 +133,7 @@ public:
     const char* c;
 };
 
-TEST_CASE("Array of struct", "[Container]")
+TEST_CASE("Array of struct", "[Array]")
 {
     s_destructedCount = 0;
 
@@ -187,7 +187,7 @@ TEST_CASE("Array of struct", "[Container]")
     REQUIRE(s_destructedCount == 100);
 }
 
-TEST_CASE("Array erase", "[Container]")
+TEST_CASE("Array erase", "[Array]")
 {
     Array<int> arr{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     REQUIRE(arr.size() == 10);
@@ -222,7 +222,7 @@ TEST_CASE("Array erase", "[Container]")
     REQUIRE(std::find(arr.begin(), arr.end(), 9) != arr.end());
 }
 
-TEST_CASE("Array erase call destructor", "[Container]")
+TEST_CASE("Array erase call destructor", "[Array]")
 {
     s_destructedCount = 0;
     {
@@ -257,7 +257,7 @@ TEST_CASE("Array erase call destructor", "[Container]")
     }
 }
 
-TEST_CASE("Array emplace", "[Container]")
+TEST_CASE("Array emplace", "[Array]")
 {
     s_destructedCount = 0;
     {
@@ -285,7 +285,7 @@ Array<std::string> GetArray()
     return ar;
 }
 
-TEST_CASE("Array copy", "[Container]")
+TEST_CASE("Array copy", "[Array]")
 {
     Array<std::string> ar = GetArray();
 
@@ -304,7 +304,7 @@ TEST_CASE("Array copy", "[Container]")
     }
 }
 
-TEST_CASE("Array empty insert", "[Container]")
+TEST_CASE("Array empty insert", "[Array]")
 {
     Array<std::string> ar;
     Array<std::string> ar2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
@@ -327,7 +327,7 @@ TEST_CASE("Array empty insert", "[Container]")
 }
 
 #ifdef RED_TEST_BENCHMARK
-TEST_CASE("Array benchmark", "[Container_Benchmark]")
+TEST_CASE("Array benchmark", "[Array_Benchmark]")
 {
     using namespace red;
 
