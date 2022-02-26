@@ -1,19 +1,73 @@
-#include "TestModule.hpp"
 #include "LevelTest.hpp"
 
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Level/JsonLevelNames.hpp"
 #include "RedEngine/Level/JsonLevelSerializer.hpp"
+#include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
 
 #include <catch2/catch.hpp>
 
+#include "TestModule.hpp"
+
 using namespace red;
+
+class LevelTest : public red::Level
+{
+public:
+    explicit LevelTest(red::World* world) : red::Level("LevelTest", world){};
+    ~LevelTest() override = default;
+
+    void Init() override
+    {
+        Entity* e = CreateEntity("MyEntity1");
+        CreateEntity("MyEntity2", e);
+        CreateEntity("MyEntity3", e);
+        CreateEntity("MyEntity4", e);
+    }
+
+    void Finalize() override
+    {
+        // Does nothing
+    }
+};
+
+TEST_CASE("Level init", "[LEVEL]")
+{
+    World world;
+    world.Init();
+
+    auto& entities = world.GetEntities();
+
+    auto entityCount = entities.size();
+
+    LevelTest levelTest(&world);
+    levelTest.InternInit();
+
+    REQUIRE(entities.size() == (entityCount + 4));
+
+    REQUIRE(std::find_if(entities.begin(), entities.end(),
+                         [](const Entity* e) { return e->GetName() == "MyEntity1"; }) != entities.end());
+
+    REQUIRE(std::find_if(entities.begin(), entities.end(),
+                         [](const Entity* e) { return e->GetName() == "MyEntity2"; }) != entities.end());
+
+    REQUIRE(std::find_if(entities.begin(), entities.end(),
+                         [](const Entity* e) { return e->GetName() == "MyEntity3"; }) != entities.end());
+
+    REQUIRE(std::find_if(entities.begin(), entities.end(),
+                         [](const Entity* e) { return e->GetName() == "MyEntity4"; }) != entities.end());
+
+    levelTest.InternFinalize();
+
+    REQUIRE(entities.size() == entityCount);
+}
 
 TEST_CASE("Level serialisation", "[LEVEL]")
 {
     World world;
-    world.RegisterComponentType<Transform>();
+    world.Init();
 
     Level level("SerializedLevel", &world);
 

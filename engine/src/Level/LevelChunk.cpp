@@ -49,17 +49,19 @@ void LevelChunk::Init()
 
 void LevelChunk::Finalize()
 {
-    m_world->OnRemoveEntities(m_ownedEntities);
-
     for (auto* e : m_ownedEntities)
     {
         e->Destroy();
     }
+
+    Clean();
+
+    m_ownedEntities.clear();
 }
 
 void LevelChunk::Clean()
 {
-    std::vector<Entity*> entitiesToRemove;
+    Array<Entity*> entitiesToRemove;
     for (auto* entity : m_ownedEntities)
     {
         if (entity->GetState() == EntityState::Destroyed)
@@ -74,6 +76,9 @@ void LevelChunk::Clean()
     for (auto* e : entitiesToRemove)
     {
         m_ownedEntities.erase(std::remove(m_ownedEntities.begin(), m_ownedEntities.end(), e), m_ownedEntities.end());
+
+        m_world->GetComponentManager()->RemoveAllComponentsOf(e);
+
         delete e;
     }
 

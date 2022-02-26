@@ -3,6 +3,7 @@
 #include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Physics/Components/Collider.hpp"
 
 #include <box2d/b2_contact.h>
@@ -14,6 +15,11 @@ namespace red
 PhysicsWorld::PhysicsWorld() : m_internalPhysicsWorld(new b2World({0.f, 0.f}))
 {
     m_internalPhysicsWorld->SetContactListener(this);
+}
+
+PhysicsWorld::~PhysicsWorld()
+{
+    RED_SAFE_DELETE(m_internalPhysicsWorld);
 }
 
 void PhysicsWorld::InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreationDesc& creationDesc)
@@ -62,12 +68,12 @@ void PhysicsWorld::ClearForces()
     m_internalPhysicsWorld->ClearForces();
 }
 
-const std::vector<CollisionInfo>& PhysicsWorld::GetCollisions() const
+const Array<CollisionInfo>& PhysicsWorld::GetCollisions() const
 {
     return m_frameCollisionInfo;
 }
 
-const std::vector<TriggerInfo>& PhysicsWorld::GetTriggers() const
+const Array<TriggerInfo>& PhysicsWorld::GetTriggers() const
 {
     return m_frameTriggerInfo;
 }

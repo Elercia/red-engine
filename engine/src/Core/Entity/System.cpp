@@ -7,7 +7,7 @@
 
 namespace red
 {
-System::System(World* world) : m_isInit(false), m_world(world), m_priority(0), m_typeId(0)
+System::System(World* world) : m_isInit(false), m_world(world), m_priority(0), m_typeTraits(EmptyTypeTraits)
 {
 }
 
@@ -18,14 +18,14 @@ void System::DebugDrawLine(const Vector2& from, const Vector2& to)
     debugComp->AddLine(from, to);
 }
 
-void System::SetTypeId(std::size_t typeId)
+void System::SetTypeTraits(TypeTraits typeTraits)
 {
-    m_typeId = typeId;
+    m_typeTraits = typeTraits;
 }
 
-std::size_t System::GetTypeId()
+std::size_t System::GetTypeId() const
 {
-    return m_typeId;
+    return m_typeTraits.typeId;
 }
 
 int System::GetPriority() const
@@ -33,9 +33,26 @@ int System::GetPriority() const
     return m_priority;
 }
 
-std::vector<Entity*> System::GetWorldEntities()
+Array<Entity*>& System::GetWorldEntities()
 {
     return m_world->GetEntities();
+}
+
+const Array<Entity*>& System::GetWorldEntities() const
+{
+    return m_world->GetEntities();
+}
+
+void System::Init()
+{
+    m_isInit = true;
+
+    RED_LOG_INFO("Init {} system", m_typeTraits.name);
+}
+
+void System::Finalise()
+{
+    m_isInit = false;
 }
 
 }  // namespace red

@@ -6,6 +6,10 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Math/Math.hpp"
+#include "RedEngine/Math/Matrix.hpp"
+#include "RedEngine/Math/MatrixFunctions.hpp"
+#include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
 namespace red
@@ -16,63 +20,51 @@ CameraComponent::CameraComponent(Entity* entity) : CameraComponent(entity, {0.f,
 {
 }
 
-CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Component(entity), m_renderedTexture(nullptr)
+CameraComponent::CameraComponent(Entity* entity, const Vector2& center) : Component(entity)
 {
     auto* window = entity->GetWorld()->GetWorldComponent<WindowComponent>();
 
     if (window == nullptr)
     {
         RED_LOG_ERROR("Camera component created without a window");
-        return;
+        m_viewport = {0, 0, 1, 1};
+    }
+    else
+    {
+        auto info = window->GetWindowInfo();
+        m_viewport = {0, 0, info.width, info.height};
     }
 
-    auto info = window->GetWindowInfo();
+    m_center = center;
 
-    m_viewport = {0, 0, info.width, info.height};
-
-    m_cameraWorldPosition =
-        Vector2(center.x - (float) m_viewport.width / 2.F, center.y - (float) m_viewport.height / 2.F);
+    UpdateMatricesIfNeeded();
 }
 
-Vector2 CameraComponent::ViewportToWorldPoint(const Vector2& point) const
+Vector2 CameraComponent::ViewportToWorldPoint(const Vector2& /*point*/) const
 {
-    Vector2 rt;
-
-    rt.x = point.x + m_cameraWorldPosition.x;
-    rt.y = point.y + m_cameraWorldPosition.y;
-
-    return rt;
+    return {0.f, 0.f};
 }
 
-Vector2 CameraComponent::WorldToViewportPoint(const Vector2& point) const
+Vector2 CameraComponent::WorldToViewportPoint(const Vector2& /*point*/) const
 {
-    Vector2 rt;
+    return {0.f, 0.f};
+}
 
-    rt.x = point.x + (float) m_viewport.x - m_cameraWorldPosition.x;
-    rt.y = point.y + (float) m_viewport.y - m_cameraWorldPosition.y;
-
-    return rt;
+bool CameraComponent::IsVisibleFrom(const AABB& /*aabb*/) const
+{
+    // TODO implement
+    return true;
 }
 
 void CameraComponent::CenterOn(const Vector2& point)
 {
-    m_cameraWorldPosition.x = point.x - (float) m_viewport.width / 2.F;
-    m_cameraWorldPosition.y = point.y - (float) m_viewport.height / 2.F;
+    m_center = point;
+    m_bDirtyMatrix = true;
 }
 
-void CameraComponent::Follow(Vector2* /*followPosition*/)
+const Vector2& CameraComponent::Center() const
 {
-    // TODO
-}
-
-bool CameraComponent::IsVisibleFrom(const Transform* /*transform*/)
-{
-    return true;
-}
-
-const Vector2& CameraComponent::Position() const
-{
-    return m_cameraWorldPosition;
+    return m_center;
 }
 
 const Vector4i& CameraComponent::Viewport() const
@@ -83,6 +75,7 @@ const Vector4i& CameraComponent::Viewport() const
 void CameraComponent::SetViewport(const Vector4i& viewport)
 {
     m_viewport = viewport;
+    m_bDirtyMatrix = true;
 }
 
 float CameraComponent::AspectRatio() const
@@ -90,29 +83,52 @@ float CameraComponent::AspectRatio() const
     return (float) m_viewport.width / (float) m_viewport.height;
 }
 
-int CameraComponent::Depth() const
+float CameraComponent::Depth() const
 {
     return m_depth;
 }
 
-void CameraComponent::SetDepth(int depth)
+void CameraComponent::SetDepth(float depth)
 {
     m_depth = depth;
+    m_bDirtyMatrix = true;
 }
 
-const Texture2D* CameraComponent::GetRenderedTexture() const
+const Color& CameraComponent::GetClearColor() const
 {
-    return m_renderedTexture;
+    return m_cleanColor;
 }
 
-const Color& CameraComponent::BackgroundColor() const
+void CameraComponent::SetClearColor(const Color& color)
 {
-    return m_backgroundColor;
+    m_cleanColor = color;
 }
 
-void CameraComponent::SetBackgroundColor(const Color& color)
+const Matrix44& CameraComponent::GetViewProjection() const
 {
-    m_backgroundColor = color;
+    return m_viewProjectionMatrix;
+}
+
+void CameraComponent::UpdateMatricesIfNeeded()
+{
+    if (m_bDirtyMatrix)
+    {
+        m_bDirtyMatrix = false;
+
+        m_projectionMatrix = Math::Ortho(0.0f, (float) m_viewport.x, 0.0f, (float) m_viewport.y, m_zNear, m_zFar);
+
+        const Vector2 midOffset = Vector2((float) m_viewport.x * 0.5f, (float) m_viewport.y * 0.5f);
+        const Vector3 position =
+            Vector3(m_center.x - ((float) m_viewport.x * 0.5f), m_center.y - ((float) m_viewport.y * 0.5f), m_depth);
+
+        m_viewMatrix = Matrix44::Identity();
+        m_viewMatrix = Math::Translate(m_viewMatrix, position);
+        m_viewMatrix = Math::Translate(m_viewMatrix, Vector3(midOffset, 0.0));
+        m_viewMatrix = Math::Rotate(m_viewMatrix, Vector3(0.0f, 0.0f, Math::ToRadians(m_rotationAngle)));
+        m_viewMatrix = Math::Translate(m_viewMatrix, Vector3(-midOffset, 0.0));
+
+        m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
+    }
 }
 
 }  // namespace red

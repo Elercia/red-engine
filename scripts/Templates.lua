@@ -82,6 +82,8 @@ function TemplateProject(Name)
 		optimize "on"
 		symbols "on"
 	filter {}
+
+	postbuildcommands { "{COPY} %{cfg.buildtarget.directory}/* " .. rootPath .. "templates/%{prj.name}" }
 end
 
 TemplateProject("Pong")

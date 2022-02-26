@@ -2,8 +2,6 @@
 
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 
-#include <memory>
-
 #include "box2d/b2_world_callbacks.h"
 
 class b2World;
@@ -16,7 +14,7 @@ class PhysicsWorld : public b2ContactListener
 {
 public:
     PhysicsWorld();
-    ~PhysicsWorld() = default;
+    ~PhysicsWorld();
 
     void InitPhysicsBody(PhysicBody* physicBody, const PhysicBodyCreationDesc& creationDesc);
     void DestroyPhysicsBody(PhysicBody* physicBody);
@@ -25,8 +23,8 @@ public:
 
     void ClearForces();
 
-    const std::vector<CollisionInfo>& GetCollisions() const;
-    const std::vector<TriggerInfo>& GetTriggers() const;
+    const Array<CollisionInfo>& GetCollisions() const;
+    const Array<TriggerInfo>& GetTriggers() const;
 
     void SetDebugDrawer(PhysicsDebugDrawer* drawer);
     void DrawDebug();
@@ -40,9 +38,9 @@ private:
                              const b2Contact* contact);
 
 private:
-    std::unique_ptr<b2World> m_internalPhysicsWorld;
+    b2World* m_internalPhysicsWorld;
 
-    std::vector<CollisionInfo> m_frameCollisionInfo;
-    std::vector<TriggerInfo> m_frameTriggerInfo;
+    Array<CollisionInfo> m_frameCollisionInfo;
+    Array<TriggerInfo> m_frameTriggerInfo;
 };
 }  // namespace red

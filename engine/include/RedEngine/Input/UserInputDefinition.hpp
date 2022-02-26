@@ -1,12 +1,12 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Input/InputDefinition.hpp"
 
 #include <array>
 #include <bitset>
-#include <map>
 #include <variant>
-#include <vector>
 
 namespace red
 {
@@ -51,8 +51,8 @@ struct KeyMapping
 };
 
 using ActionKey = std::string;
-using UserActionMapping = std::map<ActionKey, KeyMapping>;
-using UserActionState = std::map<ActionKey, KeyState>;
+using UserActionMapping = Map<ActionKey, KeyMapping>;
+using UserActionState = Map<ActionKey, KeyState>;
 
 using AxisKey = std::string;
 }  // namespace red

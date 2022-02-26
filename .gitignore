@@ -186,5 +186,8 @@ scripts/projects/
 *.sublime-workspace
 .cache
 
+# Ignore executable inside test & template folder
 test/RedEngineTest
 test/RESOURCES/TMP_OUT/
+
+templates/Pong/Pong

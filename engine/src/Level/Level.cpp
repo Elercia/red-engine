@@ -3,6 +3,7 @@
 #include "RedEngine/Level/LevelModule.hpp"
 
 #include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/JsonLevelSerializer.hpp"
 #include "RedEngine/Level/LevelChunk.hpp"
@@ -18,6 +19,11 @@ namespace red
 Level::Level(std::string name, World* world) : m_levelName(std::move(name)), m_world(world), m_state(State::Created)
 {
     m_mainLevelChunk = new LevelChunk(this);
+}
+
+Level::~Level()
+{
+    RED_SAFE_DELETE(m_mainLevelChunk);
 }
 
 void Level::InternInit()

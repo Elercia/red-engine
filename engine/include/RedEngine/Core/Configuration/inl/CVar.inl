@@ -1,4 +1,7 @@
 
+#include "RedEngine/Core/SerializationFunction.hpp"
+#include "RedEngine/Utils/TypesInfo.hpp"
+
 namespace red
 {
 template <class Type>
@@ -10,12 +13,20 @@ CVar<Type>::CVar(std::string name, std::string category, Type defaultValue)
 template <class Type>
 Type CVar<Type>::GetValue()
 {
-    static_assert(has_deserialization_overload<Type>::value, "No deserialization function provided for console type T");
-
     Type e;
-    red_deserialize_configuration_type(m_value->m_currentValue, e);
+    
+    if( !Deserialize(e, m_value->m_currentValue) )
+    {
+        RED_LOG_ERROR("Couldn't deserialize value {} into a {}", m_value->m_currentValue, TypeInfo<Type>().name);
+    }
 
     return e;
+}
+
+template <class Type>
+CVar<Type>::operator Type()
+{
+    return GetValue();
 }
 
 template <class Type>
@@ -27,9 +38,7 @@ CVarValue* CVar<Type>::operator->()
 template <class Type>
 void CVar<Type>::ChangeValue(Type value)
 {
-    static_assert(has_serialization_overload<Type>::value, "No serialization function provided for console type T");
-
-    std::string stringValue = red_serialize_configuration_type(value);
+    std::string stringValue = Serialize(value);
     m_value->ChangeValue(stringValue);
 }
 }  // namespace red

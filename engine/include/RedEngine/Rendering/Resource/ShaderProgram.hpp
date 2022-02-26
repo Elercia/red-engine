@@ -17,6 +17,7 @@ class ShaderProgram : public IResource
 {
     friend class ShaderProgramResourceLoader;
     friend class Renderer;
+    friend class Material;
 
 public:
     RED_RESOURCE(ResourceType::SHADER_PROGRAM);

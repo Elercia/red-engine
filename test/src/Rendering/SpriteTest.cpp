@@ -4,6 +4,7 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
@@ -17,15 +18,18 @@ TEST_CASE("Sprite test", "[RENDERING]")
     using namespace red;
 
     World world;
+    world.Init();
+    
     world.RegisterComponentType<ResourceHolderComponent>();
+    world.RegisterComponentType<Renderable>();
     world.RegisterComponentType<Sprite>();
 
-    Entity* sing = world.CreateWorldEntity();
+    Entity* sing = world.CreateWorldEntity("a");
     ResourceHolderComponent* holder = sing->AddComponent<ResourceHolderComponent>();
     holder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(&world));
     holder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(&world));
 
-    auto* e = world.CreateWorldEntity();
+    auto* e = world.CreateWorldEntity("a");
     auto* spriteComponent = e->AddComponent<Sprite>(red::Path::Resource("sprite_test/sprite_test"));
 
     REQUIRE(spriteComponent->GetAnimations().size() == 2);

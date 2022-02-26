@@ -1,11 +1,12 @@
 #pragma once
 
 #include "RedEngine/Core/Configuration/CVar.hpp"
-#include "RedEngine/Core/Configuration/CVarSerialization.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Core/SerializationFunction.hpp"
+
+#include <SDL2/SDL_syswm.h>
 
 struct SDL_Window;
-#include <SDL2/SDL_syswm.h>
 
 namespace red
 {
@@ -14,7 +15,7 @@ struct FullScreenMode
     enum Enum : uint8_t
     {
         FULLSCREEN = 0,
-        BORDER_LESS = 1,
+        WINDOWED_FULLSCREEN = 1,
         WINDOWED = 2
     };
 };
@@ -23,6 +24,7 @@ struct WindowInfo
 {
     int width;
     int height;
+    FullScreenMode::Enum fullscreenMode;
 };
 
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(WindowComponent)
@@ -32,6 +34,11 @@ class WindowComponent : public Component
 public:
     RED_START_COMPONENT_REGISTER_INHERITHED(WindowComponent, Component)
     RED_END_COMPONENT_REGISTER()
+
+    static CVar<std::string> s_title;
+    static CVar<int> s_height;
+    static CVar<int> s_width;
+    static CVar<FullScreenMode::Enum> s_fullscreen;
 
     WindowComponent(Entity* owner);
     virtual ~WindowComponent();
@@ -48,42 +55,19 @@ public:
     WindowInfo GetWindowInfo() const;
 
     SDL_Window* GetSDLWindow();
-
-    void Init();
+    
     void CreateNewWindow();
 
 private:
     SDL_SysWMinfo GetSDLSysInfo();
 
 private:
-    SDL_Window* m_window;
+    SDL_Window* m_window{nullptr};
 };
 
-RED_NEW_CONFIG_TYPE_SERIALIZATOR(FullScreenMode::Enum)
-{
-    switch (typeValue)
-    {
-        case FullScreenMode::FULLSCREEN:
-            return "0";
-        case FullScreenMode::BORDER_LESS:
-            return "1";
-        default:
-            return "2";
-    }
-}
-RED_NEW_CONFIG_TYPE_DESERIALIZATOR(FullScreenMode::Enum)
-{
-    if (stringValue == "0")
-    {
-        typeValue = FullScreenMode::FULLSCREEN;
-    }
-    else if (stringValue == "1")
-    {
-        typeValue = FullScreenMode::BORDER_LESS;
-    }
-    else
-    {
-        typeValue = FullScreenMode::WINDOWED;
-    }
-}
+template <>
+std::string Serialize(const FullScreenMode::Enum& typeValue);
+
+template <>
+bool Deserialize(FullScreenMode::Enum& typeValue, const std::string& stringValue);
 }  // namespace red

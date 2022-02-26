@@ -9,3 +9,5 @@ namespace red
 {
 
 }  // namespace red
+
+using namespace red;

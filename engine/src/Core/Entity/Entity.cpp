@@ -11,13 +11,14 @@
 
 namespace red
 {
-Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id), m_parent(nullptr)
+Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id)
 {
     AddComponent<Transform>(0.F, 0.F);
 }
 
 void Entity::Destroy()
 {
+    // Destroyed entities will be removed on the next World Update iteration
     m_state = EntityState::Destroyed;
 
     for (auto* child : m_children)
@@ -66,7 +67,7 @@ void Entity::SetName(const std::string& name)
     m_name = name;
 }
 
-const EntityState Entity::GetState() const
+EntityState Entity::GetState() const
 {
     return m_state;
 }
@@ -118,7 +119,7 @@ const Entity* Entity::GetParent() const
     return m_parent;
 }
 
-std::vector<Entity*> Entity::GetChildren() const
+const Array<Entity*>& Entity::GetChildren() const
 {
     return m_children;
 }

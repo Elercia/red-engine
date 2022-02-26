@@ -20,7 +20,7 @@ void Delegate<Args...>::operator()(Args... args)
 }
 
 template <typename... Args>
-FuncIndex Delegate<Args...>::Add(std::function<void(Args...)> func)
+typename Delegate<Args...>::FuncIndex Delegate<Args...>::Add(typename Delegate<Args...>::FuncType func)
 {
     FuncIndex index = m_nextIndex;
     m_nextIndex++;
@@ -31,7 +31,7 @@ FuncIndex Delegate<Args...>::Add(std::function<void(Args...)> func)
 }
 
 template <typename... Args>
-void Delegate<Args...>::Remove(FuncIndex index)
+void Delegate<Args...>::Remove(typename Delegate<Args...>::FuncIndex index)
 {
     m_functions.erase(index);
 }

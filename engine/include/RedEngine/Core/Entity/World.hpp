@@ -36,13 +36,14 @@ public:
 
     Entity* FindEntity(EntityId id);
     const Array<Entity*>& GetEntities() const;
+    Array<Entity*>& GetEntities();
 
-    Entity* CreateWorldEntity();
+    Entity* CreateWorldEntity(const std::string& name);
 
     template <class T, class... Args>
     T* AddSystem(Args... args);
     template <class T>
-    void RemoveSystem();
+    bool RemoveSystem();
     template <class T>
     T* GetSystem();
 
@@ -60,6 +61,8 @@ public:
 
     void Init();
     void Finalize();
+
+    void InitSystems();
 
     bool Update();
 
@@ -96,7 +99,7 @@ private:
     Level* m_currentLevel;
     LevelLoader* m_levelLoader;
 
-    Array<EntityId> m_entityIdGarbage;
+    Array<EntityId> m_entityIdGarbage; //TODO Remove when I found a good EntityId generation algo
 };
 
 }  // namespace red

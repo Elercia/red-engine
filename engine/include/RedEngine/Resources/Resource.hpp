@@ -23,6 +23,7 @@ enum class ResourceType
     SOUND,
     TEXTURE2D,
     SHADER_PROGRAM,
+    GEOMETRY,
     MATERIAL,
     AUDIO,
 };

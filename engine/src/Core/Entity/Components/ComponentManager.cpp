@@ -5,6 +5,7 @@
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 
 namespace red
 {
@@ -145,6 +146,21 @@ bool ComponentManager::RemoveComponent(Entity* entity, const std::string& compon
     }
 
     return false;
+}
+
+void ComponentManager::RemoveAllComponentsOf(Entity* owner)
+{
+    for(auto& itCompType : m_components)
+    {
+        auto& comonentPool = itCompType.second;
+        auto it = comonentPool.find(owner->GetId());
+
+        if( it != comonentPool.end())
+        {
+            RED_SAFE_DELETE(it->second);
+            comonentPool.erase(it);
+        }
+    }
 }
 
 Component* ComponentManager::CreateComponentFromName(Entity* entity, const std::string& componentName)

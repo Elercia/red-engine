@@ -6,7 +6,7 @@
 #include "RedEngine/Rendering/Color.hpp"
 
 #include <memory>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -39,7 +39,7 @@ struct DebugSegment : public DebugShape
 
 struct DebugPolygon : public DebugShape
 {
-    std::vector<Vector2> points;
+    Array<Vector2> points;
 };
 
 struct DebugPoint : public DebugShape
@@ -64,11 +64,11 @@ public:
 
     void AddLine(const Vector2& from, const Vector2& to, const Color& c = ColorConstant::BLACK);
     void AddCircle(const Vector2& center, float radius, const Color& c = ColorConstant::BLACK);
-    void AddPolygon(const std::vector<Vector2>& points, const Color& c = ColorConstant::BLACK, bool isSolid = false);
+    void AddPolygon(const Array<Vector2>& points, const Color& c = ColorConstant::BLACK, bool isSolid = false);
     void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK, bool isSolid = false);
 
 private:
-    std::vector<std::unique_ptr<DebugShape>> m_frameShapes;
+    Array<std::unique_ptr<DebugShape>> m_frameShapes;
     std::unique_ptr<PhysicsDebugDrawer> m_physicsDebugDrawer;
 };
 }  // namespace red

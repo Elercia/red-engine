@@ -7,80 +7,95 @@
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/Renderer.hpp"
 
+#include <SDL2/SDL.h>
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
 {
-    RED_LOG_INFO("Adding Rendering system");
 }
 
 void RenderingSystem::Init()
 {
     System::Init();
 
-    auto* window = m_world->CreateWorldEntity()->AddComponent<WindowComponent>();
-    window->CreateNewWindow();
+    auto* window = m_world->CreateWorldEntity("Window")->AddComponent<WindowComponent>();
 
     m_renderer = new Renderer;
-
     m_renderer->InitRenderer(window);
+}
+
+void RenderingSystem::Finalise()
+{
+    m_renderer->Finalise();
+    RED_SAFE_DELETE(m_renderer);
+
+    System::Finalise();
 }
 
 void RenderingSystem::Update()
 {
     PROFILER_CATEGORY("Update render data", Optick::Category::Rendering)
 
-    /*auto sprites = GetComponents<Sprite>();
+    auto spriteEntities = GetComponents<Sprite>();
 
-for (auto* sprite : sprites)
-{
-    if (!sprite->IsValid())
+    for (auto* spriteEntity : spriteEntities)
+    {
+        auto* sprite = spriteEntity->GetComponent<Sprite>();
+        if (!sprite->IsValid())
             continue;
 
-    sprite->NextFrame();
-}*/
+        auto* transform = spriteEntity->GetComponent<Transform>();
+
+        sprite->NextFrame();
+
+        // Push this entity to the list of entity to render
+        m_renderer->Draw(sprite, transform);
+    }
+
+    RenderDebug();
 }
 
 void RenderingSystem::BeginRender()
 {
+    PROFILER_CATEGORY("Begin rendering", Optick::Category::Rendering);
+
+    UpdateWindowAsNeeded();
+
     m_renderer->BeginRenderFrame();
 }
 
 void RenderingSystem::EndRender()
 {
-    m_renderer->EndRenderFrame();
-}
-
-void RenderingSystem::Render()
-{
-    PROFILER_CATEGORY("Rendering", Optick::Category::Rendering)
-
-    auto renderables = GetComponents<Renderable>();
+    PROFILER_CATEGORY("End rendering", Optick::Category::Rendering);
 
     // Draw frame for each camera
-    for (auto& cameraEntity : GetComponents<CameraComponent>())
+    auto cameras = GetComponents<CameraComponent>();
+    for (auto& cameraEntity : cameras)
     {
         auto* cameraComponent = cameraEntity->GetComponent<CameraComponent>();
         m_renderer->BeginCameraRendering(cameraComponent);
 
-        // Draw each sprite
-        for (auto& entity : renderables)
-        {
-            auto* renderable = entity->GetComponent<Renderable>();
-            auto* transform = entity->GetComponent<Transform>();
+        m_renderer->RenderOpaque(cameraComponent);
+        m_renderer->RenderTransparency(cameraComponent);
+        m_renderer->RenderLights(cameraComponent);
 
-            m_renderer->Render(cameraComponent, renderable, *transform);
-        }
+#ifdef RED_DEBUG
+        m_renderer->RenderDebug(cameraComponent);
+#endif
 
-        DrawDebug(cameraComponent);
-
-        m_renderer->EndCameraRendering();
+        m_renderer->EndCameraRendering(cameraComponent);
     }
+
+    m_renderer->EndRenderFrame();
 }
 
 Renderer* RenderingSystem::GetRenderer()
@@ -88,7 +103,7 @@ Renderer* RenderingSystem::GetRenderer()
     return m_renderer;
 }
 
-void RenderingSystem::DrawDebug(CameraComponent* camera)
+void RenderingSystem::RenderDebug()
 {
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
@@ -103,34 +118,51 @@ void RenderingSystem::DrawDebug(CameraComponent* camera)
             {
                 auto* circle = static_cast<DebugCircle*>(shape.get());
 
-                m_renderer->DrawCircle(camera, circle->center, circle->radius, circle->color);
+                m_renderer->DrawDebugCircle(circle->center, circle->radius, circle->color);
             }
             break;
             case DebugShapeType::POLYGON:
             {
                 auto* polygon = static_cast<DebugPolygon*>(shape.get());
 
-                m_renderer->DrawLines(camera, polygon->points, polygon->color);
+                m_renderer->DrawDebugLines(polygon->points, polygon->color);
             }
             break;
             case DebugShapeType::SEGMENT:
             {
                 auto* segment = static_cast<DebugSegment*>(shape.get());
 
-                m_renderer->DrawLine(camera, segment->point1, segment->point2, segment->color);
+                m_renderer->DrawDebugLine(segment->point1, segment->point2, segment->color);
             }
             break;
             case DebugShapeType::POINT:
             {
                 auto* point = static_cast<DebugPoint*>(shape.get());
 
-                m_renderer->DrawPoint(camera, point->coord, point->color);
+                m_renderer->DrawDebugPoint(point->coord, point->color);
             }
             break;
         }
     }
 
     debugComp->m_frameShapes.clear();
+}
+
+void RenderingSystem::UpdateWindowAsNeeded()
+{
+    auto windowEntities = GetComponents<WindowComponent>();
+    auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
+
+    for (auto* windowEntity : windowEntities)
+    {
+        // TODO what about window cvars ? 
+        auto* windowComp = windowEntity->GetComponent<WindowComponent>();
+
+        if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
+        {
+            m_renderer->ReCreateWindow(windowComp);
+        }
+    }
 }
 
 }  // namespace red

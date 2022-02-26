@@ -3,6 +3,8 @@ group("Tests")
 project ("RedEngineTest")
 	kind "ConsoleApp"
 	language("C++")
+	
+	rtti("Off")
 	cppdialect(cppDialect)
 	warnings("Extra")
 	flags("NoPCH")
@@ -41,7 +43,7 @@ project ("RedEngineTest")
 	filter "configurations:Debug"
 		defines "RED_DEBUG"
 		runtime "Debug"
-		symbols "on"
+		symbols "Full"
 	filter {}
 
 	filter "configurations:Release"
@@ -50,3 +52,5 @@ project ("RedEngineTest")
 		optimize "on"
 		symbols "on"
 	filter {}
+
+	postbuildcommands { "{COPY} %{cfg.buildtarget.directory}/* " .. rootPath .. "test" }

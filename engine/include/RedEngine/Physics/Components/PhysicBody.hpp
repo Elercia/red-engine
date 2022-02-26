@@ -6,7 +6,7 @@
 #include "RedEngine/Physics/ContactInfo.hpp"
 
 #include <box2d/b2_body.h>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -58,8 +58,8 @@ private:
     PhysicBodyCreationDesc m_desc;
     b2Body* m_body;
 
-    std::vector<OnCollisionSignalType::Slot> m_collisionSlots;
+    Array<OnCollisionSignalType::Slot> m_collisionSlots;
 
-    std::vector<OnTriggerSignalType::Slot> m_triggerSlots;
+    Array<OnTriggerSignalType::Slot> m_triggerSlots;
 };
 }  // namespace red

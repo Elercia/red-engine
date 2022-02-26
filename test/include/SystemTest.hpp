@@ -45,7 +45,8 @@ public:
 class MockSystem : public red::System
 {
 public:
-    explicit MockSystem(red::World* world) : System(world) {}
+    explicit MockSystem(red::World* world) : red::System(world) {}
+    virtual ~MockSystem() = default;
 
     void Update() override
     {

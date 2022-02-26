@@ -1,11 +1,12 @@
 #pragma once
 
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
+#include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
 #include <functional>
 #include <string>
 #include <type_traits>
-#include <vector>
 
 namespace red
 {
@@ -35,7 +36,7 @@ private:
     std::string m_name;
     std::string m_category;
 
-    std::vector<std::function<void(CVarValue* variable)>> m_valueChangeCallback;
+    Array<std::function<void(CVarValue* variable)>> m_valueChangeCallback;
 };
 
 template <class Type>
@@ -50,6 +51,8 @@ public:
 
     [[nodiscard]] inline Type GetValue();
     void ChangeValue(Type value);
+
+    operator Type();
 
     CVarValue* operator->();
 

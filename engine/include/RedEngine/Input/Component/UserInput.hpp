@@ -1,11 +1,10 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Input/InputDefinition.hpp"
 #include "RedEngine/Input/UserInputDefinition.hpp"
 #include "RedEngine/Math/Vector.hpp"
-
-#include <map>
 
 namespace red
 {

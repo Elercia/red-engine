@@ -9,8 +9,10 @@ namespace red
 struct TypeTraits
 {
     std::string_view name;
-    const uint32 typeId;
+    uint32 typeId;
 };
+
+constexpr TypeTraits EmptyTypeTraits{"invalid", (uint32) -1};
 
 #ifdef _MSC_VER
 #define RED_FUNCNAME __FUNCSIG__

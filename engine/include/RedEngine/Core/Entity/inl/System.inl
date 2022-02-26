@@ -4,11 +4,12 @@
 namespace red
 {
 template <class... ComponentTypes>
-std::vector<Entity*> System::GetComponents()
+Array<Entity*> System::GetComponents() const
 {
-    std::vector<Entity*> selectedEntities;
+    Array<Entity*> selectedEntities;
 
-    for (auto& entityPtr : GetWorldEntities())
+    auto& worldentities = GetWorldEntities();
+    for (auto& entityPtr : worldentities)
     {
         auto list = {entityPtr->HasComponent<ComponentTypes>()...};
 

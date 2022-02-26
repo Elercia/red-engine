@@ -13,7 +13,7 @@ class JsonLevelLoader : public LevelLoader
 {
 public:
     JsonLevelLoader(World* world);
-    ~JsonLevelLoader();
+    virtual ~JsonLevelLoader();
 
     virtual LevelData ReadLevelData(const Path& path) override;
 

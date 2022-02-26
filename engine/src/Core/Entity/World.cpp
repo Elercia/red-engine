@@ -8,6 +8,7 @@
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/JsonLevelLoader.hpp"
 #include "RedEngine/Level/Level.hpp"
@@ -27,30 +28,15 @@ World::World()
     , m_levelLoader(nullptr)
 {
     RegisterComponentType<Transform>();
-
-    m_worldChunk = new LevelChunk(this);
 }
 
 World::~World()
 {
-    for (auto& system : m_systems)
-    {
-        system->Finalise();
-        delete system;
-    }
-
-    m_systems.clear();
-
-    m_worldChunk->Finalize();
-
-    Clean();
-
-    delete m_componentManager;
-    delete m_worldChunk;
+    Finalize();
 }
 
 void World::OnAddEntity(Entity* entity)
-{
+{    
     Entity* oldEntity = FindEntity(entity->GetId());
     if (oldEntity != nullptr)
     {
@@ -77,9 +63,10 @@ void World::OnRemoveEntity(Entity* entity)
 
 void World::OnRemoveEntities(Array<Entity*>& entities)
 {
-    m_entities.erase(remove_if(m_entities.begin(), m_entities.end(),
-                               [&](auto x) { return find(entities.begin(), entities.end(), x) != entities.end(); }),
-                     m_entities.end());
+    m_entities.erase(
+        std::remove_if(m_entities.begin(), m_entities.end(),
+                       [&](auto x) { return std::find(entities.begin(), entities.end(), x) != entities.end(); }),
+        m_entities.end());
 }
 
 Entity* World::FindEntity(EntityId id)
@@ -95,14 +82,25 @@ Entity* World::FindEntity(EntityId id)
 
 void World::Init()
 {
+    if (m_worldChunk != nullptr)
+    {
+        m_worldChunk->Finalize();
+        RED_SAFE_DELETE(m_worldChunk);
+    }
+
+    m_worldChunk = new LevelChunk(this);
     m_worldChunk->Init();
 
+    RED_SAFE_DELETE(m_levelLoader);
     m_levelLoader = new JsonLevelLoader(this);
+}
 
+void World::InitSystems()
+{
     std::sort(m_systems.begin(), m_systems.end(),
               [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
 
-    for (const auto& system : m_systems)
+    for (auto* system : m_systems)
     {
         if (!system->m_isInit)
             system->Init();
@@ -111,32 +109,45 @@ void World::Init()
 
 void World::Finalize()
 {
+    // Delete current level entities
     ChangeLevel(nullptr);
 
-    m_worldChunk->Finalize();
-
-    for (auto& entity : m_entities)
-    {
-        entity->Destroy();
-    }
+    // Delete current world level chunk entities
+    if (m_worldChunk != nullptr)
+        m_worldChunk->Finalize();
 
     for (auto& system : m_systems)
     {
         system->Finalise();
+        RED_SAFE_DELETE(system);
     }
+
+    m_systems.clear();
+
+    Clean();
+
+    RED_SAFE_DELETE(m_worldChunk);
+    RED_SAFE_DELETE(m_levelLoader);
+
+    RED_SAFE_DELETE(m_componentManager);
+    RED_SAFE_DELETE(m_componentRegistry);
 }
 
 bool World::Update()
 {
-    std::sort(m_systems.begin(), m_systems.end(),
-              [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
+    Clean();
 
     EventsComponent* events = GetWorldComponent<EventsComponent>();
 
-    bool quit = events->QuitRequested();
+    bool quit = events != nullptr ? events->QuitRequested() : false;
 
     if (quit)
         return false;
+
+    for (auto& system : m_systems)
+    {
+        system->BeginRender();
+    }
 
     for (auto& system : m_systems)
     {
@@ -153,6 +164,11 @@ bool World::Update()
         system->PostUpdate();
     }
 
+    for (auto& system : m_systems)
+    {
+        system->EndRender();
+    }
+
     return true;
 }
 
@@ -163,6 +179,8 @@ void World::Clean()
 
     if (m_worldChunk != nullptr)
         m_worldChunk->Clean();
+
+    InitSystems();
 }
 
 void World::AddGarbageEntityId(EntityId entityId)
@@ -194,27 +212,36 @@ void World::ChangeLevel(Level* newLevel)
     m_currentLevel = newLevel;
 
     if (m_currentLevel != nullptr)
+    {
+        RED_LOG_INFO("Change level {}", newLevel->GetName());
+
         m_currentLevel->InternInit();
 
-    for (auto* system : m_systems)
-    {
-        system->ManageEntities();
+        for (auto* system : m_systems)
+        {
+            system->ManageEntities();
+        }
     }
 }
 
-const std::vector<System*>& World::GetSystems() const
+const Array<System*>& World::GetSystems() const
 {
     return m_systems;
 }
 
-const std::vector<Entity*>& World::GetEntities() const
+const Array<Entity*>& World::GetEntities() const
 {
     return m_entities;
 }
 
-Entity* World::CreateWorldEntity()
+Array<Entity*>& World::GetEntities()
 {
-    Entity* e = m_worldChunk->CreateEntity();
+    return m_entities;
+}
+
+Entity* World::CreateWorldEntity(const std::string& name)
+{
+    Entity* e = m_worldChunk->CreateEntity(name);
 
     OnAddEntity(e);
 

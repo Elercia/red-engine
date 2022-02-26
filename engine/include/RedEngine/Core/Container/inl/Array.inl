@@ -1,8 +1,78 @@
-#include "RedEngine/Math/Math.hpp"
 
 namespace red
 {
 #ifdef RED_USE_ARRAY
+
+template <typename T>
+Array<T>::Array()
+{
+}
+
+template <typename T>
+Array<T>::Array(std::initializer_list<T> list)
+{
+    reserve(list.size());
+
+    for (auto it = list.begin(); it != list.end(); it++)
+        push_back(*it);
+}
+
+template <typename T>
+Array<T>::~Array()
+{
+    Destroy(begin(), end());
+    RED_SAFE_FREE(m_data);
+}
+
+template <typename T>
+Array<T>::Array(const Array<T>& other)
+{
+    reserve(other.m_size);
+
+    for (auto& it : other)
+    {
+        push_back(it);
+    }
+}
+
+template <typename T>
+Array<T>& Array<T>::operator=(const Array<T>& other)
+{
+    reserve(other.m_size);
+
+    for (auto& it : other)
+    {
+        push_back(it);
+    }
+
+    return *this;
+}
+
+template <typename T>
+Array<T>::Array(Array<T>&& other)
+    : m_size(std::move(other.m_size)), m_capacity(std::move(other.m_capacity)), m_data(std::move(other.m_data))
+{
+    other.m_size = 0;
+    other.m_capacity = 0;
+    other.m_data = nullptr;
+}
+
+template <typename T>
+Array<T>& Array<T>::operator=(Array<T>&& other)
+{
+    Destroy(begin(), end());
+    RED_SAFE_FREE(m_data);
+
+    m_size = std::move(other.m_size);
+    m_capacity = std::move(other.m_capacity);
+    m_data = std::move(other.m_data);
+
+    other.m_size = 0;
+    other.m_capacity = 0;
+    other.m_data = nullptr;
+
+    return *this;
+}
 
 template <typename T>
 template <typename... Args>
@@ -11,7 +81,7 @@ typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
     size_type index = m_size;
     size_type newSize = m_size + 1;
 
-    SmartReserve(newSize);
+    reserve(newSize);
 
     m_size = newSize;
 
@@ -21,53 +91,56 @@ typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
 }
 
 template <typename T>
-void Array<T>::resize(size_type count, T value /*= T()*/)
+void Array<T>::resize(size_type count)
 {
-    Resize(count, value);
+    reserve(count);
+
+    for (size_type i = m_size; i < count; i++)
+    {
+        new (m_data + i) T();
+    }
+
+    m_size = count;
 }
 
 template <typename T>
-void Array<T>::Resize(size_type count, const T& t)
+void Array<T>::resize(size_type count, const T& t)
 {
-    if (m_size < count)
+    reserve(count);
+    for (size_type i = m_size; i < count; i++)
     {
-        for (int i = m_size; i < count; i++)
-        {
-            push_back(t);
-        }
+        push_back(t);
     }
 }
 
 template <typename T>
 void Array<T>::pop_back()
 {
-    SmartReserve(m_size - 1);
-    m_size--;
-
     Destroy(m_size - 1, m_size);
+
+    m_size--;
 }
 
 template <typename T>
 void Array<T>::push_back(T&& value)
 {
-    SmartReserve(m_size + 1);
-    m_data[m_size] = std::move(value);
+    reserve(m_size + 1);
+    new (m_data + m_size) T(std::move(value));
     m_size++;
 }
 
 template <typename T>
 void Array<T>::push_back(const T& value)
 {
-    SmartReserve(m_size + 1);
-
-    m_data[m_size] = value;
+    reserve(m_size + 1);
+    new (m_data + m_size) T(value);
     m_size++;
 }
 
 template <typename T>
 typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator last)
 {
-    RED_ASSERT_S(last > first);
+    RED_ASSERT_S(last >= first);
     RED_ASSERT_S(first >= begin());
     RED_ASSERT_S(last <= end());
 
@@ -80,16 +153,16 @@ typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator
 
     while (shift < endIt)
     {
-        *index = std::move(*shift);
+        *index = *shift;
         index++;
         shift++;
     }
 
-    size_type valueErased = (size_type)(last - first);
+    size_type valueErased = (size_type) (last - first);
 
     m_size -= valueErased;
 
-    SmartReserve(m_size);
+    reserve(m_size);
 
     return const_cast<iterator>(first);
 }
@@ -112,103 +185,73 @@ typename Array<T>::iterator Array<T>::erase(iterator pos)
     return erase((const_iterator) pos);
 }
 
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, std::initializer_list<T> ilist)
-//{
-//    SmartReserve(m_size + ilist.size());
-//
-//    m_size++;
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, size_type count, const T& value)
-//{
-//    SmartReserve(m_size + count);
-//}
-//
-// template <typename T>
-// void Array<T>::insert(iterator pos, size_type count, const T& value)
-//{
-//    return insert((const_iterator) pos, count, value);
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, T&& value)
-//{
-//    SmartReserve(m_size + 1);
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(const_iterator pos, const T& value)
-//{
-//    SmartReserve(m_size + 1);
-//}
-//
-// template <typename T>
-// typename Array<T>::iterator Array<T>::insert(iterator pos, const T& value)
-//{
-//    SmartReserve(m_size + 1);
-//}
-
 template <typename T>
 void Array<T>::clear()
 {
-    SetCapacity(0);
+    Destroy(begin(), end());
     m_size = 0;
 }
 
 template <typename T>
 void Array<T>::shrink_to_fit()
 {
-    reserve(m_size);
+    SetCapacity(m_size);
 }
 
 template <typename T>
 void Array<T>::reserve(size_type capacity)
 {
-    if (capacity < m_size)
+    if (capacity < m_size || capacity <= m_capacity)
     {
-        RED_ERROR("Couldnt reserve a size below size");
         return;
     }
+
+    capacity = Math::NextPowerOf2(capacity);
 
     SetCapacity(capacity);
 }
 
 template <typename T>
-void red::Array<T>::SmartReserve(size_type capacity)
-{
-    size_type newCapacity = m_capacity;
-
-    if (capacity > m_capacity)
-    {
-        newCapacity = Math::NextPowerOf2(capacity);
-    }
-
-    SetCapacity(newCapacity);
-}
-
-template <typename T>
 void Array<T>::SetCapacity(size_type askedCapacity)
 {
-    if (askedCapacity == m_capacity)
+    if (askedCapacity < m_size)
         return;
-
-    T* tmp = nullptr;
 
     if (askedCapacity != 0)
     {
-        tmp = (T*) std::calloc(size_of_type, askedCapacity);
-        RED_ASSERT_S(tmp != nullptr);
-
-        for (int i = 0; i < m_size; i++)
+        auto capacitySize = askedCapacity * sizeof(T);
+        if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
         {
-            tmp[i] = std::move(m_data[i]);
+            T* tmp = (T*) realloc(m_data, capacitySize);
+
+            if (tmp == NULL)
+            {
+                RED_ABORT("OutOfMemory");
+            }
+
+            m_data = tmp;
+        }
+        else
+        {
+            T* tmp = (T*) malloc(capacitySize);
+
+            if (tmp == NULL)
+            {
+                RED_ABORT("OutOfMemory");
+            }
+
+            // Copy members from old location to the new one
+            for (size_type i = 0; i < m_size; i++)
+            {
+                new (tmp + i) T(std::move(m_data[i]));
+                m_data[i].~T();
+            }
+
+            RED_SAFE_FREE(m_data);
+            m_data = tmp;
         }
     }
 
-    std::swap(m_data, tmp);
-    RED_SAFE_FREE(tmp);
     m_capacity = askedCapacity;
 }
 
@@ -329,22 +372,41 @@ typename Array<T>::const_reference Array<T>::operator[](size_type index) const
 }
 
 template <typename T>
-Array<T>::Array() : m_size(0), m_capacity(0), m_data(nullptr)
+template <class InputIterator>
+typename Array<T>::iterator Array<T>::insert(const_iterator position, InputIterator first, InputIterator last)
 {
-}
+    const size_type nbElem = (size_type) (last - first);
+    const size_type positionIndex = (size_type) (position - m_data);
+    if (nbElem == 0)
+        return (iterator) position;
 
-template <typename T>
-Array<T>::Array(std::initializer_list<T> list) : m_size(0), m_capacity(0), m_data(nullptr)
-{
-    for (auto it = list.begin(); it != list.end(); it++)
-        push_back(*it);
-}
+    RED_ASSERT(position >= begin() && position <= end(), "Position is out of range");
+    RED_ASSERT(first < last, "Invalid insertion");
 
-template <typename T>
-Array<T>::~Array()
-{
-    Destroy(0, m_size);
-    RED_SAFE_FREE(m_data);
+    reserve(m_size + nbElem);  // position interator is now invalid due to possible allocation change
+
+    if (m_size > 0)
+    {
+        // move elements from [position;end] to [position+nbElem; end+nbElem]
+        for (auto i = positionIndex; i < m_size; ++i)
+        {
+            new (m_data + i + nbElem) T(std::move(*(m_data + i)));
+            (m_data + i)->~T();
+        }
+    }
+
+    // copy elements from [first;last] to [position; position+nbElem]
+    iterator itFrom = (iterator) first;
+    for (size_type i = 0; i < nbElem; i++)
+    {
+        new (m_data + i + positionIndex) T(*itFrom);
+
+        itFrom++;
+    }
+
+    m_size += nbElem;
+
+    return (iterator) position;
 }
 
 template <typename T>

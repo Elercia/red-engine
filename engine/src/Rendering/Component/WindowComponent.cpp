@@ -3,43 +3,47 @@
 #include "RedEngine/Rendering/RenderingModule.hpp"
 
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Utils/BitfieldUtils.hpp"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_video.h>
 
 namespace red
 {
-CVar<std::string> m_title{"title", "window", "RedEngine"};
-CVar<int> m_height{"height", "window", 600};
-CVar<int> m_width{"width", "window", 800};
-CVar<FullScreenMode::Enum> m_fullscreen{"fullscreen_mode", "window", FullScreenMode::WINDOWED};
+CVar<std::string> WindowComponent::s_title{"title", "window", "RedEngine"};
+CVar<int> WindowComponent::s_height{"height", "window", 600};
+CVar<int> WindowComponent::s_width{"width", "window", 800};
+CVar<FullScreenMode::Enum> WindowComponent::s_fullscreen{"fullscreen_mode", "window", FullScreenMode::WINDOWED};
 
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(WindowComponent)
 
-WindowComponent::WindowComponent(Entity* owner) : Component(owner), m_window(nullptr)
+WindowComponent::WindowComponent(Entity *owner) : Component(owner)
 {
 }
 
 WindowComponent::~WindowComponent()
 {
-    SDL_Quit();
-}
-
-void WindowComponent::Init()
-{
-    // TODO Surely move this to renderer
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-    {
-        RED_LOG_ERROR("Error initializing SDL with error {}", SDL_GetError());
-        SDL_Quit();
-        RED_ABORT("Cannot initialize SDL2");
-    }
 }
 
 void WindowComponent::CreateNewWindow()
 {
-    m_window = SDL_CreateWindow(m_title.GetValue().c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                m_width.GetValue(), m_height.GetValue(),
-                                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+    uint32 windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+
+    if (s_fullscreen == FullScreenMode::WINDOWED_FULLSCREEN)
+    {
+        windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    }
+    else if (s_fullscreen == FullScreenMode::FULLSCREEN)
+    {
+        windowFlags |= SDL_WINDOW_FULLSCREEN;
+    }
+    else
+    {
+        windowFlags |= SDL_WINDOW_BORDERLESS | SDL_WINDOW_RESIZABLE;
+    }
+
+    m_window = SDL_CreateWindow(s_title.GetValue().c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                s_width.GetValue(), s_height.GetValue(), windowFlags);
 
     if (m_window == nullptr)
     {
@@ -47,30 +51,6 @@ void WindowComponent::CreateNewWindow()
     }
 
     RED_LOG_INFO("Created window");
-
-    m_height->OnValueChange([&](CVarValue* /*elem*/)
-                            { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
-
-    m_width->OnValueChange([&](CVarValue* /*elem*/)
-                           { SDL_SetWindowSize(this->m_window, m_width.GetValue(), m_height.GetValue()); });
-
-    m_fullscreen->OnValueChange(
-        [&](CVarValue* /*elem*/)
-        {
-            int flag = 0;
-            switch (m_fullscreen.GetValue())
-            {
-                case FullScreenMode::FULLSCREEN:
-                case FullScreenMode::BORDER_LESS:
-                    flag = SDL_WINDOW_FULLSCREEN;
-                    break;
-                case FullScreenMode::WINDOWED:
-                    flag = 0;
-                    break;
-            }
-
-            SDL_SetWindowFullscreen(this->m_window, flag);
-        });
 }
 
 #ifdef RED_WINDOWS
@@ -89,7 +69,7 @@ HWND WindowComponent::GetNativeHandle()
 
     return sysInfo.info.x11.window;
 }
-Display* WindowComponent::GetNativeDisplay()
+Display *WindowComponent::GetNativeDisplay()
 {
     SDL_SysWMinfo sysInfo = GetSDLSysInfo();
 
@@ -115,15 +95,63 @@ WindowInfo WindowComponent::GetWindowInfo() const
     int width;
     int height;
     SDL_GetWindowSize(m_window, &width, &height);
+    uint32 windowFlags = SDL_GetWindowFlags(m_window);
 
-    WindowInfo info{width, height};
+    FullScreenMode::Enum mode = FullScreenMode::WINDOWED;
+
+    if (HasBit(windowFlags, SDL_WINDOW_FULLSCREEN))
+    {
+        mode = FullScreenMode::FULLSCREEN;
+    }
+    else if (HasBit(windowFlags, SDL_WINDOW_FULLSCREEN_DESKTOP))
+    {
+        mode = FullScreenMode::WINDOWED_FULLSCREEN;
+    }
+
+    WindowInfo info{width, height, mode};
 
     return info;
 }
 
-SDL_Window* WindowComponent::GetSDLWindow()
+SDL_Window *WindowComponent::GetSDLWindow()
 {
     return m_window;
+}
+
+template <>
+std::string Serialize(const FullScreenMode::Enum &typeValue)
+{
+    switch (typeValue)
+    {
+        case FullScreenMode::FULLSCREEN:
+            return "0";
+        case FullScreenMode::WINDOWED_FULLSCREEN:
+            return "1";
+        default:
+            return "2";
+    }
+}
+
+template <>
+bool Deserialize(FullScreenMode::Enum &typeValue, const std::string &stringValue)
+{
+    if (stringValue == "0")
+    {
+        typeValue = FullScreenMode::FULLSCREEN;
+        return true;
+    }
+    if (stringValue == "1")
+    {
+        typeValue = FullScreenMode::WINDOWED_FULLSCREEN;
+        return true;
+    }
+    if (stringValue == "2")
+    {
+        typeValue = FullScreenMode::WINDOWED;
+        return true;
+    }
+
+    return false;
 }
 
 }  // namespace red

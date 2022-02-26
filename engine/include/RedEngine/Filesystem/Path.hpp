@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Utils/Types.hpp"
+#include "RedEngine/Math/Hash.hpp"
 
 #include <string>
 #include <string_view>
@@ -44,6 +45,9 @@ public:
 
     void ForceRefreshStatus();  // Force the refresh of the path
 
+    bool operator==(const Path& other) const;
+    bool operator!=(const Path& other) const;
+
 private:
     void SetUnicodePath(const std::wstring& unicodeStr);
 
@@ -61,6 +65,9 @@ private:
     PathStates m_states;
     uint32 m_hash;
 };
+
+template<>
+uint64 Hash(const Path& value);
 }  // namespace red
 
 namespace std

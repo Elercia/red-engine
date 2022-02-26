@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RedEngine/Core/Configuration/CVarSerialization.hpp"
 #include "RedEngine/Core/Configuration/CVarUtils.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 

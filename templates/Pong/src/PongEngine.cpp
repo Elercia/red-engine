@@ -1,6 +1,8 @@
 #include "PongEngine.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
 
 #include "PongLevel.hpp"
+#include "ScoreComponent.hpp"
 
 namespace pong
 {
@@ -17,6 +19,8 @@ bool PongEngine::Destroy()
 {
     CheckReturn(Engine::Destroy());
 
+    getchar();
+
     return true;
 }
 
@@ -24,4 +28,14 @@ std::string_view PongEngine::GetGameName() const
 {
     return "Pong Template";
 }
+
+bool PongEngine::RegisterComponentTypes()
+{
+    CheckReturn(Engine::RegisterComponentTypes());
+
+    m_world->RegisterComponentType<ScoreComponent>();
+
+    return true;
+}
+
 }  // namespace pong

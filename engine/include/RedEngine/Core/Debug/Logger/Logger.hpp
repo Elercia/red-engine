@@ -1,6 +1,8 @@
 #pragma once
 
-#include <iostream>
+#include "RedEngine/Core/Event/Delegate.hpp"
+#include "RedEngine/Core/SerializationFunction.hpp"
+
 #include <string>
 
 namespace red
@@ -16,27 +18,38 @@ enum class LogLevel
     LEVEL_FATAL
 };
 
+template <>
+std::string Serialize(const LogLevel &value);
+template <>
+bool Deserialize(LogLevel &value, const std::string &str);
+
 void SetLogLevel(LogLevel level);
 
 class Logger
 {
 public:
+
+    static const Map<LogLevel, std::string> logLevelAsString;
+
+    using OutputDelegate = Delegate<const std::string& /*Log message*/>;
+
     Logger();
-    virtual ~Logger() = default;
+    ~Logger() = default;
 
     void SetLogLevel(LogLevel level);
 
     template <typename... Args>
     void LogInternal(LogLevel level, int line, const char* file, const std::string& format, Args... args);
 
-protected:
-    virtual void Out(const std::string& data)
-    {
-        std::cout << data << std::endl;
-    }
+    void Out(const std::string& str);
+
+    OutputDelegate::FuncIndex AddOutput(OutputDelegate::FuncType output);
+
+    static void LogToStandardOutputFun(const std::string& out);
 
 private:
     LogLevel m_logLevel;
+    OutputDelegate m_delegates;
 };
 
 }  // namespace red

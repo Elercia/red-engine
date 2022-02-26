@@ -33,6 +33,9 @@ CVarManager::~CVarManager()
 
 void CVarManager::LoadConfigFileInternal(const Path& path)
 {
+    if(!path.Exist())
+        return;
+
     auto iniCatKeyValues = utils::IniReader::ReadFromFile(path);
 
     for (auto& iniCatKeyValue : iniCatKeyValues)

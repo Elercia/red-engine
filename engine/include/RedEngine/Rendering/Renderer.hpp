@@ -1,14 +1,17 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
+#include "RedEngine/Math/AABB.hpp"
+#include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/Rendering/Color.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Resource/Geometry.hpp"
+#include "RedEngine/Rendering/Resource/Material.hpp"
 
 #include <memory>
 #include <string>
-#include <vector>
-
-#include "Color.hpp"
 
 namespace red
 {
@@ -18,36 +21,65 @@ class CameraComponent;
 
 using OpenGlContext = void*;
 
+struct RenderingData
+{
+    Matrix44 worldMatrix;
+    Geometry* geometry;
+    MaterialInstance materialInstance;
+    AABB aabb;
+};
+
 class Renderer
 {
 public:
     Renderer();
     ~Renderer();
 
-    void BeginCameraRendering(CameraComponent* cameraComponent);
-    void EndCameraRendering();
-
     void BeginRenderFrame();
     void EndRenderFrame();
 
-    void Render(CameraComponent* camera, Renderable* renderable, const Transform& transform);
+    // Push the renderable to the corresponding render queue
+    void Draw(const Renderable* renderable, const Transform* transform);
 
-    void DrawLine(CameraComponent* camera, const Vector2& first, const Vector2& second,
+    void DrawDebugLine(const Vector2& first, const Vector2& second,
                   const Color& color = ColorConstant::RED);
 
-    void DrawLines(CameraComponent* camera, const std::vector<Vector2>& points, const Color& color = ColorConstant::RED,
+    void DrawDebugLines(const Array<Vector2>& points, const Color& color = ColorConstant::RED,
                    bool isFilled = false);
 
-    void DrawCircle(CameraComponent* camera, const Vector2& center, float radius,
+    void DrawDebugCircle(const Vector2& center, float radius,
                     const Color& color = ColorConstant::RED);
 
-    void DrawPoint(CameraComponent* camera, const Vector2& coord, const Color& color = ColorConstant::RED);
+    void DrawDebugPoint(const Vector2& coord, const Color& color = ColorConstant::RED);
 
+    // Draw passes
+    void BeginCameraRendering(CameraComponent* camera);
+    void EndCameraRendering(CameraComponent* camera);
+
+    void RenderOpaque(CameraComponent* camera);
+    void RenderTransparency(CameraComponent* camera);
+    void RenderLights(CameraComponent* camera);
+    void RenderDebug(CameraComponent* camera);
+
+    // Rendering resource management
     void InitRenderer(WindowComponent* window);
+    void Finalise();
+
+    void ReCreateWindow(WindowComponent* window);
+
+private:
+    Array<RenderingData>& GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
+                                                       int& renderDataCount);
+
+    void UseMaterial(const MaterialInstance& mat);
+    void UseGeometry(const Geometry* geom);
 
 private:
     OpenGlContext m_glContext;
     WindowComponent* m_window;
+
+    // Render entities push for this frame, these will be then culled and rendered
+    Array<RenderingData> m_renderingData[RenderEntityType::Count];
 };
 
 }  // namespace red

@@ -6,7 +6,9 @@
 #include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
 #include "RedEngine/Audio/System/AudioSystem.hpp"
+#include "RedEngine/Core/Configuration/CVarManager.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
@@ -20,16 +22,33 @@
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/Resource/GeometryResourceLoader.hpp"
+#include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
+#include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/Random.hpp"
 
+#ifdef RED_WINDOWS
+#include <debugapi.h>
+#endif
+
 namespace red
 {
+#ifdef RED_DEBUG
+#define DefaultLogLevel LogLevel::LEVEL_DEBUG
+#else
+#define DefaultLogLevel LogLevel::LEVEL_INFO
+#endif
+
+static CVar<bool> s_addStandardOutputLog{"AddStandardOutputlog", "Logger", false};
+static CVar<LogLevel> s_logLevel{"LogLevel", "Logger", DefaultLogLevel};
+
 Engine* Engine::s_engine = nullptr;
 
 Engine* Engine::GetInstance()
@@ -45,10 +64,8 @@ Engine::~Engine()
 {
 }
 
-int Engine::MainLoop()
+void Engine::MainLoop()
 {
-    m_world->Init();
-
     bool continueExec = true;
 
     FrameCounter fc;
@@ -60,46 +77,97 @@ int Engine::MainLoop()
         Time::SetDeltaTime(deltaTime);
 
         continueExec = m_world->Update();
-
-        m_world->Clean();
     }
-
-    return 0;
 }
 
 bool Engine::RegisterComponentTypes()
 {
-    CheckReturn(m_world->RegisterComponentType<Transform>());
-    CheckReturn(m_world->RegisterComponentType<DebugComponent>());
-    CheckReturn(m_world->RegisterComponentType<EventsComponent>());
-    CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
-    CheckReturn(m_world->RegisterComponentType<ColliderList>());
-    CheckReturn(m_world->RegisterComponentType<PhysicBody>());
+    // Rendering
+    CheckReturn(m_world->RegisterComponentType<Renderable>());
     CheckReturn(m_world->RegisterComponentType<Sprite>());
     CheckReturn(m_world->RegisterComponentType<WindowComponent>());
     CheckReturn(m_world->RegisterComponentType<CameraComponent>());
+
+    // Debug
+    CheckReturn(m_world->RegisterComponentType<DebugComponent>());
+
+    // Inputs
+    CheckReturn(m_world->RegisterComponentType<EventsComponent>());
+    CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
+
+    // Physics
+    CheckReturn(m_world->RegisterComponentType<ColliderList>());
+    CheckReturn(m_world->RegisterComponentType<PhysicBody>());
+
+    // Resources
     CheckReturn(m_world->RegisterComponentType<ResourceHolderComponent>());
+
+    // Audio
     CheckReturn(m_world->RegisterComponentType<AudioSource>());
     CheckReturn(m_world->RegisterComponentType<AudioListener>());
 
     return true;
 }
 
+#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+static void LogToDebugger(const std::string& out)
+{
+    OutputDebugStringA(out.c_str());
+    OutputDebugStringA("\n");
+}
+#endif
+
+void Engine::SetupLogger()
+{
+    int standarOutputFuncIndex = -1;
+    int debugOutputFuncIndex = -1;
+
+#ifdef RED_DEBUG
+    // Always add standard output when debugging
+    standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+#endif
+
+#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+    if (IsDebuggerPresent() != 0)
+    {
+        debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
+    }
+#endif
+
+    if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
+    {
+        standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+    }
+
+    SetLogLevel(s_logLevel);
+
+    RED_LOG_INFO("Setup logger for output {}, debugger {}", standarOutputFuncIndex != -1, debugOutputFuncIndex != -1);
+}
+
 bool Engine::Create()
 {
+    CVarManager::LoadConfigFile(Path::Resource("Config.ini"));
+
+    SetupLogger();
+
     InitRandomEngine(42);
 
     m_world = new World;
 
     RegisterComponentTypes();
 
-    auto* worldEntity = m_world->CreateWorldEntity();
+    m_world->Init();
+
+    auto* worldEntity = m_world->CreateWorldEntity("ResourceHolder");
 
     // TODO Put it inside a resource loader system
     auto* resourceHolder = worldEntity->AddComponent<ResourceHolderComponent>();
     resourceHolder->RegisterResourceLoader(ResourceType::SPRITE, new SpriteResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::TEXTURE2D, new TextureResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SOUND, new SoundResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::MATERIAL, new MaterialResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::GEOMETRY, new GeometryResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::SHADER_PROGRAM, new ShaderProgramResourceLoader(m_world));
 
     m_world->AddSystem<RenderingSystem>();
     m_world->AddSystem<PhysicSystem>();
@@ -108,7 +176,7 @@ bool Engine::Create()
     m_world->AddSystem<UserInputSystem>();
     m_world->AddSystem<AudioSystem>();
 
-    m_world->Init();
+    m_world->InitSystems();
 
     return true;
 }

@@ -16,6 +16,16 @@
             "name": "Build release",
             "cmd": ["scripts\\VS2019Build.bat", "Release"],
             "working_dir" : "$project_path"
+        },
+        {
+            "name": "Run tests",
+            "cmd": ["scripts\\RunTests.bat"],
+            "working_dir" : "$project_path"
+        },
+        {
+            "name": "Run Pong",
+            "cmd": ["scripts\\RunTemplate.bat"],
+            "working_dir" : "$project_path"
         }
     ]
 }

@@ -58,7 +58,7 @@ public:
     const std::string& GetName() const;
     void SetName(const std::string& name);
 
-    const EntityState GetState() const;
+    EntityState GetState() const;
 
     void Destroy();
 
@@ -67,20 +67,20 @@ public:
     void RemoveChild(Entity* child);
     Entity* GetParent();
     const Entity* GetParent() const;
-    Array<Entity*> GetChildren() const;
+    const Array<Entity*>& GetChildren() const;
 
     World* GetWorld();
 
     ComponentManager* GetComponentManager();
 
 protected:
-    World* m_world;
-    EntityId m_id;
+    World* m_world{nullptr};
+    EntityId m_id{0};
     std::string m_name;
 
-    Entity* m_parent;
+    Entity* m_parent{nullptr};
     Array<Entity*> m_children;
-    EntityState m_state;
+    EntityState m_state{EntityState::PreCreation};
 };
 
 }  // namespace red

@@ -1,9 +1,10 @@
-#include "TestModule.hpp"
-
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/System.hpp"
 
 #include <SystemTest.hpp>
+
+#include "TestModule.hpp"
 
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent1)
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent11)
@@ -17,6 +18,7 @@ TEST_CASE("Component", "[ECS]")
     SECTION("Bulk add remove")
     {
         red::World world;
+        world.Init();
 
         world.RegisterComponentType<MockComponent1>();
         world.RegisterComponentType<MockComponent11>();
@@ -25,7 +27,7 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock1;
         for (int i = 0; i < 100; ++i)
         {
-            auto* entity = world.CreateWorldEntity();
+            auto* entity = world.CreateWorldEntity("a");
             entitiesWithMock1.push_back(entity);
             REQUIRE(entity != nullptr);
         }
@@ -33,7 +35,7 @@ TEST_CASE("Component", "[ECS]")
         std::vector<red::Entity*> entitiesWithMock2;
         for (int i = 0; i < 100; ++i)
         {
-            auto* entity = world.CreateWorldEntity();
+            auto* entity = world.CreateWorldEntity("b");
             entitiesWithMock2.push_back(entity);
             REQUIRE(entity != nullptr);
         }
@@ -90,18 +92,19 @@ TEST_CASE("Component", "[ECS]")
     SECTION("Check component validity")
     {
         red::World world;
+        world.Init();
 
         world.RegisterComponentType<MockComponent1>();
         world.RegisterComponentType<MockComponent11>();
         world.RegisterComponentType<MockComponent2>();
 
-        auto* entityA = world.CreateWorldEntity();
+        auto* entityA = world.CreateWorldEntity("a");
         REQUIRE(entityA != nullptr);
 
         auto* componentAddedA = entityA->AddComponent<MockComponent1>();
         REQUIRE(componentAddedA != nullptr);
 
-        auto* entityB = world.CreateWorldEntity();
+        auto* entityB = world.CreateWorldEntity("b");
         REQUIRE(entityB != nullptr);
 
         auto* componentAddedB = entityB->AddComponent<MockComponent1>();
@@ -120,11 +123,12 @@ TEST_CASE("Component", "[ECS]")
 TEST_CASE("Component inheritance", "[ECS]")
 {
     red::World world;
+    world.Init();
 
     world.RegisterComponentType<MockComponent1>();
     world.RegisterComponentType<MockComponent11>();
 
-    auto* entityA = world.CreateWorldEntity();
+    auto* entityA = world.CreateWorldEntity("a");
     REQUIRE(entityA != nullptr);
 
     SECTION("Hierarchy working")
@@ -152,4 +156,47 @@ TEST_CASE("Component inheritance", "[ECS]")
         REQUIRE(entityA->RemoveComponent<MockComponent1>());
         REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
     }
+}
+
+namespace EntityDestroyRemoveComp
+{
+class TestSystem : public red::System
+{
+public:
+    explicit TestSystem(red::World* world) : red::System(world)
+    {
+    }
+    virtual ~TestSystem() = default;
+
+    void Update() override
+    {
+        m_entityCount = (int) GetComponents<MockComponent1>().size();
+    }
+
+    int m_entityCount = 0;
+};
+}  // namespace EntityDestroyRemoveComp
+
+TEST_CASE("Entity destroy remove components", "[ECS]")
+{
+    using namespace red;
+    using namespace EntityDestroyRemoveComp;
+
+    red::World world;
+    world.Init();
+
+    world.RegisterComponentType<MockComponent1>();
+    auto* testSystem = world.AddSystem<TestSystem>();
+
+    auto* entityA = world.CreateWorldEntity("a");
+    entityA->AddComponent<MockComponent1>();
+
+    world.Update();
+
+    REQUIRE(testSystem->m_entityCount == 1);
+
+    entityA->Destroy();
+    world.Update();
+
+    REQUIRE(testSystem->m_entityCount == 0);
 }

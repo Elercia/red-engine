@@ -3,7 +3,7 @@
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -19,6 +19,6 @@ public:
     ~SpriteResource() = default;
 
 private:
-    std::vector<AnimationDesc> m_animations;
+    Array<AnimationDesc> m_animations;
 };
 }  // namespace red

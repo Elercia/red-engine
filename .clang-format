@@ -18,7 +18,10 @@ AllowShortLoopsOnASingleLine: false
 PointerAlignment: Left
 AlignConsecutiveAssignments: false
 AlignTrailingComments: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: true
 
+#SeparateDefinitionBlocks: Always #clang-format 14
 
 SortIncludes  : true
 IncludeBlocks : Regroup

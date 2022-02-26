@@ -2,10 +2,11 @@
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/Utils/TypesInfo.hpp"
 
 #include <algorithm>
 #include <memory>
-#include <vector>
+#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -28,41 +29,38 @@ public:
     virtual void PreUpdate(){};
     virtual void Update(){};
     virtual void PostUpdate(){};
-
+    
     virtual void BeginRender(){};
-    virtual void Render(){};
     virtual void EndRender(){};
 
     /// Called once the world is initializing to manager system-specific init
-    virtual void Init()
-    {
-        m_isInit = true;
-    }
+    virtual void Init();
 
     /// Called once the system is shutting down to manage system-specific shutdown
-    virtual void Finalise(){};
+    virtual void Finalise();
 
     virtual void ManageEntities(){};
 
     // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
-    std::vector<Entity*> GetComponents();
+    Array<Entity*> GetComponents() const;
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);
 
-    void SetTypeId(std::size_t typeId);
-    std::size_t GetTypeId();
+    void SetTypeTraits(TypeTraits typeTraits);
+    std::size_t GetTypeId() const;
 
     int GetPriority() const;
 
-    std::vector<Entity*> GetWorldEntities();
+    Array<Entity*>& GetWorldEntities();
+    const Array<Entity*>& GetWorldEntities() const;
 
 protected:
     bool m_isInit;
     World* m_world;
     int m_priority;
-    std::size_t m_typeId;
+    TypeTraits m_typeTraits;
 };
 }  // namespace red
 

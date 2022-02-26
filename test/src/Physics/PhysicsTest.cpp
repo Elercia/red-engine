@@ -24,10 +24,11 @@ TEST_CASE("Component binding", "[PHYSICS]")
 {
     using namespace red;
     World w;
+    w.Init();
     w.RegisterComponentType<PhysicBody>();
     w.RegisterComponentType<ColliderList>();
 
-    Entity* e = w.CreateWorldEntity();
+    Entity* e = w.CreateWorldEntity("a");
     PhysicSystem* system = w.AddSystem<PhysicSystem>();
 
     red::PhysicBodyCreationDesc desc = {red::PhysicsBodyType::DYNAMIC_BODY};

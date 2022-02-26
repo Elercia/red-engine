@@ -8,9 +8,12 @@ T* World::AddSystem(Args... args)
 {
     static_assert(std::is_base_of<System, T>::value, "World add system template T must be subclass of System");
 
-    auto* ptr = new T(this, std::forward<Args>(args)...);
+    auto info = TypeInfo<T>();
 
-    ptr->SetTypeId(TypeInfo<T>().typeId);
+    auto* ptr = new T(this, std::forward<Args>(args)...);
+    ptr->SetTypeTraits(info);
+
+    RED_LOG_INFO("Adding {} system", info.name);
 
     m_systems.push_back(ptr);
 
@@ -18,9 +21,27 @@ T* World::AddSystem(Args... args)
 }
 
 template <class T>
-void World::RemoveSystem()
+bool World::RemoveSystem()
 {
-    // TODO implement
+    auto info = TypeInfo<T>();
+    auto systemTypeId = info.typeId;
+
+    RED_LOG_INFO("Remove {} system", info.name);
+
+    for (Array<System*>::iterator it = m_systems.begin(), end = m_systems.end(); it != end; ++it)
+    {
+        System* system = (*it);
+        if (system->GetTypeId() == systemTypeId)
+        {
+            m_systems.erase(it);
+
+            delete system;
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 template <typename T>
@@ -82,7 +103,6 @@ bool World::RegisterComponentType()
             inheritedCompTraits->childComponentTraits.push_back(compData);
         }
     }
-
 
     return true;
 }

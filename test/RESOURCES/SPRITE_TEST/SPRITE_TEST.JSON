@@ -1,0 +1,134 @@
+[
+  {
+    "name": "first",
+    "spritesheet": "SPRITE_TEST/paddle.png",
+    "opacity": {
+      "hasOpacity": true,
+      "color": {
+        "r": 0,
+        "v": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    "loop": true,
+    "frames": [
+      {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "w": 30,
+          "h": 150
+        },
+        "size": {
+          "w": 30,
+          "h": 100
+        },
+        "duration": 1,
+        "center": {
+          "x": 15,
+          "y": 50
+        },
+        "flip_h": false,
+        "flip_v": false,
+        "rotation": 0
+      },
+      {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "w": 30,
+          "h": 150
+        },
+        "size": {
+          "w": 30,
+          "h": 100
+        },
+        "duration": 0,
+        "center": {
+          "x": 15,
+          "y": 50
+        },
+        "flip_h": false,
+        "flip_v": false,
+        "rotation": 90
+      }
+    ]
+  },
+  {
+    "name": "second",
+    "spritesheet": "SPRITE_TEST/paddle.png",
+    "loop": true,
+    "opacity": {
+      "hasOpacity": true,
+      "color": {
+        "r": 0,
+        "v": 0,
+        "b": 0,
+        "a": 0
+      }
+    },
+    "frames": [
+      {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "w": 30,
+          "h": 150
+        },
+        "size": {
+          "w": 30,
+          "h": 100
+        },
+        "duration": 0.5,
+        "center": {
+          "x": 15,
+          "y": 50
+        },
+        "flip_h": false,
+        "flip_v": false,
+        "rotation": 0
+      },
+      {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "w": 30,
+          "h": 150
+        },
+        "size": {
+          "w": 30,
+          "h": 100
+        },
+        "duration": 0.5,
+        "center": {
+          "x": 15,
+          "y": 50
+        },
+        "flip_h": false,
+        "flip_v": false,
+        "rotation": 90
+      },
+      {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "w": 30,
+          "h": 150
+        },
+        "size": {
+          "w": 30,
+          "h": 100
+        },
+        "duration": 0.5,
+        "center": {
+          "x": 15,
+          "y": 50
+        },
+        "flip_h": false,
+        "flip_v": false,
+        "rotation": 90
+      }
+    ]
+  }
+]

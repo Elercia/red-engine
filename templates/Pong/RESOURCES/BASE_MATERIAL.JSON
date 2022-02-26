@@ -1,0 +1,10 @@
+{
+	"shader_program" : "BASE_SHADER",
+	"rendering_type" : 0, // opaque
+	"pixel_uniforms" : [
+		{
+			"type" : "texture",
+			"name" : "texture_sampler"
+		}
+	]
+}

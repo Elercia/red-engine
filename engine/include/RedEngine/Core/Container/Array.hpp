@@ -1,12 +1,20 @@
 #pragma once
 
+#define RED_USE_ARRAY
+#ifdef RED_USE_ARRAY
+
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Macros.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Math/Math.hpp"
+#include "RedEngine/Utils/Types.hpp"
+
 #include <cstdlib>
 #include <initializer_list>
-#include <vector>
 
 namespace red
 {
-#ifdef RED_USE_ARRAY
+//TODO Add something like template <T> size_type GrowPolicy(neededCapacity) that default implementation is returning NextPowOf2 and allow other kind of grow policy (return 2x the cap etc etc)
 
 template <typename T>
 class Array
@@ -18,9 +26,7 @@ public:
     using reference = T&;
     using const_reference = const T&;
 
-    using size_type = int;
-
-    static constexpr size_t size_of_type = sizeof(T);
+    using size_type = uint64;
 
     /// Constructors
     Array();
@@ -28,56 +34,49 @@ public:
 
     Array(std::initializer_list<T> list);
 
-    Array(const Array& other) = delete;
-    void operator=(const Array& other) = delete;
+    Array(const Array<T>& other);
+    Array<T>& operator=(const Array<T>& other);
 
-    Array(Array&& other) = default;
-    Array& operator=(Array&& other) = default;
+    Array(Array<T>&& other);
+    Array<T>& operator=(Array<T>&& other);
 
     /// Accessors
-    RED_FORCEINLINE const_reference operator[](size_type index) const;
-    RED_FORCEINLINE reference operator[](size_type index);
+    const_reference operator[](size_type index) const;
+    reference operator[](size_type index);
 
-    RED_FORCEINLINE const_reference at(size_type index) const;
-    RED_FORCEINLINE reference at(size_type index);
+    const_reference at(size_type index) const;
+    reference at(size_type index);
 
-    RED_FORCEINLINE reference front();
-    RED_FORCEINLINE const_reference front() const;
+    reference front();
+    const_reference front() const;
 
-    RED_FORCEINLINE reference back();
-    RED_FORCEINLINE const_reference back() const;
+    reference back();
+    const_reference back() const;
 
-    RED_FORCEINLINE T* data();
-    RED_FORCEINLINE const T* data() const;
+    T* data();
+    const T* data() const;
 
-    RED_FORCEINLINE iterator begin();
-    RED_FORCEINLINE const_iterator begin() const;
-    RED_FORCEINLINE const_iterator cbegin() const;
+    iterator begin();
+    const_iterator begin() const;
+    const_iterator cbegin() const;
 
-    RED_FORCEINLINE iterator end();
-    RED_FORCEINLINE const_iterator end() const;
-    RED_FORCEINLINE const_iterator cend() const;
+    iterator end();
+    const_iterator end() const;
+    const_iterator cend() const;
 
     /// Capacity and size
-    RED_FORCEINLINE bool empty() const;
+    bool empty() const;
 
-    RED_FORCEINLINE size_type size() const;
-    RED_FORCEINLINE size_type capacity() const;
+    size_type size() const;
+    size_type capacity() const;
 
     void reserve(size_type capacity);
     void shrink_to_fit();
 
     void clear();
 
-    void resize(size_type count, T value = T());
-
-    /// Modifiers
-    /*iterator insert(iterator pos, const T& value);
-    iterator insert(const_iterator pos, const T& value);
-    iterator insert(const_iterator pos, T&& value);
-    void insert(iterator pos, size_type count, const T& value);
-    iterator insert(const_iterator pos, size_type count, const T& value);
-    iterator insert(const_iterator pos, std::initializer_list<T> list);*/
+    void resize(size_type count);
+    void resize(size_type count, const T& t);
 
     iterator erase(iterator pos);
     iterator erase(const_iterator pos);
@@ -92,23 +91,29 @@ public:
 
     void pop_back();
 
-private:
-    RED_FORCEINLINE void SetCapacity(size_type newCapacity);
-    RED_FORCEINLINE void SmartReserve(size_type capacity);
-    RED_FORCEINLINE void Resize(size_type count, const T& t);
-    RED_FORCEINLINE void Destroy(size_type from, size_type to);
-    RED_FORCEINLINE void Destroy(iterator from, iterator to);
+    template <class InputIterator>
+    iterator insert(const_iterator position, InputIterator first, InputIterator last);
 
-    size_type m_size;
-    size_type m_capacity;
-    T* m_data;
+private:
+    void SetCapacity(size_type askedCapacity);
+    void Destroy(size_type from, size_type to);
+    void Destroy(iterator from, iterator to);
+
+    size_type m_size{0};
+    size_type m_capacity{0};
+    T* m_data{nullptr};
 };
+}  // namespace red
 #else  // RED_USE_ARRAY
 
+#include <vector>
+
+namespace red
+{
 template <typename T>
 using Array = std::vector<T>;
+}  // namespace red
 
 #endif  // else RED_USE_ARRAY
-}  // namespace red
 
 #include "inl/Array.inl"

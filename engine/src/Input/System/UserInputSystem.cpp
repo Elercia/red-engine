@@ -14,7 +14,7 @@ namespace red
 {
 UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
 {
-    m_priority = 9;
+    m_priority = 1;
 }
 
 void UserInputSystem::Init()
@@ -23,9 +23,11 @@ void UserInputSystem::Init()
 
     PROFILER_CATEGORY("Input Init", Optick::Category::Input);
 
+    // TODO move this to the event system
+    // TODO add a call to SDL_QuitSubSystem to clean memory (or make sure SDL_Quit is called in every cases)
     SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 
-    m_inputComponent = m_world->CreateWorldEntity()->AddComponent<UserInputComponent>();
+    m_inputComponent = m_world->CreateWorldEntity("UserInputSystemEntity")->AddComponent<UserInputComponent>();
 
     m_inputComponent->m_actionMapping = utils::UserInputHelper::LoadActionMapping();
 
@@ -33,6 +35,11 @@ void UserInputSystem::Init()
     {
         RED_LOG_INFO("Loaded mapping {}", mapping.first);
     }
+}
+
+void UserInputSystem::Finalise()
+{
+    SDL_QuitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 }
 
 void UserInputSystem::PreUpdate()
@@ -48,7 +55,7 @@ void UserInputSystem::PreUpdate()
         KeyState oldState = m_inputComponent->m_state[actionName];
         KeyState mappingState = eventsSystem->GetKeyState(mapping.mapping);
 
-        std::vector<KeyState> states;
+        Array<KeyState> states;
 
         for (size_t i = 0; i < g_modifierKeys.size(); i++)
         {
@@ -77,7 +84,7 @@ void UserInputSystem::PreUpdate()
     }
 }
 
-KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, const std::vector<KeyState>& states)
+KeyState UserInputSystem::AglomerateKeyStates(const KeyState& oldState, const Array<KeyState>& states)
 {
     KeyState resultState = {false, false, false};
     resultState.isPressed = states[0].isPressed;

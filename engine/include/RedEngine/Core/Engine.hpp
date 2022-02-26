@@ -21,7 +21,7 @@ public:
     Engine();
     virtual ~Engine();
 
-    int MainLoop();
+    void MainLoop();
 
     virtual bool Create();
     virtual bool Destroy();
@@ -29,6 +29,8 @@ public:
     virtual std::string_view GetGameName() const;
 
     virtual bool RegisterComponentTypes();
+
+    virtual void SetupLogger();
 
 protected:
     int m_argc;

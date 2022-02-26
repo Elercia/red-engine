@@ -14,18 +14,29 @@ UserInputComponent::~UserInputComponent() = default;
 
 [[nodiscard]] bool UserInputComponent::GetKeyDown(const ActionKey& keyId) const
 {
-    return m_state.at(keyId).isDown;
+    auto it = m_state.find(keyId);
+    if (it == m_state.end())
+        return false;
+    return it->second.isDown;
 }
 
 [[nodiscard]] bool UserInputComponent::GetKeyUp(const ActionKey& keyId) const
 {
-    return m_state.at(keyId).isUp;
+    auto it = m_state.find(keyId);
+    if (it == m_state.end())
+        return false;
+
+    return it->second.isUp;
 }
 
 [[nodiscard]] bool UserInputComponent::GetKey(const ActionKey& keyId) const
 {
-    return m_state.at(keyId).isPressed;
-}  // TODO find and return false if not found
+    auto it = m_state.find(keyId);
+    if (it == m_state.end())
+        return false;
+    
+    return it->second.isPressed;
+}
 
 Vector2 UserInputComponent::GetAxis(const AxisKey& /*axisId*/) const
 {

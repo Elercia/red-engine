@@ -11,7 +11,7 @@ namespace red
 {
 namespace utils
 {
-    std::vector<iniCatKeyValue> IniReader::ReadFromFile(const Path& path)
+    Array<iniCatKeyValue> IniReader::ReadFromFile(const Path& path)
     {
         namespace fs = std::filesystem;
 
@@ -25,7 +25,7 @@ namespace utils
             return {};
         }
 
-        std::vector<iniCatKeyValue> iniKeyCatValues;
+        Array<iniCatKeyValue> iniKeyCatValues;
 
         std::string lineBuffer;
         std::string currentCategory = "default";
