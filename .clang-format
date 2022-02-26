@@ -23,8 +23,6 @@ AlignEscapedNewlines: true
 
 #SeparateDefinitionBlocks: Always #clang-format 14
 
-IndentPPDirectives: BeforeHash
-
 SortIncludes  : true
 IncludeBlocks : Regroup
 IncludeCategories:
