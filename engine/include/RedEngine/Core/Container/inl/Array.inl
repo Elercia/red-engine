@@ -376,7 +376,7 @@ template <class InputIterator>
 typename Array<T>::iterator Array<T>::insert(const_iterator position, InputIterator first, InputIterator last)
 {
     const size_type nbElem = (size_type) (last - first);
-    const size_type positionIndex = (size_type) (m_data - position);
+    const size_type positionIndex = (size_type) (position - m_data);
     if (nbElem == 0)
         return (iterator) position;
 
