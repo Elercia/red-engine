@@ -29,23 +29,26 @@ std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const Path& pat
     namespace fs = std::filesystem;
     using json = nlohmann::json;
 
-    auto soundResource = GetOrCreateFromCache(path);
+    Path activePath = path;
+    activePath.Append(L".json");
+
+    auto soundResource = GetOrCreateFromCache(activePath);
 
     if (soundResource->GetLoadState() == LoadState::STATE_LOADED)
         return soundResource;
 
-    if (!path.Exist() || path.IsDirectory())
+    if (!activePath.Exist() || activePath.IsDirectory())
     {
-        RED_LOG_WARNING("Cannot load sound for path {}", path.GetAscciiPath());
+        RED_LOG_WARNING("Cannot load sound for path {}", activePath.GetAscciiPath());
         soundResource->SetLoadState(LoadState::STATE_ERROR);
         return soundResource;
     }
 
-    auto parsedJson = json::parse(ReadFile(path), nullptr, false);
+    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false);
 
     if (parsedJson.is_discarded() || !parsedJson.is_object())
     {
-        RED_LOG_WARNING("Path {} is not a valid JSON", path.GetAscciiPath());
+        RED_LOG_WARNING("Path {} is not a valid JSON", activePath.GetAscciiPath());
         soundResource->SetLoadState(LoadState::STATE_ERROR);
         return soundResource;
     }
