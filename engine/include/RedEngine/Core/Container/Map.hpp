@@ -12,6 +12,9 @@ using Map = std::map<KeyT, ValueT>;
 #else  // ifndef RED_USE_MAP
 
 #include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Macros.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Math/Hash.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
