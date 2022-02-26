@@ -11,7 +11,7 @@ using namespace red;
 
 #ifdef RED_USE_MAP
 
-TEST_CASE("Map Set / Get", "[Container]")
+TEST_CASE("Map Set / Get", "[Map]")
 {
     Map<std::string, int> m;
 
@@ -37,7 +37,7 @@ TEST_CASE("Map Set / Get", "[Container]")
     REQUIRE(m["THREE"] == 3);
 }
 
-TEST_CASE("Map Initializer list", "[Container]")
+TEST_CASE("Map Initializer list", "[Map]")
 {
     Map<std::string, int> m({{"ONE", 1}, {"TWO", 2}, {"THREE", 3}});
 
@@ -47,7 +47,7 @@ TEST_CASE("Map Initializer list", "[Container]")
     REQUIRE(m["THREE"] == 3);
 }
 
-TEST_CASE("Map a lot of keys", "[Container]")
+TEST_CASE("Map a lot of keys", "[Map]")
 {
     // Mainly to test delay, iterators and map usage
     Map<int, int> m;
@@ -82,7 +82,7 @@ TEST_CASE("Map a lot of keys", "[Container]")
     }
 }
 
-TEST_CASE("Map colisions", "[Container]")
+TEST_CASE("Map colisions", "[Map]")
 {
     Map<std::string, int> m;
 
@@ -101,7 +101,7 @@ TEST_CASE("Map colisions", "[Container]")
     }
 }
 
-TEST_CASE("Map erase", "[Container]")
+TEST_CASE("Map erase", "[Map]")
 {
     Map<int, int> m;
 
@@ -147,10 +147,13 @@ TEST_CASE("Map erase", "[Container]")
 
 //#define RED_TEST_BENCHMARK
 #ifdef RED_TEST_BENCHMARK
-TEST_CASE("Map benchmark", "[Container]")
+#include <unordered_map>
+
+TEST_CASE("Map benchmark", "[Map_Benchmark]")
 {
     DurationCounter counterRed;
     DurationCounter counterStd;
+    DurationCounter counterStdUnordered;
 
     {
         DurationRAII profiler(counterRed);
@@ -163,7 +166,7 @@ TEST_CASE("Map benchmark", "[Container]")
             m.insert({s, i});
         }
 
-        for( auto& p : m )
+        for (auto& p : m)
         {
             std::string s = fmt::format("{}", p.second);
             REQUIRE(s == p.first);
@@ -187,7 +190,7 @@ TEST_CASE("Map benchmark", "[Container]")
             m.insert({s, i});
         }
 
-        for( auto& p : m )
+        for (auto& p : m)
         {
             std::string s = fmt::format("{}", p.second);
             REQUIRE(s == p.first);
@@ -200,10 +203,35 @@ TEST_CASE("Map benchmark", "[Container]")
         }
     }
 
-    std::cout << "red::Map timing : " << counterRed.GetDuration()
-              << "\nstd::map timing : " << counterStd.GetDuration() << std::endl;
+    {
+        DurationRAII profiler(counterStdUnordered);
+
+        std::unordered_map<std::string, int> m;
+
+        for (int i = 0; i < 60000; i++)
+        {
+            std::string s = fmt::format("{}", i);
+            m.insert({s, i});
+        }
+
+        for (auto& p : m)
+        {
+            std::string s = fmt::format("{}", p.second);
+            REQUIRE(s == p.first);
+        }
+
+        for (int i = 0; i < 60000; i++)
+        {
+            std::string s = fmt::format("{}", i);
+            m.erase(s);
+        }
+    }
+
+    std::cout << "red::Map timing : " << counterRed.GetDuration() << "\nstd::map timing : " << counterStd.GetDuration()
+              << "\nstd::unordered_map timing : " << counterStdUnordered.GetDuration() << std::endl;
 
     REQUIRE(counterRed.GetDuration() <= counterStd.GetDuration());
+    REQUIRE(counterRed.GetDuration() <= counterStdUnordered.GetDuration());
 }
 #endif
 
