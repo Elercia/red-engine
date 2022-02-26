@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Event/Delegate.hpp"
 
 #include <functional>
 #include <string>
@@ -10,54 +11,75 @@
 
 namespace red
 {
-class CVarValue
+// Non-templated class to store genericly CVar into CVarManager
+class ICVar
+{
+public:
+    ICVar(const std::string& name, const std::string& category, uint32 typeId);
+    ~ICVar() = default;
+
+    [[nodiscard]] std::string GetName() const;
+    [[nodiscard]] std::string GetCategory() const;
+    [[nodiscard]] std::string GetLongName() const;
+
+    void ChangeValueFromString(const std::string& str);
+
+protected:
+    std::string m_name;
+    std::string m_category;
+
+    std::function<bool(const std::string&)> m_deserializationFunction;
+
+    uint32 m_typeId;  // the typeId of the typename T of the CVarValue
+};
+
+// Shared CVar value managed by CVarManager
+template <typename T>
+class CVarValue : public ICVar
 {
     template <class Type>
     friend class CVar;
     friend CVarManager;
 
 public:
-    CVarValue(std::string name, std::string category, std::string defaultValue);
+    using ValueChangeDelegate = Delegate<CVarValue<T>>;
+
+    CVarValue(const std::string& name, const std::string& category, const T& defaultValue);
     ~CVarValue() = default;
 
-    void ChangeValue(std::string newValue);
+    void ChangeValue(const T& newValue);
     void Reset();
 
-    [[nodiscard]] std::string GetName() const;
-    [[nodiscard]] std::string GetCategory() const;
-    [[nodiscard]] std::string GetLongName() const;
-
-    size_t OnValueChange(std::function<void(CVarValue* variableValue)> callback);
+    typename ValueChangeDelegate::FuncIndex OnValueChange(typename ValueChangeDelegate::FuncType callback);
 
 private:
-    std::string m_defaultValue;
-    std::string m_currentValue;
+    const T m_defaultValue;
+    T m_currentValue;
 
-    std::string m_name;
-    std::string m_category;
-
-    Array<std::function<void(CVarValue* variable)>> m_valueChangeCallback;
+    ValueChangeDelegate m_changeDelegate;
 };
 
-template <class Type>
+// Holder class to declare CVar
+// Creating a cvar will create a CVarValue of the given type inside CVarManager
+template <class T>
 class CVar
 {
-    friend CVarValue;
+    friend CVarValue<T>;
     friend class CVarManager;
 
 public:
-    CVar(std::string name, std::string category, Type defaultValue);
+    CVar(const std::string& name, const std::string& category, const T& defaultValue);
     ~CVar() = default;
 
-    [[nodiscard]] inline Type GetValue();
-    void ChangeValue(Type value);
+    [[nodiscard]] inline T& GetValue();
+    void ChangeValue(const T& value);
 
-    operator Type();
+    operator T();
 
-    CVarValue* operator->();
+    CVarValue<T>* operator->();
 
 private:
-    CVarValue* m_value;
+    CVarValue<T>* m_value;
 };
 
 }  // namespace red

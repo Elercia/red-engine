@@ -4,41 +4,69 @@
 
 namespace red
 {
-template <class Type>
-CVar<Type>::CVar(std::string name, std::string category, Type defaultValue)
+////////////////////////////////////////////////
+//////// CVar
+////////////////////////////////////////////////
+template <class T>
+CVar<T>::CVar(const std::string& name, const std::string& category, const T& defaultValue)
 {
-    CVarManager::NewConsoleVariableDeclaration(this, name, category, defaultValue);
+    m_value = CVarManager::NewConsoleVariableDeclaration(name, category, defaultValue);
 }
 
-template <class Type>
-Type CVar<Type>::GetValue()
+template <class T>
+T& CVar<T>::GetValue()
 {
-    Type e;
-    
-    if( !Deserialize(e, m_value->m_currentValue) )
-    {
-        RED_LOG_ERROR("Couldn't deserialize value {} into a {}", m_value->m_currentValue, TypeInfo<Type>().name);
-    }
-
-    return e;
+    return m_value->m_currentValue;
 }
 
-template <class Type>
-CVar<Type>::operator Type()
+template <class T>
+CVar<T>::operator T()
 {
     return GetValue();
 }
 
-template <class Type>
-CVarValue* CVar<Type>::operator->()
+template <class T>
+CVarValue<T>* CVar<T>::operator->()
 {
     return m_value;
 }
 
-template <class Type>
-void CVar<Type>::ChangeValue(Type value)
+template <class T>
+void CVar<T>::ChangeValue(const T& value)
 {
-    std::string stringValue = Serialize(value);
-    m_value->ChangeValue(stringValue);
+    m_value->m_currentValue = value;
+}
+
+////////////////////////////////////////////////
+//////// CVarValue
+////////////////////////////////////////////////
+template <class T>
+CVarValue<T>::CVarValue(const std::string& name, const std::string& category, const T& defaultValue) : ICVar(name, category, TypeInfo<T>().typeId)
+    , m_defaultValue(defaultValue) 
+    , m_currentValue(defaultValue)
+{
+    m_deserializationFunction = [this](const std::string& strValue){
+        return Deserialize(m_currentValue, strValue);
+    };
+}
+
+template <class T>
+void CVarValue<T>::ChangeValue(const T& newValue)
+{
+    m_currentValue = newValue;
+
+    m_changeDelegate(this);
+}
+
+template <class T>
+void CVarValue<T>::Reset()
+{
+    ChangeValue(m_defaultValue);
+}
+
+template <class T>
+typename CVarValue<T>::ValueChangeDelegate::FuncIndex CVarValue<T>::OnValueChange(typename CVarValue<T>::ValueChangeDelegate::FuncType callback)
+{
+    return m_changeDelegate.Add(callback);
 }
 }  // namespace red

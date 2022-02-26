@@ -33,7 +33,7 @@ CVarManager::~CVarManager()
 
 void CVarManager::LoadConfigFileInternal(const Path& path)
 {
-    if(!path.Exist())
+    if (!path.Exist())
         return;
 
     auto iniCatKeyValues = utils::IniReader::ReadFromFile(path);
@@ -44,25 +44,18 @@ void CVarManager::LoadConfigFileInternal(const Path& path)
         auto& key = std::get<1>(iniCatKeyValue);
         auto& value = std::get<2>(iniCatKeyValue);
 
-        auto foundVar = m_configVariable.find(CVarUtils::GetLongName(cat, key));
-        if (foundVar != m_configVariable.end())
+        auto* foundVar = FindCVar(CVarUtils::GetLongName(cat, key));
+        if (foundVar != nullptr)
         {
-            // CVar already exist in memory (overriding)
-            foundVar->second->ChangeValue(value);
+            // CVar already exist in memory
+            foundVar->ChangeValueFromString(value);
         }
         else
         {
-            // CVar already doesn't exist in memory (inserting)
-            auto* cVarValue = new CVarValue(key, cat, value);
-            m_configVariable.insert({CVarUtils::GetLongName(cat, key), cVarValue});
+            // CVar already doesn't exist
+            // It is not registered and will not be usable
         }
     }
-}
-
-CVarValue* CVarManager::NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
-                                                      const std::string& defaultValue)
-{
-    return CVarManager::GetInstance().NewConsoleVariableDeclarationInternal(name, category, defaultValue);
 }
 
 void CVarManager::LoadConfigFile(const Path& path)
@@ -70,19 +63,14 @@ void CVarManager::LoadConfigFile(const Path& path)
     CVarManager::GetInstance().LoadConfigFileInternal(path);
 }
 
-CVarValue* CVarManager::NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
-                                                              const std::string& defaultValue)
+ICVar* CVarManager::FindCVar(const std::string& fullName)
 {
-    auto configName = CVarUtils::GetLongName(category, name);
-    auto foundConfigValue = m_configVariable.find(configName);
-    if (foundConfigValue != m_configVariable.end())
-    {
-        return foundConfigValue->second;
-    }
+    auto it = m_configVariable.find(fullName);
 
-    auto* cVarValue = new CVarValue(name, category, defaultValue);
-    m_configVariable.insert({configName, cVarValue});
+    if (it == m_configVariable.end())
+        return nullptr;
 
-    return cVarValue;
+    return it->second;
 }
+
 }  // namespace red

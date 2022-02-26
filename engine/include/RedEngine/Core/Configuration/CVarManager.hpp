@@ -1,16 +1,19 @@
 #pragma once
 
 #include "RedEngine/Core/Configuration/CVarUtils.hpp"
+#include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Utils/TypesInfo.hpp"
 
-#include <filesystem>
 #include <string>
-#include <unordered_map>
 
 namespace red
 {
+class ICVar;
 template <typename Type>
 class CVar;
+template <typename Type>
 class CVarValue;
 
 class CVarManager
@@ -18,26 +21,26 @@ class CVarManager
 public:
     static CVarManager& GetInstance();
 
+    template <typename T>
+    static CVarValue<T>* NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
+                                              const T& defaultValue);
+
+    static void LoadConfigFile(const Path& path);
+
 public:
     CVarManager();
     ~CVarManager();
 
-    template <typename T>
-    static void NewConsoleVariableDeclaration(CVar<T>* cvar, const std::string& name, const std::string& category,
-                                              T defaultValue);
-
-    static void LoadConfigFile(const Path& path);
-
 private:
     void LoadConfigFileInternal(const Path& path);
-    static CVarValue* NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
-                                                    const std::string& defaultValue);
-    CVarValue* NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
-                                                     const std::string& defaultValue);
 
-    std::unordered_map<std::string, CVarValue*> m_configVariable;
-    std::string m_resourceFolder;
-    std::string m_userDataFolder;
+    template <typename T>
+    CVarValue<T>* NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
+                                                 const T& defaultValue);
+
+    ICVar* FindCVar(const std::string& fullName);
+
+    Map<std::string, ICVar*> m_configVariable;
 };
 
 }  // namespace red

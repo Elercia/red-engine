@@ -1,14 +1,29 @@
+#include <fmt/format.h>
 
-#include "RedEngine/Core/SerializationFunction.hpp"
 namespace red
 {
 template <typename T>
-void CVarManager::NewConsoleVariableDeclaration(CVar<T>* cvar, const std::string& name, const std::string& category,
-                                                T defaultValue)
+CVarValue<T>* CVarManager::NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
+                                                         const T& defaultValue)
 {
-    std::string stringValue = Serialize(defaultValue);
+    auto& instance = CVarManager::GetInstance();
 
-    auto* cVarValue = CVarManager::NewConsoleVariableDeclaration(name, category, stringValue);
-    cvar->m_value = cVarValue;
+    return instance.NewConsoleVariableDeclarationInternal(name, category, defaultValue);
+}
+
+template <typename T>
+CVarValue<T>* CVarManager::NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
+                                                                 const T& defaultValue)
+{
+    auto fullName = CVarUtils::GetLongName(category, name);
+
+    ICVar* cvarInterface = FindCVar(fullName);
+    if (cvarInterface == nullptr)
+    {
+        cvarInterface = new CVarValue<T>(name, category, defaultValue);
+        m_configVariable.insert({fullName, cvarInterface});
+    }
+
+    return (CVarValue<T>*) cvarInterface;
 }
 }  // namespace red

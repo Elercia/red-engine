@@ -4,17 +4,13 @@
 
 namespace red
 {
-class CVarValue;
+class ICVar;
 
 class CVarUtils
 {
 public:
-    static bool IsBool(const std::string& value, bool& outValue);
-    static bool IsInt(const std::string& value, int& outValue);
-    static bool IsDouble(const std::string& value, double& outValue);
-
     static std::string GetLongName(const std::string& category, const std::string& key);
-    static std::string GetLongName(const CVarValue* cVar);
+    static std::string GetLongName(const ICVar* cvar);
 
 private:
     CVarUtils() = delete;
