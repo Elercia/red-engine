@@ -28,61 +28,29 @@ ShaderProgramResourceLoader::~ShaderProgramResourceLoader()
 {
 }
 
-std::shared_ptr<ShaderProgram> ShaderProgramResourceLoader::LoadResource(const Path& path)
+
+bool ShaderProgramResourceLoader::InitResource(std::shared_ptr<ShaderProgram>& resource, const Path& path, nlohmann::json jsonContent)
 {
-    using json = nlohmann::json;
-
-    Path activePath = path;
-    activePath.Append(L".json");
-
-    auto shaderResource = GetOrCreateFromCache(activePath);
-
-    if (shaderResource->GetLoadState() == LoadState::STATE_LOADED)
-        return shaderResource;
-
-    shaderResource->SetLoadState(LoadState::STATE_ERROR);
-
-    if (!activePath.Exist() || activePath.IsDirectory())
-    {
-        RED_LOG_WARNING("Cannot load shader for path {}", activePath.GetAscciiPath());
-        return nullptr;
-    }
-
-    auto shaderStr = ReadFile(activePath);
-
-    if (shaderStr.empty())
-    {
-        RED_LOG_WARNING("Cannot load shader for path {}", path.GetAscciiPath());
-        return shaderResource;
-    }
-
-    auto shaderJson = json::parse(shaderStr);
-    if (shaderJson.empty())
-    {
-        RED_LOG_WARNING("Cannot load shader for path {}", path.GetAscciiPath());
-        return shaderResource;
-    }
-
-    if (shaderJson[SHADER_TYPE] == "vertex_pixel")
-        shaderResource->m_type = ShaderProgramType::Vertex_Pixel;
-    else if (shaderJson[SHADER_TYPE] == "compute")
-        shaderResource->m_type = ShaderProgramType::Compute;
+    if (jsonContent[SHADER_TYPE] == "vertex_pixel")
+        resource->m_type = ShaderProgramType::Vertex_Pixel;
+    else if (jsonContent[SHADER_TYPE] == "compute")
+        resource->m_type = ShaderProgramType::Compute;
     else
     {
         RED_LOG_WARNING("Cannot load shader for path {}", path.GetAscciiPath());
-        return shaderResource;
+        return false;
     }
 
-    if (shaderResource->m_type == ShaderProgramType::Vertex_Pixel)
+    if (resource->m_type == ShaderProgramType::Vertex_Pixel)
     {
         int vertexHandle =
-            CompileShader(ShaderType::Vertex, Path::Resource(std::string(shaderJson[VERTEX_SHADER_PATH])));
-        int pixelHandle = CompileShader(ShaderType::Pixel, Path::Resource(std::string(shaderJson[PIXEL_SHADER_PATH])));
+            CompileShader(ShaderType::Vertex, Path::Resource(std::string(jsonContent[VERTEX_SHADER_PATH])));
+        int pixelHandle = CompileShader(ShaderType::Pixel, Path::Resource(std::string(jsonContent[PIXEL_SHADER_PATH])));
 
         if (vertexHandle == -1 || pixelHandle == -1)
         {
             RED_LOG_ERROR("Failed to load shader program because one of the shader couldn't compile");
-            return shaderResource;
+            return false;
         }
 
         int programHandle = glCreateProgram();
@@ -117,26 +85,24 @@ std::shared_ptr<ShaderProgram> ShaderProgramResourceLoader::LoadResource(const P
         glDeleteShader(vertexHandle);
         glDeleteShader(pixelHandle);
 
-        shaderResource->m_handle = programHandle;
+        resource->m_handle = programHandle;
         if (!bOk)
         {
-            shaderResource->m_handle = -1;
+            resource->m_handle = -1;
             glDeleteProgram(programHandle);
-            return shaderResource;
+            return false;
         }
     }
     else
     {
         RED_LOG_ERROR("Not implemented");
-        return shaderResource;
+        return false;
     }
 
-    shaderResource->SetLoadState(LoadState::STATE_LOADED);
-
-    return shaderResource;
+    return true;
 }
 
-void ShaderProgramResourceLoader::FreeResource(std::shared_ptr<ShaderProgram> resource)
+void ShaderProgramResourceLoader::FinalizeResource(std::shared_ptr<ShaderProgram> resource)
 {
     resource->SetLoadState(LoadState::STATE_RELEASED);
 }

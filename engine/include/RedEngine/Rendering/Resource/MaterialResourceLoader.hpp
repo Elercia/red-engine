@@ -14,8 +14,8 @@ public:
     MaterialResourceLoader(World* world);
     ~MaterialResourceLoader();
 
-    std::shared_ptr<Material> LoadResource(const Path& path) override;
+    bool InitResource(std::shared_ptr<Material> &resource, const Path &path, nlohmann::json jsonContent) override;
 
-    void FreeResource(std::shared_ptr<Material> resource) override;
+    void FinalizeResource(std::shared_ptr<Material> resource) override;
 };
 }  // namespace red

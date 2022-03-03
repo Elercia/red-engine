@@ -26,57 +26,27 @@ MaterialResourceLoader::~MaterialResourceLoader()
 {
 }
 
-std::shared_ptr<Material> MaterialResourceLoader::LoadResource(const Path& path)
+bool MaterialResourceLoader::InitResource(std::shared_ptr<Material>& resource, const Path& /*path*/,
+                                          nlohmann::json jsonContent)
 {
-    namespace fs = std::filesystem;
-    using json = nlohmann::json;
-
-    Path activePath = path;
-    activePath.Append(L".json");
-
-    auto resourcePtr = GetOrCreateFromCache(activePath);
-
-    if (resourcePtr != nullptr && resourcePtr->GetLoadState() == LoadState::STATE_LOADED)
-    {
-        return resourcePtr;
-    }
-
-    resourcePtr->SetLoadState(LoadState::STATE_ERROR);  // At the end, the texture should either be
-                                                        // loaded or not (if an error occurred)
-
-    if (!activePath.Exist() || activePath.IsDirectory())
-    {
-        RED_LOG_WARNING("Cannot load material for path {}", activePath.GetAscciiPath());
-        return resourcePtr;
-    }
-
     auto* shaderResourceLoader =
         m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<ShaderProgramResourceLoader>();
 
-    auto content = ReadFile(activePath);
-    auto parsedJson = json::parse(content, nullptr, false, true);
+    std::wstring shaderPath = jsonContent["shader_program"];
+    resource->m_shaderProgram = shaderResourceLoader->LoadResource(Path::Resource(shaderPath));
 
-    if (parsedJson.is_discarded() || !parsedJson.is_array())
-    {
-        RED_LOG_WARNING("Path {} is not a valid JSON", activePath.GetAscciiPath());
-        return nullptr;
-    }
+    resource->m_type = jsonContent["rendering_type"];
 
-    std::wstring shaderPath = parsedJson["shader_program"];
-    resourcePtr->m_shaderProgram = shaderResourceLoader->LoadResource(Path::Resource(shaderPath));
+    resource->SetLoadState(LoadState::STATE_LOADED);
 
-    resourcePtr->m_type = parsedJson["rendering_type"];
-
-    resourcePtr->SetLoadState(LoadState::STATE_LOADED);
-
-    RED_LOG_INFO("Creating material from path {}", activePath.GetAscciiPath());
-
-    return resourcePtr;
+    return true;
 }
 
-void MaterialResourceLoader::FreeResource(std::shared_ptr<Material> resource)
+void MaterialResourceLoader::FinalizeResource(std::shared_ptr<Material> resource)
 {
     resource->SetLoadState(LoadState::STATE_RELEASED);
+
+    resource->m_shaderProgram = NULL;
 }
 
 }  // namespace red

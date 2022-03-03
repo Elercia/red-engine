@@ -34,7 +34,7 @@ std::shared_ptr<Type> ResourceLoader<Type>::GetOrCreateFromCache(const Path& pat
 }
 
 template <typename Type>
-void ResourceLoader<Type>::FreeUnusedResources()
+void ResourceLoader<Type>::FinalizeUnusedResources()
 {
     for (auto resourceIt = m_loadedResources.begin(); resourceIt != m_loadedResources.end();)
     {
@@ -42,7 +42,7 @@ void ResourceLoader<Type>::FreeUnusedResources()
 
         if (resource.use_count() == 1)
         {
-            FreeResource(resource);
+            FinalizeResource(resource);
 
             resourceIt = m_loadedResources.erase(resourceIt);
         }
@@ -52,20 +52,54 @@ void ResourceLoader<Type>::FreeUnusedResources()
 }
 
 template <typename Type>
-void ResourceLoader<Type>::FreeAllResources()
+void ResourceLoader<Type>::FinalizeAllResources()
 {
     for (auto resourceIt = m_loadedResources.begin(); resourceIt != m_loadedResources.end(); resourceIt++)
     {
         auto& resource = resourceIt->second;
 
-        FreeResource(resource);
+        FinalizeResource(resource);
     }
 }
 
 template <typename Type>
-std::shared_ptr<red::IResource> red::ResourceLoader<Type>::LoadAbstractResource(const Path& path)
+std::shared_ptr<red::IResource> ResourceLoader<Type>::LoadAbstractResource(const Path& path)
 {
     return LoadResource(path);
+}
+
+template <typename Type>
+std::shared_ptr<Type> ResourceLoader<Type>::LoadResource(const Path& path)
+{
+    using json = nlohmann::json;
+
+    Path activePath = path;
+    activePath.Append(L".json");
+
+    auto cachedResource = GetOrCreateFromCache(activePath);
+
+    if (cachedResource->GetLoadState() != LoadState::STATE_NOT_LOADED)
+        return cachedResource;
+
+    cachedResource->SetLoadState(LoadState::STATE_ERROR);
+
+    if (!activePath.Exist() || activePath.IsDirectory())
+    {
+        RED_LOG_WARNING("Cannot load resource of type {} from path {}", TypeInfo<Type>().name,
+                        activePath.GetAscciiPath());
+        return cachedResource;
+    }
+
+    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false, true);
+
+    if (InitResource(cachedResource, path, parsedJson))
+    {
+        cachedResource->SetLoadState( LoadState::STATE_LOADED );
+    }
+
+    RED_LOG_TRACE("Creating {} from path {}", TypeInfo<Type>().name, activePath.GetAscciiPath());
+
+    return cachedResource;
 }
 
 }  // namespace red

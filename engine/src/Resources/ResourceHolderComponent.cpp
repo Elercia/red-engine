@@ -38,7 +38,7 @@ void ResourceHolderComponent::RemoveAllLoaders()
 {
     for (auto& loader : m_resourceLoaders)
     {
-        loader.second->FreeAllResources();
+        loader.second->FinalizeAllResources();
     }
     m_resourceLoaders.clear();
 }

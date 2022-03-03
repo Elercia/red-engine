@@ -13,9 +13,8 @@ public:
     SoundResourceLoader(World* world);
     ~SoundResourceLoader();
 
-    std::shared_ptr<SoundResource> LoadResource(const Path& path);
-
-    void FreeResource(std::shared_ptr<SoundResource> resource) override;
+    void FinalizeResource(std::shared_ptr<SoundResource> resource);
+    bool InitResource(std::shared_ptr<SoundResource>& resource, const Path& path, nlohmann::json jsonContent);
 };
 
 }  // namespace red

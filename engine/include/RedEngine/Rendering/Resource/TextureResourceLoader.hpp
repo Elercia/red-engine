@@ -13,8 +13,7 @@ public:
     TextureResourceLoader(World* world);
     ~TextureResourceLoader();
 
-    std::shared_ptr<Texture2D> LoadResource(const Path& path);
-
-    void FreeResource(std::shared_ptr<Texture2D> resource) override;
+    void FinalizeResource(std::shared_ptr<Texture2D> resource);
+    bool InitResource(std::shared_ptr<Texture2D>& resource, const Path& path, nlohmann::json jsonContent);
 };
 }  // namespace red

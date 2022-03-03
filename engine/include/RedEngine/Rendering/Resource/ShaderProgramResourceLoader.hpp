@@ -11,9 +11,8 @@ public:
     ShaderProgramResourceLoader(World* world);
     ~ShaderProgramResourceLoader();
 
-    std::shared_ptr<ShaderProgram> LoadResource(const Path& path);
-
-    void FreeResource(std::shared_ptr<ShaderProgram> resource) override;
+    virtual void FinalizeResource(std::shared_ptr<ShaderProgram> resource) override;
+    virtual bool InitResource(std::shared_ptr<ShaderProgram>& resource, const Path& path, nlohmann::json jsonContent) override;
 
 private:
     enum class ShaderType

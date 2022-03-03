@@ -24,42 +24,14 @@ SoundResourceLoader::~SoundResourceLoader()
 {
 }
 
-std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const Path& path)
+bool SoundResourceLoader::InitResource(std::shared_ptr<SoundResource>& resource, const Path& /*path*/, nlohmann::json jsonContent)
 {
-    namespace fs = std::filesystem;
-    using json = nlohmann::json;
-
-    Path activePath = path;
-    activePath.Append(L".json");
-
-    auto soundResource = GetOrCreateFromCache(activePath);
-
-    if (soundResource->GetLoadState() == LoadState::STATE_LOADED)
-        return soundResource;
-
-    if (!activePath.Exist() || activePath.IsDirectory())
-    {
-        RED_LOG_WARNING("Cannot load sound for path {}", activePath.GetAscciiPath());
-        soundResource->SetLoadState(LoadState::STATE_ERROR);
-        return soundResource;
-    }
-
-    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false);
-
-    if (parsedJson.is_discarded() || !parsedJson.is_object())
-    {
-        RED_LOG_WARNING("Path {} is not a valid JSON", activePath.GetAscciiPath());
-        soundResource->SetLoadState(LoadState::STATE_ERROR);
-        return soundResource;
-    }
-
     auto* fmodSystem = m_world->GetSystem<AudioSystem>()->GetFmodSystem();
 
-    std::string soundPath = parsedJson["sound_path"];
+    std::string soundPath = jsonContent["sound_path"];
     if (soundPath.empty())
     {
-        soundResource->SetLoadState(LoadState::STATE_ERROR);
-        return soundResource;
+        return false;
     }
 
     FMOD::Sound* fmodSound;
@@ -67,13 +39,12 @@ std::shared_ptr<SoundResource> SoundResourceLoader::LoadResource(const Path& pat
     FmodUtils::FmodCheck(fmodSystem->createSound(soundPath.c_str(), FMOD_2D, nullptr, &fmodSound),
                          "Error creating sound");
 
-    soundResource->SetSound(fmodSound);
-    soundResource->SetLoadState(LoadState::STATE_LOADED);
+    resource->SetSound(fmodSound);
 
-    return soundResource;
+    return true;
 }
 
-void SoundResourceLoader::FreeResource(std::shared_ptr<SoundResource> resource)
+void SoundResourceLoader::FinalizeResource(std::shared_ptr<SoundResource> resource)
 {
     resource->SetLoadState(LoadState::STATE_RELEASED);
     FmodUtils::FmodCheck(resource->GetSound()->release(), "Error releasing sound");

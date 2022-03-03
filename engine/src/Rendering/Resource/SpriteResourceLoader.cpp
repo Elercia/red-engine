@@ -25,37 +25,12 @@ SpriteResourceLoader::~SpriteResourceLoader()
 {
 }
 
-std::shared_ptr<SpriteResource> SpriteResourceLoader::LoadResource(const Path& path)
+bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resource, const Path& path, nlohmann::json jsonContent)
 {
-    namespace fs = std::filesystem;
-    using json = nlohmann::json;
-
-    Path activePath = path;
-    activePath.Append(L".json");
-
-    auto spriteResource = GetOrCreateFromCache(activePath);
-
-    if (spriteResource->GetLoadState() == LoadState::STATE_LOADED)
-        return spriteResource;
-
-    if (!activePath.Exist() || activePath.IsDirectory())
-    {
-        RED_LOG_WARNING("Cannot load sprite for path {}", activePath.GetAscciiPath());
-        return nullptr;
-    }
-
-    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false);
-
-    if (parsedJson.is_discarded() || !parsedJson.is_array())
-    {
-        RED_LOG_WARNING("Path {} is not a valid JSON", activePath.GetAscciiPath());
-        return nullptr;
-    }
-
     auto* textureResourceLoader =
         m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<TextureResourceLoader>();
 
-    for (auto animationJson : parsedJson)
+    for (auto animationJson : jsonContent)
     {
         AnimationDesc animationDesc;
 
@@ -65,7 +40,7 @@ std::shared_ptr<SpriteResource> SpriteResourceLoader::LoadResource(const Path& p
         auto spriteSheetJson = animationJson.find("spritesheet");
         if (spriteSheetJson == animationJson.end())
         {
-            RED_LOG_WARNING("Path {} has no spritesheet attribute", activePath.GetAscciiPath());
+            RED_LOG_WARNING("Path {} has no spritesheet attribute", path.GetAscciiPath());
         }
 
         std::string spriteSheetPathStr = spriteSheetJson.value();
@@ -101,15 +76,13 @@ std::shared_ptr<SpriteResource> SpriteResourceLoader::LoadResource(const Path& p
             animationDesc.frames.push_back(frameDesc);
         }
 
-        spriteResource->m_animations.push_back(animationDesc);
+        resource->m_animations.push_back(animationDesc);
     }
 
-    spriteResource->SetLoadState(LoadState::STATE_LOADED);
-
-    return spriteResource;
+    return true;
 }
 
-void SpriteResourceLoader::FreeResource(std::shared_ptr<SpriteResource> resource)
+void SpriteResourceLoader::FinalizeResource(std::shared_ptr<SpriteResource> resource)
 {
     resource->SetLoadState(LoadState::STATE_RELEASED);
 }

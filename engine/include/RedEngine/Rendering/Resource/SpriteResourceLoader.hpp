@@ -13,9 +13,8 @@ public:
     SpriteResourceLoader(World* world);
     ~SpriteResourceLoader();
 
-    std::shared_ptr<SpriteResource> LoadResource(const Path& path);
-
-    void FreeResource(std::shared_ptr<SpriteResource> resource) override;
+    void FinalizeResource(std::shared_ptr<SpriteResource> resource);
+    bool InitResource(std::shared_ptr<SpriteResource>& resource, const Path& path, nlohmann::json jsonContent);
 };
 
 }  // namespace red

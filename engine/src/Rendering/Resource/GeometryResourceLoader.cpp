@@ -23,42 +23,19 @@ GeometryResourceLoader::~GeometryResourceLoader()
 {
 }
 
-std::shared_ptr<GeometryResourceWrapper> GeometryResourceLoader::LoadResource(const Path& path)
+bool GeometryResourceLoader::InitResource(std::shared_ptr<GeometryResourceWrapper>& resource, const Path& /*path*/,
+                              nlohmann::json jsonContent) 
 {
-    using json = nlohmann::json;
-
-    Path activePath = path;
-    activePath.Append(L".json");
-
-    auto geometryResource = GetOrCreateFromCache(activePath);
-
-    if (geometryResource->GetLoadState() == LoadState::STATE_LOADED)
-        return geometryResource;
-
-    if (!activePath.Exist() || activePath.IsDirectory())
-    {
-        RED_LOG_WARNING("Cannot load geometry for path {}", activePath.GetAscciiPath());
-        return nullptr;
-    }
-
-    auto parsedJson = json::parse(ReadFile(activePath), nullptr, false, true);
-
-    if (parsedJson.is_discarded() || !parsedJson.is_array())
-    {
-        RED_LOG_WARNING("Path {} is not a valid JSON", activePath.GetAscciiPath());
-        return nullptr;
-    }
-
     // FIXME : Use Array class 
-    auto jsonVertex = parsedJson["vertices"].get<std::vector<float>>();
-    auto jsonIndex = parsedJson["indexes"].get<std::vector<float>>();
-    auto jsonUvs = parsedJson["uv"].get<std::vector<float>>();
+    auto jsonVertex = jsonContent["vertices"].get<std::vector<float>>();
+    auto jsonIndex = jsonContent["indexes"].get<std::vector<float>>();
+    auto jsonUvs = jsonContent["uv"].get<std::vector<float>>();
 
-    auto& geom = geometryResource->m_geom;
+    auto& geom = resource->m_geom;
 
     geom.m_indexCount = (int)jsonIndex.size();
     geom.m_vertexCount = (int)jsonVertex.size();
-    geom.m_primitiveType = parsedJson["primitive_type"];
+    geom.m_primitiveType = jsonContent["primitive_type"];
 
     GLuint vertex_vbo = 0;
     glGenBuffers(1, &vertex_vbo);
@@ -90,12 +67,10 @@ std::shared_ptr<GeometryResourceWrapper> GeometryResourceLoader::LoadResource(co
     glVertexAttribPointer(3, 2, GL_INT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(3);
 
-    geometryResource->SetLoadState(LoadState::STATE_LOADED);
-
-    return geometryResource;
+    return true;
 }
 
-void GeometryResourceLoader::FreeResource(std::shared_ptr<GeometryResourceWrapper> /*resource*/)
+void GeometryResourceLoader::FinalizeResource(std::shared_ptr<GeometryResourceWrapper> resource)
 {
 }
 }  // namespace red
