@@ -20,7 +20,8 @@ Transform::Transform(Entity* entity, float x, float y) : Transform(entity, {x, y
 {
 }
 
-Transform::Transform(Entity* entity, Vector2 position) : Component(entity), m_localPosition(position)
+Transform::Transform(Entity* entity, Vector2 position)
+    : Component(entity), m_localPosition(position), m_dirtyWorldMatrix(true)
 {
 }
 
@@ -96,27 +97,27 @@ void Transform::UpdateWorldMatrixIfNeeded()
     Transform* parentTransform = parent != nullptr ? parent->GetComponent<Transform>() : nullptr;
     bool parentDirty = parentTransform != nullptr ? parentTransform->m_dirtyWorldMatrix : false;
 
-    if (m_dirtyWorldMatrix || parentDirty)
+    if (m_dirtyWorldMatrix)
     {
         m_dirtyWorldMatrix = false;
 
-        m_worldMatrix = Matrix44::Identity();
-        m_worldMatrix = Math::Translate(m_worldMatrix, Vector3(m_localPosition, m_localDepth));
+        m_localWorldMatrix = Matrix44::Identity();
+        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, Vector3(m_localPosition, m_localDepth));
 
-        m_worldMatrix = Math::Translate(m_worldMatrix, Vector3(m_localRotationAnchor, 0.0f));
-        m_worldMatrix = Math::Rotate(m_worldMatrix, Vector3(0.0f, 0.0f, Math::ToRadians(m_localRotation)));
-        m_worldMatrix = Math::Translate(m_worldMatrix, -Vector3(m_localRotationAnchor, 0.0f));
-        m_worldMatrix = Math::Scale(m_worldMatrix, Vector3(m_localScale, 1.0f));
+        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, Vector3(m_localRotationAnchor, 0.0f));
+        m_localWorldMatrix = Math::Rotate(m_localWorldMatrix, Vector3(0.0f, 0.0f, Math::ToRadians(m_localRotation)));
+        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, -Vector3(m_localRotationAnchor, 0.0f));
+        m_localWorldMatrix = Math::Scale(m_localWorldMatrix, Vector3(m_localScale, 1.0f));
+    }
 
-        if (parentTransform != nullptr)
-        {
-            parentTransform->UpdateWorldMatrixIfNeeded();
-            m_worldMatrix = parentTransform->GetLocalWorldMatrix() * m_worldMatrix;
-        }
-        else
-        {
-            m_worldMatrix = m_localWorldMatrix;
-        }
+    if ((m_dirtyWorldMatrix || parentDirty) && parentTransform != nullptr)
+    {
+        parentTransform->UpdateWorldMatrixIfNeeded();
+        m_worldMatrix = parentTransform->GetWorldMatrix() * m_localWorldMatrix;
+    }
+    else
+    {
+        m_worldMatrix = m_localWorldMatrix;
     }
 }
 

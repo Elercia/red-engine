@@ -163,6 +163,8 @@ void Renderer::RenderOpaque(CameraComponent* camera)
     uint64 count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(RenderEntityType::Opaque, camera, count);
 
+    camera->UpdateMatricesIfNeeded();
+
     const Matrix44& projView = camera->GetViewProjection();
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Opaque");

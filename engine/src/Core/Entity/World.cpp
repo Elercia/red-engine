@@ -144,6 +144,13 @@ bool World::Update()
     if (quit)
         return false;
 
+    for( auto* entity : m_entities)
+    {
+        auto* tranform = entity->GetComponent<Transform>();
+
+        tranform->UpdateWorldMatrixIfNeeded();   
+    }
+
     for (auto& system : m_systems)
     {
         system->BeginRender();
