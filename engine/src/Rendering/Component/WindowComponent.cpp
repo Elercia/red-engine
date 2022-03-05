@@ -39,7 +39,7 @@ void WindowComponent::CreateNewWindow()
     }
     else
     {
-        windowFlags |= SDL_WINDOW_BORDERLESS | SDL_WINDOW_RESIZABLE;
+        windowFlags |= SDL_WINDOW_RESIZABLE;
     }
 
     m_window = SDL_CreateWindow(s_title.GetValue().c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
