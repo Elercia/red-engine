@@ -1,7 +1,7 @@
 [
   {
     "name": "default",
-    "spritesheet": "paddle.png",
+    "spritesheet": "PADDLE_SPRITESHEET",
     "opacity": {
       "hasOpacity": true,
       "color": {

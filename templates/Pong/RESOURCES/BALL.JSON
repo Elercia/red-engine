@@ -1,7 +1,7 @@
 [
   {
     "name": "default",
-    "spritesheet": "ball.png",
+    "spritesheet": "BALL_SPRITESHEET",
     "loop": false,
     "opacity": {
       "hasOpacity": true,

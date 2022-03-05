@@ -1,6 +1,6 @@
 {
 	"shader_program" : "BASE_SHADER",
-	"rendering_type" : 0, // opaque
+	"rendering_type" : 0,
 	"pixel_uniforms" : [
 		{
 			"type" : "texture",
