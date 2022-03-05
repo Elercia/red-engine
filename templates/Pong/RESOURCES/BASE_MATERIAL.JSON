@@ -1,5 +1,5 @@
 {
-	"shader_program" : "BASE_SHADER",
+	"shader_program" : "BASE_SHADER_PROGRAM",
 	"rendering_type" : 0,
 	"pixel_uniforms" : [
 		{

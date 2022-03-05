@@ -12,6 +12,7 @@
 #include "RedEngine/Rendering/Resource/Material.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgram.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
+#include "RedEngine/Utils/Types.hpp"
 
 // clang-format off
 #include <GL/gl3w.h>

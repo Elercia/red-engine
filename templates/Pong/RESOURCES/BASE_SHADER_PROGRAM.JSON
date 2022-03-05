@@ -1,6 +1,7 @@
 {
-	"vertex_path" : "BaseVertex.glsl",
-	"pixel_path" : "BaseFragment.glsl",
+	"type" : "vertex_pixel",
+	"vertex_path" : "BASEVERTEX.GLSL",
+	"pixel_path" : "BASEPIXEL.GLSL",
 
 	"vertex_input_layout" : [
 		"vertex",

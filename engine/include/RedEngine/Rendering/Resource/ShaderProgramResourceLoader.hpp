@@ -17,8 +17,8 @@ public:
 private:
     enum class ShaderType
     {
-        Pixel,
         Vertex,
+        Pixel,
         Compute
     };
 

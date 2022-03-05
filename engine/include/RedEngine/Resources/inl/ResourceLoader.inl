@@ -92,9 +92,9 @@ std::shared_ptr<Type> ResourceLoader<Type>::LoadResource(const Path& path)
 
     auto parsedJson = json::parse(ReadFile(activePath), nullptr, false, true);
 
-    if (InitResource(cachedResource, path, parsedJson))
+    if (InitResource(cachedResource, activePath, parsedJson))
     {
-        cachedResource->SetLoadState( LoadState::STATE_LOADED );
+        cachedResource->SetLoadState(LoadState::STATE_LOADED);
     }
 
     RED_LOG_TRACE("Creating {} from path {}", TypeInfo<Type>().name, activePath.GetAscciiPath());

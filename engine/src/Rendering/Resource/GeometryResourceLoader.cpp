@@ -29,7 +29,7 @@ bool GeometryResourceLoader::InitResource(std::shared_ptr<GeometryResourceWrappe
     // FIXME : Use Array class 
     auto jsonVertex = jsonContent["vertices"].get<std::vector<float>>();
     auto jsonIndex = jsonContent["indexes"].get<std::vector<float>>();
-    auto jsonUvs = jsonContent["uv"].get<std::vector<float>>();
+    auto jsonUvs = jsonContent["uvs"].get<std::vector<float>>();
 
     auto& geom = resource->m_geom;
 

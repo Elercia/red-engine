@@ -32,12 +32,11 @@ bool MaterialResourceLoader::InitResource(std::shared_ptr<Material>& resource, c
     auto* shaderResourceLoader =
         m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<ShaderProgramResourceLoader>();
 
-    std::wstring shaderPath = jsonContent["shader_program"];
-    resource->m_shaderProgram = shaderResourceLoader->LoadResource(Path::Resource(shaderPath));
+    std::string shaderPathStr = jsonContent["shader_program"];
+    Path shaderPath = Path::Resource(shaderPathStr);
+    resource->m_shaderProgram = shaderResourceLoader->LoadResource(shaderPath);
 
     resource->m_type = jsonContent["rendering_type"];
-
-    resource->SetLoadState(LoadState::STATE_LOADED);
 
     return true;
 }

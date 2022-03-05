@@ -37,7 +37,7 @@ bool ShaderProgramResourceLoader::InitResource(std::shared_ptr<ShaderProgram>& r
         resource->m_type = ShaderProgramType::Compute;
     else
     {
-        RED_LOG_WARNING("Cannot load shader for path {}", path.GetAscciiPath());
+        RED_LOG_WARNING("Cannot load shader for path {} because shader type is not recognized", path.GetAscciiPath());
         return false;
     }
 
@@ -74,7 +74,7 @@ bool ShaderProgramResourceLoader::InitResource(std::shared_ptr<ShaderProgram>& r
                 infoLog.resize(maxLength);
                 glGetProgramInfoLog(programHandle, maxLength, &maxLength, &infoLog[0]);
 
-                RED_LOG_WARNING("Cannot compile shader for path {} because of the following error : {}",
+                RED_LOG_WARNING("Cannot link shader program for path {} because of the following error : {}",
                                 path.GetAscciiPath(), infoLog.data());
             }
         }
@@ -111,10 +111,10 @@ int ShaderProgramResourceLoader::CompileShader(ShaderType type, const Path& path
 {
     const std::string shaderCode = ReadFile(path);
 
-    const GLuint openglTypes[] = {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
+    static const GLuint openglTypes[] = {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
 
-    GLuint ShaderTypeGL = openglTypes[(int) type];
-    GLuint handle = glCreateShader(ShaderTypeGL);
+    GLuint GLShaderType = openglTypes[(int) type];
+    GLuint handle = glCreateShader(GLShaderType);
 
     {
         const char* shaderData = shaderCode.data();
