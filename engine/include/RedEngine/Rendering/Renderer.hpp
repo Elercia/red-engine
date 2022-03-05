@@ -69,7 +69,7 @@ public:
 
 private:
     Array<RenderingData>& GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
-                                                       int& renderDataCount);
+                                                       uint64& renderDataCount);
 
     void UseMaterial(const MaterialInstance& mat);
     void UseGeometry(const Geometry* geom);

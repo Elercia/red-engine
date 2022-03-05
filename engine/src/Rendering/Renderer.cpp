@@ -159,7 +159,7 @@ void Renderer::RenderOpaque(CameraComponent* camera)
 {
     PROFILER_CATEGORY("RenderOpaque", Optick::Category::Rendering);
 
-    int count = 0;
+    uint64 count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(RenderEntityType::Opaque, camera, count);
 
     const Matrix44& projView = camera->GetViewProjection();
@@ -246,11 +246,12 @@ void Renderer::UseGeometry(const Geometry* geom)
 }
 
 Array<RenderingData>& Renderer::GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
-                                                             int& renderDataCount)
+                                                             uint64& renderDataCount)
 {
     Array<RenderingData>& ret = m_renderingData[type];
+    renderDataCount = ret.size();
 
-    for (int i = (int) ret.size() - 1; i >= 0; i--)
+    for (uint64 i = 0u; i < ret.size(); i++)
     {
         if (!camera->IsVisibleFrom(ret[i].aabb))
             renderDataCount--;
