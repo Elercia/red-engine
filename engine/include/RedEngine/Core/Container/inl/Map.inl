@@ -183,7 +183,7 @@ std::pair<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator, bool> Map<Ke
 {
     EnsureCapacity();
 
-    auto index = GetIndexOf(value.first, m_values);
+    auto index = GetIndexOf(value.first, m_values, true);
     bool added = true;
     auto& bucket = m_values[index];
     if (bucket.used)
@@ -207,7 +207,7 @@ std::pair<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator, bool> Map<Ke
 {
     EnsureCapacity();
 
-    auto index = GetIndexOf(value.first, m_values);
+    auto index = GetIndexOf(value.first, m_values, true);
     bool added = true;
     auto& bucket = m_values[index];
     if (bucket.used)
@@ -234,7 +234,7 @@ bool Map<KeyT, ValueT, HashOpT, EqualsOpT>::contains(const KeyT& key) const
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::find(const KeyT& key)
 {
-    auto index = GetIndexOf(key, m_values);
+    auto index = GetIndexOf(key, m_values, false);
     if (index == (size_type) -1)
         return end();
 
@@ -252,7 +252,7 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::find(
     const KeyT& key) const
 {
-    auto index = GetIndexOf(key, m_values);
+    auto index = GetIndexOf(key, m_values, false);
     if (index == (size_type) -1)
         return end();
 
@@ -294,7 +294,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashO
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::erase(const KeyT& key)
 {
-    auto index = GetIndexOf(key, m_values);
+    auto index = GetIndexOf(key, m_values, false);
     if (index == (size_type) -1)
         return end();
 
@@ -428,7 +428,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::value_type* Map<KeyT, ValueT, Ha
 
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, HashOpT, EqualsOpT>::GetIndexOf(
-    const KeyT& key, const Array<Bucket>& inside) const
+    const KeyT& key, const Array<Bucket>& inside, bool forInsertion) const
 {
     if (m_values.empty())
         return (size_type) -1;
@@ -439,7 +439,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
 
     int j = 1;
     auto* bucket = &inside[index];
-    while ((bucket->used || bucket->erased) && !EqualsOpT::Equals(bucket->value.first, key))
+    while ((bucket->used || (!forInsertion && bucket->erased)) && !EqualsOpT::Equals(bucket->value.first, key))
     {
         index = (index + (j * j)) % inside.size();  // Quadratic jumps
         j++;
@@ -487,7 +487,7 @@ void Map<KeyT, ValueT, HashOpT, EqualsOpT>::Rehash(
     {
         if (currentBucket.used)
         {
-            auto newIndex = GetIndexOf(currentBucket.value.first, newBuckets);
+            auto newIndex = GetIndexOf(currentBucket.value.first, newBuckets, true);
 
             Bucket& newBucket = newBuckets[newIndex];
             newBucket.used = true;

@@ -172,7 +172,7 @@ private:
     size_type GetPrevious(size_type index) const;
     value_type* GetPair(size_type index) const;
 
-    size_type GetIndexOf(const KeyT& key, const Array<Bucket>& inside) const;
+    size_type GetIndexOf(const KeyT& key, const Array<Bucket>& inside, bool forInsertion) const;
 
 private:
     Array<Bucket> m_values;
