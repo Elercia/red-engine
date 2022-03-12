@@ -74,19 +74,6 @@ TEST_CASE("Matrix-scalar mul", "[MATH]")
     REQUIRE(m2(3, 3) == 2.0f);
 }
 
-TEST_CASE("Matrix-vector mul", "[MATH]")
-{
-    Matrix44 matrix1 = Matrix44::Identity();
-    Vector4 vec = {1.f, 2.f, 3.f, 4.f};
-
-    Matrix44 m2 = matrix1 * vec;
-
-    REQUIRE(m2(0, 0) == 1.0f);
-    REQUIRE(m2(1, 1) == 2.0f);
-    REQUIRE(m2(2, 2) == 3.0f);
-    REQUIRE(m2(3, 3) == 4.0f);
-}
-
 TEST_CASE("Matrix-matrix mul", "[MATH]")
 {
     Matrix44 matrix1 = Matrix44::Identity();
