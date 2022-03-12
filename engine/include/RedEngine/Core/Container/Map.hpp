@@ -172,7 +172,8 @@ private:
     size_type GetPrevious(size_type index) const;
     value_type* GetPair(size_type index) const;
 
-    size_type GetIndexOf(const KeyT& key, const Array<Bucket>& inside, bool forInsertion) const;
+    template <bool forInsertion>
+    size_type GetIndexOf(const KeyT& key, const Array<Bucket>& inside) const;
 
 private:
     Array<Bucket> m_values;

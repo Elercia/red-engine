@@ -183,7 +183,7 @@ std::pair<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator, bool> Map<Ke
 {
     EnsureCapacity();
 
-    auto index = GetIndexOf(value.first, m_values, true);
+    auto index = GetIndexOf<true>(value.first, m_values);
     bool added = true;
     auto& bucket = m_values[index];
     if (bucket.used)
@@ -207,7 +207,7 @@ std::pair<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator, bool> Map<Ke
 {
     EnsureCapacity();
 
-    auto index = GetIndexOf(value.first, m_values, true);
+    auto index = GetIndexOf<true>(value.first, m_values);
     bool added = true;
     auto& bucket = m_values[index];
     if (bucket.used)
@@ -234,7 +234,7 @@ bool Map<KeyT, ValueT, HashOpT, EqualsOpT>::contains(const KeyT& key) const
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::find(const KeyT& key)
 {
-    auto index = GetIndexOf(key, m_values, false);
+    auto index = GetIndexOf<false>(key, m_values);
     if (index == (size_type) -1)
         return end();
 
@@ -252,7 +252,7 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::find(
     const KeyT& key) const
 {
-    auto index = GetIndexOf(key, m_values, false);
+    auto index = GetIndexOf<false>(key, m_values);
     if (index == (size_type) -1)
         return end();
 
@@ -294,7 +294,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashO
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashOpT, EqualsOpT>::erase(const KeyT& key)
 {
-    auto index = GetIndexOf(key, m_values, false);
+    auto index = GetIndexOf<false>(key, m_values);
     if (index == (size_type) -1)
         return end();
 
@@ -427,8 +427,9 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::value_type* Map<KeyT, ValueT, Ha
 }
 
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
+template <bool forInsertion>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, HashOpT, EqualsOpT>::GetIndexOf(
-    const KeyT& key, const Array<Bucket>& inside, bool forInsertion) const
+    const KeyT& key, const Array<Bucket>& inside) const
 {
     if (m_values.empty())
         return (size_type) -1;
@@ -437,13 +438,29 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
 
     auto index = hash % inside.size();
 
+    uint64 firstErasedBucket = (uint64) -1;
     int j = 1;
     auto* bucket = &inside[index];
-    while ((bucket->used || (!forInsertion && bucket->erased)) && !EqualsOpT::Equals(bucket->value.first, key))
+    while (true)
     {
+        if (!bucket->used || EqualsOpT::Equals(bucket->value.first, key))
+            break;
+
+        if constexpr (forInsertion)
+        {
+            if (firstErasedBucket != (uint64) -1 && bucket->erased)
+                firstErasedBucket = index;
+        }
+
         index = (index + (j * j)) % inside.size();  // Quadratic jumps
         j++;
         bucket = &inside[index];
+    }
+
+    if constexpr (forInsertion)
+    {
+        if (!bucket->used && firstErasedBucket != (uint64) -1)
+            return firstErasedBucket;
     }
 
     RED_ASSERT_S(index < inside.size());
@@ -487,7 +504,7 @@ void Map<KeyT, ValueT, HashOpT, EqualsOpT>::Rehash(
     {
         if (currentBucket.used)
         {
-            auto newIndex = GetIndexOf(currentBucket.value.first, newBuckets, true);
+            auto newIndex = GetIndexOf<true>(currentBucket.value.first, newBuckets);
 
             Bucket& newBucket = newBuckets[newIndex];
             newBucket.used = true;
