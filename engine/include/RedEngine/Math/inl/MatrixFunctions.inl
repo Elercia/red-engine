@@ -6,7 +6,7 @@ namespace Math
 	{
 		// clang-format off
 		Matrix44 ortho = {
-			2 / (right - left), 0.f, 0.f, 		-((right+left) / (right-left)),
+			2.f / (right - left), 0.f, 0.f, 	-((right+left) / (right-left)),
 			0.f, 2.f / (top - bottom), 0.f, 	-((top+bottom) / (top-bottom)),
 			0.f, 0.f, -2.f / (zFar- zNear) , 	-((zFar+zNear) / (zFar-zNear)),
 			0.f, 0.f, 0.f, 						1.f,
