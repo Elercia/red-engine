@@ -1,25 +1,25 @@
 ![Project build status](https://github.com/Elercia/red-engine/workflows/CI%20Workflow/badge.svg?branch=master)
 # Red Engine
 
-Welcome to RedEngine my hobby-projet to learn and experiment things around C++ and game developement. This project has no time limit and is only made on my personal time.
+Welcome to RedEngine my hobby-project to learn and experiment things around C++ and game development. This project has no time limit and is only made on my personal time.
 
 ## Goals
-The main goal of this projet is to experiment around modern C++ and game engine development. I want to make this usable as a 2D Game engine for simple games. 
+The main goal of this project is to experiment around modern C++ and game engine development. I want to make this usable as a 2D Game engine for simple games. 
 
 ### Goal features
 
 **Rendering :**
-* Basic rendering system built around Opengl (to keep it simple)
+* Basic rendering system built around OpenGL (to keep it simple)
 * Widgets for menus and in game UI
 
 **Physics :**
 * Physics engine (with rigid bodies, forces, contacts, triggers) all wrapped around Box2D
 
 **Audio :**
-* Audio engine using Fmod (with event triggers and direct launch)
+* Audio engine using FMod (with event triggers and direct launch)
 
 **Scripting :**
-* Fully sciptable gameplay using [Lua](https://www.lua.org/)  
+* Fully scriptable gameplay using language like [Lua](https://www.lua.org/) or [ChaiScript](https://chaiscript.com/) (tbd)
 
 **Core :**
 * Entity / Component / System
@@ -46,13 +46,13 @@ Hierarchy :
     - ``Rendering`` Rendering system of the engine. Including rendering related components, resources and system.
     - ``Resources`` Base classes and systems used to load and manage systems.
     - ``Utils`` Everything that don't go inside other categories.
-- ``exernal`` External library (using Git sub modules or downloaded from there repositories)
-- ``scripts`` Usefull scripts such as generating project
+- ``external`` External library (using Git sub modules or downloaded from there repositories)
+- ``scripts`` Useful scripts such as generating project
 - ``templates`` Projects game templates (used to show off engine working) 
-- ``test`` Unit / fonctional tests
+- ``test`` Unit / functional tests
 
 ## Building
-### Environement
+### Environment
 
 This is targeting Windows and Linux and is using [Premake](https://github.com/premake/premake-core) as a build configuration tool.
 You can generate all projects files that provides premake (cf premake documentation).
@@ -61,16 +61,16 @@ We provide utility scripts to generate common IDE / Editor project files such as
 Simply use the ``GenerateXXXProject.sh/bat`` inside the ``scripts`` folder.
 Project files are generated in ``scripts/projects`` folder.
 
-You can also generate ``compile_commands.json`` using the corresponding scripts (usefull for editors).
+You can also generate ``compile_commands.json`` using the corresponding scripts (useful for editors).
 
 ## Dependencies
 The engine uses the following dependencies :
 - [Catch2](https://github.com/catchorg/Catch2) as the test framework.
 - [Box2D](https://github.com/erincatto/box2d) for engine physics simulation.
-- [Debug break](https://github.com/scottt/debugbreak) as a portable debugguer breaking tool.
+- [Debug break](https://github.com/scottt/debugbreak) as a portable debugger breaking tool.
 - [FMOD](https://www.fmod.com/) for audio processing.
-- [fmt](https://github.com/fmtlib/fmt) as the string formating used in the logger.
-- [Nlohmann JSON](https://github.com/nlohmann/json) for loading all the resource (saved in json format).
+- [fmt](https://github.com/fmtlib/fmt) as the string formatting used in the logger.
+- [Nlohmann JSON](https://github.com/nlohmann/json) for loading all the resource (saved in JSON format).
 - [Optick](https://optick.dev/) to register profiling events.
 - [SDL2](https://www.libsdl.org/) to manage platform dependent code such as input handling and window creation.
 - [STB (image related)](https://github.com/nothings/stb) to load / write images on CPU side.
