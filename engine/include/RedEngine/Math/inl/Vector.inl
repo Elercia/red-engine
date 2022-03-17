@@ -1,3 +1,4 @@
+#include "RedEngine/Math/Math.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 namespace red
@@ -104,6 +105,30 @@ constexpr Vector4T<T> operator+(const Vector4T<T>& l)
 }
 
 template <typename T>
+constexpr T& Vector2T<T>::operator[](uint8 i)
+{
+    return (&x)[i];
+}
+
+template <typename T>
+constexpr const T& Vector2T<T>::operator[](uint8 i) const
+{
+    return (&x)[i];
+}
+
+template <typename T>
+constexpr T& Vector3T<T>::operator[](uint8 i)
+{
+    return (&x)[i];
+}
+
+template <typename T>
+constexpr const T& Vector3T<T>::operator[](uint8 i) const
+{
+    return (&x)[i];
+}
+
+template <typename T>
 constexpr T& Vector4T<T>::operator[](uint8 i)
 {
     return (&x)[i];
@@ -115,4 +140,63 @@ constexpr const T& Vector4T<T>::operator[](uint8 i) const
     return (&x)[i];
 }
 
+template <typename T>
+constexpr T Vector2T<T>::LengthSquare() const
+{
+    return x * x + y * y;
+}
+
+template <typename T>
+constexpr T Vector2T<T>::Length() const
+{
+    return Math::Sqrt(LengthSquare());
+}
+
+template <typename T>
+constexpr Vector2T<T> Vector2T<T>::Normalize()
+{
+    T length = Length();
+
+    return Vector2T(x / length, y / length);
+}
+
+template <typename T>
+constexpr T Vector3T<T>::LengthSquare() const
+{
+    return x * x + y * y + z * z;
+}
+
+template <typename T>
+constexpr T Vector3T<T>::Length() const
+{
+    return Math::Sqrt(LengthSquare());
+}
+
+template <typename T>
+constexpr Vector3T<T> Vector3T<T>::Normalize()
+{
+    T length = Length();
+
+    return Vector3T(x / length, y / length, z / length);
+}
+
+template <typename T>
+constexpr T Vector4T<T>::LengthSquare() const
+{
+    return x * x + y * y + z * z + w * w;
+}
+
+template <typename T>
+constexpr T Vector4T<T>::Length() const
+{
+    return Math::Sqrt(LengthSquare());
+}
+
+template <typename T>
+constexpr Vector4T<T> Vector4T<T>::Normalize()
+{
+    T length = Length();
+
+    return Vector3T(x / length, y / length, z / length, w / length);
+}
 }  // namespace red

@@ -24,6 +24,14 @@ public:
     constexpr Vector2T<T>& operator=(const Vector2T<T>&) = default;
     constexpr Vector2T<T>& operator=(Vector2T<T>&&) = default;
 
+    constexpr T& operator[](uint8 i);
+    constexpr const T& operator[](uint8 i) const;
+
+    constexpr T LengthSquare() const;
+    constexpr T Length() const;
+
+    constexpr Vector2T<T> Normalize();
+
     union
     {
         T x;
@@ -53,13 +61,21 @@ public:
     {
     }
 
+    ~Vector3T() = default;
+
     constexpr Vector3T(const Vector3T&) = default;
     constexpr Vector3T(Vector3T&&) = default;
 
     constexpr Vector3T<T>& operator=(const Vector3T<T>&) = default;
     constexpr Vector3T<T>& operator=(Vector3T<T>&&) = default;
 
-    ~Vector3T() = default;
+    constexpr T& operator[](uint8 i);
+    constexpr const T& operator[](uint8 i) const;
+
+    constexpr T LengthSquare() const;
+    constexpr T Length() const;
+
+    constexpr Vector3T<T> Normalize();
 
     T x, y, z;
 };
@@ -76,6 +92,8 @@ public:
     {
     }
 
+    ~Vector4T() = default;
+
     constexpr Vector4T(const Vector4T<T>&) = default;
     constexpr Vector4T(Vector4T<T>&&) = default;
 
@@ -85,7 +103,10 @@ public:
     constexpr T& operator[](uint8 i);
     constexpr const T& operator[](uint8 i) const;
 
-    ~Vector4T() = default;
+    constexpr T LengthSquare() const;
+    constexpr T Length() const;
+
+    constexpr Vector4T<T> Normalize();
 
     T x;
     T y;
