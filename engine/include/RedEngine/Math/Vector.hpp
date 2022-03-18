@@ -157,6 +157,14 @@ constexpr Vector4T<T> operator-(const Vector4T<T>& l);
 template <typename T>
 constexpr Vector4T<T> operator+(const Vector4T<T>& l);
 
+template <typename T>
+constexpr Vector3T<T> Cross(const Vector3T<T>& a, const Vector3T<T>& b);
+
+template <typename T>
+constexpr T Dot(const Vector2T<T>& a, const Vector2T<T>& b);
+template <typename T>
+constexpr T Dot(const Vector3T<T>& a, const Vector3T<T>& b);
+
 // TODO move this to a physics header
 b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
 Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2);

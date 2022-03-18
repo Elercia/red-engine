@@ -193,10 +193,29 @@ constexpr T Vector4T<T>::Length() const
 }
 
 template <typename T>
-constexpr Vector4T<T> Vector4T<T>::Normalize()
+constexpr Vector4T<T> Vector4T<T>::Normalize() const
 {
     T length = Length();
 
     return Vector3T(x / length, y / length, z / length, w / length);
 }
+
+template <typename T>
+constexpr Vector3T<T> Cross(const Vector3T<T>& a, const Vector3T<T>& b)
+{
+    return Vector3T<T>(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+}
+
+template <typename T>
+constexpr T Dot(const Vector2T<T>& a, const Vector2T<T>& b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+template <typename T>
+constexpr T Dot(const Vector3T<T>& a, const Vector3T<T>& b)
+{
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
 }  // namespace red
