@@ -30,7 +30,7 @@ public:
     constexpr T LengthSquare() const;
     constexpr T Length() const;
 
-    constexpr Vector2T<T> Normalize();
+    constexpr Vector2T<T> Normalize() const;
 
     union
     {
@@ -75,7 +75,7 @@ public:
     constexpr T LengthSquare() const;
     constexpr T Length() const;
 
-    constexpr Vector3T<T> Normalize();
+    constexpr Vector3T<T> Normalize() const;
 
     T x, y, z;
 };
@@ -106,7 +106,7 @@ public:
     constexpr T LengthSquare() const;
     constexpr T Length() const;
 
-    constexpr Vector4T<T> Normalize();
+    constexpr Vector4T<T> Normalize() const;
 
     T x;
     T y;

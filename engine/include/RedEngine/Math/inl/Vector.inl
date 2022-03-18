@@ -153,7 +153,7 @@ constexpr T Vector2T<T>::Length() const
 }
 
 template <typename T>
-constexpr Vector2T<T> Vector2T<T>::Normalize()
+constexpr Vector2T<T> Vector2T<T>::Normalize() const
 {
     T length = Length();
 
@@ -173,7 +173,7 @@ constexpr T Vector3T<T>::Length() const
 }
 
 template <typename T>
-constexpr Vector3T<T> Vector3T<T>::Normalize()
+constexpr Vector3T<T> Vector3T<T>::Normalize() const
 {
     T length = Length();
 
