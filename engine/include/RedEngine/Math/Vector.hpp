@@ -143,6 +143,15 @@ template <typename T>
 constexpr Vector2T<T> operator*(const Vector2T<T>& l, T scalar);
 
 template <typename T>
+constexpr Vector3T<T> operator+(const Vector3T<T>& l, const Vector3T<T>& r);
+template <typename T>
+constexpr Vector3T<T> operator-(const Vector3T<T>& l, const Vector3T<T>& r);
+template <typename T>
+constexpr Vector3T<T> operator*(const Vector3T<T>& l, const Vector3T<T>& r);
+template <typename T>
+constexpr Vector3T<T> operator*(const Vector3T<T>& l, T scalar);
+
+template <typename T>
 constexpr Vector2T<T> operator-(const Vector2T<T>& l);
 template <typename T>
 constexpr Vector2T<T> operator+(const Vector2T<T>& l);

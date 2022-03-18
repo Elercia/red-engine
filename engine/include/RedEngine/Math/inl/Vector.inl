@@ -84,6 +84,54 @@ constexpr Vector4T<T> operator-(const Vector4T<T>& l)
 }
 
 template <typename T>
+constexpr Vector3T<T> operator+(const Vector3T<T>& l, const Vector3T<T>& r)
+{
+    Vector3T<T> ret;
+
+    ret.x = l.x + r.x;
+    ret.y = l.y + r.y;
+    ret.z = l.z + r.z;
+
+    return ret;
+}
+
+template <typename T>
+constexpr Vector3T<T> operator-(const Vector3T<T>& l, const Vector3T<T>& r)
+{
+    Vector3T<T> ret;
+
+    ret.x = l.x - r.x;
+    ret.y = l.y - r.y;
+    ret.z = l.z - r.z;
+
+    return ret;
+}
+
+template <typename T>
+constexpr Vector3T<T> operator*(const Vector3T<T>& l, const Vector3T<T>& r)
+{
+    Vector3T<T> ret;
+
+    ret.x = l.x * r.x;
+    ret.y = l.y * r.y;
+    ret.z = l.z * r.z;
+
+    return ret;
+}
+
+template <typename T>
+constexpr Vector3T<T> operator*(const Vector3T<T>& l, T scalar)
+{
+    Vector3T<T> ret;
+
+    ret.x = l.x + scalar;
+    ret.y = l.y + scalar;
+    ret.z = l.z + scalar;
+
+    return ret;
+}
+
+template <typename T>
 constexpr Vector2T<T> operator+(const Vector2T<T>& l)
 {
     Vector2T<T> value = l;
