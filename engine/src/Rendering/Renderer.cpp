@@ -114,6 +114,8 @@ void Renderer::EndRenderFrame()
 
 void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 {
+    cameraComponent->UpdateMatricesIfNeeded();
+    
     // Setup the camera viewport
     glViewport(cameraComponent->m_viewport.x, cameraComponent->m_viewport.y, cameraComponent->m_viewport.width,
                cameraComponent->m_viewport.height);
@@ -163,14 +165,12 @@ void Renderer::RenderOpaque(CameraComponent* camera)
     uint64 count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(RenderEntityType::Opaque, camera, count);
 
-    camera->UpdateMatricesIfNeeded();
-
     const Matrix44& projView = camera->GetViewProjection();
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Opaque");
 
     // Do the actual render calls to the camera render target
-    for (int i = 0; i < count; i++)
+    for (uint64 i = 0; i < count; i++)
     {
         auto& renderData = datas[i];
 
@@ -246,6 +246,8 @@ void Renderer::UseGeometry(const Geometry* geom)
 {
     glEnableVertexAttribArray(0);
     glBindVertexArray(geom->m_gpuBufferHandle);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_gpuIndexBuffer);
 }
 
 Array<RenderingData>& Renderer::GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,

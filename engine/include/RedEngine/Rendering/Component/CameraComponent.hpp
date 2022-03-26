@@ -23,16 +23,13 @@ class CameraComponent : public Component
 
 public:
     RED_START_COMPONENT_REGISTER_INHERITHED(CameraComponent, Component)
-    RED_MEMBER("center", m_center, "The center position of the camera", 0);
     RED_MEMBER("viewport", m_viewport, "The viewport (postion on window & size) of the camera", 0);
     RED_MEMBER("depth", m_depth, "The depth of the camera", 0);
-    RED_MEMBER("rotation", m_rotationAngle, "The rotation around the center anchor", 0);
     RED_MEMBER("zNear", m_zNear, "The projection zNear", 0);
     RED_MEMBER("zFar", m_zFar, "The projection zFar", 0);
     RED_END_COMPONENT_REGISTER()
 
     CameraComponent(Entity* entity);
-    CameraComponent(Entity* entity, const Vector2& center);
     virtual ~CameraComponent() = default;
 
     /// View ports points
@@ -41,10 +38,6 @@ public:
 
     // Return true if the given AABB is visible from the given camera
     [[nodiscard]] bool IsVisibleFrom(const AABB& aabb) const;
-
-    /// Accessors and Setters
-    [[nodiscard]] const Vector2& Center() const;
-    void CenterOn(const Vector2& point);
 
     [[nodiscard]] const Vector4i& Viewport() const;
     void SetViewport(const Vector4i& viewport);
@@ -65,21 +58,16 @@ private:
     /// The camera viewport (position in the window and size)
     Vector4i m_viewport;
 
-    Vector2 m_center;
-
     /// Depth of the camera (defaulted to 0)
     /// Higher depth camera are rendered after (to be on top of another)
     float m_depth{0};
 
-    float m_rotationAngle{0.f};
-
     /// Background color (color to clear the screen before rendering)
     Color m_cleanColor{ColorConstant::BLACK};
 
-    float m_zNear{0.0f};
-    float m_zFar{100.0f};
+    float m_zNear{0.1f};
+    float m_zFar{1000.0f};
 
-    bool m_bDirtyMatrix{true};
     Matrix44 m_viewMatrix;
     Matrix44 m_projectionMatrix;
     Matrix44 m_viewProjectionMatrix;

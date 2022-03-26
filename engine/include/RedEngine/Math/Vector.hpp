@@ -5,6 +5,13 @@
 namespace red
 {
 template <typename T>
+class Vector2T;
+template <typename T>
+class Vector3T;
+template <typename T>
+class Vector4T;
+
+template <typename T>
 class Vector2T
 {
 public:

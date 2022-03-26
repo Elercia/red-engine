@@ -75,6 +75,7 @@ void Sprite::NextFrame()
     }
 
     m_material.parameters.parameters["texture_sampler"].texture = m_currentAnimationInfo.currentAnimation->texture;
+    m_material.parameters.parameters["texture_sampler"].type = ValueType::TEXTURE;
 }
 
 bool Sprite::StartAnimation(const std::string& name)

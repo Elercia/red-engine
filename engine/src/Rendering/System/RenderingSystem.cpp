@@ -75,7 +75,7 @@ void RenderingSystem::BeginRender()
 
 void RenderingSystem::EndRender()
 {
-    PROFILER_CATEGORY("End rendering", Optick::Category::Rendering);
+    PROFILER_CATEGORY("Flush rendering", Optick::Category::Rendering);
 
     // Draw frame for each camera
     auto cameras = GetComponents<CameraComponent>();

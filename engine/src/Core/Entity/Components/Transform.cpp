@@ -57,6 +57,14 @@ Vector2& Transform::GetScale()
     return m_localScale;
 }
 
+float Transform::GetDepth() const
+{
+    auto* parent = GetOwner()->GetParent();
+    Transform* parentTransform = parent != nullptr ? parent->GetComponent<Transform>() : nullptr;
+
+    return parentTransform != nullptr ? m_localDepth + parentTransform->GetDepth() : m_localDepth;
+}
+
 float Transform::GetRotationDeg() const
 {
     return m_localRotation;
@@ -99,10 +107,7 @@ void Transform::UpdateWorldMatrixIfNeeded()
 
     if (m_dirtyWorldMatrix)
     {
-        m_dirtyWorldMatrix = false;
-
-        m_localWorldMatrix = Matrix44::Identity();
-        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, Vector3(m_localPosition, m_localDepth));
+        m_localWorldMatrix = Math::Translate(Matrix44::Identity(), Vector3(m_localPosition, m_localDepth));
 
         m_localWorldMatrix = Math::Translate(m_localWorldMatrix, Vector3(m_localRotationAnchor, 0.0f));
         m_localWorldMatrix = Math::Rotate(m_localWorldMatrix, Vector3(0.0f, 0.0f, Math::ToRadians(m_localRotation)));
@@ -119,6 +124,10 @@ void Transform::UpdateWorldMatrixIfNeeded()
     {
         m_worldMatrix = m_localWorldMatrix;
     }
+
+    m_worldMatrix.Inverse();
+
+    m_dirtyWorldMatrix = false;
 }
 
 const Matrix44& Transform::GetLocalWorldMatrix() const
@@ -141,7 +150,7 @@ const Matrix44& Transform::GetWorldMatrix() const
 Matrix44& Transform::GetWorldMatrix()
 {
     UpdateWorldMatrixIfNeeded();
-    
+
     return m_worldMatrix;
 }
 

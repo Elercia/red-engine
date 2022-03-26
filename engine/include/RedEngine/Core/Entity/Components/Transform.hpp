@@ -31,6 +31,8 @@ public:
     [[nodiscard]] const Vector2& GetScale() const;
     [[nodiscard]] Vector2& GetScale();
 
+    [[nodiscard]] float GetDepth() const;
+
     [[nodiscard]] float GetRotationDeg() const;
     [[nodiscard]] float GetRotationRad() const;
 

@@ -5,6 +5,7 @@
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
+#include "RedEngine/Rendering/Resource/Material.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Resources/ResourceLoader.hpp"
@@ -37,6 +38,27 @@ bool MaterialResourceLoader::InitResource(std::shared_ptr<Material>& resource, c
     resource->m_shaderProgram = shaderResourceLoader->LoadResource(shaderPath);
 
     resource->m_type = jsonContent["rendering_type"];
+
+    auto& defaultUniforms = jsonContent["pixel_uniforms"];
+
+    for (auto& uniform : defaultUniforms)
+    {
+        auto type = uniform["type"];
+        std::string name = uniform["name"];
+
+        auto& newParam = resource->m_defaultMaterialData.parameters[name];
+
+        if (type == "texture")
+        {
+            newParam.type = ValueType::TEXTURE;
+            newParam.texture = NULL;  // TODO default value ?
+        }
+        else
+        {
+            newParam.type = ValueType::VECTOR4;
+            newParam.vector = Vector4();  // TODO default value ?
+        }
+    }
 
     return true;
 }

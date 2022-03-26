@@ -10,8 +10,9 @@ layout(location = 0) out vec2 texture_uv_out;
 
 void main() 
 {
+    vec4 inputPosition = vec4(vertex_position.xy, 0.f, 1.f);
+    vec4 positionWS = inputPosition * world;
+
     texture_uv_out = tex_uv;
-    vec4 inputPosition = vec4(vertex_position.xy, 0.0, 1.f);
-    vec4 positionWS = world * inputPosition;
-    gl_Position = view_projection * positionWS;
+    gl_Position = positionWS * view_projection;
 }

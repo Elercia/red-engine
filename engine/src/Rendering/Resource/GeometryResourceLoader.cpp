@@ -28,8 +28,10 @@ bool GeometryResourceLoader::InitResource(std::shared_ptr<GeometryResourceWrappe
 {
     // FIXME : Use Array class 
     auto jsonVertex = jsonContent["vertices"].get<std::vector<float>>();
-    auto jsonIndex = jsonContent["indexes"].get<std::vector<float>>();
+    auto jsonIndex = jsonContent["indexes"].get<std::vector<int>>();
     auto jsonUvs = jsonContent["uvs"].get<std::vector<float>>();
+
+    RED_LOG_INFO("Loaded {} vertices, {} indexes, {} uvs", jsonVertex.size(), jsonIndex.size(), jsonUvs.size());
 
     auto& geom = resource->m_geom;
 
@@ -42,30 +44,25 @@ bool GeometryResourceLoader::InitResource(std::shared_ptr<GeometryResourceWrappe
     glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo);
     glBufferData(GL_ARRAY_BUFFER, jsonVertex.size() * sizeof(float), jsonVertex.data(), GL_STATIC_DRAW);
 
-    GLuint index_ibo = 0;
-    glGenBuffers(1, &index_ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, jsonIndex.size() * sizeof(int), jsonIndex.data(), GL_STATIC_DRAW);
-
     GLuint uv_vbo = 0;
     glGenBuffers(1, &uv_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
     glBufferData(GL_ARRAY_BUFFER, jsonUvs.size() * sizeof(float), jsonUvs.data(), GL_STATIC_DRAW);
 
+    glGenBuffers(1, &geom.m_gpuIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom.m_gpuIndexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, jsonIndex.size() * sizeof(int), jsonIndex.data(), GL_STATIC_DRAW);
+
     glGenVertexArrays(1, &geom.m_gpuBufferHandle);
     glBindVertexArray(geom.m_gpuBufferHandle);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_ibo);
-    glVertexAttribPointer(3, 2, GL_INT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(3);
 
     return true;
 }

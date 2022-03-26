@@ -56,6 +56,8 @@ struct Collider
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(ColliderList)
 
 // TODO Collision layers
+// TODO Remove ColliderList as a component 
+//      Instead, put it directly inside the PhysicBody it will be a lot easier to manage
 class ColliderList : public Component
 {
     friend class PhysicSystem;
