@@ -135,6 +135,7 @@ void Renderer::Draw(const Renderable* renderable, const Transform* transform)
     data.materialInstance = renderable->m_material;
     data.worldMatrix = transform->GetWorldMatrix();
     data.aabb = renderable->m_aabb;
+    data.size = renderable->m_size;
 
     auto& renderDatasForCamera = m_renderingData[data.materialInstance.material->GetRenderType()];
     renderDatasForCamera.push_back(std::move(data));
@@ -176,6 +177,10 @@ void Renderer::RenderOpaque(CameraComponent* camera)
 
         UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);
+
+        // TODO put it inside a SSBO
+        const int sizeLocation = renderData.materialInstance.material->GetInputLocation("size");
+        glUniform2fv(sizeLocation, 1, &(renderData.size.x));
 
         const int worldLocation = renderData.materialInstance.material->GetInputLocation("world");
         glUniformMatrix4fv(worldLocation, 1, GL_FALSE, renderData.worldMatrix.m_data);

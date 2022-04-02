@@ -27,6 +27,7 @@ struct RenderingData
     Geometry* geometry;
     MaterialInstance materialInstance;
     AABB aabb;
+    Vector2 size;
 };
 
 class Renderer

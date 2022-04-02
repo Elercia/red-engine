@@ -42,6 +42,9 @@ public:
     bool IsValid() const;
 
 private:
+    void UpdateRenderData();
+
+private:
     std::shared_ptr<SpriteResource> m_spriteResource;
     CurrentAnimationDesc m_currentAnimationInfo;
 };

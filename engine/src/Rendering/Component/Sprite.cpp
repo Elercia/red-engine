@@ -74,8 +74,7 @@ void Sprite::NextFrame()
         }
     }
 
-    m_material.parameters.parameters["texture_sampler"].texture = m_currentAnimationInfo.currentAnimation->texture;
-    m_material.parameters.parameters["texture_sampler"].type = ValueType::TEXTURE;
+    UpdateRenderData();
 }
 
 bool Sprite::StartAnimation(const std::string& name)
@@ -110,6 +109,15 @@ const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const
 bool Sprite::IsValid() const
 {
     return m_material.material != nullptr && m_geometry != nullptr && m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
+}
+
+void Sprite::UpdateRenderData()
+{
+    m_material.parameters.parameters["texture_sampler"].texture = m_currentAnimationInfo.currentAnimation->texture;
+    m_material.parameters.parameters["texture_sampler"].type = ValueType::TEXTURE;
+
+    const Vector2i& sizei = m_currentAnimationInfo.currentAnimationFrame->size;
+    m_size = {(float)sizei.x, (float)sizei.y};
 }
 
 }  // namespace red

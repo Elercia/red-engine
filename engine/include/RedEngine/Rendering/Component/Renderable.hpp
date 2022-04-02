@@ -28,6 +28,7 @@ public:
     std::shared_ptr<GeometryResourceWrapper> GetGeometry();
 
 protected:
+    Vector2 m_size;
     AABB m_aabb;
     std::shared_ptr<GeometryResourceWrapper> m_geometry;
     MaterialInstance m_material;
