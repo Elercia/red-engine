@@ -125,8 +125,6 @@ void Transform::UpdateWorldMatrixIfNeeded()
         m_worldMatrix = m_localWorldMatrix;
     }
 
-    m_worldMatrix.Inverse();
-
     m_dirtyWorldMatrix = false;
 }
 
