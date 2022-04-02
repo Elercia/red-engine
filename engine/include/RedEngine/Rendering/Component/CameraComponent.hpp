@@ -44,8 +44,8 @@ public:
 
     [[nodiscard]] float AspectRatio() const;
 
-    [[nodiscard]] float Depth() const;
-    void SetDepth(float depth);
+    [[nodiscard]] int Depth() const;
+    void SetDepth(int depth);
 
     [[nodiscard]] const Color& GetClearColor() const;
     void SetClearColor(const Color& color);
@@ -60,7 +60,7 @@ private:
 
     /// Depth of the camera (defaulted to 0)
     /// Higher depth camera are rendered after (to be on top of another)
-    float m_depth{0};
+    int m_depth{0};
 
     /// Background color (color to clear the screen before rendering)
     Color m_cleanColor{ColorConstant::BLACK};

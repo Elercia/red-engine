@@ -66,12 +66,12 @@ float CameraComponent::AspectRatio() const
     return (float) m_viewport.width / (float) m_viewport.height;
 }
 
-float CameraComponent::Depth() const
+int CameraComponent::Depth() const
 {
     return m_depth;
 }
 
-void CameraComponent::SetDepth(float depth)
+void CameraComponent::SetDepth(int depth)
 {
     m_depth = depth;
 }
