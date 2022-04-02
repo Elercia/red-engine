@@ -29,7 +29,7 @@ void PongLevel::Init()
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
     auto info = window->GetWindowInfo();
 
-    /*float paddlePosHeight = (info.height / 2.F) - (100.F / 2.F);
+    float paddlePosHeight = (info.height / 2.F) - (100.F / 2.F);
 
     red::Vector2 center{info.width / 2.F, info.height / 2.F};
 
@@ -85,9 +85,6 @@ void PongLevel::Init()
     manager->AddComponent<red::CameraComponent>();
     manager->AddComponent<red::AudioListener>();
 
-    auto* managerTransform = manager->GetComponent<red::Transform>();
-    managerTransform->SetDepth(-1.f);
-
     auto* walls = CreateEntity("Walls");
 
     red::EdgeColliderDesc wallUpColliderDesc;
@@ -109,30 +106,7 @@ void PongLevel::Init()
 
     auto* logicSystem = m_world->AddSystem<GameLogicSystem>(paddleOne, paddleTwo, ball);
     logicSystem->m_paddlecollisionSignal = slot;
-    m_world->AddSystem<GameControlSystem>(paddleOne, paddleTwo);*/
-
-    auto* ball0 = CreateEntity("Ball-topleft");
-    ball0->AddComponent<red::Sprite>(red::Path::Resource("ball"));
-    ball0->GetComponent<red::Transform>()->SetPosition(red::Vector2(0.f, 0.f));
-    ball0->GetComponent<red::Transform>()->SetScale(red::Vector2(32.f, 32.f));
-
-    auto* ball1 = CreateEntity("Ball-topright");
-    ball1->AddComponent<red::Sprite>(red::Path::Resource("ball"));
-    ball1->GetComponent<red::Transform>()->SetPosition(red::Vector2((float) info.width, 0.f));
-    ball1->GetComponent<red::Transform>()->SetScale(red::Vector2(32.f, 32.f));
-
-    auto* ball2 = CreateEntity("Ball-bottomleft");
-    ball2->AddComponent<red::Sprite>(red::Path::Resource("ball"));
-    ball2->GetComponent<red::Transform>()->SetPosition(red::Vector2(0.f, (float) info.height));
-    ball2->GetComponent<red::Transform>()->SetScale(red::Vector2(32.f, 32.f));
-
-    auto* ball3 = CreateEntity("Ball-bottomright");
-    ball3->AddComponent<red::Sprite>(red::Path::Resource("ball"));
-    ball3->GetComponent<red::Transform>()->SetPosition(red::Vector2((float) info.width, (float) info.height));
-    ball3->GetComponent<red::Transform>()->SetScale(red::Vector2(32.f, 32.f));
-
-    auto* manager = CreateEntity("Manager");
-    manager->AddComponent<red::CameraComponent>();
+    m_world->AddSystem<GameControlSystem>(paddleOne, paddleTwo);
 }
 
 void PongLevel::Finalize()
