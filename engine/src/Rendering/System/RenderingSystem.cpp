@@ -12,11 +12,13 @@
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Renderer.hpp"
 
 #include <SDL2/SDL.h>
+#include <algorithm>
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
@@ -78,15 +80,14 @@ void RenderingSystem::EndRender()
     PROFILER_CATEGORY("Flush rendering", Optick::Category::Rendering);
 
     // Draw frame for each camera
-    auto cameras = GetComponents<CameraComponent>();
-    for (auto& cameraEntity : cameras)
+    auto cameras = GetSortedCameras();
+
+    for (auto& cameraComponent : cameras)
     {
-        auto* cameraComponent = cameraEntity->GetComponent<CameraComponent>();
         m_renderer->BeginCameraRendering(cameraComponent);
 
         m_renderer->RenderOpaque(cameraComponent);
         m_renderer->RenderTransparency(cameraComponent);
-        m_renderer->RenderLights(cameraComponent);
 
 #ifdef RED_DEBUG
         m_renderer->RenderDebug(cameraComponent);
@@ -94,6 +95,11 @@ void RenderingSystem::EndRender()
 
         m_renderer->EndCameraRendering(cameraComponent);
     }
+
+
+#ifdef RED_DEBUG
+        m_renderer->RenderGlobalDebug();
+#endif
 
     m_renderer->EndRenderFrame();
 }
@@ -163,6 +169,19 @@ void RenderingSystem::UpdateWindowAsNeeded()
             m_renderer->ReCreateWindow(windowComp);
         }
     }
+}
+
+Array<CameraComponent*> RenderingSystem::GetSortedCameras()
+{
+    auto cameraEntities = GetComponents<CameraComponent>();
+    Array<CameraComponent*> cameras;
+    cameras.resize(cameraEntities.size());
+    std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(), [](Entity* e){return e->GetComponent<CameraComponent>();});
+
+    std::sort(cameras.begin(), cameras.end(),
+              [](const CameraComponent* l, const CameraComponent* r) { return l->Depth() < r->Depth(); });
+
+    return cameras;
 }
 
 }  // namespace red

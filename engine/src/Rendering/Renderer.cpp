@@ -32,7 +32,11 @@ const int PrimitiveTypesAsGLTypes[] = {
     GL_TRIANGLES, GL_QUADS, GL_LINES, GL_POINTS, GL_LINE_LOOP, GL_LINE_STRIP, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN,
 };
 
-Renderer::Renderer() : m_glContext(nullptr), m_window(nullptr)
+Renderer::Renderer()
+    : m_glContext(nullptr)
+    , m_window(nullptr)
+    , m_perInstanceData(1, sizeof(PerInstanceData))
+    , m_perCameraData(1, sizeof(PerCameraData))
 {
 }
 
@@ -52,7 +56,7 @@ void Renderer::InitRenderer(WindowComponent* window)
     // Request OpenGL 4.3 context.
     CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) != 0,
                        "Error setting gl context major version with error {}", SDL_GetError());
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) != 0,
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4) != 0,
                        "Error setting gl context major version with error {}", SDL_GetError());
 
     // set double buffer
@@ -78,6 +82,9 @@ void Renderer::InitRenderer(WindowComponent* window)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    m_perInstanceData.Init();
+    m_perCameraData.Init();
+
     RED_LOG_INFO("Init OpenGL renderer");
 }
 
@@ -88,6 +95,9 @@ void Renderer::ReCreateWindow(WindowComponent* /*window*/)
 
 void Renderer::Finalise()
 {
+    m_perInstanceData.Finalize();
+    m_perCameraData.Finalize();
+
     SDL_GL_DeleteContext(m_glContext);
 
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -178,15 +188,17 @@ void Renderer::RenderOpaque(CameraComponent* camera)
         UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);
 
-        // TODO put it inside a SSBO
-        const int sizeLocation = renderData.materialInstance.material->GetInputLocation("size");
-        glUniform2fv(sizeLocation, 1, &(renderData.size.x));
+        PerCameraData* perCamera = m_perCameraData.Map<PerCameraData>(MapType::WRITE);
+        perCamera->viewProj = projView;
+        m_perCameraData.UnMap();
 
-        const int worldLocation = renderData.materialInstance.material->GetInputLocation("world");
-        glUniformMatrix4fv(worldLocation, 1, GL_FALSE, renderData.worldMatrix.m_data);
+        PerInstanceData* perInstance = m_perInstanceData.Map<PerInstanceData>(MapType::WRITE);
+        perInstance->size = renderData.size;
+        perInstance->world = renderData.worldMatrix;
+        m_perInstanceData.UnMap();
 
-        const int viewProjLocation = renderData.materialInstance.material->GetInputLocation("view_projection");
-        glUniformMatrix4fv(viewProjLocation, 1, GL_FALSE, projView.m_data);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_perCameraData.m_gpuBufferHandle);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_perInstanceData.m_gpuBufferHandle);
 
         auto primitiveType = renderData.geometry->GetPrimitiveType();
 
@@ -197,18 +209,17 @@ void Renderer::RenderOpaque(CameraComponent* camera)
     glPopDebugGroup();
 }
 
-void Renderer::RenderDebug(CameraComponent* /*camera*/)
-{
-}
-
 void Renderer::RenderTransparency(CameraComponent* /*camera*/)
 {
     PROFILER_CATEGORY("RenderTransparency", Optick::Category::Rendering);
 }
 
-void Renderer::RenderLights(CameraComponent* /*camera*/)
+void Renderer::RenderDebug(CameraComponent* /*camera*/)
 {
-    PROFILER_CATEGORY("RenderLights", Optick::Category::Rendering);
+}
+
+void Renderer::RenderGlobalDebug()
+{
 }
 
 void Renderer::UseMaterial(const MaterialInstance& materialInstance)

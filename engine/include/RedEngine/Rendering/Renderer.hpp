@@ -9,6 +9,7 @@
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Resource/Geometry.hpp"
 #include "RedEngine/Rendering/Resource/Material.hpp"
+#include "RedEngine/Rendering/GPUBuffer.hpp"
 
 #include <memory>
 #include <string>
@@ -27,6 +28,17 @@ struct RenderingData
     Geometry* geometry;
     MaterialInstance materialInstance;
     AABB aabb;
+    Vector2 size;
+};
+
+struct PerCameraData
+{
+    Matrix44 viewProj;
+};
+
+struct PerInstanceData
+{
+    Matrix44 world;
     Vector2 size;
 };
 
@@ -59,8 +71,8 @@ public:
 
     void RenderOpaque(CameraComponent* camera);
     void RenderTransparency(CameraComponent* camera);
-    void RenderLights(CameraComponent* camera);
     void RenderDebug(CameraComponent* camera);
+    void RenderGlobalDebug();
 
     // Rendering resource management
     void InitRenderer(WindowComponent* window);
@@ -81,6 +93,9 @@ private:
 
     // Render entities push for this frame, these will be then culled and rendered
     Array<RenderingData> m_renderingData[RenderEntityType::Count];
+
+    GPUBuffer m_perInstanceData;
+    GPUBuffer m_perCameraData;
 };
 
 }  // namespace red
