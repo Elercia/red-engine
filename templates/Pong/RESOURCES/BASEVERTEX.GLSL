@@ -24,4 +24,5 @@ void main()
     texture_uv_out = tex_uv;
     gl_Position = positionWS * PerCameraData.view_projection;
     gl_Position.z = 0;
+    gl_Position.y *= -1.f;
 }
