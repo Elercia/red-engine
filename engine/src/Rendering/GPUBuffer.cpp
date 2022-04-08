@@ -17,21 +17,38 @@ GPUBuffer::~GPUBuffer()
 
 void GPUBuffer::Init()
 {
-    glGenBuffers(1, &m_gpuBufferHandle);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_gpuBufferHandle);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, m_elementSize * m_nbElements, nullptr, GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    glCreateBuffers(1, &m_gpuBufferHandle);
+    glNamedBufferData(m_gpuBufferHandle, m_elementSize * m_nbElements, nullptr, GL_DYNAMIC_DRAW);
 }
 
 void GPUBuffer::Finalize()
 {
+    glDeleteBuffers(1, &m_gpuBufferHandle);
+}
+
+void* GPUBuffer::MapData(MapType mapType)
+{
+    if (mappedData != nullptr)
+        return mappedData;
+
+    static const uint32 MapTypeToGlMap[] = {
+        GL_READ_ONLY,   // READ
+        GL_WRITE_ONLY,  // WRITE
+        GL_READ_WRITE,  // READ_WRITE
+    };
+
+    uint32 glMap = MapTypeToGlMap[(int) mapType];
+
+    void* ptr = glMapNamedBuffer(m_gpuBufferHandle, glMap);
+
+    mappedData = ptr;
+
+    return mappedData;
 }
 
 void GPUBuffer::UnMap()
 {
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_gpuBufferHandle);
-    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    glUnmapNamedBuffer(m_gpuBufferHandle);
 
     mappedData = nullptr;
 }

@@ -29,6 +29,9 @@ public:
     void UnMap();
 
 private:
+    void* MapData(MapType mapType);
+
+private:
     void* mappedData{nullptr};
 
     uint32 m_nbElements;
