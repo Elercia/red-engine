@@ -8,6 +8,7 @@
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Rendering/Resource/GeometryResourceLoader.hpp"
+#include "RedEngine/Rendering/Resource/Material.hpp"
 #include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
@@ -113,8 +114,9 @@ bool Sprite::IsValid() const
 
 void Sprite::UpdateRenderData()
 {
-    m_material.parameters.parameters["texture_sampler"].texture = m_currentAnimationInfo.currentAnimation->texture;
-    m_material.parameters.parameters["texture_sampler"].type = ValueType::TEXTURE;
+    auto& binding = m_material.overiddenBindings.bindings[BindingIndex::Diffuse];
+    binding.texture = m_currentAnimationInfo.currentAnimation->texture.get();
+    binding.type = BindingType::Texture;
 
     const Vector2i& sizei = m_currentAnimationInfo.currentAnimationFrame->size;
     m_size = {(float)sizei.x, (float)sizei.y};

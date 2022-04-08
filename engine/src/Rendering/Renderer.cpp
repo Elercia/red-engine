@@ -224,37 +224,41 @@ void Renderer::RenderGlobalDebug()
 
 void Renderer::UseMaterial(const MaterialInstance& materialInstance)
 {
-    auto& material = materialInstance.material;
-    auto& parameters = materialInstance.parameters;
+    const auto& material = materialInstance.material;
+    const auto& defaultBindings = material->m_defaultBindings.bindings;
+    const auto& overiddenBindings = materialInstance.overiddenBindings.bindings;
 
     glUseProgram(material->GetShaderProgram()->m_handle);
 
     // Bind textures and buffers
-    int i = 0;
-    for (auto& parameterIt : material->m_defaultMaterialData.parameters)
+    for (int i = 0; i < BindingIndex::Max; i++)
     {
-        auto& name = parameterIt.first;
-        auto* value = &parameterIt.second;
+        const BindingValue* value = nullptr;
 
-        auto overidenParamValueIt = parameters.parameters.find(name);
-        if (overidenParamValueIt != parameters.parameters.end())
-            value = &overidenParamValueIt->second;
-
-        if (value->type == ValueType::TEXTURE)
+        const auto& defaultBinding = defaultBindings[i];
+        const auto& overidenBinding = overiddenBindings[i];
+        if (overidenBinding.type != BindingType::None)
         {
-            auto& texture = value->texture;
-
-            glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, texture->m_textureHandle);
-            glUniform1i(material->GetInputLocation(name.c_str()), i);
+            value = &overidenBinding;
         }
-        else if (value->type == ValueType::VECTOR4)
+        else if (defaultBinding.type != BindingType::None)
         {
-            auto& vector = value->vector;
-            glUniform4fv(material->GetInputLocation(name.c_str()), 1, &vector.x);
+            value = &defaultBinding;
         }
 
-        i++;
+        if (value != nullptr)
+        {
+            if (value->type == BindingType::Texture)
+            {
+                const auto& texture = value->texture;
+                glBindTextureUnit(i, texture->m_textureHandle);
+            }
+            else if (value->type == BindingType::Vector4)
+            {
+                const auto& vector = value->floats;
+                glUniform4fv(i, 1, vector);
+            }
+        }
     }
 }
 

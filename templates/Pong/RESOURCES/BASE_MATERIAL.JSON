@@ -4,7 +4,7 @@
 	"pixel_uniforms" : [
 		{
 			"type" : "texture",
-			"name" : "texture_sampler"
+			"binding_index" : 0
 		}
 	]
 }

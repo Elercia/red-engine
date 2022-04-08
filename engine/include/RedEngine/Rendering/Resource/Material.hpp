@@ -18,24 +18,37 @@ enum RenderEntityType
     Count,
 };
 
-enum class ValueType
+enum class BindingType
 {
-    TEXTURE, 
-    VECTOR4
+    None,
+    Texture,
+    Vector4
 };
 
-struct ParameterValue
+struct BindingIndex
 {
-    ValueType type;
+    enum
+    {
+        Diffuse = 0,
+        Max = 16,
+    };
+};
 
-    std::shared_ptr<Texture2D> texture;
-    Vector4 vector;
+struct BindingValue
+{
+    BindingType type = BindingType::None;
+
+    union
+    {
+        Texture2D* texture;
+        float floats[4];
+    };
 };
 
 // Struct that contains resource that are bound to the current material
-struct MaterialParameter
+struct MaterialBindings
 {
-    Map<std::string, ParameterValue> parameters; // TODO simple c-array with direct input location as index
+    BindingValue bindings[BindingIndex::Max];
 };
 
 class Material;
@@ -43,7 +56,7 @@ class Material;
 struct MaterialInstance
 {
     std::shared_ptr<Material> material;
-    MaterialParameter parameters;
+    MaterialBindings overiddenBindings;
 };
 
 class Material : public IResource
@@ -65,6 +78,6 @@ public:
 private:
     std::shared_ptr<ShaderProgram> m_shaderProgram{nullptr};
     RenderEntityType m_type{RenderEntityType::Opaque};
-    MaterialParameter m_defaultMaterialData;
+    MaterialBindings m_defaultBindings;
 };
 }  // namespace red

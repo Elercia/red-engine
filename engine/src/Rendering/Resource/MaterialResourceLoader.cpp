@@ -43,20 +43,21 @@ bool MaterialResourceLoader::InitResource(std::shared_ptr<Material>& resource, c
 
     for (auto& uniform : defaultUniforms)
     {
-        auto type = uniform["type"];
-        std::string name = uniform["name"];
+        std::string type = uniform["type"];
+        int layoutIndex = uniform["binding_index"];
 
-        auto& newParam = resource->m_defaultMaterialData.parameters[name];
+        auto& newParam = resource->m_defaultBindings.bindings[layoutIndex];
 
         if (type == "texture")
         {
-            newParam.type = ValueType::TEXTURE;
+            newParam.type = BindingType::Texture;
             newParam.texture = NULL;  // TODO default value ?
         }
         else
         {
-            newParam.type = ValueType::VECTOR4;
-            newParam.vector = Vector4();  // TODO default value ?
+            newParam.type = BindingType::Vector4;
+            for (int i = 0; i < 4; i++)
+                newParam.floats[i] = 0.f;  // TODO default value ?
         }
     }
 

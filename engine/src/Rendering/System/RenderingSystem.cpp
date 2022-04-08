@@ -161,7 +161,7 @@ void RenderingSystem::UpdateWindowAsNeeded()
 
     for (auto* windowEntity : windowEntities)
     {
-        // TODO what about window cvars ? 
+        // TODO what about window cvars ?
         auto* windowComp = windowEntity->GetComponent<WindowComponent>();
 
         if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
