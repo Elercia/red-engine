@@ -147,7 +147,7 @@ void Renderer::InitRenderer(WindowComponent* window)
     // Request OpenGL 4.3 context.
     CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) != 0,
                        "Error setting gl context major version with error {}", SDL_GetError());
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4) != 0,
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5) != 0,
                        "Error setting gl context major version with error {}", SDL_GetError());
 
     // set double buffer
