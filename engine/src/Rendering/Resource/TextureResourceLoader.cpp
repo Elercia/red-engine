@@ -50,7 +50,7 @@ bool TextureResourceLoader::InitResource(std::shared_ptr<Texture2D>& resource, c
 
     glCreateTextures(GL_TEXTURE_2D, 1, &resource->m_textureHandle);
     glTextureStorage2D(resource->m_textureHandle, 1, pixelFormatSized, resource->m_size.width, resource->m_size.height);
-    glTextureSubImage2D(resource->m_textureHandle, 1, 0, 0, resource->m_size.width, resource->m_size.height, pixelFormat, GL_UNSIGNED_BYTE, data);
+    glTextureSubImage2D(resource->m_textureHandle, 0, 0, 0, resource->m_size.width, resource->m_size.height, pixelFormat, GL_UNSIGNED_BYTE, data);
 
     stbi_image_free(data);
 
