@@ -30,7 +30,7 @@ void DebugSystem::Init()
 
 void DebugSystem::Update()
 {
-    PROFILER_CATEGORY("Debug", Optick::Category::Debug);
+    PROFILER_EVENT_CATEGORY("Debug", ProfilerCategory::Input);
 
     auto* events = m_world->GetWorldComponent<EventsComponent>();
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();

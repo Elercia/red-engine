@@ -72,6 +72,8 @@ void Engine::MainLoop()
 
     while (continueExec)
     {
+        PROFILER_FRAME("MainThread");
+
         float deltaTime = fc.Update();
 
         Time::SetDeltaTime(deltaTime);
@@ -82,6 +84,8 @@ void Engine::MainLoop()
 
 bool Engine::RegisterComponentTypes()
 {
+    PROFILER_EVENT();
+
     // Rendering
     CheckReturn(m_world->RegisterComponentType<Renderable>());
     CheckReturn(m_world->RegisterComponentType<Sprite>());
@@ -119,6 +123,8 @@ static void LogToDebugger(const std::string& out)
 
 void Engine::SetupLogger()
 {
+    PROFILER_EVENT();
+
     int standarOutputFuncIndex = -1;
     int debugOutputFuncIndex = -1;
 
@@ -146,6 +152,8 @@ void Engine::SetupLogger()
 
 bool Engine::Create()
 {
+    PROFILER_EVENT();
+
     CVarManager::LoadConfigFile(Path::Resource("Config.ini"));
 
     SetupLogger();
@@ -183,6 +191,8 @@ bool Engine::Create()
 
 bool Engine::Destroy()
 {
+    PROFILER_EVENT();
+
     auto* resourceHolder = m_world->GetWorldComponent<ResourceHolderComponent>();
 
     resourceHolder->RemoveAllLoaders();
@@ -190,6 +200,8 @@ bool Engine::Destroy()
     m_world->Finalize();
 
     delete m_world;
+
+    PROFILER_SHUTDOWN();
 
     return true;
 }

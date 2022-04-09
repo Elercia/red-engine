@@ -21,7 +21,7 @@ void UserInputSystem::Init()
 {
     System::Init();
 
-    PROFILER_CATEGORY("Input Init", Optick::Category::Input);
+    PROFILER_EVENT_CATEGORY("Input Init", ProfilerCategory::Input);
 
     // TODO move this to the event system
     // TODO add a call to SDL_QuitSubSystem to clean memory (or make sure SDL_Quit is called in every cases)
@@ -44,7 +44,7 @@ void UserInputSystem::Finalise()
 
 void UserInputSystem::PreUpdate()
 {
-    PROFILER_CATEGORY("Input Update", Optick::Category::Input);
+    PROFILER_EVENT_CATEGORY("Input update", ProfilerCategory::Input);
 
     auto* eventsSystem = m_world->GetWorldComponent<EventsComponent>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)

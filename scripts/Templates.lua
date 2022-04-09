@@ -46,7 +46,7 @@ function TemplateProject(Name)
 
 	defines
 	{
-		-- "RED_USE_PROFILER",
+		"RED_USE_PROFILER",
 	}
 
 	filter "platforms:Win64"

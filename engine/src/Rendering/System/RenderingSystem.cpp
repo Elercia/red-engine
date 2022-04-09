@@ -45,7 +45,7 @@ void RenderingSystem::Finalise()
 
 void RenderingSystem::Update()
 {
-    PROFILER_CATEGORY("Update render data", Optick::Category::Rendering)
+    PROFILER_EVENT_CATEGORY("Update render data", ProfilerCategory::Rendering);
 
     auto spriteEntities = GetComponents<Sprite>();
 
@@ -68,7 +68,7 @@ void RenderingSystem::Update()
 
 void RenderingSystem::BeginRender()
 {
-    PROFILER_CATEGORY("Begin rendering", Optick::Category::Rendering);
+    PROFILER_EVENT_CATEGORY("Begin rendering", ProfilerCategory::Rendering);
 
     UpdateWindowAsNeeded();
 
@@ -77,7 +77,7 @@ void RenderingSystem::BeginRender()
 
 void RenderingSystem::EndRender()
 {
-    PROFILER_CATEGORY("Flush rendering", Optick::Category::Rendering);
+    PROFILER_EVENT_CATEGORY("Flush rendering", ProfilerCategory::Rendering);
 
     // Draw frame for each camera
     auto cameras = GetSortedCameras();
@@ -96,9 +96,8 @@ void RenderingSystem::EndRender()
         m_renderer->EndCameraRendering(cameraComponent);
     }
 
-
 #ifdef RED_DEBUG
-        m_renderer->RenderGlobalDebug();
+    m_renderer->RenderGlobalDebug();
 #endif
 
     m_renderer->EndRenderFrame();
@@ -176,7 +175,8 @@ Array<CameraComponent*> RenderingSystem::GetSortedCameras()
     auto cameraEntities = GetComponents<CameraComponent>();
     Array<CameraComponent*> cameras;
     cameras.resize(cameraEntities.size());
-    std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(), [](Entity* e){return e->GetComponent<CameraComponent>();});
+    std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(),
+                   [](Entity* e) { return e->GetComponent<CameraComponent>(); });
 
     std::sort(cameras.begin(), cameras.end(),
               [](const CameraComponent* l, const CameraComponent* r) { return l->Depth() < r->Depth(); });

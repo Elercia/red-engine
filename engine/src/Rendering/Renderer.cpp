@@ -266,7 +266,7 @@ void Renderer::DrawDebugPoint(const Vector2& /*coord*/, const Color& /*color*/ /
 
 void Renderer::RenderOpaque(CameraComponent* camera)
 {
-    PROFILER_CATEGORY("RenderOpaque", Optick::Category::Rendering);
+    PROFILER_EVENT_CATEGORY("RenderOpaque", ProfilerCategory::Rendering);
 
     uint64 count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(RenderEntityType::Opaque, camera, count);
@@ -306,7 +306,7 @@ void Renderer::RenderOpaque(CameraComponent* camera)
 
 void Renderer::RenderTransparency(CameraComponent* /*camera*/)
 {
-    PROFILER_CATEGORY("RenderTransparency", Optick::Category::Rendering);
+     PROFILER_EVENT_CATEGORY("RenderTransparency", ProfilerCategory::Rendering);
 }
 
 void Renderer::RenderDebug(CameraComponent* /*camera*/)
