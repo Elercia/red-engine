@@ -12,14 +12,15 @@ uint64 Hash(const int& value)
     return (uint64)value;
 }
 
+// FIXME Implement these
 template <>
-uint64 Hash(const double& value)
+uint64 Hash(const double& /*value*/)
 {
     return 0;
 }
 
 template <>
-uint64 Hash(const float& value)
+uint64 Hash(const float& /*value*/)
 {
     return 0;
 }
