@@ -3,7 +3,7 @@
     "name": "default",
     "spritesheet": "PADDLE_SPRITESHEET",
     "opacity": {
-      "hasOpacity": true,
+      "hasOpacity": false,
       "color": {
         "r": 0,
         "v": 0,
