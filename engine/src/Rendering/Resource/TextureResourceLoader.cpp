@@ -28,9 +28,9 @@ bool TextureResourceLoader::InitResource(std::shared_ptr<Texture2D>& resource, c
 
     Path resourcePath = Path::Resource(asciiPath);
 
-    int nrChannels;
-    unsigned char* data =
-        stbi_load(resourcePath.GetAscciiPath().c_str(), &resource->m_size.width, &resource->m_size.height, &nrChannels, 0);
+    int nbChannels;
+    unsigned char* data = stbi_load(resourcePath.GetAscciiPath().c_str(), &resource->m_size.width,
+                                    &resource->m_size.height, &nbChannels, 0);
 
     if (data == nullptr)
     {
@@ -40,12 +40,17 @@ bool TextureResourceLoader::InitResource(std::shared_ptr<Texture2D>& resource, c
         return false;
     }
 
-    glGenTextures(1, &resource->m_textureHandle);
-    glBindTexture(GL_TEXTURE_2D, resource->m_textureHandle);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, resource->m_size.width, resource->m_size.height, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                 data);  // TODO change format of the texture from the read channel data or user defined format
-    glGenerateMipmap(GL_TEXTURE_2D);  // TODO make a macro to check opengl errors like described
-                                      // https://www.khronos.org/opengl/wiki/OpenGL_Error
+    GLenum pixelFormatSized = nbChannels == 4 ? GL_RGBA8 : GL_RGB8;
+    GLenum pixelFormat = nbChannels == 4 ? GL_RGBA : GL_RGB;
+
+    RED_LOG_INFO("Creating texture {} ({}:{}) with {} channels", path.GetAscciiPath(), resource->m_size.width, resource->m_size.height, nbChannels);
+
+    // TODO make a macro to check opengl errors like described
+    // https://www.khronos.org/opengl/wiki/OpenGL_Error
+
+    glCreateTextures(GL_TEXTURE_2D, 1, &resource->m_textureHandle);
+    glTextureStorage2D(resource->m_textureHandle, 1, pixelFormatSized, resource->m_size.width, resource->m_size.height);
+    glTextureSubImage2D(resource->m_textureHandle, 1, 0, 0, resource->m_size.width, resource->m_size.height, pixelFormat, GL_UNSIGNED_BYTE, data);
 
     stbi_image_free(data);
 
