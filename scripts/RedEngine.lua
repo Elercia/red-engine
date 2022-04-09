@@ -15,7 +15,7 @@ libsToLink 				= {
 							"fmod",
 							"fsbank",
 							"fmodstudio",
-							--"optick",
+							"optick",
 							"STBI",
 						}
 

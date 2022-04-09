@@ -30,7 +30,7 @@ project "RedEngineLib"
 
 	defines
 	{
-		-- "RED_USE_PROFILER",
+		"RED_USE_PROFILER",
 	}
 
 	links
