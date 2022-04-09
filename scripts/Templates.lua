@@ -17,7 +17,7 @@ function TemplateProject(Name)
 	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
 	objdir (rootPath .. "/output/obj/" .. outputDirSementic)
 
-	local templatePath = rootPath .. "/templates/Pong"
+	local templatePath = rootPath .. "/templates/"..Name
 
 	files
 	{
