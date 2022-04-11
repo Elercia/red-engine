@@ -9,6 +9,7 @@
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/RenderDebugUtils.hpp"
 #include "RedEngine/Rendering/Resource/Material.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgram.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
@@ -31,97 +32,6 @@ namespace red
 const int PrimitiveTypesAsGLTypes[] = {
     GL_TRIANGLES, GL_QUADS, GL_LINES, GL_POINTS, GL_LINE_LOOP, GL_LINE_STRIP, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN,
 };
-
-static void OpenGLMessageCallback(GLenum source, GLenum type, GLuint /*id*/, GLenum severity, GLsizei /*length*/,
-                                  const GLchar* message, const void* /*userParam*/)
-{
-    const char* sourceStr;
-    const char* typeStr;
-    const char* severityStr;
-
-    switch (source)
-    {
-        case GL_DEBUG_SOURCE_API:
-            sourceStr = "API";
-            break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-            sourceStr = "WINDOW SYSTEM";
-            break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER:
-            sourceStr = "SHADER COMPILER";
-            break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:
-            sourceStr = "THIRD PARTY";
-            break;
-        case GL_DEBUG_SOURCE_APPLICATION:
-            sourceStr = "APPLICATION";
-            break;
-        case GL_DEBUG_SOURCE_OTHER:
-            sourceStr = "UNKNOWN";
-            break;
-        default:
-            sourceStr = "UNKNOWN";
-            break;
-    }
-
-    switch (type)
-    {
-        case GL_DEBUG_TYPE_ERROR:
-            typeStr = "ERROR";
-            break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-            typeStr = "DEPRECATED BEHAVIOR";
-            break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            typeStr = "UDEFINED BEHAVIOR";
-            break;
-        case GL_DEBUG_TYPE_PORTABILITY:
-            typeStr = "PORTABILITY";
-            break;
-        case GL_DEBUG_TYPE_PERFORMANCE:
-            typeStr = "PERFORMANCE";
-            break;
-        case GL_DEBUG_TYPE_OTHER:
-            typeStr = "OTHER";
-            break;
-        case GL_DEBUG_TYPE_MARKER:
-            typeStr = "MARKER";
-            break;
-        default:
-            typeStr = "UNKNOWN";
-            break;
-    }
-
-    bool log = false;
-    switch (severity)
-    {
-        case GL_DEBUG_SEVERITY_HIGH:
-            severityStr = "HIGH SEVERITY";
-            log = true;
-            break;
-        case GL_DEBUG_SEVERITY_MEDIUM:
-            severityStr = "MEDIUM SEVERITY";
-            log = true;
-            break;
-        case GL_DEBUG_SEVERITY_LOW:
-            severityStr = "LOW SEVERITY";
-            log = true;
-            break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION:
-            severityStr = "NOTIFICATION";
-            // log = true;
-            break;
-        default:
-            severityStr = "UNKNOWN";
-            log = true;
-            break;
-    }
-
-    if (log)
-    {
-        RED_LOG_INFO("OpenGL {}::{} raised from {}: {}\n", typeStr, severityStr, sourceStr, message);
-    }
-}
 
 Renderer::Renderer()
     : m_glContext(nullptr)
@@ -170,18 +80,14 @@ void Renderer::InitRenderer(WindowComponent* window)
         return;
     }
 
+#ifdef RED_DEBUG
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(OpenGLMessageCallback, nullptr);
-
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#endif
 
     m_perInstanceData.Init();
     m_perCameraData.Init();
-
-    RED_LOG_INFO("Init OpenGL renderer");
 }
 
 void Renderer::ReCreateWindow(WindowComponent* /*window*/)
@@ -272,9 +178,9 @@ void Renderer::RenderOpaque(CameraComponent* camera)
     uint64 count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(RenderEntityType::Opaque, camera, count);
 
-    const Matrix44& projView = camera->GetViewProjection();
-
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Opaque");
+
+    glDisable(GL_BLEND);
 
     // Do the actual render calls to the camera render target
     for (uint64 i = 0; i < count; i++)
