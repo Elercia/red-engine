@@ -137,6 +137,8 @@ Renderer::~Renderer()
 
 void Renderer::InitRenderer(WindowComponent* window)
 {
+    RED_LOG_INFO("Init OpenGL renderer");
+
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
     {
         RED_LOG_ERROR("Error initializing SDL_Video with error {}", SDL_GetError());
@@ -144,13 +146,12 @@ void Renderer::InitRenderer(WindowComponent* window)
         RED_ABORT("Cannot initialize Renderer");
     }
 
-    // Request OpenGL 4.3 context.
+    // Request OpenGL 4.5 context.
     CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) != 0,
                        "Error setting gl context major version with error {}", SDL_GetError());
     CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5) != 0,
                        "Error setting gl context major version with error {}", SDL_GetError());
 
-    // set double buffer
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     m_window = window;
@@ -283,14 +284,8 @@ void Renderer::RenderOpaque(CameraComponent* camera)
         UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);
 
-        PerCameraData* perCamera = m_perCameraData.Map<PerCameraData>(MapType::WRITE);
-        perCamera->viewProj = projView;
-        m_perCameraData.UnMap();
-
-        PerInstanceData* perInstance = m_perInstanceData.Map<PerInstanceData>(MapType::WRITE);
-        perInstance->size = renderData.size;
-        perInstance->world = renderData.worldMatrix;
-        m_perInstanceData.UnMap();
+        FillCameraBuffer(*camera);
+        FillEntityBuffer(renderData);
 
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_perCameraData.m_gpuBufferHandle);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_perInstanceData.m_gpuBufferHandle);
@@ -315,6 +310,21 @@ void Renderer::RenderDebug(CameraComponent* /*camera*/)
 
 void Renderer::RenderGlobalDebug()
 {
+}
+
+void Renderer::FillCameraBuffer(const CameraComponent& camera)
+{
+    PerCameraData* perCamera = m_perCameraData.Map<PerCameraData>(MapType::WRITE);
+    perCamera->viewProj = camera.GetViewProjection();
+    m_perCameraData.UnMap();
+}
+
+void Renderer::FillEntityBuffer(const RenderingData& data)
+{
+    PerInstanceData* perInstance = m_perInstanceData.Map<PerInstanceData>(MapType::WRITE);
+    perInstance->size = data.size;
+    perInstance->world = data.worldMatrix;
+    m_perInstanceData.UnMap();
 }
 
 void Renderer::UseMaterial(const MaterialInstance& materialInstance)

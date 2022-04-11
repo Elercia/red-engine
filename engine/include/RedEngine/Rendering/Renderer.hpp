@@ -87,6 +87,9 @@ private:
     void UseMaterial(const MaterialInstance& mat);
     void UseGeometry(const Geometry* geom);
 
+    void FillCameraBuffer(const CameraComponent& camera);
+    void FillEntityBuffer(const RenderingData& data);
+
 private:
     OpenGlContext m_glContext;
     WindowComponent* m_window;
