@@ -4,8 +4,6 @@
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/SerializationFunction.hpp"
 
-#include <SDL2/SDL_syswm.h>
-
 struct SDL_Window;
 
 namespace red
@@ -43,23 +41,11 @@ public:
     WindowComponent(Entity* owner);
     virtual ~WindowComponent();
 
-#ifdef RED_WINDOWS
-    HWND GetNativeHandle();
-#endif
-
-#ifdef RED_LINUX
-    ::Window GetNativeHandle();
-    Display* GetNativeDisplay();
-#endif
-
     WindowInfo GetWindowInfo() const;
 
     SDL_Window* GetSDLWindow();
     
     void CreateNewWindow();
-
-private:
-    SDL_SysWMinfo GetSDLSysInfo();
 
 private:
     SDL_Window* m_window{nullptr};

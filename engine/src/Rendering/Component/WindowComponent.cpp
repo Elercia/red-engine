@@ -6,6 +6,7 @@
 #include "RedEngine/Utils/BitfieldUtils.hpp"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_video.h>
 
 namespace red
@@ -53,10 +54,11 @@ void WindowComponent::CreateNewWindow()
     RED_LOG_INFO("Created window");
 }
 
+#if 0
 #ifdef RED_WINDOWS
 HWND WindowComponent::GetNativeHandle()
 {
-    SDL_SysWMinfo sysInfo = GetSDLSysInfo();
+    SDL_SysWMinfo sysInfo = GetSDLSysInfo(m_window);
 
     return sysInfo.info.win.window;
 }
@@ -65,30 +67,32 @@ HWND WindowComponent::GetNativeHandle()
 #ifdef RED_LINUX
 ::Window WindowComponent::GetNativeHandle()
 {
-    SDL_SysWMinfo sysInfo = GetSDLSysInfo();
+    SDL_SysWMinfo sysInfo = GetSDLSysInfo(m_window);
 
     return sysInfo.info.x11.window;
 }
 Display *WindowComponent::GetNativeDisplay()
 {
-    SDL_SysWMinfo sysInfo = GetSDLSysInfo();
+    SDL_SysWMinfo sysInfo = GetSDLSysInfo(m_window);
 
     return sysInfo.info.x11.display;
 }
 #endif  // PLATFORM_LINUX
 
-SDL_SysWMinfo WindowComponent::GetSDLSysInfo()
+
+static SDL_SysWMinfo GetSDLSysInfo(SDL_Window *window)
 {
     SDL_SysWMinfo sysInfo;
     SDL_VERSION(&sysInfo.version);
 
-    if (SDL_GetWindowWMInfo(m_window, &sysInfo) != SDL_TRUE)
+    if (SDL_GetWindowWMInfo(window, &sysInfo) != SDL_TRUE)
     {
         RED_ERROR("Cant get native window handle on windows")
     }
 
     return sysInfo;
 }
+#endif
 
 WindowInfo WindowComponent::GetWindowInfo() const
 {

@@ -13,6 +13,8 @@ namespace red
 {
 class Transform;
 class Renderable;
+class Entity;
+class WindowComponent;
 
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(CameraComponent)
 
@@ -30,6 +32,7 @@ public:
     RED_END_COMPONENT_REGISTER()
 
     CameraComponent(Entity* entity);
+    CameraComponent(Entity* entity, WindowComponent* attachedWindow);
     virtual ~CameraComponent() = default;
 
     /// View ports points
@@ -39,8 +42,12 @@ public:
     // Return true if the given AABB is visible from the given camera
     [[nodiscard]] bool IsVisibleFrom(const AABB& aabb) const;
 
-    [[nodiscard]] const Vector4i& Viewport() const;
-    void SetViewport(const Vector4i& viewport);
+    [[nodiscard]] Vector4i ViewportRect() const;
+    [[nodiscard]] const Vector4& Viewport() const;
+    void SetViewport(const Vector4& viewport);
+
+    [[nodiscard]] const WindowComponent* GetAttachedWindow() const;
+    void SetAttachedWindow(const WindowComponent* window);
 
     [[nodiscard]] float AspectRatio() const;
 
@@ -55,8 +62,11 @@ public:
     const Matrix44& GetViewProjection() const;
 
 private:
-    /// The camera viewport (position in the window and size)
-    Vector4i m_viewport;
+    Entity* m_attachedWindow;
+
+    // The camera viewport
+    // This describe the position in the window and it size between 0-1
+    Vector4 m_viewport;
 
     /// Depth of the camera (defaulted to 0)
     /// Higher depth camera are rendered after (to be on top of another)

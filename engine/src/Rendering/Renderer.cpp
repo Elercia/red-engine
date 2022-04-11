@@ -219,11 +219,11 @@ void Renderer::EndRenderFrame()
 
 void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 {
-    cameraComponent->UpdateMatricesIfNeeded();
-    
     // Setup the camera viewport
-    glViewport(cameraComponent->m_viewport.x, cameraComponent->m_viewport.y, cameraComponent->m_viewport.width,
-               cameraComponent->m_viewport.height);
+
+    auto viewport = cameraComponent->ViewportRect();
+
+    glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 
     glClearColor(cameraComponent->m_cleanColor.r / 255.f, cameraComponent->m_cleanColor.g / 255.f,
                  cameraComponent->m_cleanColor.b / 255.f, cameraComponent->m_cleanColor.a / 255.f);

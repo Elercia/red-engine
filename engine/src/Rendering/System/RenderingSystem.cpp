@@ -156,6 +156,7 @@ void RenderingSystem::RenderDebug()
 void RenderingSystem::UpdateWindowAsNeeded()
 {
     auto windowEntities = GetComponents<WindowComponent>();
+    auto cameraEntities = GetComponents<CameraComponent>();
     auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
 
     for (auto* windowEntity : windowEntities)
@@ -166,6 +167,14 @@ void RenderingSystem::UpdateWindowAsNeeded()
         if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
         {
             m_renderer->ReCreateWindow(windowComp);
+        }
+
+        for (auto* cameraEntity : cameraEntities)
+        {
+            auto* cameraComp = cameraEntity->GetComponent<CameraComponent>();
+
+            if (cameraComp->GetAttachedWindow() == windowComp)
+                cameraComp->UpdateMatricesIfNeeded();
         }
     }
 }

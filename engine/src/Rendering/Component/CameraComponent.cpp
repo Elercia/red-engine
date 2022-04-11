@@ -17,21 +17,14 @@ namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(CameraComponent)
 
-CameraComponent::CameraComponent(Entity* entity) : Component(entity)
+CameraComponent::CameraComponent(Entity* entity) : Component(entity), m_attachedWindow(nullptr)
 {
-    auto* window = entity->GetWorld()->GetWorldComponent<WindowComponent>();
+    UpdateMatricesIfNeeded();
+}
 
-    if (window == nullptr)
-    {
-        RED_LOG_ERROR("Camera component created without a window");
-        m_viewport = {0, 0, 1, 1};
-    }
-    else
-    {
-        auto info = window->GetWindowInfo();
-        m_viewport = {0, 0, info.width, info.height};
-    }
-
+CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow)
+    : Component(entity), m_attachedWindow(attachedWindow->GetOwner())
+{
     UpdateMatricesIfNeeded();
 }
 
@@ -51,12 +44,26 @@ bool CameraComponent::IsVisibleFrom(const AABB& /*aabb*/) const
     return true;
 }
 
-const Vector4i& CameraComponent::Viewport() const
+Vector4i CameraComponent::ViewportRect() const
+{
+    if (m_attachedWindow == nullptr)
+        return {0, 0, 0, 0};
+
+    WindowInfo windowInfo = m_attachedWindow->GetComponent<WindowComponent>()->GetWindowInfo();
+
+    Vector4i viewport((int) (m_viewport.x * (float) windowInfo.width), (int) (m_viewport.y * (float) windowInfo.height),
+                      (int) (m_viewport.width * (float) windowInfo.width),
+                      (int) (m_viewport.height * (float) windowInfo.height));
+
+    return viewport;
+}
+
+const Vector4& CameraComponent::Viewport() const
 {
     return m_viewport;
 }
 
-void CameraComponent::SetViewport(const Vector4i& viewport)
+void CameraComponent::SetViewport(const Vector4& viewport)
 {
     m_viewport = viewport;
 }
@@ -91,13 +98,32 @@ const Matrix44& CameraComponent::GetViewProjection() const
     return m_viewProjectionMatrix;
 }
 
+const WindowComponent* CameraComponent::GetAttachedWindow() const
+{
+    return m_attachedWindow->GetComponent<WindowComponent>();
+}
+
+void CameraComponent::SetAttachedWindow(const WindowComponent* window)
+{
+    m_attachedWindow = window->GetOwner();
+
+    UpdateMatricesIfNeeded();
+}
+
 void CameraComponent::UpdateMatricesIfNeeded()
 {
+    if (m_attachedWindow == nullptr)
+        return;
+    auto windowInfo = m_attachedWindow->GetComponent<WindowComponent>()->GetWindowInfo();
     auto* transform = GetOwner()->GetComponent<Transform>();
+
+    const Vector2i windowSize(windowInfo.width, windowInfo.height);
     auto& worldPosition = transform->GetPosition();
     auto pos = Vector3(worldPosition, transform->GetDepth());
 
-    m_projectionMatrix = Math::Ortho(0.f, (float) m_viewport.width, 0.f, (float) m_viewport.height, m_zNear, m_zFar);
+    m_projectionMatrix = Math::Ortho(
+        m_viewport.x * (float) windowSize.width, m_viewport.width * (float) windowSize.width,
+        m_viewport.y * (float) windowSize.height, m_viewport.height * (float) windowSize.height, m_zNear, m_zFar);
     m_viewMatrix = transform->GetWorldMatrix();
 
     m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
