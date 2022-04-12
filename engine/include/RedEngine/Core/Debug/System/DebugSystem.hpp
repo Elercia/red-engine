@@ -4,6 +4,8 @@
 
 namespace red
 {
+class DebugComponent;
+
 class DebugSystem : public System
 {
 public:
@@ -13,5 +15,9 @@ public:
     virtual void Init() override;
 
     void Update() override;
+
+private:
+
+    void RenderConsole(DebugComponent* debug);
 };
 }  // namespace red

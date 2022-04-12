@@ -94,14 +94,9 @@ void Renderer::InitRenderer(WindowComponent* window)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    (void) io;
-    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    // ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForOpenGL(m_window->GetSDLWindow(), m_glContext);
@@ -142,9 +137,6 @@ void Renderer::BeginRenderFrame()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-
-    static bool demoWindowImgui = true;
-    ImGui::ShowDemoWindow(&demoWindowImgui);
 }
 
 void Renderer::EndRenderFrame()

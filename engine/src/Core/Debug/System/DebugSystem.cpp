@@ -12,8 +12,10 @@
 #include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
+#include <SDL2/SDL_clipboard.h>
 #include <box2d/b2_draw.h>
 #include <box2d/box2d.h>
+#include <imgui.h>
 
 namespace red
 {
@@ -25,7 +27,114 @@ DebugSystem::DebugSystem(World* world) : System(world)
 void DebugSystem::Init()
 {
     System::Init();
-    m_world->CreateWorldEntity("DebugSystemEntity")->AddComponent<DebugComponent>();
+    auto* debugComp = m_world->CreateWorldEntity("DebugSystemEntity")->AddComponent<DebugComponent>();
+
+    GetRedLogger()->AddOutput([=](const std::string& out) { debugComp->AddLog(out); });
+}
+
+void DebugSystem::RenderConsole(DebugComponent* debug)
+{
+    static bool open = true;
+    if (!ImGui::Begin("Console", &open))
+    {
+        ImGui::End();
+        return;
+    }
+
+    // Header
+
+    if (ImGui::BeginPopupContextItem())
+    {
+        if (ImGui::MenuItem("Close"))
+            open = false;
+        ImGui::EndPopup();
+    }
+
+    if (ImGui::SmallButton("Clear"))
+    {
+        debug->ClearLogs();
+    }
+
+    static bool autoScroll = true;
+    bool scrollToBottom = false;
+    ImGui::Checkbox("Auto-scroll", &autoScroll);
+    if (ImGui::Button("Scroll to bottom"))
+        scrollToBottom = true;
+
+    ImGui::Separator();
+
+    // Log content
+
+    // Reserve enough left-over height for 1 separator + 1 input text
+    const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
+    ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), false,
+                      ImGuiWindowFlags_HorizontalScrollbar);
+
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));  // Tighten spacing
+
+    const auto& logs = debug->GetLogBuffer();
+    for (const auto& log : logs)
+    {
+        ImVec4 color;
+        bool has_color = false;
+        if (log.find("error") != std::string::npos)
+        {
+            color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
+            has_color = true;
+        }
+        else if (log[0] == '>')
+        {
+            color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
+            has_color = true;
+        }
+        if (has_color)
+            ImGui::PushStyleColor(ImGuiCol_Text, color);
+
+        ImGui::TextUnformatted(log.c_str());
+
+        if (ImGui::IsItemClicked(0))
+        {
+            if (ImGui::BeginPopupContextWindow())
+            {
+                if (ImGui::Selectable("Clear"))
+                {
+                    ImGui::SetClipboardText(log.c_str());
+                }
+                ImGui::EndPopup();
+            }
+        }
+
+        if (has_color)
+            ImGui::PopStyleColor();
+    }
+
+    if (scrollToBottom || (autoScroll && ImGui::GetScrollY() < ImGui::GetScrollMaxY()))
+        ImGui::SetScrollHereY(1.0f);
+    scrollToBottom = false;
+
+    ImGui::PopStyleVar();
+    ImGui::EndChild();
+
+    ImGui::Separator();
+
+    // Input zone
+    bool reclaimFocus = false;
+    ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue;
+
+    static char inputBuffer[512] = {0};
+    if (ImGui::InputText("Input", inputBuffer, IM_ARRAYSIZE(inputBuffer), input_text_flags))
+    {
+        debug->HandleCommand(inputBuffer);
+        inputBuffer[0] = '\0';
+        reclaimFocus = true;
+    }
+
+    // Auto-focus on window apparition
+    ImGui::SetItemDefaultFocus();
+    if (reclaimFocus)
+        ImGui::SetKeyboardFocusHere(-1);  // Auto focus previous widget
+
+    ImGui::End();
 }
 
 void DebugSystem::Update()
@@ -34,6 +143,8 @@ void DebugSystem::Update()
 
     auto* events = m_world->GetWorldComponent<EventsComponent>();
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+
+    RenderConsole(debugComp);
 
     if (events->GetKeyDown(KeyCodes::KEY_F1))
     {

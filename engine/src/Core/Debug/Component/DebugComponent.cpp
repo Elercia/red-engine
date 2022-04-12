@@ -36,4 +36,26 @@ void DebugComponent::AddPoint(const Vector2& coord, const Color& c /*= ColorCons
     auto* point = new DebugPoint{{DebugShapeType::POINT, isSolid, c}, coord};
     m_frameShapes.emplace_back(point);
 }
+
+void DebugComponent::ClearLogs()
+{
+    m_logs.clear();
+}
+
+const Array<std::string>& DebugComponent::GetLogBuffer() const
+{
+    return m_logs;
+}
+
+void DebugComponent::HandleCommand(const std::string& str)
+{
+    m_logs.push_back(">" + str);
+}
+
+void DebugComponent::AddLog(const std::string& str)
+{
+    m_logs.push_back(str);
+    if (m_logs.size() > 500)
+        m_logs.erase(m_logs.begin(), m_logs.begin() + 100);
+}
 }  // namespace red

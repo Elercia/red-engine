@@ -67,8 +67,14 @@ public:
     void AddPolygon(const Array<Vector2>& points, const Color& c = ColorConstant::BLACK, bool isSolid = false);
     void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK, bool isSolid = false);
 
+    void ClearLogs();
+    const Array<std::string>& GetLogBuffer() const;
+    void HandleCommand(const std::string& str);
+    void AddLog(const std::string& str);
+
 private:
     Array<std::unique_ptr<DebugShape>> m_frameShapes;
     std::unique_ptr<PhysicsDebugDrawer> m_physicsDebugDrawer;
+    Array<std::string> m_logs;
 };
 }  // namespace red
