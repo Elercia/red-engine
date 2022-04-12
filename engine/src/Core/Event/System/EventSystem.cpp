@@ -7,6 +7,8 @@
 #include "RedEngine/Input/InputDefinitionTranslationUnit.hpp"
 
 #include <SDL2/SDL_events.h>
+#include <imgui.h>
+#include <imgui_impl_sdl.h>
 
 namespace red
 {
@@ -43,6 +45,10 @@ void EventSystem::PreUpdate()
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
     {
+#ifdef RED_DEBUG
+        ImGui_ImplSDL2_ProcessEvent(&event);
+#endif
+
         /* handle your event here */
         switch (event.type)
         {

@@ -160,3 +160,22 @@ ExternalLibs("STBI", true, "/stbi/include")
 	{
 		externalDirectoryPath .. "/stbi/include/"
 	}
+
+ExternalLibs("ImGui", true, "/imgui/")
+	files
+	{
+		externalDirectoryPath .. "/imgui/backends/imgui_impl_sdl.cpp",
+		externalDirectoryPath .. "/imgui/backends/imgui_impl_opengl3.cpp",
+		externalDirectoryPath .. "/imgui/imgui*.cpp",
+	}
+
+	includedirs
+	{
+		externalDirectoryPath .. "/imgui/",
+		externalDirectoryPath .. "/imgui/backends/",
+		externalDirectoryPath .. "/SDL2/include/SDL2/",
+		externalDirectoryPath .. "/SDL2/include/",
+	}
+
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/imgui/")
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/imgui/backends/")

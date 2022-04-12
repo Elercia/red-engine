@@ -75,5 +75,6 @@ The engine uses the following dependencies :
 - [SDL2](https://www.libsdl.org/) to manage platform dependent code such as input handling and window creation.
 - [STB (image related)](https://github.com/nothings/stb) to load / write images on CPU side.
 - [GL3W](https://github.com/skaslev/gl3w) to load OpenGL functions.  
+- [Dear ImGui](https://github.com/ocornut/imgui) to display debug / utils  
 - [Premake export compile commands](https://github.com/tarruda/premake-export-compile-commands/) To export ``compile_commands.json`` with premake script.  
 

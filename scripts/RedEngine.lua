@@ -17,6 +17,7 @@ libsToLink 				= {
 							"fmodstudio",
 							"optick",
 							"STBI",
+							"imgui",
 						}
 
 availablePlatforms={}

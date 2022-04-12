@@ -19,6 +19,10 @@
 #include <GL/gl3w.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+
+#include <imgui.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_sdl.h>
 // clang-format on
 
 #define CheckGLReturnValue(expr, ...) \
@@ -74,6 +78,8 @@ void Renderer::InitRenderer(WindowComponent* window)
         return;
     }
 
+    SDL_GL_MakeCurrent(m_window->GetSDLWindow(), m_glContext);
+
     if (gl3wInit() != 0)
     {
         RED_LOG_ERROR("Failed to query openGL context from SDL");
@@ -84,6 +90,22 @@ void Renderer::InitRenderer(WindowComponent* window)
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(OpenGLMessageCallback, nullptr);
+
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    (void) io;
+    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    // ImGui::StyleColorsClassic();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplSDL2_InitForOpenGL(m_window->GetSDLWindow(), m_glContext);
+    ImGui_ImplOpenGL3_Init("#version 130");
 #endif
 
     m_perInstanceData.Init();
@@ -100,6 +122,10 @@ void Renderer::Finalise()
     m_perInstanceData.Finalize();
     m_perCameraData.Finalize();
 
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
     SDL_GL_DeleteContext(m_glContext);
 
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -111,6 +137,14 @@ void Renderer::BeginRenderFrame()
     glViewport(0, 0, windowInfo.width, windowInfo.height);
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+     // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    static bool demoWindowImgui = true;
+    ImGui::ShowDemoWindow(&demoWindowImgui);
 }
 
 void Renderer::EndRenderFrame()
@@ -215,7 +249,9 @@ void Renderer::RenderDebug(CameraComponent* /*camera*/)
 }
 
 void Renderer::RenderGlobalDebug()
-{
+{   
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Renderer::FillCameraBuffer(const CameraComponent& camera)

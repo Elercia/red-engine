@@ -35,6 +35,7 @@
 #include "RedEngine/Utils/Random.hpp"
 
 #ifdef RED_WINDOWS
+#include <windows.h> // For some reason, some include above define some macros that break everything with a #error "No Target Architecture"
 #include <debugapi.h>
 #endif
 
