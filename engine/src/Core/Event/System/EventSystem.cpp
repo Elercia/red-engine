@@ -83,7 +83,7 @@ void EventSystem::PreUpdate()
                     keyState.isPressed = true;
                     keyState.isDown = true;
 
-                    RED_LOG_DEBUG("Events : Key DOWN {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
+                    RED_LOG_TRACE("Events : Key DOWN {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
                 }
             }
             break;
@@ -94,7 +94,7 @@ void EventSystem::PreUpdate()
                 keyState.isPressed = false;
                 keyState.isUp = true;
 
-                RED_LOG_DEBUG("Events : Key UP {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
+                RED_LOG_TRACE("Events : Key UP {}", codes[keyboardCodes.at(event.key.keysym.scancode)]);
             }
             break;
                 // -------- MOUSE --------
@@ -110,7 +110,7 @@ void EventSystem::PreUpdate()
                 if (!keyState.isDown)
                 {
                     keyState = {true, false, true};
-                    RED_LOG_DEBUG("Mouse button DOWN {}", codes[mouseCodes.at(event.button.button)]);
+                    RED_LOG_TRACE("Mouse button DOWN {}", codes[mouseCodes.at(event.button.button)]);
                 }
             }
             break;
@@ -121,29 +121,29 @@ void EventSystem::PreUpdate()
                 if (!keyState.isUp)
                 {
                     keyState = {false, true, false};
-                    RED_LOG_DEBUG("Mouse button UP {}", codes[mouseCodes.at(event.button.button)]);
+                    RED_LOG_TRACE("Mouse button UP {}", codes[mouseCodes.at(event.button.button)]);
                 }
             }
             break;
             case SDL_MOUSEWHEEL:
             {
-                RED_LOG_DEBUG("Mouse wheel detected delta x:{}, y:{}", event.wheel.x, event.wheel.y);
+                RED_LOG_TRACE("Mouse wheel detected delta x:{}, y:{}", event.wheel.x, event.wheel.y);
             }
             break;
                 // -------- GAMEPAD --------
             case SDL_CONTROLLERAXISMOTION:
             {
-                RED_LOG_DEBUG("Gamepad axis motion");
+                RED_LOG_TRACE("Gamepad axis motion");
             }
             break;
             case SDL_CONTROLLERBUTTONDOWN:
             {
-                RED_LOG_DEBUG("Gamepad button down");
+                RED_LOG_TRACE("Gamepad button down");
             }
             break;
             case SDL_CONTROLLERBUTTONUP:
             {
-                RED_LOG_DEBUG("Gamepad button up");
+                RED_LOG_TRACE("Gamepad button up");
             }
             break;
             case SDL_CONTROLLERDEVICEADDED:
