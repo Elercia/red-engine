@@ -68,13 +68,13 @@ public:
     void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK, bool isSolid = false);
 
     void ClearLogs();
-    const Array<std::string>& GetLogBuffer() const;
+    const Array<Logger::LogOoutputInfo>& GetLogBuffer() const;
     void HandleCommand(const std::string& str);
-    void AddLog(const std::string& str);
+    void AddLog(const Logger::LogOoutputInfo& str);
 
 private:
     Array<std::unique_ptr<DebugShape>> m_frameShapes;
     std::unique_ptr<PhysicsDebugDrawer> m_physicsDebugDrawer;
-    Array<std::string> m_logs;
+    Array<Logger::LogOoutputInfo> m_logs;
 };
 }  // namespace red

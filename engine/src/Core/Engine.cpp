@@ -115,9 +115,9 @@ bool Engine::RegisterComponentTypes()
 }
 
 #if defined(RED_WINDOWS) && defined(RED_DEBUG)
-static void LogToDebugger(const std::string& out)
+static void LogToDebugger(const Logger::LogOoutputInfo& out)
 {
-    OutputDebugStringA(out.c_str());
+    OutputDebugStringA(out.str.c_str());
     OutputDebugStringA("\n");
 }
 #endif

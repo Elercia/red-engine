@@ -29,7 +29,7 @@ void DebugSystem::Init()
     System::Init();
     auto* debugComp = m_world->CreateWorldEntity("DebugSystemEntity")->AddComponent<DebugComponent>();
 
-    GetRedLogger()->AddOutput([=](const std::string& out) { debugComp->AddLog(out); });
+    GetRedLogger()->AddOutput([=](const Logger::LogOoutputInfo& out) { debugComp->AddLog(out); });
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
@@ -58,6 +58,7 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     static bool autoScroll = true;
     bool scrollToBottom = false;
     ImGui::Checkbox("Auto-scroll", &autoScroll);
+    ImGui::SameLine();
     if (ImGui::Button("Scroll to bottom"))
         scrollToBottom = true;
 
@@ -76,21 +77,28 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     for (const auto& log : logs)
     {
         ImVec4 color;
-        bool has_color = false;
-        if (log.find("error") != std::string::npos)
+        switch (log.level)
         {
-            color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
-            has_color = true;
+            case LogLevel::LEVEL_CUSTOM:
+                color = ImVec4(0.8f, 0.6f, 0.f, 1.f);
+                break;
+            case LogLevel::LEVEL_WARNING:
+                color = ImVec4(1.f, 0.8f, 0.f, 1.f);
+                break;
+            case LogLevel::LEVEL_ERROR:
+                color = ImVec4(1.f, 0.2f, 0.f, 1.f);
+                break;
+            case LogLevel::LEVEL_FATAL:
+                color = ImVec4(1.f, 0.4f, 0.f, 1.f);
+                break;
+            default:
+                color = ImGui::GetStyle().Colors[ImGuiCol_Text];
+                break;
         }
-        else if (log[0] == '>')
-        {
-            color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
-            has_color = true;
-        }
-        if (has_color)
-            ImGui::PushStyleColor(ImGuiCol_Text, color);
 
-        ImGui::TextUnformatted(log.c_str());
+        ImGui::PushStyleColor(ImGuiCol_Text, color);
+
+        ImGui::TextUnformatted(log.str.c_str());
 
         if (ImGui::IsItemClicked(0))
         {
@@ -98,14 +106,13 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
             {
                 if (ImGui::Selectable("Clear"))
                 {
-                    ImGui::SetClipboardText(log.c_str());
+                    ImGui::SetClipboardText(log.str.c_str());
                 }
                 ImGui::EndPopup();
             }
         }
 
-        if (has_color)
-            ImGui::PopStyleColor();
+        ImGui::PopStyleColor();
     }
 
     if (scrollToBottom || (autoScroll && ImGui::GetScrollY() < ImGui::GetScrollMaxY()))

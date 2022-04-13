@@ -10,6 +10,7 @@ namespace red
 
 enum class LogLevel
 {
+    LEVEL_CUSTOM,
     LEVEL_TRACE,
     LEVEL_DEBUG,
     LEVEL_INFO,
@@ -29,9 +30,15 @@ class Logger
 {
 public:
 
+    struct LogOoutputInfo
+    {
+        std::string str;
+        LogLevel level;
+    };
+
     static const Map<LogLevel, std::string> logLevelAsString;
 
-    using OutputDelegate = Delegate<const std::string& /*Log message*/>;
+    using OutputDelegate = Delegate<const LogOoutputInfo&>;
 
     Logger();
     ~Logger() = default;
@@ -41,11 +48,11 @@ public:
     template <typename... Args>
     void LogInternal(LogLevel level, int line, const char* file, const std::string& format, Args... args);
 
-    void Out(const std::string& str);
+    void Out(const LogOoutputInfo& data);
 
     OutputDelegate::FuncIndex AddOutput(OutputDelegate::FuncType output);
 
-    static void LogToStandardOutputFun(const std::string& out);
+    static void LogToStandardOutputFun(const LogOoutputInfo& out);
 
 private:
     LogLevel m_logLevel;

@@ -21,7 +21,10 @@ void Logger::LogInternal(LogLevel level, int line, const char* file, const std::
 
         std::string logString = fmt::format(format, std::forward<Args>(args)...);
 
-        Out(levelFormat + logString);
+        LogOoutputInfo info;
+        info.str = levelFormat + logString;
+        info.level = level;
+        Out(info);
     }
 }
 

@@ -2,6 +2,8 @@
 
 #include "RedEngine/Core/CoreModule.hpp"
 
+#include <fmt/core.h>
+
 namespace red
 {
 const Map<LogLevel, std::string> Logger::logLevelAsString{
@@ -23,9 +25,9 @@ void Logger::SetLogLevel(LogLevel level)
     m_logLevel = level;
 }
 
-void Logger::Out(const std::string& str)
+void Logger::Out(const LogOoutputInfo& data)
 {
-    m_delegates(str);
+    m_delegates(data);
 }
 
 Logger::OutputDelegate::FuncIndex Logger::AddOutput(OutputDelegate::FuncType output)
@@ -33,9 +35,10 @@ Logger::OutputDelegate::FuncIndex Logger::AddOutput(OutputDelegate::FuncType out
     return m_delegates.Add(std::move(output));
 }
 
-void Logger::LogToStandardOutputFun(const std::string& out)
+void Logger::LogToStandardOutputFun(const LogOoutputInfo& out)
 {
-    std::cout << out << "\n";
+    fmt::print(out.str);
+    std::putc('\n', stdout);
 }
 
 template <>

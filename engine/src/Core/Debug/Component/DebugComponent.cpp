@@ -42,20 +42,23 @@ void DebugComponent::ClearLogs()
     m_logs.clear();
 }
 
-const Array<std::string>& DebugComponent::GetLogBuffer() const
+const Array<Logger::LogOoutputInfo>& DebugComponent::GetLogBuffer() const
 {
     return m_logs;
 }
 
 void DebugComponent::HandleCommand(const std::string& str)
 {
-    m_logs.push_back(">" + str);
+    Logger::LogOoutputInfo info;
+    info.str = str;
+    info.level = LogLevel::LEVEL_CUSTOM;
+    m_logs.push_back(info);
 }
 
-void DebugComponent::AddLog(const std::string& str)
+void DebugComponent::AddLog(const Logger::LogOoutputInfo& str)
 {
     m_logs.push_back(str);
-    if (m_logs.size() > 500)
+    if (m_logs.size() > 1000)
         m_logs.erase(m_logs.begin(), m_logs.begin() + 100);
 }
 }  // namespace red
