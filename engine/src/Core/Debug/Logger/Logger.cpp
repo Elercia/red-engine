@@ -7,7 +7,7 @@
 namespace red
 {
 const Map<LogLevel, std::string> Logger::logLevelAsString{
-    {LogLevel::LEVEL_TRACE, "TRACE"},     {LogLevel::LEVEL_DEBUG, "DEBUG"}, {LogLevel::LEVEL_INFO, "INFO"},
+    {LogLevel::LEVEL_CUSTOM, "CUSTOM"}, {LogLevel::LEVEL_TRACE, "TRACE"},     {LogLevel::LEVEL_DEBUG, "DEBUG"}, {LogLevel::LEVEL_INFO, "INFO"},
     {LogLevel::LEVEL_WARNING, "WARNING"}, {LogLevel::LEVEL_ERROR, "ERROR"}, {LogLevel::LEVEL_FATAL, "FATAL"},
 };
 
