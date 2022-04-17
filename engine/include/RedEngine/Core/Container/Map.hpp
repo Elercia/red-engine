@@ -155,8 +155,8 @@ public:
     const_iterator end() const;
     const_iterator cend() const;
 
-    size_type size();
-    bool empty();
+    size_type size() const;
+    bool empty() const;
     void clear();
 
 private:

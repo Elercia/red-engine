@@ -349,13 +349,13 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator Map<KeyT, ValueT,
 }
 
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
-typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, HashOpT, EqualsOpT>::size()
+typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, HashOpT, EqualsOpT>::size() const
 {
     return m_size;
 }
 
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
-bool Map<KeyT, ValueT, HashOpT, EqualsOpT>::empty()
+bool Map<KeyT, ValueT, HashOpT, EqualsOpT>::empty()  const
 {
     return m_values.empty();
 }
