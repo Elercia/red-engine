@@ -3,6 +3,7 @@
 #include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
@@ -54,6 +55,57 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     {
         debug->ClearLogs();
     }
+    ImGui::SameLine();
+
+    ImGui::PushItemWidth(100);
+    // Set log level combo
+    {
+        static ImGuiComboFlags flags = 0;
+        LogLevel currentLogLevel = GetRedLogger()->GetLogLevel();
+        if (ImGui::BeginCombo("Log level", Logger::logLevelAsString[currentLogLevel].c_str(), flags))
+        {
+            for (auto& item : Logger::logLevelAsString)
+            {
+                const bool is_selected = item.first == currentLogLevel;
+                if (ImGui::Selectable(item.second.c_str(), is_selected))
+                    SetLogLevel(item.first);
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+    }
+
+    ImGui::SameLine();
+
+    // Log level filter
+    {
+        static ImGuiComboFlags flags = 0;
+        static uint32 selectedLevels = (uint32) -1;
+
+        if (ImGui::BeginCombo("Shown log levels", "", flags))
+        {
+            for (auto& item : Logger::logLevelAsString)
+            {
+                const bool is_selected = ((1 << (uint32) item.first) & selectedLevels) != 0;
+                if (ImGui::Selectable(item.second.c_str(), is_selected))
+                {
+                    if (is_selected)
+                    {
+                        selectedLevels &= ~(1 << (uint32) item.first);
+                    }
+                    else
+                    {
+                        selectedLevels |= (1 << (uint32) item.first);
+                    }
+                }
+            }
+            ImGui::EndCombo();
+        }
+    }
+    ImGui::PopItemWidth();
 
     static bool autoScroll = true;
     bool scrollToBottom = false;
@@ -100,11 +152,11 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
 
         ImGui::TextUnformatted(log.str.c_str());
 
-        if (ImGui::IsItemClicked(0))
+        if (ImGui::IsItemClicked(0))  // TODO not working
         {
             if (ImGui::BeginPopupContextWindow())
             {
-                if (ImGui::Selectable("Clear"))
+                if (ImGui::Selectable("Copy"))
                 {
                     ImGui::SetClipboardText(log.str.c_str());
                 }

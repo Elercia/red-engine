@@ -12,9 +12,10 @@ TEST_CASE("Logger", "[Debug]")
 
     std::string lastLog;
 
-    auto outFunction = [&](const std::string& out){
-        lastLog = out;
+    auto outFunction = [&](const Logger::LogOoutputInfo& out){
+        lastLog = out.str;
     };
+    
     logger.AddOutput(outFunction);
 
     SECTION("Logging trace")
