@@ -50,10 +50,8 @@ void GameControlSystem::Update()
 
 void GameControlSystem::KeepInBound(red::Vector2& pos)
 {
-    auto info = m_world->GetWorldComponent<red::WindowComponent>()->GetWindowInfo();
-
     if (pos.y < 0)
         pos.y = 0;
-    if (pos.y + 100.F > static_cast<float>(info.height))
-        pos.y = static_cast<float>(info.height - 100);
+    if (pos.y + 100.F > 600)
+        pos.y = static_cast<float>(600 - 100);
 }

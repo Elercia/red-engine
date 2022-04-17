@@ -3,15 +3,6 @@
     "name": "default",
     "spritesheet": "BALL_SPRITESHEET",
     "loop": false,
-    "opacity": {
-      "hasOpacity": true,
-      "color": {
-        "r": 0,
-        "v": 0,
-        "b": 0,
-        "a": 0
-      }
-    },
     "frames": [
       {
         "rect": {

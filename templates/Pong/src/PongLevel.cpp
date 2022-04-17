@@ -34,9 +34,7 @@ void PongLevel::Init()
     red::Vector2 center{info.width / 2.F, info.height / 2.F};
 
     const auto onCollision = [](const red::CollisionInfo& collisionInfo)
-    {
-        collisionInfo.firstPhysicBody->GetOwner()->GetComponent<red::AudioSource>()->Play();
-    };
+    { collisionInfo.firstPhysicBody->GetOwner()->GetComponent<red::AudioSource>()->Play(); };
 
     const float ballSize = 30.f;
 
@@ -59,6 +57,7 @@ void PongLevel::Init()
     auto* ball = CreateEntity("Ball");
     ball->AddComponent<red::Sprite>(red::Path::Resource("ball"));
     ball->GetComponent<red::Transform>()->SetPosition(center);
+
     auto* ballPhysicBody = ball->AddComponent<red::PhysicBody>(ballBodyDesc);
     ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
     ball->AddComponent<red::AudioSource>(ballbounding);
@@ -82,7 +81,7 @@ void PongLevel::Init()
 
     auto* manager = CreateEntity("Manager");
     manager->AddComponent<ScoreComponent>();
-    manager->AddComponent<red::CameraComponent>(window);
+    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f), 600);
     manager->AddComponent<red::AudioListener>();
 
     auto* walls = CreateEntity("Walls");

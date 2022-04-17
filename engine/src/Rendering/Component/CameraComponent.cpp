@@ -17,25 +17,21 @@ namespace red
 {
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(CameraComponent)
 
-CameraComponent::CameraComponent(Entity* entity) : Component(entity), m_attachedWindow(nullptr)
+CameraComponent::CameraComponent(Entity* entity)
+    : Component(entity), m_attachedWindow(nullptr), m_frameBuffer(true, 1), m_viewport(0.f, 0.f, 1.f, 1.f), m_size(10)
 {
-    UpdateMatricesIfNeeded();
+    UpdateState();
 }
 
-CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow)
-    : Component(entity), m_attachedWindow(attachedWindow->GetOwner())
+CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, int size)
+    : Component(entity), m_attachedWindow(attachedWindow->GetOwner()), m_frameBuffer(true, 1), m_viewport(viewport), m_size(size)
 {
-    UpdateMatricesIfNeeded();
+    UpdateState();
 }
 
-Vector2 CameraComponent::ViewportToWorldPoint(const Vector2& /*point*/) const
+CameraComponent::~CameraComponent()
 {
-    return {0.f, 0.f};
-}
-
-Vector2 CameraComponent::WorldToViewportPoint(const Vector2& /*point*/) const
-{
-    return {0.f, 0.f};
+    m_frameBuffer.Finalize();
 }
 
 bool CameraComponent::IsVisibleFrom(const AABB& /*aabb*/) const
@@ -44,7 +40,7 @@ bool CameraComponent::IsVisibleFrom(const AABB& /*aabb*/) const
     return true;
 }
 
-Vector4i CameraComponent::ViewportRect() const
+Vector4i CameraComponent::GetWindowRect() const
 {
     if (m_attachedWindow == nullptr)
         return {0, 0, 0, 0};
@@ -107,26 +103,26 @@ void CameraComponent::SetAttachedWindow(const WindowComponent* window)
 {
     m_attachedWindow = window->GetOwner();
 
-    UpdateMatricesIfNeeded();
+    UpdateState();
 }
 
-void CameraComponent::UpdateMatricesIfNeeded()
+void CameraComponent::UpdateState()
 {
     if (m_attachedWindow == nullptr)
         return;
+
     auto windowInfo = m_attachedWindow->GetComponent<WindowComponent>()->GetWindowInfo();
+
+    float aspectRatio = (float) windowInfo.width / (float) windowInfo.height;
+
     auto* transform = GetOwner()->GetComponent<Transform>();
 
-    const Vector2i windowSize(windowInfo.width, windowInfo.height);
-    auto& worldPosition = transform->GetPosition();
-    auto pos = Vector3(worldPosition, transform->GetDepth());
-
-    m_projectionMatrix = Math::Ortho(
-        m_viewport.x * (float) windowSize.width, m_viewport.width * (float) windowSize.width,
-        m_viewport.y * (float) windowSize.height, m_viewport.height * (float) windowSize.height, m_zNear, m_zFar);
+    m_projectionMatrix = Math::Ortho(0.f, (float) m_size * aspectRatio, 0.f, (float) m_size, m_zNear, m_zFar);
     m_viewMatrix = transform->GetWorldMatrix();
 
     m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
+
+    // m_frameBuffer.Init(Vector2i(viewportRect.width, viewportRect.height));
 }
 
 }  // namespace red

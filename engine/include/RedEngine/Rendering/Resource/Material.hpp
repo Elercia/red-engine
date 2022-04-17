@@ -11,7 +11,7 @@ namespace red
 {
 class ShaderProgram;
 
-enum RenderEntityType
+enum class RenderEntityType : uint8
 {
     Opaque,
     Transparency,

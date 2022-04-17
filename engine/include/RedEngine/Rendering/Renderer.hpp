@@ -7,9 +7,10 @@
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Rendering/Color.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/FrameBuffer.hpp"
+#include "RedEngine/Rendering/GPUBuffer.hpp"
 #include "RedEngine/Rendering/Resource/Geometry.hpp"
 #include "RedEngine/Rendering/Resource/Material.hpp"
-#include "RedEngine/Rendering/GPUBuffer.hpp"
 
 #include <memory>
 #include <string>
@@ -44,6 +45,14 @@ struct PerInstanceData
 
 class Renderer
 {
+private:
+    struct RenderPassDesc
+    {
+        bool alphaBlending = false;
+        const char* name = "Unknown";
+        RenderEntityType renderType = RenderEntityType::Opaque;
+    };
+
 public:
     Renderer();
     ~Renderer();
@@ -54,14 +63,11 @@ public:
     // Push the renderable to the corresponding render queue
     void Draw(const Renderable* renderable, const Transform* transform);
 
-    void DrawDebugLine(const Vector2& first, const Vector2& second,
-                  const Color& color = ColorConstant::RED);
+    void DrawDebugLine(const Vector2& first, const Vector2& second, const Color& color = ColorConstant::RED);
 
-    void DrawDebugLines(const Array<Vector2>& points, const Color& color = ColorConstant::RED,
-                   bool isFilled = false);
+    void DrawDebugLines(const Array<Vector2>& points, const Color& color = ColorConstant::RED, bool isFilled = false);
 
-    void DrawDebugCircle(const Vector2& center, float radius,
-                    const Color& color = ColorConstant::RED);
+    void DrawDebugCircle(const Vector2& center, float radius, const Color& color = ColorConstant::RED);
 
     void DrawDebugPoint(const Vector2& coord, const Color& color = ColorConstant::RED);
 
@@ -73,6 +79,8 @@ public:
     void RenderTransparency(CameraComponent* camera);
     void RenderDebug(CameraComponent* camera);
     void RenderGlobalDebug();
+
+    void RenderPass(CameraComponent* camera, const RenderPassDesc& desc);
 
     // Rendering resource management
     void InitRenderer(WindowComponent* window);
@@ -95,7 +103,7 @@ private:
     WindowComponent* m_window;
 
     // Render entities push for this frame, these will be then culled and rendered
-    Array<RenderingData> m_renderingData[RenderEntityType::Count];
+    Array<RenderingData> m_renderingData[(uint8)RenderEntityType::Count];
 
     GPUBuffer m_perInstanceData;
     GPUBuffer m_perCameraData;

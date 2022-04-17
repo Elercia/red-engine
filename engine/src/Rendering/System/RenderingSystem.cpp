@@ -19,6 +19,7 @@
 
 #include <SDL2/SDL.h>
 #include <algorithm>
+
 namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
@@ -168,14 +169,14 @@ void RenderingSystem::UpdateWindowAsNeeded()
         {
             m_renderer->ReCreateWindow(windowComp);
         }
+    }
 
-        for (auto* cameraEntity : cameraEntities)
-        {
-            auto* cameraComp = cameraEntity->GetComponent<CameraComponent>();
+    for (auto* cameraEntity : cameraEntities)
+    {
+        auto* cameraComp = cameraEntity->GetComponent<CameraComponent>();
 
-            if (cameraComp->GetAttachedWindow() == windowComp)
-                cameraComp->UpdateMatricesIfNeeded();
-        }
+        // This is required because the camera could have moved last frame
+        cameraComp->UpdateState();
     }
 }
 

@@ -5,6 +5,7 @@
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Rendering/Color.hpp"
+#include "RedEngine/Rendering/FrameBuffer.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
 #include <array>
@@ -32,17 +33,13 @@ public:
     RED_END_COMPONENT_REGISTER()
 
     CameraComponent(Entity* entity);
-    CameraComponent(Entity* entity, WindowComponent* attachedWindow);
-    virtual ~CameraComponent() = default;
-
-    /// View ports points
-    [[nodiscard]] Vector2 ViewportToWorldPoint(const Vector2& point) const;
-    [[nodiscard]] Vector2 WorldToViewportPoint(const Vector2& point) const;
+    CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, int size);
+    virtual ~CameraComponent();
 
     // Return true if the given AABB is visible from the given camera
     [[nodiscard]] bool IsVisibleFrom(const AABB& aabb) const;
 
-    [[nodiscard]] Vector4i ViewportRect() const;
+    [[nodiscard]] Vector4i GetWindowRect() const;
     [[nodiscard]] const Vector4& Viewport() const;
     void SetViewport(const Vector4& viewport);
 
@@ -57,16 +54,20 @@ public:
     [[nodiscard]] const Color& GetClearColor() const;
     void SetClearColor(const Color& color);
 
-    void UpdateMatricesIfNeeded();
+    void UpdateState();
 
     const Matrix44& GetViewProjection() const;
 
 private:
     Entity* m_attachedWindow;
+    FrameBuffer m_frameBuffer;
 
     // The camera viewport
-    // This describe the position in the window and it size between 0-1
+    // This describe where the camera will be drawn on the screen
     Vector4 m_viewport;
+
+    // The size of the camera
+    int m_size;
 
     /// Depth of the camera (defaulted to 0)
     /// Higher depth camera are rendered after (to be on top of another)

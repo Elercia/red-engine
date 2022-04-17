@@ -2,15 +2,6 @@
   {
     "name": "default",
     "spritesheet": "PADDLE_SPRITESHEET",
-    "opacity": {
-      "hasOpacity": false,
-      "color": {
-        "r": 0,
-        "v": 0,
-        "b": 0,
-        "a": 0
-      }
-    },
     "loop" :  false,
     "frames": [
       {

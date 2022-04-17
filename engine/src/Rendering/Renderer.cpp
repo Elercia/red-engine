@@ -61,10 +61,10 @@ void Renderer::InitRenderer(WindowComponent* window)
     }
 
     // Request OpenGL 4.5 context.
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) != 0,
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4),
                        "Error setting gl context major version with error {}", SDL_GetError());
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5) != 0,
-                       "Error setting gl context major version with error {}", SDL_GetError());
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5),
+                       "Error setting gl context minor version with error {}", SDL_GetError());
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
@@ -133,7 +133,7 @@ void Renderer::BeginRenderFrame()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-     // Start the Dear ImGui frame
+    // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
@@ -153,8 +153,7 @@ void Renderer::EndRenderFrame()
 void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 {
     // Setup the camera viewport
-
-    auto viewport = cameraComponent->ViewportRect();
+    auto viewport = cameraComponent->GetWindowRect();
 
     glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 
@@ -175,7 +174,7 @@ void Renderer::Draw(const Renderable* renderable, const Transform* transform)
     data.aabb = renderable->m_aabb;
     data.size = renderable->m_size;
 
-    auto& renderDatasForCamera = m_renderingData[data.materialInstance.material->GetRenderType()];
+    auto& renderDatasForCamera = m_renderingData[(uint32)data.materialInstance.material->GetRenderType()];
     renderDatasForCamera.push_back(std::move(data));
 }
 
@@ -199,14 +198,42 @@ void Renderer::DrawDebugPoint(const Vector2& /*coord*/, const Color& /*color*/ /
 
 void Renderer::RenderOpaque(CameraComponent* camera)
 {
-    PROFILER_EVENT_CATEGORY("RenderOpaque", ProfilerCategory::Rendering);
+    RenderPassDesc desc;
+    desc.alphaBlending = false;
+    desc.name = "opaque";
+    desc.renderType = RenderEntityType::Opaque;
+
+    RenderPass(camera, desc);
+}
+
+void Renderer::RenderTransparency(CameraComponent* camera)
+{
+    RenderPassDesc desc;
+    desc.alphaBlending = true;
+    desc.name = "transparency";
+    desc.renderType = RenderEntityType::Transparency;  
+
+    RenderPass(camera, desc);
+}
+
+void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
+{
+    PROFILER_EVENT_CATEGORY(desc.name, ProfilerCategory::Rendering);
 
     uint64 count = 0;
-    Array<RenderingData>& datas = GetVisibleRenderDatasForType(RenderEntityType::Opaque, camera, count);
+    Array<RenderingData>& datas = GetVisibleRenderDatasForType(desc.renderType, camera, count);
 
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Opaque");
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, desc.name);
 
-    glDisable(GL_BLEND);
+    if (desc.alphaBlending)
+    {
+        glEnable(GL_BLEND);
+    }
+    else
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
 
     // Do the actual render calls to the camera render target
     for (uint64 i = 0; i < count; i++)
@@ -231,19 +258,18 @@ void Renderer::RenderOpaque(CameraComponent* camera)
     glPopDebugGroup();
 }
 
-void Renderer::RenderTransparency(CameraComponent* /*camera*/)
-{
-     PROFILER_EVENT_CATEGORY("RenderTransparency", ProfilerCategory::Rendering);
-}
-
 void Renderer::RenderDebug(CameraComponent* /*camera*/)
 {
 }
 
 void Renderer::RenderGlobalDebug()
-{   
+{
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug");
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    glPopDebugGroup();
 }
 
 void Renderer::FillCameraBuffer(const CameraComponent& camera)
@@ -267,6 +293,7 @@ void Renderer::UseMaterial(const MaterialInstance& materialInstance)
     const auto& defaultBindings = material->m_defaultBindings.bindings;
     const auto& overiddenBindings = materialInstance.overiddenBindings.bindings;
 
+    // TODO fix crash when a invalid handle is used
     glUseProgram(material->GetShaderProgram()->m_handle);
 
     // Bind textures and buffers
@@ -312,7 +339,7 @@ void Renderer::UseGeometry(const Geometry* geom)
 Array<RenderingData>& Renderer::GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
                                                              uint64& renderDataCount)
 {
-    Array<RenderingData>& ret = m_renderingData[type];
+    Array<RenderingData>& ret = m_renderingData[(uint32)type];
     renderDataCount = ret.size();
 
     for (uint64 i = 0u; i < ret.size(); i++)

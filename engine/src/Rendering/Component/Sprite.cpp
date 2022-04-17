@@ -33,7 +33,7 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
     m_material.material = m_owner->GetWorld()
                         ->GetWorldComponent<ResourceHolderComponent>()
                         ->GetResourceLoader<MaterialResourceLoader>()
-                       ->LoadResource(Path::Resource("BASE_MATERIAL"));
+                       ->LoadResource(Path::Resource("BASE_OPAQUE_MATERIAL"));
     m_geometry = m_owner->GetWorld()
                         ->GetWorldComponent<ResourceHolderComponent>()
                         ->GetResourceLoader<GeometryResourceLoader>()
