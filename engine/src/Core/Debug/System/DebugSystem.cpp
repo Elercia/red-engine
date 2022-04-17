@@ -80,25 +80,26 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
 
     ImGui::SameLine();
 
+    static uint32 selectedLogLevels = (uint32) -1;
+
     // Log level filter
     {
         static ImGuiComboFlags flags = 0;
-        static uint32 selectedLevels = (uint32) -1;
 
         if (ImGui::BeginCombo("Shown log levels", "", flags))
         {
             for (auto& item : Logger::logLevelAsString)
             {
-                const bool is_selected = ((1 << (uint32) item.first) & selectedLevels) != 0;
+                const bool is_selected = ((1 << (uint32) item.first) & selectedLogLevels) != 0;
                 if (ImGui::Selectable(item.second.c_str(), is_selected))
                 {
                     if (is_selected)
                     {
-                        selectedLevels &= ~(1 << (uint32) item.first);
+                        selectedLogLevels &= ~(1 << (uint32) item.first);
                     }
                     else
                     {
-                        selectedLevels |= (1 << (uint32) item.first);
+                        selectedLogLevels |= (1 << (uint32) item.first);
                     }
                 }
             }
@@ -128,6 +129,11 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     const auto& logs = debug->GetLogBuffer();
     for (const auto& log : logs)
     {
+        if ((selectedLogLevels & (1 << (uint32) log.level)) == 0)
+        {
+            continue;
+        }
+
         ImVec4 color;
         switch (log.level)
         {
