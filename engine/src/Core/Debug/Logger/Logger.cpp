@@ -25,6 +25,11 @@ void Logger::SetLogLevel(LogLevel level)
     m_logLevel = level;
 }
 
+LogLevel Logger::GetLogLevel() const
+{
+    return m_logLevel;   
+}
+
 void Logger::Out(const LogOoutputInfo& data)
 {
     m_delegates(data);

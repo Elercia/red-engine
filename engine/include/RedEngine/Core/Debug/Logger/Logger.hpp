@@ -44,6 +44,7 @@ public:
     ~Logger() = default;
 
     void SetLogLevel(LogLevel level);
+    LogLevel GetLogLevel() const;
 
     template <typename... Args>
     void LogInternal(LogLevel level, int line, const char* file, const std::string& format, Args... args);
