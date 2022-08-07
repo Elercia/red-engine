@@ -20,7 +20,7 @@ enum class RenderEntityType : uint8
 
 enum class BindingType
 {
-    None,
+    Undefined,
     Texture,
     Vector4
 };
@@ -36,7 +36,7 @@ struct BindingIndex
 
 struct BindingValue
 {
-    BindingType type = BindingType::None;
+    BindingType type = BindingType::Undefined;
 
     union
     {

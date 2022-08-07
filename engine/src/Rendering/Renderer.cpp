@@ -303,11 +303,11 @@ void Renderer::UseMaterial(const MaterialInstance& materialInstance)
 
         const auto& defaultBinding = defaultBindings[i];
         const auto& overidenBinding = overiddenBindings[i];
-        if (overidenBinding.type != BindingType::None)
+        if (overidenBinding.type != BindingType::Undefined)
         {
             value = &overidenBinding;
         }
-        else if (defaultBinding.type != BindingType::None)
+        else if (defaultBinding.type != BindingType::Undefined)
         {
             value = &defaultBinding;
         }

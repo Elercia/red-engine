@@ -16,15 +16,14 @@ project "RedEngineLib"
 
 	files
 	{
-		enginePath .. "/include/**.hpp",
-		enginePath .. "/include/**.inl",
-		enginePath .. "/src/**.cpp",
+		enginePath .. "/compile.cpp",
 		
 	}
 
 	includedirs
 	{
 		enginePath .. "/include/",
+		enginePath .. "/src/",
 		ExternalIncludeDirs,
 	}
 
