@@ -192,7 +192,7 @@ void World::Clean()
 
 void World::AddGarbageEntityId(EntityId entityId)
 {
-    RED_ASSERT(std::find(m_entityIdGarbage.begin(), m_entityIdGarbage.end(), entityId) == m_entityIdGarbage.end(),
+    RedAssert(std::find(m_entityIdGarbage.begin(), m_entityIdGarbage.end(), entityId) == m_entityIdGarbage.end(),
                "EntityId is already inside entity garbage, this may lead to 2 entities with the same ID");
 
     m_entityIdGarbage.push_back(entityId);

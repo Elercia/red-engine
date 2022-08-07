@@ -54,7 +54,7 @@ ComponentPoolType& ComponentManager::GetComponentPool(std::size_t componentTypeI
     }
 
     auto [it, inserted] = m_components.insert({componentTypeId, {}});
-    RED_ASSERT(inserted, "Counldn't insert a new component pool")
+    RedAssert(inserted, "Counldn't insert a new component pool")
 
     return it->second;
 }

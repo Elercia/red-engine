@@ -7,14 +7,14 @@ namespace red
 /*template <typename T>
 std::string Serialize(const T& value)
 {
-    RED_ERROR("Hiting a Serialize function that is not implemented");
+    RedError("Hiting a Serialize function that is not implemented");
     return "not-implemented";
 }
 
 template <typename T>
 bool Deserialize(T& value, const std::string& str)
 {
-    RED_ERROR("Hiting a Deserialize function that is not implemented");
+    RedError("Hiting a Deserialize function that is not implemented");
     return false;
 }*/
 

@@ -29,7 +29,7 @@ void ComponentTraits::AddMember(const std::string& name, MemberTypeT ComponentTy
     {
         RED_LOG_ERROR("Member with name \"{}\" already found in component registry for component \"{}\"", name,
                       TypeInfo<ComponentTypeT>().name);
-        RED_ABORT("Error initializing engine components types"); // we are at startup 
+        RedAbort("Error initializing engine components types"); // we are at startup 
     }
 
     members[name] = member;

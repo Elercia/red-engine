@@ -1,6 +1,7 @@
 
 
 // Headers
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Audio/AudioEvent.hpp"
 #include "RedEngine/Audio/AudioModule.hpp"
 #include "RedEngine/Audio/AudioUtils.hpp"
@@ -19,7 +20,6 @@
 #include "RedEngine/Core/CoreModule.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
-#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"

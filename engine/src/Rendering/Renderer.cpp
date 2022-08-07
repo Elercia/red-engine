@@ -57,7 +57,7 @@ void Renderer::InitRenderer(WindowComponent* window)
     {
         RED_LOG_ERROR("Error initializing SDL_Video with error {}", SDL_GetError());
         SDL_Quit();
-        RED_ABORT("Cannot initialize Renderer");
+        RedAbort("Cannot initialize Renderer");
     }
 
     // Request OpenGL 4.5 context.

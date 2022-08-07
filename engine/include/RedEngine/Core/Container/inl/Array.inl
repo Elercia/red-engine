@@ -140,9 +140,9 @@ void Array<T>::push_back(const T& value)
 template <typename T>
 typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator last)
 {
-    RED_ASSERT_S(last >= first);
-    RED_ASSERT_S(first >= begin());
-    RED_ASSERT_S(last <= end());
+    RedAssert(last >= first);
+    RedAssert(first >= begin());
+    RedAssert(last <= end());
 
     iterator index = const_cast<iterator>(first);
     iterator shift = const_cast<iterator>(last);
@@ -226,7 +226,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
 
             if (tmp == NULL)
             {
-                RED_ABORT("OutOfMemory");
+                RedAbort("OutOfMemory");
             }
 
             m_data = tmp;
@@ -237,7 +237,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
 
             if (tmp == NULL)
             {
-                RED_ABORT("OutOfMemory");
+                RedAbort("OutOfMemory");
             }
 
             // Copy members from old location to the new one
@@ -348,14 +348,14 @@ typename Array<T>::reference Array<T>::front()
 template <typename T>
 typename Array<T>::reference Array<T>::at(size_type index)
 {
-    RED_ASSERT_S(index < m_size);
+    RedAssert(index < m_size);
     return m_data[index];
 }
 
 template <typename T>
 typename Array<T>::const_reference Array<T>::at(size_type index) const
 {
-    RED_ASSERT_S(index < m_size);
+    RedAssert(index < m_size);
     return m_data[index];
 }
 
@@ -380,8 +380,8 @@ typename Array<T>::iterator Array<T>::insert(const_iterator position, InputItera
     if (nbElem == 0)
         return (iterator) position;
 
-    RED_ASSERT(position >= begin() && position <= end(), "Position is out of range");
-    RED_ASSERT(first < last, "Invalid insertion");
+    RedAssert(position >= begin() && position <= end(), "Position is out of range");
+    RedAssert(first < last, "Invalid insertion");
 
     reserve(m_size + nbElem);  // position interator is now invalid due to possible allocation change
 

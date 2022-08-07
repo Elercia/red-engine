@@ -48,7 +48,7 @@ void WindowComponent::CreateNewWindow()
 
     if (m_window == nullptr)
     {
-        RED_ABORT("Error creating the windows");
+        RedAbort("Error creating the windows");
     }
 
     RED_LOG_INFO("Created window");
@@ -87,7 +87,7 @@ static SDL_SysWMinfo GetSDLSysInfo(SDL_Window *window)
 
     if (SDL_GetWindowWMInfo(window, &sysInfo) != SDL_TRUE)
     {
-        RED_ERROR("Cant get native window handle on windows")
+        RedError("Cant get native window handle on windows")
     }
 
     return sysInfo;

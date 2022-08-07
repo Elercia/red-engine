@@ -1,47 +1,52 @@
 #pragma once
 
 #include <debugbreak.h>
-#include <string_view>
+#include <fmt/format.h>
+#include <string>
 
 namespace red
 {
-enum class ErrorReturn
+void LogAssert(const char* filename, int line, const std::string& s);
+
+template <typename... Args>
+void HandleAssert(bool expr, const char* filename, int line, const std::string& message = "", Args... args)
 {
-    BREAK,
-    CONTINUE
-};
-ErrorReturn HandleAssert(bool expr, std::string_view message, const char* filename,
-                         int line);  // TODO add the possibility to add arguments to the message (, ...)
+    if (expr)
+        return;
+
+    std::string logString = fmt::format(message, std::forward<Args>(args)...);
+
+    LogAssert(filename, line, logString);
+
+#ifdef RED_BREAK_ON_ASSERT
+    debug_break();
+#endif
+}
 }  // namespace red
 
 #ifdef RED_DEBUG
 
 // TODO Add a abort reason (out of memory for exemple)
-#define RED_ABORT(MSG)                                                             \
-    do                                                                             \
-    {                                                                              \
-        red::ErrorReturn _ret = red::HandleAssert(false, MSG, __FILE__, __LINE__); \
-        if (_ret == red::ErrorReturn::BREAK)                                       \
-            debug_break();                                                         \
+#define RedAbort(...)                                               \
+    do                                                               \
+    {                                                                \
+        red::HandleAssert(false, __FILE__, __LINE__, ##__VA_ARGS__); \
     } while (0);
 
-#define RED_ASSERT(expr, MSG)                                                     \
-    do                                                                            \
-    {                                                                             \
-        red::ErrorReturn _ret = red::HandleAssert(expr, MSG, __FILE__, __LINE__); \
-        if (_ret == red::ErrorReturn::BREAK)                                      \
-            debug_break();                                                        \
+#define RedAssert(expr, ...)                                       \
+    do                                                              \
+    {                                                               \
+        red::HandleAssert(expr, __FILE__, __LINE__, ##__VA_ARGS__); \
     } while (0);
 
 #else
-    
-#define RED_ABORT(MSG)
-#define RED_ASSERT(expr, MSG)
+
+#define RedAbort(...) abort();
+#define RedAssert(expr, ...)
 
 #endif  // RED_DEBUG
 
-#define RED_ERROR(MSG) RED_ASSERT(false, MSG)
-#define RED_ASSERT_S(expr) RED_ASSERT(expr, "Assert triggered")
+#define RedError(...) RedAssert(false, ##__VA_ARGS__)
 
 #define CheckReturn(EXPR)      \
     {                          \

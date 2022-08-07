@@ -421,7 +421,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::value_type* Map<KeyT, ValueT, Ha
     typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type index) const
 {
     const Bucket& bucket = m_values[index];
-    RED_ASSERT_S(bucket.used);
+    RedAssert(bucket.used);
 
     return const_cast<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::value_type*>(&bucket.value);
 }
@@ -463,7 +463,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
             return firstErasedBucket;
     }
 
-    RED_ASSERT_S(index < inside.size());
+    RedAssert(index < inside.size());
 
     return index;
 }

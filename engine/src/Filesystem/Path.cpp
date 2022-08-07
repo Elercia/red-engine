@@ -24,7 +24,7 @@ std::wstring Path::GetUserBasePath()
     WCHAR my_documents[MAX_PATH];
     HRESULT result = SHGetFolderPath(nullptr, CSIDL_PERSONAL, nullptr, SHGFP_TYPE_CURRENT, my_documents);
 
-    RED_ASSERT(result == S_OK, "failed to get patht to MyDocuments folder");
+    RedAssert(result == S_OK, "failed to get patht to MyDocuments folder");
 
     std::wstring unicodeStr(my_documents);
 

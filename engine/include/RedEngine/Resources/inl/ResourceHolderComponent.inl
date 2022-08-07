@@ -9,7 +9,7 @@ LoaderType* ResourceHolderComponent::GetResourceLoader()
 
     if (it == m_resourceLoaders.end())
     {
-        RED_ERROR("ResourceLoader not registered");
+        RedError("ResourceLoader not registered");
 
         return nullptr;
     }
@@ -24,7 +24,7 @@ std::shared_ptr<T> ResourceHolderComponent::LoadResource(const Path& path, Resou
 
     if (it == m_resourceLoaders.end())
     {
-        RED_ERROR("ResourceLoader not registered");
+        RedError("ResourceLoader not registered");
 
         return nullptr;
     }

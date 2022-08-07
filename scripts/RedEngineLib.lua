@@ -77,7 +77,7 @@ project "RedEngineLib"
 	filter {}
 
 	filter { "configurations:Debug" }
-		defines "RED_DEBUG"
+		defines {"RED_DEBUG", "RED_BREAK_ON_ASSERT" }
 		runtime "Debug"
 		symbols "Full"
 	filter {}

@@ -23,11 +23,11 @@ bool ResourceHolderComponent::RegisterResourceLoader(ResourceType resourceType, 
 
     if (resourceLoaderIt != m_resourceLoaders.end())
     {
-        RED_ERROR("Resource loader already registered");
+        RedError("Resource loader already registered");
         return false;
     }
 
-    RED_ASSERT(loader != nullptr, "Registered resource loader is null");
+    RedAssert(loader != nullptr, "Registered resource loader is null");
 
     m_resourceLoaders.insert({resourceType, loader});
 
