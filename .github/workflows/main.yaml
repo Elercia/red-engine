@@ -45,7 +45,7 @@ jobs:
       run: |
         cd scripts
         call GenerateVs2019Project.bat
-        msbuild projects/vs2019/RedEngine.sln /t:Build /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
+        msbuild projects/windows_vs2019/RedEngine.sln /t:Build /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
       shell: cmd
     # - name: Test
     #   run: scripts/bin/premake5.exe test --test-all
