@@ -21,11 +21,11 @@ constexpr TypeTraits TypeInfo()
 
     constexpr auto typeName = full_name.substr(start_index, length);
 
-    constexpr auto structSlicedTypeName = typeName.find(function_struct_start) != std::string_view::npos
+    constexpr auto structSlicedTypeName = function_struct_start.empty() == false && typeName.find(function_struct_start) != std::string_view::npos
                                               ? typeName.substr(function_struct_start.length())
                                               : typeName;
 
-    constexpr auto classSlicedTypeName = structSlicedTypeName.find(function_class_start) != std::string_view::npos
+    constexpr auto classSlicedTypeName = function_class_start.empty() == false && structSlicedTypeName.find(function_class_start) != std::string_view::npos
                                              ? structSlicedTypeName.substr(function_class_start.length())
                                              : structSlicedTypeName;
 
