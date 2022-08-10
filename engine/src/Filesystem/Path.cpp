@@ -22,7 +22,7 @@ std::wstring Path::GetUserBasePath()
 {
 #if defined(RED_WINDOWS)
     WCHAR my_documents[MAX_PATH];
-    HRESULT result = SHGetFolderPath(nullptr, CSIDL_PERSONAL, nullptr, SHGFP_TYPE_CURRENT, my_documents);
+    HRESULT result = SHGetFolderPathW(nullptr, CSIDL_PERSONAL, nullptr, SHGFP_TYPE_CURRENT, my_documents);
 
     RedAssert(result == S_OK, "failed to get patht to MyDocuments folder");
 
