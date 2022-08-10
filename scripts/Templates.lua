@@ -47,6 +47,7 @@ function TemplateProject(Name)
 	defines
 	{
 		"RED_USE_PROFILER",
+		"FMT_EXCEPTIONS=0",
 	}
 
 	filter "platforms:Win64"

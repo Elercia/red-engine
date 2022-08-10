@@ -30,6 +30,7 @@ project "RedEngineLib"
 	defines
 	{
 		"RED_USE_PROFILER",
+		"FMT_EXCEPTIONS=0",
 	}
 
 	links

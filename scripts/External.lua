@@ -122,6 +122,11 @@ ExternalLibs("fmt", true, "/fmt/include")
 		externalDirectoryPath .. "/fmt/include/**.h",
 	}
 
+	defines
+	{
+		"FMT_EXCEPTIONS=0"
+	}
+
 ExternalLibs("optick", true, "/optick/src")
 	files
 	{

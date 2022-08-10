@@ -48,6 +48,11 @@ workspace "RedEngine"
 		"MultiProcessorCompile",
 	}
 
+	defines
+	{
+		"FMT_EXCEPTIONS=0",
+	}
+
 	filter { "platforms:Win64" }
 		system "windows"
 		architecture "x64"
