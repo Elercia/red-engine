@@ -48,7 +48,10 @@ project "RedEngineLib"
 	filter {}
 
 	filter { "toolset:msc" }
-  		buildoptions { "" }
+		linkoptions 
+		{
+			"/NODEFAULTLIB:library"
+		}
 	filter {}
 
 	filter { "platforms:Win64" }
@@ -62,11 +65,6 @@ project "RedEngineLib"
 		links
 		{
 			"SDL2main.lib"
-		}
-
-		linkoptions 
-		{
-			"/NODEFAULTLIB:library"
 		}
 	filter {}
 
