@@ -41,7 +41,7 @@ void CVar<T>::ChangeValue(const T& value)
 //////// CVarValue
 ////////////////////////////////////////////////
 template <class T>
-CVarValue<T>::CVarValue(const std::string& name, const std::string& category, const T& defaultValue) : ICVar(name, category, TypeInfo<T>().typeId)
+CVarValue<T>::CVarValue(const std::string& name, const std::string& category, const T& defaultValue) : ICVar(name, category)
     , m_defaultValue(defaultValue) 
     , m_currentValue(defaultValue)
 {

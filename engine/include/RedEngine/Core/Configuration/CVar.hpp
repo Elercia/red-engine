@@ -15,7 +15,7 @@ namespace red
 class ICVar
 {
 public:
-    ICVar(const std::string& name, const std::string& category, uint32 typeId);
+    ICVar(const std::string& name, const std::string& category);
     ~ICVar() = default;
 
     [[nodiscard]] std::string GetName() const;
@@ -29,8 +29,6 @@ protected:
     std::string m_category;
 
     std::function<bool(const std::string&)> m_deserializationFunction;
-
-    uint32 m_typeId;  // the typeId of the typename T of the CVarValue
 };
 
 // Shared CVar value managed by CVarManager
