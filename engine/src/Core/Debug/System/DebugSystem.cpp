@@ -62,7 +62,7 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     {
         static ImGuiComboFlags flags = 0;
         LogLevel currentLogLevel = GetRedLogger()->GetLogLevel();
-        if (ImGui::BeginCombo("Log level", Logger::logLevelAsString[currentLogLevel].c_str(), flags))
+        if (ImGui::BeginCombo("Log level", Logger::logLevelAsString.at(currentLogLevel).c_str(), flags))
         {
             for (auto& item : Logger::logLevelAsString)
             {
