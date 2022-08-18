@@ -35,6 +35,7 @@ TEST_CASE("Create level entities", "[ECS]")
         world.Init();
 
         Level level("Test level", &world);
+        level.InternInit();
 
         const size_t entityCountStart = world.GetEntities().size();
 
@@ -43,8 +44,6 @@ TEST_CASE("Create level entities", "[ECS]")
         {
             level.CreateEntity();
         }
-
-        level.InternInit();
 
         REQUIRE(world.GetEntities().size() - entityCountStart == entityCreated);
 

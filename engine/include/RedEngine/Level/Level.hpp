@@ -8,8 +8,6 @@
 
 namespace red
 {
-class LevelChunk;
-
 class Level : Uncopyable
 {
 public:
@@ -46,20 +44,13 @@ public:
     Entity* CreateEntity(const std::string& name);
     Entity* CreateEntity(const std::string& name, Entity* parent);
 
-    Array<Entity*>& GetEntities();
-    const Array<Entity*>& GetEntities() const;
-
     void Serialize(const Path& path) const;
 
     void SetState(State state);
 
-private:
-    void OnEntityCreated(Entity* e);
-
 protected:
+    Entity* m_rootEntity;
     std::string m_levelName;
-
-    LevelChunk* m_mainLevelChunk;
 
     World* m_world;
 

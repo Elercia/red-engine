@@ -45,7 +45,7 @@ TEST_CASE("Level init", "[LEVEL]")
     LevelTest levelTest(&world);
     levelTest.InternInit();
 
-    REQUIRE(entities.size() == (entityCount + 4));
+    REQUIRE(entities.size() == (entityCount + 4 + 1) ); // 4 entities created by the level + the level root
 
     REQUIRE(std::find_if(entities.begin(), entities.end(),
                          [](const Entity* e) { return e->GetName() == "MyEntity1"; }) != entities.end());
@@ -70,6 +70,7 @@ TEST_CASE("Level serialisation", "[LEVEL]")
     world.Init();
 
     Level level("SerializedLevel", &world);
+    level.InternInit();
 
     Entity* e1 = level.CreateEntity("Test");
     Entity* e2 = level.CreateEntity("Test2");
@@ -78,8 +79,6 @@ TEST_CASE("Level serialisation", "[LEVEL]")
 
     Entity* child1 = level.CreateEntity("Test1", e1);
     level.CreateEntity("Test11", child1);
-
-    level.InternInit();
 
     Path p = Path::Resource("tmp_out/test_serialize_level.json");
 

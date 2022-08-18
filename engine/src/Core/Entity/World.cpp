@@ -12,7 +12,6 @@
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/JsonLevelLoader.hpp"
 #include "RedEngine/Level/Level.hpp"
-#include "RedEngine/Level/LevelChunk.hpp"
 #include "RedEngine/Utils/Random.hpp"
 
 #include <algorithm>
@@ -20,9 +19,10 @@
 
 namespace red
 {
+static int s_nameCounter = 0;
+
 World::World()
-    : m_worldChunk(nullptr)
-    , m_componentManager(new ComponentManager(this))
+    : m_componentManager(new ComponentManager(this))
     , m_componentRegistry(new ComponentRegistry())
     , m_currentLevel(nullptr)
     , m_levelLoader(nullptr)
@@ -36,7 +36,7 @@ World::~World()
 }
 
 void World::OnAddEntity(Entity* entity)
-{    
+{
     Entity* oldEntity = FindEntity(entity->GetId());
     if (oldEntity != nullptr)
     {
@@ -46,11 +46,11 @@ void World::OnAddEntity(Entity* entity)
     }
 
     m_entities.push_back(entity);
-}
 
-void World::OnAddEntities(Array<Entity*>& entities)
-{
-    m_entities.insert(m_entities.end(), entities.begin(), entities.end());
+    for (auto* child : entity->GetChildren())
+    {
+        OnAddEntity(child);
+    }
 }
 
 void World::OnRemoveEntity(Entity* entity)
@@ -59,14 +59,8 @@ void World::OnRemoveEntity(Entity* entity)
 
     if (it != m_entities.end())
         m_entities.erase(it);
-}
 
-void World::OnRemoveEntities(Array<Entity*>& entities)
-{
-    m_entities.erase(
-        std::remove_if(m_entities.begin(), m_entities.end(),
-                       [&](auto x) { return std::find(entities.begin(), entities.end(), x) != entities.end(); }),
-        m_entities.end());
+    RED_SAFE_DELETE(entity);
 }
 
 Entity* World::FindEntity(EntityId id)
@@ -82,15 +76,6 @@ Entity* World::FindEntity(EntityId id)
 
 void World::Init()
 {
-    if (m_worldChunk != nullptr)
-    {
-        m_worldChunk->Finalize();
-        RED_SAFE_DELETE(m_worldChunk);
-    }
-
-    m_worldChunk = new LevelChunk(this);
-    m_worldChunk->Init();
-
     RED_SAFE_DELETE(m_levelLoader);
     m_levelLoader = new JsonLevelLoader(this);
 }
@@ -112,10 +97,6 @@ void World::Finalize()
     // Delete current level entities
     ChangeLevel(nullptr);
 
-    // Delete current world level chunk entities
-    if (m_worldChunk != nullptr)
-        m_worldChunk->Finalize();
-
     for (auto& system : m_systems)
     {
         system->Finalise();
@@ -126,7 +107,6 @@ void World::Finalize()
 
     Clean();
 
-    RED_SAFE_DELETE(m_worldChunk);
     RED_SAFE_DELETE(m_levelLoader);
 
     RED_SAFE_DELETE(m_componentManager);
@@ -144,11 +124,11 @@ bool World::Update()
     if (quit)
         return false;
 
-    for( auto* entity : m_entities)
+    for (auto* entity : m_entities)
     {
         auto* tranform = entity->GetComponent<Transform>();
 
-        tranform->UpdateWorldMatrixIfNeeded();   
+        tranform->UpdateWorldMatrixIfNeeded();
     }
 
     for (auto& system : m_systems)
@@ -184,18 +164,21 @@ void World::Clean()
     if (m_currentLevel != nullptr)
         m_currentLevel->Clean();
 
-    if (m_worldChunk != nullptr)
-        m_worldChunk->Clean();
+    Array<Entity*> toRemove;
+    for (auto* e : m_entities)
+    {
+        if (e->GetState() == EntityState::Destroyed)
+        {
+            toRemove.push_back(e);
+        }
+    }
+
+    for (auto* e : toRemove)
+    {
+        OnRemoveEntity(e);
+    }
 
     InitSystems();
-}
-
-void World::AddGarbageEntityId(EntityId entityId)
-{
-    RedAssert(std::find(m_entityIdGarbage.begin(), m_entityIdGarbage.end(), entityId) == m_entityIdGarbage.end(),
-               "EntityId is already inside entity garbage, this may lead to 2 entities with the same ID");
-
-    m_entityIdGarbage.push_back(entityId);
 }
 
 void World::LoadLevel(const Path& levelPath)
@@ -248,7 +231,37 @@ Array<Entity*>& World::GetEntities()
 
 Entity* World::CreateWorldEntity(const std::string& name)
 {
-    Entity* e = m_worldChunk->CreateEntity(name);
+    Entity* e = new Entity(this, GetNewEntityId());
+
+    e->SetName(name);
+    e->SetParent(nullptr);
+
+    OnAddEntity(e);
+
+    return e;
+}
+
+Entity* World::CreateEntity(Entity* parent)
+{
+    Entity* e = new Entity(this, GetNewEntityId());
+
+    e->SetName("Unnamed" + s_nameCounter++);
+    e->SetParent(parent);
+
+    OnAddEntity(e);
+
+    return e;
+}
+
+Entity* World::CreateEntity(Entity* parent, EntityId id)
+{
+    if (FindEntity(id))
+        return nullptr;
+
+    Entity* e = new Entity(this, id);
+
+    e->SetName("Unnamed" + s_nameCounter++);
+    e->SetParent(parent);
 
     OnAddEntity(e);
 
@@ -277,14 +290,6 @@ Level* World::GetCurrentLevel()
 
 EntityId World::GetNewEntityId()
 {
-    if (!m_entityIdGarbage.empty())
-    {
-        const auto id = m_entityIdGarbage.back();
-        m_entityIdGarbage.pop_back();
-
-        return id;
-    }
-
     return (EntityId) RandomUint64();
 }
 }  // namespace red

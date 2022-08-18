@@ -1,6 +1,3 @@
-
-#include "RedEngine/Level/LevelChunk.hpp"
-
 namespace red
 {
 template <class T, class... Args>
@@ -66,7 +63,7 @@ T* World::GetSystem()
 template <typename T>
 T* World::GetWorldComponent()
 {
-    for (auto* e : m_worldChunk->GetEntities())
+    for (auto* e : m_entities)
     {
         auto* comp = e->GetComponent<T>();
         if (comp != nullptr)

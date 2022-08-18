@@ -6,7 +6,6 @@
 #include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Level/JsonLevelSerializer.hpp"
-#include "RedEngine/Level/LevelChunk.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 
@@ -16,21 +15,20 @@
 
 namespace red
 {
-Level::Level(std::string name, World* world) : m_levelName(std::move(name)), m_world(world), m_state(State::Created)
+Level::Level(std::string name, World* world)
+    : m_rootEntity(nullptr), m_levelName(std::move(name)), m_world(world), m_state(State::Created)
 {
-    m_mainLevelChunk = new LevelChunk(this);
 }
 
 Level::~Level()
 {
-    RED_SAFE_DELETE(m_mainLevelChunk);
 }
 
 void Level::InternInit()
 {
-    Init();
+    m_rootEntity = CreateEntity("Root", nullptr);
 
-    m_mainLevelChunk->Init();
+    Init();
 
     m_state = State::Ready;
 }
@@ -39,14 +37,15 @@ void Level::InternFinalize()
 {
     Finalize();
 
-    m_mainLevelChunk->Finalize();
+    m_rootEntity->Destroy();
+
+    m_world->Clean();
 
     m_state = State::Finalized;
 }
 
 void Level::Clean()
 {
-    m_mainLevelChunk->Clean();
 }
 
 const std::string& Level::GetName() const
@@ -61,62 +60,56 @@ World* Level::GetWorld()
 
 Entity* Level::GetRootEntity() const
 {
-    return m_mainLevelChunk->GetRootEntity();
+    return m_rootEntity;
 }
 
 Entity* Level::CreateEntity()
 {
-    Entity* e = m_mainLevelChunk->CreateEntity();
+    Entity* e = m_world->CreateEntity(GetRootEntity());
 
-    OnEntityCreated(e);
+    e->SetParent(GetRootEntity());
 
     return e;
 }
 
 Entity* Level::CreateEntity(const std::string& name)
 {
-    Entity* e = m_mainLevelChunk->CreateEntity(name);
+    Entity* e = m_world->CreateEntity(GetRootEntity());
 
-    OnEntityCreated(e);
+    e->SetName(name);
+    e->SetParent(GetRootEntity());
 
     return e;
 }
 
 Entity* Level::CreateEntity(const std::string& name, Entity* parent)
 {
-    Entity* e = m_mainLevelChunk->CreateEntity(name, parent);
+    Entity* e = m_world->CreateEntity(GetRootEntity());
 
-    OnEntityCreated(e);
+    e->SetName(name);
+    e->SetParent(parent);
 
     return e;
 }
 
 Entity* Level::CreateEntity(EntityId id, const std::string& name)
 {
-    Entity* e = m_mainLevelChunk->CreateEntity(id, name);
+    Entity* e = m_world->CreateEntity(GetRootEntity(), id);
 
-    OnEntityCreated(e);
+    e->SetName(name);
+    e->SetParent(GetRootEntity());
 
     return e;
 }
 
 Entity* Level::CreateEntity(EntityId id, const std::string& name, Entity* parent)
 {
-    Entity* e = m_mainLevelChunk->CreateEntity(id, name, parent);
+    Entity* e = m_world->CreateEntity(GetRootEntity(), id);
 
-    OnEntityCreated(e);
+    e->SetName(name);
+    e->SetParent(parent);
 
     return e;
-}
-
-Array<Entity*>& Level::GetEntities()
-{
-    return m_mainLevelChunk->GetEntities();
-}
-
-const Array<Entity*>& Level::GetEntities() const
-{
-    return m_mainLevelChunk->GetEntities();
 }
 
 void Level::Serialize(const Path& path) const
@@ -130,13 +123,5 @@ void Level::Serialize(const Path& path) const
 void Level::SetState(State state)
 {
     m_state = state;
-}
-
-void Level::OnEntityCreated(Entity* e)
-{
-    if (m_state == State::Ready)
-    {
-        m_world->OnAddEntity(e);
-    }
 }
 }  // namespace red

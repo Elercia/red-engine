@@ -11,7 +11,6 @@
 
 namespace red
 {
-class LevelChunk;
 class ComponentManager;
 class Component;
 class Level;
@@ -30,15 +29,15 @@ public:
     World& operator=(World&& world) = delete;
 
     void OnAddEntity(Entity* entity);
-    void OnAddEntities(Array<Entity*>& entities);
     void OnRemoveEntity(Entity* entity);
-    void OnRemoveEntities(Array<Entity*>& entities);
 
     Entity* FindEntity(EntityId id);
     const Array<Entity*>& GetEntities() const;
     Array<Entity*>& GetEntities();
 
     Entity* CreateWorldEntity(const std::string& name);
+    Entity* CreateEntity(Entity* parent);
+    Entity* CreateEntity(Entity* parent, EntityId id);
 
     template <class T, class... Args>
     T* AddSystem(Args... args);
@@ -67,7 +66,6 @@ public:
     bool Update();
 
     void Clean();
-    void AddGarbageEntityId(EntityId entityId);
 
     PhysicsWorld* GetPhysicsWorld();
 
@@ -82,10 +80,6 @@ public:
     EntityId GetNewEntityId();
 
 private:
-    // World chunk is used to store world entities such as resource loaders, window, rendering stuff
-    LevelChunk* m_worldChunk;
-
-    // aggregation of all the entities from all the level chunk loaded (not owned by the world)
     Array<Entity*> m_entities;
 
     // Collection of system working on the world
@@ -93,13 +87,11 @@ private:
 
     ComponentManager* m_componentManager;
     ComponentRegistry* m_componentRegistry;
-
+ 
     PhysicsWorld m_physicsWorld;
 
     Level* m_currentLevel;
     LevelLoader* m_levelLoader;
-
-    Array<EntityId> m_entityIdGarbage; //TODO Remove when I found a good EntityId generation algo
 };
 
 }  // namespace red
