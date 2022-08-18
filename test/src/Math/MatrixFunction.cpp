@@ -19,9 +19,6 @@ TEST_CASE("Orthogonal_transformation", "[MATH]")
 	Vector4 transformedv0 = m * v0;
 	Vector4 transformedv1 = m * v1;
 
-	fmt::print("v0 : {} {}\n", transformedv0.x, transformedv0.y);
-	fmt::print("v1 : {} {}\n", transformedv1.x, transformedv1.y);
-
 	REQUIRE(Math::EqualsEpsilon(transformedv0.x, -1.f, 0.01f));
 	REQUIRE(Math::EqualsEpsilon(transformedv0.y, -1.f, 0.01f));
 
