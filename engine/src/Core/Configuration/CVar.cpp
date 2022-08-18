@@ -21,8 +21,8 @@ std::string ICVar::GetLongName() const
     return CVarUtils::GetLongName(m_category, m_name);
 }
 
-ICVar::ICVar(const std::string& name, const std::string& category, uint32 typeId)
-    : m_name(name), m_category(category), m_typeId(typeId)
+ICVar::ICVar(const std::string& name, const std::string& category)
+    : m_name(name), m_category(category)
 {
 }
 
