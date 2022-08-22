@@ -81,7 +81,7 @@ void PongLevel::Init()
 
     auto* manager = CreateEntity("Manager");
     manager->AddComponent<ScoreComponent>();
-    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f), 600);
+    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f), red::Vector2i{800, 600});
     manager->AddComponent<red::AudioListener>();
 
     auto* walls = CreateEntity("Walls");

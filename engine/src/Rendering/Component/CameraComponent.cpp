@@ -18,13 +18,21 @@ namespace red
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(CameraComponent)
 
 CameraComponent::CameraComponent(Entity* entity)
-    : Component(entity), m_attachedWindow(nullptr), m_frameBuffer(true, 1), m_viewport(0.f, 0.f, 1.f, 1.f), m_size(10)
+    : Component(entity)
+    , m_attachedWindow(nullptr)
+    , m_frameBuffer(true, 1)
+    , m_screenViewport(0.f, 0.f, 1.f, 1.f)
+    , m_size(1, 1)
 {
     UpdateState();
 }
 
-CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, int size)
-    : Component(entity), m_attachedWindow(attachedWindow->GetOwner()), m_frameBuffer(true, 1), m_viewport(viewport), m_size(size)
+CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& sceenViewport, const Vector2i& size)
+    : Component(entity)
+    , m_attachedWindow(attachedWindow->GetOwner())
+    , m_frameBuffer(true, 1)
+    , m_screenViewport(sceenViewport)
+    , m_size(size)
 {
     UpdateState();
 }
@@ -47,26 +55,27 @@ Vector4i CameraComponent::GetWindowRect() const
 
     WindowInfo windowInfo = m_attachedWindow->GetComponent<WindowComponent>()->GetWindowInfo();
 
-    Vector4i viewport((int) (m_viewport.x * (float) windowInfo.width), (int) (m_viewport.y * (float) windowInfo.height),
-                      (int) (m_viewport.width * (float) windowInfo.width),
-                      (int) (m_viewport.height * (float) windowInfo.height));
+    Vector4i viewport((int) (m_screenViewport.x * (float) windowInfo.width),
+                      (int) (m_screenViewport.y * (float) windowInfo.height),
+                      (int) (m_screenViewport.width * (float) windowInfo.width),
+                      (int) (m_screenViewport.height * (float) windowInfo.height));
 
     return viewport;
 }
 
 const Vector4& CameraComponent::Viewport() const
 {
-    return m_viewport;
+    return m_screenViewport;
 }
 
 void CameraComponent::SetViewport(const Vector4& viewport)
 {
-    m_viewport = viewport;
+    m_screenViewport = viewport;
 }
 
 float CameraComponent::AspectRatio() const
 {
-    return (float) m_viewport.width / (float) m_viewport.height;
+    return (float) m_screenViewport.width / (float) m_screenViewport.height;
 }
 
 int CameraComponent::Depth() const
@@ -113,11 +122,9 @@ void CameraComponent::UpdateState()
 
     auto windowInfo = m_attachedWindow->GetComponent<WindowComponent>()->GetWindowInfo();
 
-    float aspectRatio = (float) windowInfo.width / (float) windowInfo.height;
-
     auto* transform = GetOwner()->GetComponent<Transform>();
 
-    m_projectionMatrix = Math::Ortho(0.f, (float) m_size * aspectRatio, 0.f, (float) m_size, m_zNear, m_zFar);
+    m_projectionMatrix = Math::Ortho(0.f, (float) m_size.x, 0.f, (float) m_size.y, m_zNear, m_zFar);
     m_viewMatrix = transform->GetWorldMatrix();
 
     m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;

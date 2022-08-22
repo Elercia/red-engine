@@ -26,14 +26,15 @@ class CameraComponent : public Component
 
 public:
     RED_START_COMPONENT_REGISTER_INHERITHED(CameraComponent, Component)
-    RED_MEMBER("viewport", m_viewport, "The viewport (postion on window & size) of the camera", 0);
+    RED_MEMBER("viewport", m_screenViewport, "The viewport (postion on window & size) of the camera", 0);
+    RED_MEMBER("size", m_size, "The size of this camera in the world", 0);
     RED_MEMBER("depth", m_depth, "The depth of the camera", 0);
     RED_MEMBER("zNear", m_zNear, "The projection zNear", 0);
     RED_MEMBER("zFar", m_zFar, "The projection zFar", 0);
     RED_END_COMPONENT_REGISTER()
 
     CameraComponent(Entity* entity);
-    CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, int size);
+    CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, const Vector2i& size);
     virtual ~CameraComponent();
 
     // Return true if the given AABB is visible from the given camera
@@ -64,10 +65,10 @@ private:
 
     // The camera viewport
     // This describe where the camera will be drawn on the screen
-    Vector4 m_viewport;
+    Vector4 m_screenViewport;
 
-    // The size of the camera
-    int m_size;
+    // Describe the size of the camera inside the world
+    Vector2i m_size;
 
     /// Depth of the camera (defaulted to 0)
     /// Higher depth camera are rendered after (to be on top of another)
