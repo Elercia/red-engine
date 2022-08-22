@@ -81,19 +81,36 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     ImGui::SameLine();
 
     static uint32 selectedLogLevels = (uint32) -1;
+    std::string shownLevels;
+    int bit = 1;
+    for (auto& item : Logger::logLevelAsString)
+    {
+        const bool isSelected = ((1 << (uint32) item.first) & selectedLogLevels) != 0;
+        if (isSelected)
+        {
+            if (bit != 1)
+            {
+                shownLevels += "|";
+            }
+
+            shownLevels += item.second;
+        }
+
+        bit++;
+    }
 
     // Log level filter
     {
         static ImGuiComboFlags flags = 0;
 
-        if (ImGui::BeginCombo("Shown log levels", "", flags))
+        if (ImGui::BeginCombo("Shown log levels", shownLevels.c_str(), flags))
         {
             for (auto& item : Logger::logLevelAsString)
             {
-                const bool is_selected = ((1 << (uint32) item.first) & selectedLogLevels) != 0;
-                if (ImGui::Selectable(item.second.c_str(), is_selected))
+                const bool isSelected = ((1 << (uint32) item.first) & selectedLogLevels) != 0;
+                if (ImGui::Selectable(item.second.c_str(), isSelected))
                 {
-                    if (is_selected)
+                    if (isSelected)
                     {
                         selectedLogLevels &= ~(1 << (uint32) item.first);
                     }
