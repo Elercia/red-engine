@@ -71,7 +71,7 @@ Component* ComponentManager::GetComponent(Entity* entity, const std::string& com
 
     if (traits == nullptr)
     {
-        RED_LOG_ERROR("Failed to create component with name {} because it is not registered", componentName);
+        RED_LOG_ERROR("Failed to get component with name {} because it is not registered", componentName);
         return nullptr;
     }
 
@@ -120,7 +120,7 @@ bool ComponentManager::RemoveComponent(Entity* entity, const std::string& compon
 
     if (traits == nullptr)
     {
-        RED_LOG_ERROR("Failed to create component with name {} because it is not registered", componentName);
+        RED_LOG_ERROR("Failed to remove component with name {} because it is not registered", componentName);
         return false;
     }
 
@@ -169,7 +169,7 @@ Component* ComponentManager::CreateComponentFromName(Entity* entity, const std::
     auto* traits = registry->GetComponentTraits(componentName);
     if (traits == nullptr)
     {
-        RED_LOG_ERROR("Failed to create component with name {} because it is not registered", componentName);
+        RED_LOG_ERROR("Failed to create component from name with name {} because it is not registered", componentName);
         return nullptr;
     }
 
