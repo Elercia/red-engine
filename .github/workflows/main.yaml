@@ -26,8 +26,6 @@ jobs:
       run:  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && sudo apt update && sudo apt install libsdl2-dev g++-11
     - name: Build
       run: cd scripts && chmod a+x GenerateMakeProject.sh && chmod a+x bin/premake5 && ./GenerateMakeProject.sh && make -C projects/linux_gmake2 -j8 config=${{ matrix.config }}_${{ matrix.platform }} CC=gcc-11 CXX=g++-11 
-    # - name: Test
-    #   run: scripts/bin/premake5 test --test-all
   windows:
     runs-on: windows-latest
     strategy:
@@ -40,13 +38,12 @@ jobs:
       with:
         submodules: 'recursive'
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        vs-version: '[17.0,]'
     - name: Build
       run: |
         cd scripts
-        call GenerateVs2019Project.bat
-        msbuild projects/windows_vs2019/RedEngine.sln /t:Build /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
+        call GenerateVs2022Project.bat
+        msbuild projects/windows_vs2022/RedEngine.sln /t:Build /p:Configuration=${{ matrix.config }} /p:Platform=${{ matrix.platform }}
       shell: cmd
-    # - name: Test
-    #   run: scripts/bin/premake5.exe test --test-all
-    #   shell: cmd
