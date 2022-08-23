@@ -21,7 +21,7 @@ template <typename T>
 Array<T>::~Array()
 {
     Destroy(begin(), end());
-    RED_SAFE_FREE(m_data);
+    red_free(m_data);
 }
 
 template <typename T>
@@ -61,7 +61,7 @@ template <typename T>
 Array<T>& Array<T>::operator=(Array<T>&& other)
 {
     Destroy(begin(), end());
-    RED_SAFE_FREE(m_data);
+    red_free(m_data);
 
     m_size = std::move(other.m_size);
     m_capacity = std::move(other.m_capacity);
@@ -222,7 +222,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
         auto capacitySize = askedCapacity * sizeof(T);
         if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
         {
-            T* tmp = (T*) realloc(m_data, capacitySize);
+            T* tmp = (T*) red_realloc(m_data, capacitySize);
 
             if (tmp == NULL)
             {
@@ -233,7 +233,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
         }
         else
         {
-            T* tmp = (T*) malloc(capacitySize);
+            T* tmp = (T*) red_malloc(capacitySize);
 
             if (tmp == NULL)
             {
@@ -247,7 +247,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
                 m_data[i].~T();
             }
 
-            RED_SAFE_FREE(m_data);
+            red_free(m_data);
             m_data = tmp;
         }
     }

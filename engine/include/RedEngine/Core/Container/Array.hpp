@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Macros.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 #include "RedEngine/Math/Math.hpp"
 #include "RedEngine/Utils/Types.hpp"
 

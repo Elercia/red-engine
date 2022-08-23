@@ -1,4 +1,11 @@
 // Headers
+#include "RedEngine/Utils/Types.hpp"
+
+#include "RedEngine/Core/Macros.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Core/Memory/MemoryProfiler.hpp"
+
 #include "RedEngine/Math/MathModule.hpp"
 #include "RedEngine/Math/AABB.hpp"
 #include "RedEngine/Math/Hash.hpp"
@@ -17,18 +24,12 @@
 #include "RedEngine/Utils/FileUtils.hpp"
 #include "RedEngine/Utils/Random.hpp"
 #include "RedEngine/Utils/StringUtils.hpp"
-#include "RedEngine/Utils/Types.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include "RedEngine/Core/CoreModule.hpp"
-#include "RedEngine/Core/Macros.hpp"
-#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
-#include "RedEngine/Core/Memory/Macros.hpp"
-#include "RedEngine/Core/Memory/MemoryManager.hpp"
-#include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
@@ -146,7 +147,6 @@
 #include "Core/Event/Component/EventsComponent.cpp"
 #include "Core/Event/Delegate.cpp"
 #include "Core/Event/System/EventSystem.cpp"
-#include "Core/Memory/MemoryManager.cpp"
 #include "Core/Memory/MemoryProfiler.cpp"
 #include "Core/SerializationFunction.cpp"
 #include "Core/Time/FrameCounter.cpp"
