@@ -61,3 +61,50 @@ TEST_CASE("Memory profiling x100", "[MEMORY]")
     REQUIRE(MemoryProfiler::GetUsage().peekAllocationCount == 200);
     REQUIRE(MemoryProfiler::GetUsage().peekAllocated == ((100 * sizeof(int)) + (100 * sizeof(float))));
 }
+
+struct MemoryTest
+{
+    static bool ctrCalled;
+    static bool dctrCalled;
+
+    int a;
+    float f;
+
+    MemoryTest()
+    {
+        ctrCalled = true;
+        a = 0;
+        f = 0.f;
+    }
+
+    ~MemoryTest()
+    {
+        dctrCalled = true;
+    }
+};
+
+bool MemoryTest::ctrCalled = false;
+bool MemoryTest::dctrCalled = false;
+
+TEST_CASE("New / delete", "[MEMORY]")
+{
+    MemoryProfiler::ResetUsage();
+    MemoryTest::ctrCalled = false;
+    MemoryTest::dctrCalled = false;
+
+    MemoryTest* a = red_new(MemoryTest);
+
+    REQUIRE(MemoryProfiler::GetUsage().currentAllocationCount == 1);
+    REQUIRE(MemoryProfiler::GetUsage().currentlyAllocated == sizeof(MemoryTest));
+
+    red_delete(a);
+
+    REQUIRE(MemoryTest::ctrCalled);
+    REQUIRE(MemoryTest::dctrCalled);
+
+    REQUIRE(MemoryProfiler::GetUsage().currentAllocationCount == 0);
+    REQUIRE(MemoryProfiler::GetUsage().currentlyAllocated == 0);
+
+    REQUIRE(MemoryProfiler::GetUsage().peekAllocationCount == 1);
+    REQUIRE(MemoryProfiler::GetUsage().peekAllocated == sizeof(MemoryTest));
+}

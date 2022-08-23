@@ -10,10 +10,16 @@
 #define red_malloc(size)       red::MemoryProfiler::Allocate(size, __LINE__, __FILE__)
 #define red_realloc(ptr, size) red::MemoryProfiler::Realloc(ptr, size, __LINE__, __FILE__)
 #define red_free(ptr)          red::MemoryProfiler::Free(ptr)
+
+#define red_new(T, ...) red::MemoryProfiler::New<T>(__LINE__, __FILE__, ##__VA_ARGS__)
+#define red_delete(ptr) red::MemoryProfiler::Delete(ptr)
 #else
 #define red_malloc(size)       std::malloc(size)
 #define red_realloc(ptr, size) std::realloc(ptr, size)
 #define red_free(ptr)          std::free(ptr)
+
+#define red_new(T, ...) new T(##__VA_ARGS__)
+#define red_delete(ptr) delete ptr
 #endif
 
 #define MemoryGuard (uint32) 0xBAADF00D
@@ -50,10 +56,15 @@ public:
     static void* Realloc(void* ptr, sizet size, int line, const char* file);
     static void Free(void* ptr);
 
+    template <typename T, typename... Args>
+    static T* New(int line, const char* file, Args... args);
+
+    template <typename T>
+    static void Delete(T* ptr);
+
     static void InitAllocInfo(AllocationInfo* info);
 
     static const MemoryUsageInfo& GetUsage();
-
     static void ResetUsage();
 
 private:
@@ -64,3 +75,5 @@ private:
     static MemoryUsageInfo s_memoryUsage;
 };
 }  // namespace red
+
+#include "inl/MemoryProfiler.inl"
