@@ -5,6 +5,7 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Core/Memory/MemoryProfiler.hpp"
+#include "RedEngine/Core/Memory/LinearAllocator.hpp"
 
 #include "RedEngine/Math/MathModule.hpp"
 #include "RedEngine/Math/AABB.hpp"
@@ -148,6 +149,7 @@
 #include "Core/Event/Delegate.cpp"
 #include "Core/Event/System/EventSystem.cpp"
 #include "Core/Memory/MemoryProfiler.cpp"
+#include "Core/Memory/LinearAllocator.cpp"
 #include "Core/SerializationFunction.cpp"
 #include "Core/Time/FrameCounter.cpp"
 #include "Core/Time/Time.cpp"
