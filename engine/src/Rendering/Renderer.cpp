@@ -220,7 +220,7 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 {
     PROFILER_EVENT_CATEGORY(desc.name, ProfilerCategory::Rendering);
 
-    uint64 count = 0;
+    uint32 count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(desc.renderType, camera, count);
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, desc.name);
@@ -236,7 +236,7 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
     }
 
     // Do the actual render calls to the camera render target
-    for (uint64 i = 0; i < count; i++)
+    for (uint32 i = 0; i < count; i++)
     {
         auto& renderData = datas[i];
 
@@ -337,12 +337,12 @@ void Renderer::UseGeometry(const Geometry* geom)
 }
 
 Array<RenderingData>& Renderer::GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
-                                                             uint64& renderDataCount)
+                                                             uint32& renderDataCount)
 {
     Array<RenderingData>& ret = m_renderingData[(uint32)type];
     renderDataCount = ret.size();
 
-    for (uint64 i = 0u; i < ret.size(); i++)
+    for (uint32 i = 0u; i < ret.size(); i++)
     {
         if (!camera->IsVisibleFrom(ret[i].aabb))
             renderDataCount--;

@@ -15,9 +15,14 @@
 
 namespace red
 {
-//TODO Add something like template <T> size_type GrowPolicy(neededCapacity) that default implementation is returning NextPowOf2 and allow other kind of grow policy (return 2x the cap etc etc)
+struct DefaultAllocator
+{
+    static inline void* Allocate(uint32 size);
+    static inline void Free(void* ptr);
+    static inline void* Realloc(void* ptr, uint32 size);
+};
 
-template <typename T>
+template <typename T, typename Allocator = DefaultAllocator>
 class Array
 {
 public:
@@ -27,7 +32,7 @@ public:
     using reference = T&;
     using const_reference = const T&;
 
-    using size_type = uint64;
+    using size_type = uint32;
 
     /// Constructors
     Array();
@@ -35,11 +40,11 @@ public:
 
     Array(std::initializer_list<T> list);
 
-    Array(const Array<T>& other);
-    Array<T>& operator=(const Array<T>& other);
+    Array(const Array& other);
+    Array& operator=(const Array& other);
 
-    Array(Array<T>&& other);
-    Array<T>& operator=(Array<T>&& other);
+    Array(Array&& other);
+    Array& operator=(Array&& other);
 
     /// Accessors
     const_reference operator[](size_type index) const;

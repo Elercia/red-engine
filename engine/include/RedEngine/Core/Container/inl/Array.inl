@@ -3,29 +3,44 @@ namespace red
 {
 #ifdef RED_USE_ARRAY
 
-template <typename T>
-Array<T>::Array()
+void* DefaultAllocator ::Allocate(uint32 size)
+{
+    return red_malloc(size);
+}
+
+void DefaultAllocator::Free(void* ptr)
+{
+    red_free(ptr);
+}
+
+void* DefaultAllocator::Realloc(void* ptr, uint32 size)
+{
+    return red_realloc(ptr, size);
+}
+
+template <typename T, typename Allocator>
+Array<T, Allocator>::Array()
 {
 }
 
-template <typename T>
-Array<T>::Array(std::initializer_list<T> list)
+template <typename T, typename Allocator>
+Array<T, Allocator>::Array(std::initializer_list<T> list)
 {
-    reserve(list.size());
+    reserve((uint32)list.size());
 
     for (auto it = list.begin(); it != list.end(); it++)
         push_back(*it);
 }
 
-template <typename T>
-Array<T>::~Array()
+template <typename T, typename Allocator>
+Array<T, Allocator>::~Array()
 {
     Destroy(begin(), end());
-    red_free(m_data);
+    Allocator::Free(m_data);
 }
 
-template <typename T>
-Array<T>::Array(const Array<T>& other)
+template <typename T, typename Allocator>
+Array<T, Allocator>::Array(const Array<T, Allocator>& other)
 {
     reserve(other.m_size);
 
@@ -35,8 +50,8 @@ Array<T>::Array(const Array<T>& other)
     }
 }
 
-template <typename T>
-Array<T>& Array<T>::operator=(const Array<T>& other)
+template <typename T, typename Allocator>
+Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, Allocator>& other)
 {
     reserve(other.m_size);
 
@@ -48,8 +63,8 @@ Array<T>& Array<T>::operator=(const Array<T>& other)
     return *this;
 }
 
-template <typename T>
-Array<T>::Array(Array<T>&& other)
+template <typename T, typename Allocator>
+Array<T, Allocator>::Array(Array<T, Allocator>&& other)
     : m_size(std::move(other.m_size)), m_capacity(std::move(other.m_capacity)), m_data(std::move(other.m_data))
 {
     other.m_size = 0;
@@ -57,11 +72,11 @@ Array<T>::Array(Array<T>&& other)
     other.m_data = nullptr;
 }
 
-template <typename T>
-Array<T>& Array<T>::operator=(Array<T>&& other)
+template <typename T, typename Allocator>
+Array<T, Allocator>& Array<T, Allocator>::operator=(Array<T, Allocator>&& other)
 {
     Destroy(begin(), end());
-    red_free(m_data);
+    Allocator::Free(m_data);
 
     m_size = std::move(other.m_size);
     m_capacity = std::move(other.m_capacity);
@@ -74,9 +89,9 @@ Array<T>& Array<T>::operator=(Array<T>&& other)
     return *this;
 }
 
-template <typename T>
+template <typename T, typename Allocator>
 template <typename... Args>
-typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
+typename Array<T, Allocator>::reference Array<T, Allocator>::emplace_back(Args&&... args)
 {
     size_type index = m_size;
     size_type newSize = m_size + 1;
@@ -90,8 +105,8 @@ typename Array<T>::reference Array<T>::emplace_back(Args&&... args)
     return m_data[index];
 }
 
-template <typename T>
-void Array<T>::resize(size_type count)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::resize(size_type count)
 {
     reserve(count);
 
@@ -103,8 +118,8 @@ void Array<T>::resize(size_type count)
     m_size = count;
 }
 
-template <typename T>
-void Array<T>::resize(size_type count, const T& t)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::resize(size_type count, const T& t)
 {
     reserve(count);
     for (size_type i = m_size; i < count; i++)
@@ -113,32 +128,32 @@ void Array<T>::resize(size_type count, const T& t)
     }
 }
 
-template <typename T>
-void Array<T>::pop_back()
+template <typename T, typename Allocator>
+void Array<T, Allocator>::pop_back()
 {
     Destroy(m_size - 1, m_size);
 
     m_size--;
 }
 
-template <typename T>
-void Array<T>::push_back(T&& value)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::push_back(T&& value)
 {
     reserve(m_size + 1);
     new (m_data + m_size) T(std::move(value));
     m_size++;
 }
 
-template <typename T>
-void Array<T>::push_back(const T& value)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::push_back(const T& value)
 {
     reserve(m_size + 1);
     new (m_data + m_size) T(value);
     m_size++;
 }
 
-template <typename T>
-typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator last)
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::iterator Array<T, Allocator>::erase(const_iterator first, const_iterator last)
 {
     RedAssert(last >= first);
     RedAssert(first >= begin());
@@ -167,39 +182,39 @@ typename Array<T>::iterator Array<T>::erase(const_iterator first, const_iterator
     return const_cast<iterator>(first);
 }
 
-template <typename T>
-typename Array<T>::iterator Array<T>::erase(iterator first, iterator last)
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::iterator Array<T, Allocator>::erase(iterator first, iterator last)
 {
     return erase((const_iterator) first, (const_iterator) last);
 }
 
-template <typename T>
-typename Array<T>::iterator Array<T>::erase(const_iterator pos)
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::iterator Array<T, Allocator>::erase(const_iterator pos)
 {
     return erase(pos, pos + 1);
 }
 
-template <typename T>
-typename Array<T>::iterator Array<T>::erase(iterator pos)
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::iterator Array<T, Allocator>::erase(iterator pos)
 {
     return erase((const_iterator) pos);
 }
 
-template <typename T>
-void Array<T>::clear()
+template <typename T, typename Allocator>
+void Array<T, Allocator>::clear()
 {
     Destroy(begin(), end());
     m_size = 0;
 }
 
-template <typename T>
-void Array<T>::shrink_to_fit()
+template <typename T, typename Allocator>
+void Array<T, Allocator>::shrink_to_fit()
 {
     SetCapacity(m_size);
 }
 
-template <typename T>
-void Array<T>::reserve(size_type capacity)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::reserve(size_type capacity)
 {
     if (capacity < m_size || capacity <= m_capacity)
     {
@@ -211,18 +226,18 @@ void Array<T>::reserve(size_type capacity)
     SetCapacity(capacity);
 }
 
-template <typename T>
-void Array<T>::SetCapacity(size_type askedCapacity)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
 {
     if (askedCapacity < m_size)
         return;
 
     if (askedCapacity != 0)
     {
-        auto capacitySize = askedCapacity * sizeof(T);
+        uint32 capacitySize = askedCapacity * sizeof(T);
         if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
         {
-            T* tmp = (T*) red_realloc(m_data, capacitySize);
+            T* tmp = (T*) Allocator::Realloc(m_data, capacitySize);
 
             if (tmp == NULL)
             {
@@ -233,7 +248,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
         }
         else
         {
-            T* tmp = (T*) red_malloc(capacitySize);
+            T* tmp = (T*) Allocator::Allocate(capacitySize);
 
             if (tmp == NULL)
             {
@@ -247,7 +262,7 @@ void Array<T>::SetCapacity(size_type askedCapacity)
                 m_data[i].~T();
             }
 
-            red_free(m_data);
+            Allocator::Free(m_data);
             m_data = tmp;
         }
     }
@@ -255,125 +270,126 @@ void Array<T>::SetCapacity(size_type askedCapacity)
     m_capacity = askedCapacity;
 }
 
-template <typename T>
-typename Array<T>::size_type Array<T>::capacity() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::size_type Array<T, Allocator>::capacity() const
 {
     return m_capacity;
 }
 
-template <typename T>
-typename Array<T>::size_type Array<T>::size() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::size_type Array<T, Allocator>::size() const
 {
     return m_size;
 }
 
-template <typename T>
-bool Array<T>::empty() const
+template <typename T, typename Allocator>
+bool Array<T, Allocator>::empty() const
 {
     return m_size == 0;
 }
 
-template <typename T>
-typename Array<T>::const_iterator Array<T>::cend() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_iterator Array<T, Allocator>::cend() const
 {
     return end();
 }
 
-template <typename T>
-typename Array<T>::const_iterator Array<T>::end() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_iterator Array<T, Allocator>::end() const
 {
     return m_data + m_size;
 }
 
-template <typename T>
-typename Array<T>::iterator Array<T>::end()
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::iterator Array<T, Allocator>::end()
 {
     return m_data + m_size;
 }
 
-template <typename T>
-typename Array<T>::const_iterator Array<T>::cbegin() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_iterator Array<T, Allocator>::cbegin() const
 {
     return begin();
 }
 
-template <typename T>
-typename Array<T>::const_iterator Array<T>::begin() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_iterator Array<T, Allocator>::begin() const
 {
     return m_data;
 }
 
-template <typename T>
-typename Array<T>::iterator Array<T>::begin()
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::iterator Array<T, Allocator>::begin()
 {
     return m_data;
 }
 
-template <typename T>
-const T* Array<T>::data() const
+template <typename T, typename Allocator>
+const T* Array<T, Allocator>::data() const
 {
     return m_data;
 }
 
-template <typename T>
-T* Array<T>::data()
+template <typename T, typename Allocator>
+T* Array<T, Allocator>::data()
 {
     return m_data;
 }
 
-template <typename T>
-typename Array<T>::const_reference Array<T>::back() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_reference Array<T, Allocator>::back() const
 {
     return m_data[m_size - 1];
 }
 
-template <typename T>
-typename Array<T>::reference Array<T>::back()
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::reference Array<T, Allocator>::back()
 {
     return m_data[m_size - 1];
 }
 
-template <typename T>
-typename Array<T>::const_reference Array<T>::front() const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_reference Array<T, Allocator>::front() const
 {
     return m_data[0];
 }
 
-template <typename T>
-typename Array<T>::reference Array<T>::front()
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::reference Array<T, Allocator>::front()
 {
     return m_data[0];
 }
 
-template <typename T>
-typename Array<T>::reference Array<T>::at(size_type index)
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::reference Array<T, Allocator>::at(size_type index)
 {
     RedAssert(index < m_size);
     return m_data[index];
 }
 
-template <typename T>
-typename Array<T>::const_reference Array<T>::at(size_type index) const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_reference Array<T, Allocator>::at(size_type index) const
 {
     RedAssert(index < m_size);
     return m_data[index];
 }
 
-template <typename T>
-typename Array<T>::reference Array<T>::operator[](size_type index)
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::reference Array<T, Allocator>::operator[](size_type index)
 {
     return at(index);
 }
 
-template <typename T>
-typename Array<T>::const_reference Array<T>::operator[](size_type index) const
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::const_reference Array<T, Allocator>::operator[](size_type index) const
 {
     return at(index);
 }
 
-template <typename T>
+template <typename T, typename Allocator>
 template <class InputIterator>
-typename Array<T>::iterator Array<T>::insert(const_iterator position, InputIterator first, InputIterator last)
+typename Array<T, Allocator>::iterator Array<T, Allocator>::insert(const_iterator position, InputIterator first,
+                                                                   InputIterator last)
 {
     const size_type nbElem = (size_type) (last - first);
     const size_type positionIndex = (size_type) (position - m_data);
@@ -409,8 +425,8 @@ typename Array<T>::iterator Array<T>::insert(const_iterator position, InputItera
     return (iterator) position;
 }
 
-template <typename T>
-void Array<T>::Destroy(size_type from, size_type to)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::Destroy(size_type from, size_type to)
 {
     iterator fromIt = m_data + from;
     iterator toIt = m_data + to;
@@ -418,8 +434,8 @@ void Array<T>::Destroy(size_type from, size_type to)
     Destroy(fromIt, toIt);
 }
 
-template <typename T>
-void Array<T>::Destroy(iterator from, iterator to)
+template <typename T, typename Allocator>
+void Array<T, Allocator>::Destroy(iterator from, iterator to)
 {
     if constexpr (!std::is_trivially_destructible<T>::value)
     {
