@@ -57,7 +57,7 @@ Engine* Engine::GetInstance()
     return s_engine;
 }
 
-Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr)
+Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr), m_frameAllocator(RED_DEFAULT_FRAMEALLOCATOR_SIZE)
 {
 }
 
@@ -80,6 +80,9 @@ void Engine::MainLoop()
         Time::SetDeltaTime(deltaTime);
 
         continueExec = m_world->Update();
+
+        m_frameAllocator.Swap();
+        m_frameAllocator.Reset();
     }
 }
 
@@ -210,6 +213,11 @@ bool Engine::Destroy()
 std::string_view Engine::GetGameName() const
 {
     return "RedEngine";
+}
+
+DoubleLinearAllocator& Engine::GetFrameAllocator()
+{
+    return m_frameAllocator;
 }
 
 }  // namespace red

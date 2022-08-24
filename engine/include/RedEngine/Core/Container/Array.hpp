@@ -19,7 +19,7 @@ struct DefaultAllocator
 {
     static inline void* Allocate(uint32 size);
     static inline void Free(void* ptr);
-    static inline void* Realloc(void* ptr, uint32 size);
+    static inline void* Realloc(void* ptr, uint32 oldSize, uint32 size);
 };
 
 template <typename T, typename Allocator = DefaultAllocator>
@@ -39,6 +39,12 @@ public:
     ~Array();
 
     Array(std::initializer_list<T> list);
+
+    template <typename OtherAllocator>
+    Array(const Array<T, OtherAllocator>& other);
+
+    template <typename OtherAllocator>
+    Array& operator=(const Array<T, OtherAllocator>& other);
 
     Array(const Array& other);
     Array& operator=(const Array& other);

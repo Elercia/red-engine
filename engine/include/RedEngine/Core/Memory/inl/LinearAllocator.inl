@@ -8,4 +8,10 @@ T* LinearAllocator::Allocate(int count /*= 1*/)
         return nullptr;
     return new (ptr) T();
 }
+
+template <typename T>
+T* DoubleLinearAllocator::Allocate(int count /*= 1*/)
+{
+    return m_allocators[m_currentAllocator].Allocate<T>(count);
+}
 }  // namespace red

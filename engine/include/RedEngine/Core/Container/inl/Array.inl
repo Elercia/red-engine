@@ -13,7 +13,7 @@ void DefaultAllocator::Free(void* ptr)
     red_free(ptr);
 }
 
-void* DefaultAllocator::Realloc(void* ptr, uint32 size)
+void* DefaultAllocator::Realloc(void* ptr, uint32 /*oldSize*/, uint32 size)
 {
     return red_realloc(ptr, size);
 }
@@ -26,7 +26,7 @@ Array<T, Allocator>::Array()
 template <typename T, typename Allocator>
 Array<T, Allocator>::Array(std::initializer_list<T> list)
 {
-    reserve((uint32)list.size());
+    reserve((uint32) list.size());
 
     for (auto it = list.begin(); it != list.end(); it++)
         push_back(*it);
@@ -40,6 +40,18 @@ Array<T, Allocator>::~Array()
 }
 
 template <typename T, typename Allocator>
+template <typename OtherAllocator>
+Array<T, Allocator>::Array(const Array<T, OtherAllocator>& other)
+{
+    reserve(other.m_size);
+
+    for (auto& it : other)
+    {
+        push_back(it);
+    }
+}
+
+template <typename T, typename Allocator>
 Array<T, Allocator>::Array(const Array<T, Allocator>& other)
 {
     reserve(other.m_size);
@@ -48,6 +60,20 @@ Array<T, Allocator>::Array(const Array<T, Allocator>& other)
     {
         push_back(it);
     }
+}
+
+template <typename T, typename Allocator>
+template <typename OtherAllocator>
+Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, OtherAllocator>& other)
+{
+    reserve(other.m_size);
+
+    for (auto& it : other)
+    {
+        push_back(it);
+    }
+
+    return *this;
 }
 
 template <typename T, typename Allocator>
@@ -237,7 +263,7 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
         uint32 capacitySize = askedCapacity * sizeof(T);
         if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
         {
-            T* tmp = (T*) Allocator::Realloc(m_data, capacitySize);
+            T* tmp = (T*) Allocator::Realloc(m_data, m_capacity * sizeof(T), capacitySize);
 
             if (tmp == NULL)
             {
