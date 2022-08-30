@@ -4,6 +4,10 @@
 #include <sysinfoapi.h>
 #endif
 
+#ifdef RED_LINUX
+#include <unistd.h>
+#endif
+
 namespace red
 {
 static SystemInfo s_systemInfo;
@@ -15,6 +19,8 @@ const SystemInfo& InitSystemInfo()
     ::GetSystemInfo(&nativeInfo);
 
     s_systemInfo.pageSize = nativeInfo.dwPageSize;
+#elif defined(RED_LINUX)
+    s_systemInfo.pageSize = ::getpagesize();
 #else
 #error not implemented
 #endif
