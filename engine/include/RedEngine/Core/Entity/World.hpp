@@ -40,7 +40,7 @@ public:
     Entity* CreateEntity(Entity* parent, EntityId id);
 
     template <class T, class... Args>
-    T* AddSystem(Args... args);
+    T* AddSystem(Args&&... args);
     template <class T>
     bool RemoveSystem();
     template <class T>

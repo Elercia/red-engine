@@ -1,7 +1,7 @@
 namespace red
 {
 template <class T, class... Args>
-T* World::AddSystem(Args... args)
+T* World::AddSystem(Args&&... args)
 {
     static_assert(std::is_base_of<System, T>::value, "World add system template T must be subclass of System");
 
