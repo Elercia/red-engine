@@ -162,6 +162,8 @@ bool Engine::Create()
 
     SetupLogger();
 
+    InitSystemInfo();
+
     InitRandomEngine(42);
 
     m_world = new World;
