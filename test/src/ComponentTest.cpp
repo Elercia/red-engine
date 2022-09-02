@@ -1,7 +1,8 @@
+#include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Utils/SystemInfo.hpp"
 
 #include <SystemTest.hpp>
 
@@ -18,6 +19,8 @@ TEST_CASE("Component", "[ECS]")
 {
     SECTION("Bulk add remove")
     {
+        red::InitSystemInfo();
+
         red::World world;
         world.Init();
 
