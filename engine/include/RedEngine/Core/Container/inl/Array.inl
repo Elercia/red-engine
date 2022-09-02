@@ -472,4 +472,87 @@ void Array<T, Allocator>::Destroy(iterator from, iterator to)
     }
 }
 #endif  // RED_USE_ARRAY
+
+template <typename T>
+ArrayView<T>::ArrayView() : m_offsetData(nullptr), m_count(0)
+{
+}
+
+template <typename T>
+template <typename A>
+ArrayView<T>::ArrayView(Array<T, A>& ar) : m_offsetData(ar.data()), m_count(ar.size())
+{
+}
+
+template <typename T>
+template <typename A>
+ArrayView<T>::ArrayView(Array<T, A>& ar, size_type start, size_type count)
+    : m_offsetData(ar.data() + start), m_count(count)
+{
+}
+
+template <typename T>
+template <typename A>
+ArrayView<T>::ArrayView(Array<T, A>& ar, size_type count) : m_offsetData(ar.data()), m_count(count)
+{
+}
+
+template <typename T>
+ArrayView<T>::ArrayView(T* data, size_type count) : m_offsetData(data), m_count(count)
+{
+}
+
+template <typename T>
+ArrayView<T>::ArrayView(T* data, size_type start, size_type count) : m_offsetData(data + start), m_count(count)
+{
+}
+
+template <typename T>
+typename ArrayView<T>::iterator ArrayView<T>::begin()
+{
+    return m_offsetData;
+}
+
+template <typename T>
+typename ArrayView<T>::const_iterator ArrayView<T>::begin() const
+{
+    return m_offsetData;
+}
+
+template <typename T>
+typename ArrayView<T>::iterator ArrayView<T>::end()
+{
+    return m_offsetData + m_count;
+}
+
+template <typename T>
+typename ArrayView<T>::const_iterator ArrayView<T>::end() const
+{
+    return m_offsetData + m_count;
+}
+
+template <typename T>
+ArrayView<T>::size_type ArrayView<T>::size() const
+{
+    return m_count;
+}
+
+template <typename T>
+T* ArrayView<T>::data()
+{
+    return m_offsetData;
+}
+
+template <typename T>
+T& ArrayView<T>::operator[](size_type index)
+{
+    return m_offsetData[index];
+}
+
+template <typename T>
+const T& ArrayView<T>::operator[](size_type index) const
+{
+    return m_offsetData[index];
+}
+
 }  // namespace red

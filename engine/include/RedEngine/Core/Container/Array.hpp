@@ -128,4 +128,46 @@ using Array = std::vector<T>;
 
 #endif  // else RED_USE_ARRAY
 
+namespace red
+{
+template <typename T>
+class ArrayView
+{
+    using size_type = uint32;
+    using iterator = T*;
+    using const_iterator = const T*;
+
+public:
+    ArrayView();
+
+    template <typename A>
+    explicit ArrayView(Array<T, A>& ar);
+
+    template <typename A>
+    ArrayView(Array<T, A>& ar, size_type start, size_type count);
+
+    template <typename A>
+    ArrayView(Array<T, A>& ar, size_type count);
+
+    ArrayView(T* data, size_type count);
+    ArrayView(T* data, size_type start, size_type count);
+
+    iterator begin();
+    const_iterator begin() const;
+
+    iterator end();
+    const_iterator end() const;
+
+    size_type size() const;
+    T* data();
+
+    T& operator[](size_type index);
+    const T& operator[](size_type index) const;
+
+private:
+    T* m_offsetData;
+    size_type m_count;
+};
+}  // namespace red
+
 #include "inl/Array.inl"
