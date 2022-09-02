@@ -22,7 +22,8 @@ namespace red
 static int s_nameCounter = 0;
 
 World::World()
-    : m_componentManager(new ComponentManager(this))
+    : m_entityAllocator(sizeof(Entity), 1000)
+    , m_componentManager(new ComponentManager(this))
     , m_componentRegistry(new ComponentRegistry())
     , m_currentLevel(nullptr)
     , m_levelLoader(nullptr)
@@ -60,7 +61,7 @@ void World::OnRemoveEntity(Entity* entity)
     if (it != m_entities.end())
         m_entities.erase(it);
 
-    RED_SAFE_DELETE(entity);
+    m_entityAllocator.Free(entity);
 }
 
 Entity* World::FindEntity(EntityId id)
@@ -231,7 +232,7 @@ Array<Entity*>& World::GetEntities()
 
 Entity* World::CreateWorldEntity(const std::string& name)
 {
-    Entity* e = new Entity(this, GetNewEntityId());
+    Entity* e = m_entityAllocator.Allocate<Entity>(this, GetNewEntityId());
 
     e->SetName(name);
     e->SetParent(nullptr);
@@ -243,7 +244,7 @@ Entity* World::CreateWorldEntity(const std::string& name)
 
 Entity* World::CreateEntity(Entity* parent)
 {
-    Entity* e = new Entity(this, GetNewEntityId());
+    Entity* e = m_entityAllocator.Allocate<Entity>(this, GetNewEntityId());
 
     e->SetName("Unnamed" + s_nameCounter++);
     e->SetParent(parent);
@@ -258,7 +259,7 @@ Entity* World::CreateEntity(Entity* parent, EntityId id)
     if (FindEntity(id))
         return nullptr;
 
-    Entity* e = new Entity(this, id);
+    Entity* e = m_entityAllocator.Allocate<Entity>(this, id);
 
     e->SetName("Unnamed" + s_nameCounter++);
     e->SetParent(parent);

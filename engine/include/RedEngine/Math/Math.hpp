@@ -27,7 +27,7 @@ namespace Math
     constexpr bool Between(T value, T lValue, T rValue);
 
     inline float Sqrt(float f);
-    constexpr uint64 NextPowerOf2(uint64 n);
+    constexpr uint32 NextPowerOf2(uint32 n);
 
     template <typename T>
     constexpr bool EqualsEpsilon(T a, T b, T epsilon);

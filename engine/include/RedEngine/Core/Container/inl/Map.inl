@@ -436,9 +436,9 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
 
     auto hash = HashOpT::HashType(key);
 
-    auto index = hash % inside.size();
+    auto index = (size_type) (hash % (uint64) inside.size());
 
-    uint64 firstErasedBucket = (uint64) -1;
+    size_type firstErasedBucket = (size_type) -1;
     int j = 1;
     auto* bucket = &inside[index];
     while (true)
@@ -448,7 +448,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
 
         if constexpr (forInsertion)
         {
-            if (firstErasedBucket != (uint64) -1 && bucket->erased)
+            if (firstErasedBucket != (size_type) -1 && bucket->erased)
                 firstErasedBucket = index;
         }
 
@@ -459,7 +459,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
 
     if constexpr (forInsertion)
     {
-        if (!bucket->used && firstErasedBucket != (uint64) -1)
+        if (!bucket->used && firstErasedBucket != (size_type) -1)
             return firstErasedBucket;
     }
 

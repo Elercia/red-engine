@@ -52,7 +52,7 @@ Hierarchy :
 - ``test`` Unit / functional tests
 
 ## Building
-### Environment
+### Development environment
 
 This is targeting Windows and Linux and is using [Premake](https://github.com/premake/premake-core) as a build configuration tool.
 You can generate all projects files that provides premake (cf premake documentation).
@@ -61,7 +61,9 @@ We provide utility scripts to generate common IDE / Editor project files such as
 Simply use the ``GenerateXXXProject.sh/bat`` inside the ``scripts`` folder.
 Project files are generated in ``scripts/projects`` folder.
 
-You can also generate ``compile_commands.json`` using the corresponding scripts (useful for editors).
+### Linux build
+
+You will need to install SDL2 development build on you distrib by running a command like ``sudo apt install libsdl2-dev``.
 
 ## Dependencies
 The engine uses the following dependencies :
@@ -75,6 +77,5 @@ The engine uses the following dependencies :
 - [SDL2](https://www.libsdl.org/) to manage platform dependent code such as input handling and window creation.
 - [STB (image related)](https://github.com/nothings/stb) to load / write images on CPU side.
 - [GL3W](https://github.com/skaslev/gl3w) to load OpenGL functions.  
-- [Dear ImGui](https://github.com/ocornut/imgui) to display debug / utils  
-- [Premake export compile commands](https://github.com/tarruda/premake-export-compile-commands/) To export ``compile_commands.json`` with premake script.  
+- [Dear ImGui](https://github.com/ocornut/imgui) to display debug / utils.
 

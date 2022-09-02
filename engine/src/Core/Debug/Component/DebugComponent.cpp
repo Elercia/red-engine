@@ -27,7 +27,7 @@ void DebugComponent::AddCircle(const Vector2& center, float radius, const Color&
 void DebugComponent::AddPolygon(const Array<Vector2>& points, const Color& c /*= ColorConstant::BLACK*/,
                                 bool isSolid /*= false*/)
 {
-    auto* polygon = new DebugPolygon{{DebugShapeType::POLYGON, isSolid, c}, std::move(points)};
+    auto* polygon = new DebugPolygon{{DebugShapeType::POLYGON, isSolid, c}, points};
     m_frameShapes.emplace_back(polygon);
 }
 

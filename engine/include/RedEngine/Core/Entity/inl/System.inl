@@ -4,9 +4,9 @@
 namespace red
 {
 template <class... ComponentTypes>
-Array<Entity*> System::GetComponents() const
+Array<Entity*, red::DoubleLinearArrayAllocator> System::GetComponents() const
 {
-    Array<Entity*> selectedEntities;
+    Array<Entity*, DoubleLinearArrayAllocator> selectedEntities;
 
     auto& worldentities = GetWorldEntities();
     for (auto& entityPtr : worldentities)

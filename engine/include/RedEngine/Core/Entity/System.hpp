@@ -1,12 +1,13 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Memory/LinearAllocator.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
 
 #include <algorithm>
 #include <memory>
-#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -43,7 +44,7 @@ public:
 
     // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
-    Array<Entity*> GetComponents() const;
+    Array<Entity*, red::DoubleLinearArrayAllocator> GetComponents() const;
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

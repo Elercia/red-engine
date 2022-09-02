@@ -1,6 +1,7 @@
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Engine.hpp"
 
 #include <SystemTest.hpp>
 
@@ -181,6 +182,8 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
 {
     using namespace red;
     using namespace EntityDestroyRemoveComp;
+
+    red::CreateEngineFrom<red::Engine>(0, nullptr); // For double allocator
 
     red::World world;
     world.Init();

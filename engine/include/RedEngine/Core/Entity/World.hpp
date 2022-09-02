@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Memory/PoolAllocator.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
@@ -40,7 +41,7 @@ public:
     Entity* CreateEntity(Entity* parent, EntityId id);
 
     template <class T, class... Args>
-    T* AddSystem(Args... args);
+    T* AddSystem(Args&&... args);
     template <class T>
     bool RemoveSystem();
     template <class T>
@@ -80,6 +81,7 @@ public:
     EntityId GetNewEntityId();
 
 private:
+    VirtualPoolAllocator m_entityAllocator;
     Array<Entity*> m_entities;
 
     // Collection of system working on the world
@@ -87,7 +89,7 @@ private:
 
     ComponentManager* m_componentManager;
     ComponentRegistry* m_componentRegistry;
- 
+
     PhysicsWorld m_physicsWorld;
 
     Level* m_currentLevel;

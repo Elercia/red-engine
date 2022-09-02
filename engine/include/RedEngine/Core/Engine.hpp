@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Memory/LinearAllocator.hpp"
 
 #include <string_view>
 #include <type_traits>
@@ -8,6 +9,8 @@
 namespace red
 {
 class World;
+
+constexpr uint32 RED_DEFAULT_FRAMEALLOCATOR_SIZE = 1 * 1024 * 1024; // 1 Mo
 
 class Engine
 {
@@ -32,11 +35,15 @@ public:
 
     virtual void SetupLogger();
 
+    DoubleLinearAllocator& GetFrameAllocator();
+
 protected:
     int m_argc;
     char** m_argv;
 
     World* m_world;
+
+    DoubleLinearAllocator m_frameAllocator;
 
 private:
     static Engine* s_engine;

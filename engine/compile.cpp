@@ -1,4 +1,14 @@
 // Headers
+#include "RedEngine/Utils/Types.hpp"
+
+#include "RedEngine/Core/Macros.hpp"
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Memory/MemoryUtils.hpp"
+#include "RedEngine/Core/Memory/Macros.hpp"
+#include "RedEngine/Core/Memory/MemoryProfiler.hpp"
+#include "RedEngine/Core/Memory/LinearAllocator.hpp"
+#include "RedEngine/Core/Memory/PoolAllocator.hpp"
+
 #include "RedEngine/Math/MathModule.hpp"
 #include "RedEngine/Math/AABB.hpp"
 #include "RedEngine/Math/Hash.hpp"
@@ -17,18 +27,13 @@
 #include "RedEngine/Utils/FileUtils.hpp"
 #include "RedEngine/Utils/Random.hpp"
 #include "RedEngine/Utils/StringUtils.hpp"
-#include "RedEngine/Utils/Types.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
+#include "RedEngine/Utils/SystemInfo.hpp"
 
 #include "RedEngine/Core/CoreModule.hpp"
-#include "RedEngine/Core/Macros.hpp"
-#include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
-#include "RedEngine/Core/Memory/Macros.hpp"
-#include "RedEngine/Core/Memory/MemoryManager.hpp"
-#include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
@@ -124,17 +129,21 @@
 #include "Audio/Resource/SoundResource.cpp"
 #include "Audio/Resource/SoundResourceLoader.cpp"
 #include "Audio/System/AudioSystem.cpp"
+
 #include "Core/Configuration/CVar.cpp"
 #include "Core/Configuration/CVarManager.cpp"
 #include "Core/Configuration/CVarUtils.cpp"
 #include "Core/Configuration/IniReader.cpp"
 #include "Core/Configuration/UserInputHelper.cpp"
+
 #include "Core/Debug/Component/DebugComponent.cpp"
 #include "Core/Debug/DebugDraw/PhysicsDebugDraw.cpp"
 #include "Core/Debug/DebugMacros.cpp"
 #include "Core/Debug/Logger/Logger.cpp"
 #include "Core/Debug/System/DebugSystem.cpp"
+
 #include "Core/Engine.cpp"
+
 #include "Core/Entity/Components/Component.cpp"
 #include "Core/Entity/Components/ComponentManager.cpp"
 #include "Core/Entity/Components/ComponentRegistry.cpp"
@@ -143,14 +152,20 @@
 #include "Core/Entity/Entity.cpp"
 #include "Core/Entity/System.cpp"
 #include "Core/Entity/World.cpp"
+
 #include "Core/Event/Component/EventsComponent.cpp"
 #include "Core/Event/Delegate.cpp"
 #include "Core/Event/System/EventSystem.cpp"
-#include "Core/Memory/MemoryManager.cpp"
+
+#include "Core/Memory/MemoryUtils.cpp"
 #include "Core/Memory/MemoryProfiler.cpp"
+#include "Core/Memory/LinearAllocator.cpp"
+#include "Core/Memory/PoolAllocator.cpp"
+
 #include "Core/SerializationFunction.cpp"
 #include "Core/Time/FrameCounter.cpp"
 #include "Core/Time/Time.cpp"
+
 #include "Filesystem/File.cpp"
 #include "Filesystem/Path.cpp"
 #include "Input/Component/UserInput.cpp"
@@ -166,11 +181,13 @@
 #include "Math/Math.cpp"
 #include "Math/SerializationFunction.cpp"
 #include "Math/Vector.cpp"
+
 #include "Physics/Components/Collider.cpp"
 #include "Physics/Components/PhysicBody.cpp"
 #include "Physics/ContactInfo.cpp"
 #include "Physics/PhysicsWorld.cpp"
 #include "Physics/System/PhysicSystem.cpp"
+
 #include "Rendering/Component/CameraComponent.cpp"
 #include "Rendering/Component/Renderable.cpp"
 #include "Rendering/Component/Sprite.cpp"
@@ -189,11 +206,14 @@
 #include "Rendering/Resource/Texture2D.cpp"
 #include "Rendering/Resource/TextureResourceLoader.cpp"
 #include "Rendering/System/RenderingSystem.cpp"
+
 #include "Resources/Resource.cpp"
 #include "Resources/ResourceHolderComponent.cpp"
 #include "Resources/ResourceLoader.cpp"
+
 #include "Utils/FileUtils.cpp"
 #include "Utils/Random.cpp"
 #include "Utils/StringUtils.cpp"
 #include "Utils/Types.cpp"
 #include "Utils/TypesInfo.cpp"
+#include "Utils/SystemInfo.cpp"

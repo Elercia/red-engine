@@ -60,10 +60,13 @@ void Renderer::InitRenderer(WindowComponent* window)
         RedAbort("Cannot initialize Renderer");
     }
 
+    constexpr int OpenglMajorVersion = 4;
+    constexpr int OpenglMinorVersion = 5;
+
     // Request OpenGL 4.5 context.
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4),
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, OpenglMajorVersion),
                        "Error setting gl context major version with error {}", SDL_GetError());
-    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5),
+    CheckGLReturnValue(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, OpenglMinorVersion),
                        "Error setting gl context minor version with error {}", SDL_GetError());
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -74,7 +77,9 @@ void Renderer::InitRenderer(WindowComponent* window)
     m_glContext = SDL_GL_CreateContext(window->GetSDLWindow());
     if (m_glContext == nullptr)
     {
-        RED_LOG_ERROR("Failed to query openGL context from SDL");
+        RED_LOG_ERROR(
+            "Failed to query openGL context from SDL. Maybe the required Opengl version is not supported ({}.{}",
+            OpenglMajorVersion, OpenglMinorVersion);
         return;
     }
 
@@ -82,7 +87,7 @@ void Renderer::InitRenderer(WindowComponent* window)
 
     if (gl3wInit() != 0)
     {
-        RED_LOG_ERROR("Failed to query openGL context from SDL");
+        RED_LOG_ERROR("Failed to init opengl functions");
         return;
     }
 
@@ -220,7 +225,7 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 {
     PROFILER_EVENT_CATEGORY(desc.name, ProfilerCategory::Rendering);
 
-    uint64 count = 0;
+    uint32 count = 0;
     Array<RenderingData>& datas = GetVisibleRenderDatasForType(desc.renderType, camera, count);
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, desc.name);
@@ -236,7 +241,7 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
     }
 
     // Do the actual render calls to the camera render target
-    for (uint64 i = 0; i < count; i++)
+    for (uint32 i = 0; i < count; i++)
     {
         auto& renderData = datas[i];
 
@@ -337,12 +342,12 @@ void Renderer::UseGeometry(const Geometry* geom)
 }
 
 Array<RenderingData>& Renderer::GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
-                                                             uint64& renderDataCount)
+                                                             uint32& renderDataCount)
 {
     Array<RenderingData>& ret = m_renderingData[(uint32)type];
     renderDataCount = ret.size();
 
-    for (uint64 i = 0u; i < ret.size(); i++)
+    for (uint32 i = 0u; i < ret.size(); i++)
     {
         if (!camera->IsVisibleFrom(ret[i].aabb))
             renderDataCount--;
