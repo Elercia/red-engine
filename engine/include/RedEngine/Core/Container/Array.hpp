@@ -158,6 +158,7 @@ public:
     iterator end();
     const_iterator end() const;
 
+    bool empty() const;
     size_type size() const;
     T* data();
 

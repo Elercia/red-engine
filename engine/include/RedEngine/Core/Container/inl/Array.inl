@@ -538,6 +538,12 @@ ArrayView<T>::size_type ArrayView<T>::size() const
 }
 
 template <typename T>
+bool ArrayView<T>::empty() const
+{
+    return m_count == 0;
+}
+
+template <typename T>
 T* ArrayView<T>::data()
 {
     return m_offsetData;
