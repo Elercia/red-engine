@@ -186,10 +186,13 @@ bool Engine::Create()
 
     m_world->AddSystem<RenderingSystem>();
     m_world->AddSystem<PhysicSystem>();
-    m_world->AddSystem<DebugSystem>();
     m_world->AddSystem<EventSystem>();
     m_world->AddSystem<UserInputSystem>();
     m_world->AddSystem<AudioSystem>();
+
+#ifdef RED_DEBUG
+    m_world->AddSystem<DebugSystem>();
+#endif
 
     m_world->InitSystems();
 

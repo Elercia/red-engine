@@ -90,9 +90,9 @@ void RenderingSystem::EndRender()
         m_renderer->RenderOpaque(cameraComponent);
         m_renderer->RenderTransparency(cameraComponent);
 
-#ifdef RED_DEBUG
-        m_renderer->RenderDebug(cameraComponent);
-#endif
+        #ifdef RED_DEBUG
+               m_renderer->RenderDebug(cameraComponent);
+        #endif
 
         m_renderer->EndCameraRendering(cameraComponent);
     }
@@ -114,6 +114,8 @@ void RenderingSystem::RenderDebug()
     PROFILER_EVENT_CATEGORY("RenderDebug", ProfilerCategory::Rendering);
 
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+    if (debugComp == nullptr)
+        return;
 
     m_world->GetPhysicsWorld()->DrawDebug();
 

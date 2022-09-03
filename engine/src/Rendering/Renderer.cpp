@@ -122,9 +122,11 @@ void Renderer::Finalise()
     m_perInstanceData.Finalize();
     m_perCameraData.Finalize();
 
+#ifdef RED_DEBUG
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
+#endif
 
     SDL_GL_DeleteContext(m_glContext);
 
