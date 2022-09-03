@@ -1,6 +1,7 @@
 #include "RedEngine/Utils/SystemInfo.hpp"
 
 #ifdef RED_WINDOWS
+#define NOMINMAX 1
 #include <sysinfoapi.h>
 #endif
 

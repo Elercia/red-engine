@@ -9,6 +9,7 @@
 #include "RedEngine/Utils/StringUtils.hpp"
 
 #if defined(RED_WINDOWS)
+#define NOMINMAX 1
 #include <shlobj.h>
 #include <windows.h>
 #endif
