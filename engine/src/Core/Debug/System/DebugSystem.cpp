@@ -35,6 +35,8 @@ void DebugSystem::Init()
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
 {
+    PROFILER_EVENT_CATEGORY("DebugSystem::RenderConsole", ProfilerCategory::Debug)
+
     static bool open = true;
     if (!ImGui::Begin("Console", &open))
     {
@@ -221,7 +223,7 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
 
 void DebugSystem::Update()
 {
-    PROFILER_EVENT_CATEGORY("Debug", ProfilerCategory::Input);
+    PROFILER_EVENT_CATEGORY("DebugSystem::Update", ProfilerCategory::Debug);
 
     auto* events = m_world->GetWorldComponent<EventsComponent>();
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();

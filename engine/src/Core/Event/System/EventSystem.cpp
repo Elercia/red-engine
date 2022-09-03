@@ -25,6 +25,8 @@ void EventSystem::Init()
 
 void EventSystem::PreUpdate()
 {
+    PROFILER_EVENT_CATEGORY("EventSystem::PreUpdate", ProfilerCategory::Input);
+
     EventsComponent* events = m_world->GetWorldComponent<EventsComponent>();
 
     auto codes = GetKeyCodeReadableDb();

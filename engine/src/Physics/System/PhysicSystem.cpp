@@ -27,6 +27,8 @@ void PhysicSystem::Init()
 
 void PhysicSystem::ManageEntities()
 {
+    PROFILER_EVENT_CATEGORY("PhysicSystem::ManageEntities", ProfilerCategory::Physics)
+
     auto bodies = GetComponents<PhysicBody>();
     for (auto* entity : bodies)
     {
@@ -88,6 +90,8 @@ void PhysicSystem::Finalise()
 
 void PhysicSystem::Update()
 {
+    PROFILER_EVENT_CATEGORY("PhysicSystem::Update", ProfilerCategory::Physics)
+
     m_physicsWorld->ClearForces();
 
     ManageEntities();
@@ -117,6 +121,8 @@ void PhysicSystem::Update()
 
 void PhysicSystem::ManageCollisions()
 {
+    PROFILER_EVENT_CATEGORY("PhysicSystem::ManageCollisions", ProfilerCategory::Physics)
+
     for (const auto& constCollision : m_physicsWorld->GetCollisions())
     {
         auto collision = constCollision;  // copy
@@ -131,6 +137,8 @@ void PhysicSystem::ManageCollisions()
 
 void PhysicSystem::ManageTriggers()
 {
+    PROFILER_EVENT_CATEGORY("PhysicSystem::ManageTriggers", ProfilerCategory::Physics)
+
     const auto& triggers = m_physicsWorld->GetTriggers();
 
     for (const auto& constTrigger : triggers)

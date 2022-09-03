@@ -58,6 +58,8 @@ void PhysicsWorld::DestroyPhysicsBody(PhysicBody* physicBody)
 
 void PhysicsWorld::Step(float timeStep, int32 velocityIterations, int32 positionIterations)
 {
+    PROFILER_EVENT_CATEGORY("PhysicsWorld::Step", ProfilerCategory::Physics)
+
     UpdateContactInfos();
 
     m_internalPhysicsWorld->Step(timeStep, velocityIterations, positionIterations);

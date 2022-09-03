@@ -44,7 +44,7 @@ void UserInputSystem::Finalise()
 
 void UserInputSystem::PreUpdate()
 {
-    PROFILER_EVENT_CATEGORY("Input update", ProfilerCategory::Input);
+    PROFILER_EVENT_CATEGORY("UserInputSystem::PreUpdate", ProfilerCategory::Input);
 
     auto* eventsSystem = m_world->GetWorldComponent<EventsComponent>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)

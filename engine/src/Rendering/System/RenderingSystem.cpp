@@ -111,6 +111,8 @@ Renderer* RenderingSystem::GetRenderer()
 
 void RenderingSystem::RenderDebug()
 {
+    PROFILER_EVENT_CATEGORY("RenderDebug", ProfilerCategory::Rendering);
+
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
     m_world->GetPhysicsWorld()->DrawDebug();
@@ -182,6 +184,8 @@ void RenderingSystem::UpdateWindowAsNeeded()
 
 Array<CameraComponent*> RenderingSystem::GetSortedCameras()
 {
+    PROFILER_EVENT_CATEGORY("RenderingSystem::GetSortedCameras", ProfilerCategory::Rendering)
+
     auto cameraEntities = GetComponents<CameraComponent>();
     Array<CameraComponent*> cameras;
     cameras.resize(cameraEntities.size());

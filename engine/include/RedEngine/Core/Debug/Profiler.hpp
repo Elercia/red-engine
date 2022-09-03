@@ -11,6 +11,7 @@
 struct ProfilerCategory
 {
     static inline auto Rendering = Optick::Category::Rendering;
+    static inline auto Physics = Optick::Category::Physics;
     static inline auto Input = Optick::Category::Input;
     static inline auto Debug = Optick::Category::Input;
     static inline auto None = Optick::Category::Input;
@@ -28,6 +29,7 @@ struct ProfilerCategory
 enum class ProfilerCategory
 {
     Rendering,
+    Physics,
     Input,
     Debug,
     None
