@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef RED_USE_PROFILER
+#if defined(RED_USE_PROFILER) && defined(RED_DEBUG)
 
 #ifdef None
 #undef None  // seems to be define inside X11
