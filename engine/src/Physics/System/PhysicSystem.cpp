@@ -102,7 +102,7 @@ void PhysicSystem::Update()
         auto* transform = entity->GetComponent<Transform>();
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
-        physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), 0);
+        physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), transform->GetRotationRad());
     }
 
     m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
@@ -113,6 +113,7 @@ void PhysicSystem::Update()
         auto* physicBody = entity->GetComponent<PhysicBody>();
 
         transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
+        transform->SetRotationRad(physicBody->GetBody()->GetAngle());
     }
 
     ManageCollisions();
