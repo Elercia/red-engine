@@ -74,12 +74,12 @@ void UserInputSystem::PreUpdate()
 
         if (resultState.isDown)
         {
-            RED_LOG_DEBUG("User action {} is down", actionName);
+            RED_LOG_TRACE("User action {} is down", actionName);
         }
 
         if (resultState.isUp)
         {
-            RED_LOG_DEBUG("User action {} is up", actionName);
+            RED_LOG_TRACE("User action {} is up", actionName);
         }
     }
 }
