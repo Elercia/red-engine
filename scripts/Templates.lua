@@ -88,3 +88,4 @@ function TemplateProject(Name)
 end
 
 TemplateProject("Pong")
+TemplateProject("Perf")
