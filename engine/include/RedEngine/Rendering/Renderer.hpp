@@ -43,6 +43,9 @@ struct PerInstanceData
     Vector2 size;
 };
 
+using RenderDataArrayPerType = std::array<Array<RenderingData>, (uint8) RenderEntityType::Count>;
+using RenderDataPerLayer = std::array<RenderDataArrayPerType, 32>;
+
 class Renderer
 {
 private:
@@ -51,6 +54,7 @@ private:
         bool alphaBlending = false;
         const char* name = "Unknown";
         RenderEntityType renderType = RenderEntityType::Opaque;
+        RenderLayerIndex layerIndex = 0;
     };
 
 public:
@@ -75,8 +79,9 @@ public:
     void BeginCameraRendering(CameraComponent* camera);
     void EndCameraRendering(CameraComponent* camera);
 
-    void RenderOpaque(CameraComponent* camera);
-    void RenderTransparency(CameraComponent* camera);
+    void RenderLayerOpaque(RenderLayerIndex layerIndex, CameraComponent* camera);
+    void RenderLayerTransparency(RenderLayerIndex layerIndex, CameraComponent* camera);
+
     void RenderDebug(CameraComponent* camera);
     void RenderGlobalDebug();
 
@@ -89,8 +94,8 @@ public:
     void ReCreateWindow(WindowComponent* window);
 
 private:
-    Array<RenderingData>& GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
-                                                       uint32& renderDataCount);
+    ArrayView<RenderingData> GetAndCullRederingDataForCamera(RenderEntityType type, RenderLayerIndex layer,
+                                                             CameraComponent* camera);
 
     void UseMaterial(const MaterialInstance& mat);
     void UseGeometry(const Geometry* geom);
@@ -98,12 +103,13 @@ private:
     void FillCameraBuffer(const CameraComponent& camera);
     void FillEntityBuffer(const RenderingData& data);
 
+    Array<RenderingData>& GetRenderArray(RenderEntityType renderType, RenderLayerIndex renderLayerIndex);
+
 private:
     OpenGlContext m_glContext;
     WindowComponent* m_window;
 
-    // Render entities push for this frame, these will be then culled and rendered
-    Array<RenderingData> m_renderingData[(uint8)RenderEntityType::Count];
+    RenderDataPerLayer m_renderingData;
 
     GPUBuffer m_perInstanceData;
     GPUBuffer m_perCameraData;

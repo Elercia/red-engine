@@ -140,18 +140,23 @@ void Renderer::BeginRenderFrame()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+#ifdef RED_DEBUG
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+#endif
 }
 
 void Renderer::EndRenderFrame()
 {
     // Clear the current render data for the current camera
-    for (Array<RenderingData>& passesDatas : m_renderingData)
+    for (RenderDataArrayPerType& perLayer : m_renderingData)
     {
-        passesDatas.clear();
+        for (Array<RenderingData>& perType : perLayer)
+        {
+            perType.clear();
+        }
     }
 
     SDL_GL_SwapWindow(m_window->GetSDLWindow());
@@ -181,8 +186,9 @@ void Renderer::Draw(const Renderable* renderable, const Transform* transform)
     data.aabb = renderable->m_aabb;
     data.size = renderable->m_size;
 
-    auto& renderDatasForCamera = m_renderingData[(uint32)data.materialInstance.material->GetRenderType()];
-    renderDatasForCamera.push_back(std::move(data));
+    auto& renderData =
+        GetRenderArray(data.materialInstance.material->GetRenderType(), renderable->GetRenderLayerIndex());
+    renderData.push_back(std::move(data));
 }
 
 void Renderer::DrawDebugLine(const Vector2& /*first*/, const Vector2& /*second*/, const Color& /*color*/)
@@ -203,22 +209,24 @@ void Renderer::DrawDebugPoint(const Vector2& /*coord*/, const Color& /*color*/ /
 {
 }
 
-void Renderer::RenderOpaque(CameraComponent* camera)
+void Renderer::RenderLayerOpaque(RenderLayerIndex layerIndex, CameraComponent* camera)
 {
     RenderPassDesc desc;
     desc.alphaBlending = false;
     desc.name = "opaque";
     desc.renderType = RenderEntityType::Opaque;
+    desc.layerIndex = layerIndex;
 
     RenderPass(camera, desc);
 }
 
-void Renderer::RenderTransparency(CameraComponent* camera)
+void Renderer::RenderLayerTransparency(RenderLayerIndex layerIndex, CameraComponent* camera)
 {
     RenderPassDesc desc;
     desc.alphaBlending = true;
     desc.name = "transparency";
-    desc.renderType = RenderEntityType::Transparency;  
+    desc.renderType = RenderEntityType::Transparency;
+    desc.layerIndex = layerIndex;
 
     RenderPass(camera, desc);
 }
@@ -227,8 +235,9 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 {
     PROFILER_EVENT_CATEGORY(desc.name, ProfilerCategory::Rendering);
 
-    uint32 count = 0;
-    Array<RenderingData>& datas = GetVisibleRenderDatasForType(desc.renderType, camera, count);
+    auto datas = GetAndCullRederingDataForCamera(desc.renderType, desc.layerIndex, camera);
+    if (datas.empty())
+        return;
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, desc.name);
 
@@ -243,7 +252,7 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
     }
 
     // Do the actual render calls to the camera render target
-    for (uint32 i = 0; i < count; i++)
+    for (uint32 i = 0; i < datas.size(); i++)
     {
         auto& renderData = datas[i];
 
@@ -343,19 +352,33 @@ void Renderer::UseGeometry(const Geometry* geom)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_gpuIndexBuffer);
 }
 
-Array<RenderingData>& Renderer::GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
-                                                             uint32& renderDataCount)
+ArrayView<RenderingData> Renderer::GetAndCullRederingDataForCamera(RenderEntityType type, RenderLayerIndex layer,
+                                                                   CameraComponent* camera)
 {
-    Array<RenderingData>& ret = m_renderingData[(uint32)type];
-    renderDataCount = ret.size();
+    PROFILER_EVENT_CATEGORY("Renderer::GetAndCullRederingDataForCamera", ProfilerCategory::Rendering);
 
-    for (uint32 i = 0u; i < ret.size(); i++)
+    auto& renderData = GetRenderArray(type, layer);
+    if (renderData.empty())
+        return ArrayView<RenderingData>();
+
+    uint32 end = renderData.size();
+    for (uint32 i = 0; i < end; i++)
     {
-        if (!camera->IsVisibleFrom(ret[i].aabb))
-            renderDataCount--;
+        auto data = renderData[i];
+        if (!camera->IsVisibleFrom(data.aabb))
+        {
+            end--;
+            std::swap(renderData[i], renderData[end]);
+            i--;
+        }
     }
 
-    return ret;
+    return ArrayView(renderData, end);
+}
+
+Array<RenderingData>& Renderer::GetRenderArray(RenderEntityType renderType, RenderLayerIndex renderLayerIndex)
+{
+    return m_renderingData[renderLayerIndex][(uint8) renderType];
 }
 
 }  // namespace red

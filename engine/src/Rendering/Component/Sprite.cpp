@@ -31,13 +31,13 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
                            ->LoadResource(resourceId);
 
     m_material.material = m_owner->GetWorld()
-                        ->GetWorldComponent<ResourceHolderComponent>()
-                        ->GetResourceLoader<MaterialResourceLoader>()
-                       ->LoadResource(Path::Resource("BASE_OPAQUE_MATERIAL"));
+                              ->GetWorldComponent<ResourceHolderComponent>()
+                              ->GetResourceLoader<MaterialResourceLoader>()
+                              ->LoadResource(Path::Resource("BASE_OPAQUE_MATERIAL"));
     m_geometry = m_owner->GetWorld()
-                        ->GetWorldComponent<ResourceHolderComponent>()
-                        ->GetResourceLoader<GeometryResourceLoader>()
-                       ->LoadResource(Path::Resource("BASE_GEOMETRY"));
+                     ->GetWorldComponent<ResourceHolderComponent>()
+                     ->GetResourceLoader<GeometryResourceLoader>()
+                     ->LoadResource(Path::Resource("BASE_GEOMETRY"));
 
     if (m_spriteResource)
     {
@@ -109,7 +109,8 @@ const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const
 
 bool Sprite::IsValid() const
 {
-    return m_material.material != nullptr && m_geometry != nullptr && m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
+    return m_material.material != nullptr && m_geometry != nullptr && m_spriteResource != nullptr &&
+           m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
 }
 
 void Sprite::UpdateRenderData()
@@ -119,7 +120,9 @@ void Sprite::UpdateRenderData()
     binding.type = BindingType::Texture;
 
     const Vector2i& sizei = m_currentAnimationInfo.currentAnimationFrame->size;
-    m_size = {(float)sizei.x, (float)sizei.y};
+    m_size = {(float) sizei.x, (float) sizei.y};
+
+    m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetPosition(), m_size);
 }
 
 }  // namespace red

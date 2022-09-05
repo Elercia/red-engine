@@ -186,7 +186,7 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     using namespace red;
     using namespace EntityDestroyRemoveComp;
 
-    red::CreateEngineFrom<red::Engine>(0, nullptr); // For double allocator
+    red::CreateEngineFrom<red::Engine>(0, nullptr);  // For double allocator
 
     red::World world;
     world.Init();

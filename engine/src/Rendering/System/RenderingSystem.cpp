@@ -87,8 +87,11 @@ void RenderingSystem::EndRender()
     {
         m_renderer->BeginCameraRendering(cameraComponent);
 
-        m_renderer->RenderOpaque(cameraComponent);
-        m_renderer->RenderTransparency(cameraComponent);
+        for (RenderLayerIndex i = 0; i < 32; i++)
+        {
+            m_renderer->RenderLayerOpaque(i, cameraComponent);
+            m_renderer->RenderLayerTransparency(i, cameraComponent);
+        }
 
         #ifdef RED_DEBUG
                m_renderer->RenderDebug(cameraComponent);

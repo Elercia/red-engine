@@ -27,7 +27,8 @@ CameraComponent::CameraComponent(Entity* entity)
     UpdateState();
 }
 
-CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& sceenViewport, const Vector2i& size)
+CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& sceenViewport,
+                                 const Vector2i& size)
     : Component(entity)
     , m_attachedWindow(attachedWindow->GetOwner())
     , m_frameBuffer(true, 1)
@@ -42,10 +43,11 @@ CameraComponent::~CameraComponent()
     m_frameBuffer.Finalize();
 }
 
-bool CameraComponent::IsVisibleFrom(const AABB& /*aabb*/) const
+bool CameraComponent::IsVisibleFrom(const AABB& aabb) const
 {
-    // TODO implement
-    return true;
+    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetPosition(), {(float) m_size.x, (float) m_size.y}); // TODO put it in camera cached state
+
+    return thisAabb.Intersect(aabb);
 }
 
 Vector4i CameraComponent::GetWindowRect() const

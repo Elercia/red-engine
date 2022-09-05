@@ -30,6 +30,7 @@ struct BindingIndex
     enum
     {
         Diffuse = 0,
+        Color = 0,
         Max = 16,
     };
 };
