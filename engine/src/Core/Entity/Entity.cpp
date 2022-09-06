@@ -13,7 +13,7 @@ namespace red
 {
 Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id)
 {
-    AddComponent<Transform>(0.F, 0.F);
+    m_transform = AddComponent<Transform>(0.F, 0.F);
 }
 
 void Entity::Destroy()

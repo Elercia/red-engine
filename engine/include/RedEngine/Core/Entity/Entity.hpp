@@ -11,6 +11,7 @@ namespace red
 {
 
 class World;
+class Transform;
 
 enum class EntityState
 {
@@ -30,8 +31,8 @@ public:
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity& entity) = delete;
 
-    Entity(Entity&&) = default;
-    Entity& operator=(Entity&& entity) = default;
+    Entity(Entity&&) = delete;
+    Entity& operator=(Entity&& entity) = delete;
 
     template <typename T, typename... Args>
     T* AddComponent(Args&&... args);
@@ -73,6 +74,7 @@ public:
 protected:
     World* m_world{nullptr};
     EntityId m_id{0};
+    Transform* m_transform;
     std::string m_name;
 
     Entity* m_parent{nullptr};

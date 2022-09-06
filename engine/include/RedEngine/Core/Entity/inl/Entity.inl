@@ -35,6 +35,12 @@ T* Entity::GetComponent()
     return GetComponentManager()->GetComponent<T>(this);
 }
 
+template <>
+inline Transform* Entity::GetComponent<Transform>()
+{
+    return m_transform;
+}
+
 template <typename T>
 T* Entity::GetComponentInParent(bool includeOwn /*= true*/)
 {
