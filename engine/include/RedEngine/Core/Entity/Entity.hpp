@@ -49,9 +49,6 @@ public:
 
     Array<Component*> GetComponents() const;
 
-    template <typename T>
-    bool HasComponent();
-
     [[nodiscard]] EntityId GetId() const;
     void SetId(EntityId id);
 

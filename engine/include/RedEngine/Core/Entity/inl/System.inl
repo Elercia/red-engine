@@ -11,7 +11,7 @@ Array<Entity*, red::DoubleLinearArrayAllocator> System::GetComponents() const
     auto& worldentities = GetWorldEntities();
     for (auto& entityPtr : worldentities)
     {
-        auto list = {entityPtr->HasComponent<ComponentTypes>()...};
+        auto list = {entityPtr->GetComponent<ComponentTypes>() != nullptr...};
 
         auto v = std::find(list.begin(), list.end(), false);
 

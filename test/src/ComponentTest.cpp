@@ -51,7 +51,6 @@ TEST_CASE("Component", "[ECS]")
                 auto* component = entity->AddComponent<MockComponent1>();
 
                 REQUIRE(component != nullptr);
-                REQUIRE(entity->HasComponent<MockComponent1>());
                 REQUIRE(entity->GetComponent<MockComponent1>() == component);
             }
 
@@ -60,11 +59,10 @@ TEST_CASE("Component", "[ECS]")
                 auto* component = entity->AddComponent<MockComponent2>();
 
                 REQUIRE(component != nullptr);
-                REQUIRE(entity->HasComponent<MockComponent2>());
                 REQUIRE(entity->GetComponent<MockComponent2>() == component);
 
                 // Check that entity don't have mock2
-                REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
+                REQUIRE_FALSE(entity->GetComponent<MockComponent1>() != nullptr);
             }
 
             for (auto* entity : entitiesWithMock1)
@@ -72,8 +70,8 @@ TEST_CASE("Component", "[ECS]")
                 entity->RemoveComponent<MockComponent1>();
 
                 // Check that entity don't have mock1 or mock2
-                REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
-                REQUIRE_FALSE(entity->HasComponent<MockComponent2>());
+                REQUIRE_FALSE(entity->GetComponent<MockComponent1>() != nullptr);
+                REQUIRE_FALSE(entity->GetComponent<MockComponent2>() != nullptr);
             }
         }
 
@@ -82,13 +80,13 @@ TEST_CASE("Component", "[ECS]")
             for (auto& entity : entitiesWithMock1)
             {
                 entity->AddComponent<MockComponent1>();
-                REQUIRE(entity->HasComponent<MockComponent1>());
+                REQUIRE(entity->GetComponent<MockComponent1>() != nullptr);
 
                 entity->RemoveComponent<MockComponent1>();
-                REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
+                REQUIRE_FALSE(entity->GetComponent<MockComponent1>() != nullptr);
 
                 entity->AddComponent<MockComponent1>();
-                REQUIRE(entity->HasComponent<MockComponent1>());
+                REQUIRE(entity->GetComponent<MockComponent1>() != nullptr);
             }
         }
     }

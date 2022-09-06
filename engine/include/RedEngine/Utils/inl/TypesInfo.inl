@@ -33,6 +33,15 @@ constexpr TypeTraits TypeInfo()
 
     constexpr TypeTraits typeTraits{classSlicedTypeName, hash};
 
+    return typeTraits;    
+}
+
+TypeTraits GetTypeInfoFromTypeName(std::string_view name)
+{
+    auto hash = fnv1a32(name);
+
+    TypeTraits typeTraits{name, hash};
+
     return typeTraits;
 }
 }  // namespace red

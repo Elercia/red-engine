@@ -31,13 +31,15 @@ Component* Entity::AddComponent(const std::string& name)
 {
     auto* componentManager = GetComponentManager();
 
-    if (componentManager->HasComponent(this, name))
+    auto inferedTraits = GetTypeInfoFromTypeName(name);
+
+    if (auto* comp = componentManager->GetComponent(this, inferedTraits); comp != nullptr)
     {
         RED_LOG_WARNING("Entity {} already has the component {}", m_name, name);
-        return componentManager->GetComponent(this, name);
+        return comp;
     }
 
-    auto componentPtr = componentManager->CreateComponentFromName(this, name);
+    auto componentPtr = componentManager->CreateComponentFromName(this, inferedTraits);
 
     return componentPtr;
 }

@@ -55,7 +55,9 @@ void LevelLoader::CreateEntity(Level* level, const EntityData& entityData, Entit
 void LevelLoader::CreateComponent(const ComponentData& componentData, Entity* owner)
 {
     const auto* compRegistry = m_world->GetComponentRegistry();
-    const auto* compTypeTraits = compRegistry->GetComponentTraits(componentData.m_name);
+
+    TypeTraits typeTraits = GetTypeInfoFromTypeName(componentData.m_name);
+    const auto* compTypeTraits = compRegistry->GetComponentTraits(typeTraits.typeId);
 
     if (compTypeTraits == nullptr)
     {

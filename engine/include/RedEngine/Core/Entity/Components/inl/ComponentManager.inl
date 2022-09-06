@@ -3,49 +3,43 @@
 
 namespace red
 {
-template <typename ComponentType_t, typename... Args>
-ComponentType_t* ComponentManager::CreateComponent(Entity* owner, Args&&... args)
+template <typename ComponentTypeT, typename... Args>
+ComponentTypeT* ComponentManager::CreateComponent(Entity* owner, Args&&... args)
 {
-    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
+    static_assert(std::is_base_of<Component, ComponentTypeT>::value, "ComponentType is not a Component type");
 
-    auto* comp = GetComponent<ComponentType_t>(owner);
+    auto* comp = GetComponent<ComponentTypeT>(owner);
     if (comp)
     {
         // Fixme should reduce includes by removing Entity dereference from here
         /*RED_LOG_WARNING("Entity {} already have a component of type {} (strict type is {})", owner->GetId(),
-                        TypeInfo<ComponentType_t>().name, comp->GetComponentName());*/
+                        TypeInfo<ComponentTypeT>().name, comp->GetComponentName());*/
         return comp;
     }
 
-    auto* createdComponent = new ComponentType_t(owner, std::forward<Args>(args)...);
+    auto* createdComponent = new ComponentTypeT(owner, std::forward<Args>(args)...);
 
     AddComponent(owner, createdComponent);
 
     return createdComponent;
 }
 
-template <typename ComponentType_t>
+template <typename ComponentTypeT>
 bool ComponentManager::RemoveComponent(Entity* owner)
 {
-    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
+    static_assert(std::is_base_of<Component, ComponentTypeT>::value, "ComponentType is not a Component type");
 
-    return RemoveComponent(owner, std::string(TypeInfo<ComponentType_t>().name));
+    constexpr auto traits = TypeInfo<ComponentTypeT>();
+    return RemoveComponent(owner, traits);
 }
 
-template <class ComponentType_t>
-bool ComponentManager::HasComponent(Entity* entity)
+template <typename ComponentTypeT>
+ComponentTypeT* ComponentManager::GetComponent(Entity* entity)
 {
-    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
+    static_assert(std::is_base_of<Component, ComponentTypeT>::value, "ComponentType is not a Component type");
 
-    return HasComponent(entity, std::string(TypeInfo<ComponentType_t>().name));
-}
-
-template <typename ComponentType_t>
-ComponentType_t* ComponentManager::GetComponent(Entity* entity)
-{
-    static_assert(std::is_base_of<Component, ComponentType_t>::value, "ComponentType is not a Component type");
-
-    auto* componentPtr = GetComponent(entity, std::string(TypeInfo<ComponentType_t>().name));
-    return reinterpret_cast<ComponentType_t*>(componentPtr);
+    constexpr auto traits = TypeInfo<ComponentTypeT>();
+    auto* componentPtr = GetComponent(entity, traits);
+    return reinterpret_cast<ComponentTypeT*>(componentPtr);
 }
 }  // namespace red

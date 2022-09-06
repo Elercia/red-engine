@@ -8,7 +8,7 @@ T* Entity::AddComponent(Args&&... args)
 
     auto* componentManager = GetComponentManager();
 
-    if (componentManager->HasComponent<T>(this))
+    if (componentManager->GetComponent<T>(this) != nullptr)
     {
         RED_LOG_WARNING("Entity {} already has the component {}", m_name, TypeInfo<T>().name);
         return componentManager->GetComponent<T>(this);
@@ -33,14 +33,6 @@ T* Entity::GetComponent()
     static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
 
     return GetComponentManager()->GetComponent<T>(this);
-}
-
-template <typename T>
-bool Entity::HasComponent()
-{
-    static_assert(std::is_base_of<Component, T>::value, "T is not a Component type");
-
-    return GetComponentManager()->HasComponent<T>(this);
 }
 
 template <typename T>

@@ -13,33 +13,34 @@
         return new CompClass(owner);                               \
     }
 
-#define RED_STATIC_COMPONENT_REGISTER_DATA(CompClass)              \
-    using CompClassT = CompClass;                                  \
-    compData->componentName = red::TypeInfo<CompClass>().name;     \
-    compData->componentTypeId = red::TypeInfo<CompClass>().typeId; \
+#define RED_STATIC_COMPONENT_REGISTER_DATA(CompClass)           \
+    using CompClassT = CompClass;                               \
+    compData->componentTypeTraits = red::TypeInfo<CompClass>(); \
     compData->creator = &CreateCompoent_##CompClass;
 
 #define RED_START_COMPONENT_REGISTER(CompClass)                             \
-    virtual std::string_view GetComponentName() const                       \
+    virtual red::TypeTraits GetComponentTraits() const                      \
     {                                                                       \
-        return red::TypeInfo<CompClass>().name;                             \
+        return red::TypeInfo<CompClass>();                                  \
     }                                                                       \
     static void RegisterComponentTypeTraits(red::ComponentTraits* compData) \
     {                                                                       \
         RED_STATIC_COMPONENT_REGISTER_DATA(CompClass)
 
 #define RED_START_COMPONENT_REGISTER_INHERITHED(CompClass, InheritedCompClass) \
-    virtual std::string_view GetComponentName() const override                 \
+    virtual red::TypeTraits GetComponentTraits() const override                \
     {                                                                          \
-        return red::TypeInfo<CompClass>().name;                                \
+        return red::TypeInfo<CompClass>();                                     \
     }                                                                          \
     static void RegisterComponentTypeTraits(red::ComponentTraits* compData)    \
     {                                                                          \
         InheritedCompClass::RegisterComponentTypeTraits(compData);             \
         RED_STATIC_COMPONENT_REGISTER_DATA(CompClass)                          \
-        compData->inheritedComponentName = red::TypeInfo<InheritedCompClass>().name;
+        compData->inheritedComponentTraits = red::TypeInfo<InheritedCompClass>();
 
-#define RED_END_COMPONENT_REGISTER() [[maybe_unused]]CompClassT* unused_but_suppress_warn_so_used=nullptr;}
+#define RED_END_COMPONENT_REGISTER()                                         \
+    [[maybe_unused]] CompClassT* unused_but_suppress_warn_so_used = nullptr; \
+    }
 
 #define RED_MEMBER(name, memberAddr, tooltip, flags) compData->AddMember(name, &CompClassT::memberAddr, tooltip, flags);
 
