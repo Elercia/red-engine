@@ -41,11 +41,6 @@ void PhysicBody::SetBody(b2Body* body)
 
 int PhysicBody::AddCollider(Collider&& collider, const ColliderDesc& desc)
 {
-    collider.m_fixtureDef.isSensor = desc.isTrigger;
-    collider.m_fixtureDef.restitution = desc.restitution;
-    collider.m_fixtureDef.friction = desc.friction;
-    collider.m_fixtureDef.density = 1.0f;
-
     auto insertionResult = m_colliders.insert({m_nextColliderIndex++, std::move(collider)});
 
     // Set the used data to the right collider
@@ -55,8 +50,11 @@ int PhysicBody::AddCollider(Collider&& collider, const ColliderDesc& desc)
     b2FixtureUserData userData;
     userData.pointer = (uintptr_t) &colliderInserted;
     colliderInserted.m_fixtureDef.userData = userData;
-
-    colliderInserted.m_fixture = m_body->CreateFixture(&collider.m_fixtureDef);
+    colliderInserted.m_fixtureDef.isSensor = desc.isTrigger;
+    colliderInserted.m_fixtureDef.restitution = desc.restitution;
+    colliderInserted.m_fixtureDef.friction = desc.friction;
+    colliderInserted.m_fixtureDef.density = 1.0f;
+    colliderInserted.m_fixture = m_body->CreateFixture(&colliderInserted.m_fixtureDef);
 
     return mapPair->first;
 }
