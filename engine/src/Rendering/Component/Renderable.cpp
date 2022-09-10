@@ -20,7 +20,12 @@ Renderable::~Renderable()
 {
 }
 
-MaterialInstance Renderable::GetMaterial()
+MaterialInstance& Renderable::GetMaterial()
+{
+    return m_material;
+}
+
+const MaterialInstance& Renderable::GetMaterial() const
 {
     return m_material;
 }

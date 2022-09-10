@@ -27,7 +27,8 @@ public:
     Renderable(Entity* owner, RenderLayerIndex layerIndex);
     ~Renderable();
 
-    MaterialInstance GetMaterial();
+    MaterialInstance& GetMaterial();
+    const MaterialInstance& GetMaterial() const;
     std::shared_ptr<GeometryResourceWrapper> GetGeometry();
 
     void SetRenderLayerIndex(RenderLayerIndex layerIndex);

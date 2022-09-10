@@ -338,7 +338,7 @@ void Renderer::UseMaterial(const MaterialInstance& materialInstance)
             else if (value->type == BindingType::Vector4)
             {
                 const auto& vector = value->floats;
-                glUniform4fv(i, 1, vector);
+                glUniform4f(i, vector[0], vector[1], vector[2], vector[3]);
             }
         }
     }
