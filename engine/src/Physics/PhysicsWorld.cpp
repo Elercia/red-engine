@@ -4,7 +4,6 @@
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 
 #include <box2d/b2_contact.h>
 #include <box2d/b2_draw.h>

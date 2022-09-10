@@ -11,7 +11,6 @@
 #include "RedEngine/Input/System/UserInputSystem.hpp"
 #include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
@@ -59,7 +58,7 @@ void PongLevel::Init()
     ball->GetComponent<red::Transform>()->SetPosition(center);
 
     auto* ballPhysicBody = ball->AddComponent<red::PhysicBody>(ballBodyDesc);
-    ball->AddComponent<red::ColliderList>()->AddCircleCollider(ballColliderDesc);
+    ballPhysicBody->AddCircleCollider(ballColliderDesc);
     ball->AddComponent<red::AudioSource>(ballbounding);
 
     auto slot = ballPhysicBody->m_collisionSignal.Connect(onCollision);
@@ -68,16 +67,16 @@ void PongLevel::Init()
     paddleOne->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
     paddleOne->GetComponent<red::Transform>()->SetPosition({100.F, paddlePosHeight});
 
-    paddleOne->AddComponent<red::PhysicBody>(paddleBodyDesc);
-    paddleOne->AddComponent<red::ColliderList>()->AddPolygonCollider(paddleColliderDesc);
+    auto* paddleOneBody = paddleOne->AddComponent<red::PhysicBody>(paddleBodyDesc);
+    paddleOneBody->AddPolygonCollider(paddleColliderDesc);
 
     auto* paddleTwo = CreateEntity("PaddleTwo");
     paddleTwo->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
     paddleTwo->GetComponent<red::Transform>()->SetPosition(
         red::Vector2(info.width - 100.F - (30.F / 2.F), paddlePosHeight));
 
-    paddleTwo->AddComponent<red::PhysicBody>(paddleBodyDesc);
-    paddleTwo->AddComponent<red::ColliderList>()->AddPolygonCollider(paddleColliderDesc);
+    auto* paddleTwoBody = paddleTwo->AddComponent<red::PhysicBody>(paddleBodyDesc);
+    paddleTwoBody->AddPolygonCollider(paddleColliderDesc);
 
     auto* manager = CreateEntity("Manager");
     manager->AddComponent<ScoreComponent>();
@@ -96,12 +95,11 @@ void PongLevel::Init()
     wallDownColliderDesc.start = {0.f, (float) info.height};
     wallDownColliderDesc.end = {(float) info.width, (float) info.height};
 
-    red::ColliderList* wallColliders = walls->AddComponent<red::ColliderList>();
-    wallColliders->AddEdgeCollider(wallUpColliderDesc);
-    wallColliders->AddEdgeCollider(wallDownColliderDesc);
-
     red::PhysicBodyCreationDesc wallBodyDesc = {red::PhysicsBodyType::STATIC_BODY};
-    walls->AddComponent<red::PhysicBody>(wallBodyDesc);
+    auto wallsBody = walls->AddComponent<red::PhysicBody>(wallBodyDesc);
+
+    wallsBody->AddEdgeCollider(wallUpColliderDesc);
+    wallsBody->AddEdgeCollider(wallDownColliderDesc);
 
     auto* logicSystem = m_world->AddSystem<GameLogicSystem>(paddleOne, paddleTwo, ball);
     logicSystem->m_paddlecollisionSignal = slot;

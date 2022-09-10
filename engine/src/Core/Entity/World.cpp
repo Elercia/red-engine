@@ -207,11 +207,6 @@ void World::ChangeLevel(Level* newLevel)
         RED_LOG_INFO("Change level {}", newLevel->GetName());
 
         m_currentLevel->InternInit();
-
-        for (auto* system : m_systems)
-        {
-            system->ManageEntities();
-        }
     }
 }
 

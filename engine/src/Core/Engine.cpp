@@ -18,7 +18,6 @@
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Input/System/UserInputSystem.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
@@ -105,7 +104,6 @@ bool Engine::RegisterComponentTypes()
     CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
 
     // Physics
-    CheckReturn(m_world->RegisterComponentType<ColliderList>());
     CheckReturn(m_world->RegisterComponentType<PhysicBody>());
 
     // Resources

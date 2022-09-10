@@ -11,7 +11,6 @@
 #include "RedEngine/Input/System/UserInputSystem.hpp"
 #include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Math/Vector.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
@@ -40,27 +39,28 @@ void PerfLevel::Init()
         const int layerIndex = i % 32;
 
         PhysicBodyCreationDesc bodyDesc = {PhysicsBodyType::DYNAMIC_BODY};
+        bodyDesc.linearDamping = 1.f;
+        bodyDesc.angularDamping = 1.f;
         CircleColliderDesc colliderDesc;
         colliderDesc.isTrigger = false;
         colliderDesc.center = {size / 2.f, size / 2.f};
         colliderDesc.radius = size / 2.f;
         colliderDesc.restitution = 1.f;
 
-        auto* ball = CreateEntity("Ball_" + i);
-        auto* s = ball->AddComponent<Sprite>(Path::Resource("ball"));
-        s->SetRenderLayerIndex(layerIndex);
-
         BindingValue value;
         value.type = BindingType::Vector4;
         auto vec4Color = colors[i % nbColors].AsVector4();
         memcpy(value.floats, &vec4Color.x, sizeof(value.floats));
 
+        auto* ball = CreateEntity("Ball_" + i);
+        auto* s = ball->AddComponent<Sprite>(Path::Resource("ball"));
+        s->SetRenderLayerIndex(layerIndex);
         s->GetMaterial().overiddenBindings.bindings[BindingIndex::Color] = value;
 
         ball->GetComponent<Transform>()->SetPosition(position);
         ball->GetComponent<Transform>()->SetScale(scale);
-        ball->AddComponent<PhysicBody>(bodyDesc);
-        ball->AddComponent<ColliderList>()->AddCircleCollider(colliderDesc);
+        auto ballCollider = ball->AddComponent<PhysicBody>(bodyDesc);
+        ballCollider->AddCircleCollider(colliderDesc);
     }
 
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();

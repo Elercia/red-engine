@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 
@@ -26,7 +25,6 @@ TEST_CASE("Component binding", "[PHYSICS]")
     World w;
     w.Init();
     w.RegisterComponentType<PhysicBody>();
-    w.RegisterComponentType<ColliderList>();
 
     Entity* e = w.CreateWorldEntity("a");
     PhysicSystem* system = w.AddSystem<PhysicSystem>();
@@ -34,7 +32,6 @@ TEST_CASE("Component binding", "[PHYSICS]")
     red::PhysicBodyCreationDesc desc = {red::PhysicsBodyType::DYNAMIC_BODY};
 
     auto* body = e->AddComponent<PhysicBody>(desc);
-    auto* list = e->AddComponent<ColliderList>();
 
     {
         red::CircleColliderDesc circleColliderDesc;
@@ -44,7 +41,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
         circleColliderDesc.restitution = 1.f;
         circleColliderDesc.friction = 0.f;
 
-        list->AddCircleCollider(circleColliderDesc);
+        body->AddCircleCollider(circleColliderDesc);
     }
 
     {
@@ -53,7 +50,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
         polygonColliderDesc.points = {{0, 0}, {30, 0}, {30, 100}, {0, 100}};
         polygonColliderDesc.restitution = 1.f;
 
-        list->AddPolygonCollider(polygonColliderDesc);
+        body->AddPolygonCollider(polygonColliderDesc);
     }
 
     {
@@ -62,7 +59,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
         edgeColliderDesc.start = {0.f, 0.f};
         edgeColliderDesc.end = {1.f, 0.f};
 
-        list->AddEdgeCollider(edgeColliderDesc);
+        body->AddEdgeCollider(edgeColliderDesc);
     }
 
     system->Init();

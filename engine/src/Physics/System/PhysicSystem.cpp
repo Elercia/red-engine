@@ -2,7 +2,6 @@
 
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
@@ -22,59 +21,6 @@ PhysicSystem::~PhysicSystem()
 void PhysicSystem::Init()
 {
     System::Init();
-    ManageEntities();
-}
-
-void PhysicSystem::ManageEntities()
-{
-    PROFILER_EVENT_CATEGORY("PhysicSystem::ManageEntities", ProfilerCategory::Physics)
-
-    auto bodies = GetComponents<PhysicBody>();
-    for (auto* entity : bodies)
-    {
-        auto* physicBody = entity->GetComponent<PhysicBody>();
-
-        if (physicBody->m_status == ComponentStatus::VALID)
-            continue;
-
-        const auto& creationDesc = physicBody->m_desc;
-
-        m_physicsWorld->InitPhysicsBody(physicBody, creationDesc);
-
-        physicBody->m_status = ComponentStatus::VALID;
-    }
-
-    auto colliders = GetComponents<ColliderList>();
-    for (auto* entity : colliders)
-    {
-        auto* colliderList = entity->GetComponent<ColliderList>();
-        if (colliderList->m_status == ComponentStatus::VALID)
-            continue;
-
-        auto* physicBody = entity->GetComponentInParent<PhysicBody>(true);
-        if (physicBody == nullptr)
-        {
-            RED_LOG_WARNING("Collider list added without parenting physicbody (in {})", entity->GetName());
-            continue;
-        }
-
-        colliderList->m_attachedPhysicBody = physicBody;
-
-        auto* fixture = physicBody->GetBody()->GetFixtureList();
-        while (fixture != nullptr)
-        {
-            physicBody->GetBody()->DestroyFixture(fixture);
-            fixture = fixture->GetNext();
-        }
-
-        for (auto& p : colliderList->GetColliders())
-        {
-            auto& collider = p.second;
-            collider.m_fixture = physicBody->GetBody()->CreateFixture(&(collider.m_fixtureDef));
-        }
-
-        colliderList->m_status = ComponentStatus::VALID;
-    }
 }
 
 void PhysicSystem::Finalise()
@@ -93,8 +39,6 @@ void PhysicSystem::Update()
     PROFILER_EVENT_CATEGORY("PhysicSystem::Update", ProfilerCategory::Physics)
 
     m_physicsWorld->ClearForces();
-
-    ManageEntities();
 
     auto bodies =  GetComponents<PhysicBody>();
     for (auto* entity : bodies)

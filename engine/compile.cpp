@@ -87,7 +87,6 @@
 #include "RedEngine/Level/LevelLoader.hpp"
 #include "RedEngine/Level/LevelSerializer.hpp"
 
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/Physics/PhysicsModule.hpp"
@@ -182,7 +181,6 @@
 #include "Math/SerializationFunction.cpp"
 #include "Math/Vector.cpp"
 
-#include "Physics/Components/Collider.cpp"
 #include "Physics/Components/PhysicBody.cpp"
 #include "Physics/ContactInfo.cpp"
 #include "Physics/PhysicsWorld.cpp"

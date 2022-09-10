@@ -21,8 +21,6 @@ public:
 
     void Update() override;
 
-    virtual void ManageEntities() override;
-
 private:
     void ManageCollisions();
     void ManageTriggers();
