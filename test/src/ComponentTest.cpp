@@ -4,16 +4,16 @@
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Utils/SystemInfo.hpp"
 
-#include <SystemTest.hpp>
+#include <catch2/catch.hpp>
+#include <vector>
 
+#include "EngineTest.hpp"
+#include "SystemTest.hpp"
 #include "TestModule.hpp"
 
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent1)
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent11)
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent2)
-
-#include <catch2/catch.hpp>
-#include <vector>
 
 TEST_CASE("Component", "[ECS]")
 {
@@ -184,7 +184,7 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     using namespace red;
     using namespace EntityDestroyRemoveComp;
 
-    red::CreateEngineFrom<red::Engine>(0, nullptr);  // For double allocator
+    red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
 
     red::World world;
     world.Init();
