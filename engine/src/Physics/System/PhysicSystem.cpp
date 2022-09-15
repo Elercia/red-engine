@@ -26,9 +26,9 @@ void PhysicSystem::Init()
 void PhysicSystem::Finalise()
 {
     auto bodies =  GetComponents<PhysicBody>();
-    for (auto* entity :bodies)
+    for (auto& tuple :bodies)
     {
-        auto* physicBody = entity->GetComponent<PhysicBody>();
+        auto* physicBody = std::get<1>( tuple );
 
         m_physicsWorld->DestroyPhysicsBody(physicBody);  // Destroying a body will destroy all the fixture attached
     }
@@ -41,20 +41,20 @@ void PhysicSystem::Update()
     m_physicsWorld->ClearForces();
 
     auto bodies =  GetComponents<PhysicBody>();
-    for (auto* entity : bodies)
+    for (auto& tuple : bodies)
     {
-        auto* transform = entity->GetComponent<Transform>();
-        auto* physicBody = entity->GetComponent<PhysicBody>();
+        auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
+        auto* physicBody = std::get<1>( tuple );
 
         physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), transform->GetRotationRad());
     }
 
     m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 
-    for (auto* entity : bodies)
+    for (auto& tuple : bodies)
     {
-        auto* transform = entity->GetComponent<Transform>();
-        auto* physicBody = entity->GetComponent<PhysicBody>();
+        auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
+        auto* physicBody = std::get<1>( tuple );
 
         transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
         transform->SetRotationRad(physicBody->GetBody()->GetAngle());

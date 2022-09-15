@@ -42,7 +42,7 @@ public:
 
     // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
-    Array<Entity*, red::DoubleLinearArrayAllocator> GetComponents() const;
+    Array<std::tuple<Entity*, ComponentTypes*...>, red::DoubleLinearArrayAllocator> GetComponents() const;
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

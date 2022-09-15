@@ -42,7 +42,7 @@ void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
     if (scores.empty() || scores.size() > 1)
         return;
 
-    auto* score = scores[0]->GetComponent<ScoreComponent>();
+    auto* score = std::get<1>(scores[0]);
 
     if (ballPos.x < 0)
     {
