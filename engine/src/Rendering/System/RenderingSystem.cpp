@@ -50,9 +50,10 @@ void RenderingSystem::Update()
 
     auto spriteEntities = GetComponents<Sprite>();
 
-    for (auto* spriteEntity : spriteEntities)
+    for (auto& comps : spriteEntities)
     {
-        auto* sprite = spriteEntity->GetComponent<Sprite>();
+        auto* spriteEntity = std::get<0>( comps );
+        auto* sprite = std::get<1>( comps );
         if (!sprite->IsValid())
             continue;
 
@@ -167,10 +168,10 @@ void RenderingSystem::UpdateWindowAsNeeded()
     auto cameraEntities = GetComponents<CameraComponent>();
     auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
 
-    for (auto* windowEntity : windowEntities)
+    for (auto& windowTuple : windowEntities)
     {
         // TODO what about window cvars ?
-        auto* windowComp = windowEntity->GetComponent<WindowComponent>();
+        auto* windowComp = std::get<1>( windowTuple );
 
         if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
         {
@@ -178,9 +179,9 @@ void RenderingSystem::UpdateWindowAsNeeded()
         }
     }
 
-    for (auto* cameraEntity : cameraEntities)
+    for (auto& cameras : cameraEntities)
     {
-        auto* cameraComp = cameraEntity->GetComponent<CameraComponent>();
+        auto* cameraComp = std::get<1>( cameras );
 
         // This is required because the camera could have moved last frame
         cameraComp->UpdateState();
@@ -195,7 +196,7 @@ Array<CameraComponent*> RenderingSystem::GetSortedCameras()
     Array<CameraComponent*> cameras;
     cameras.resize(cameraEntities.size());
     std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(),
-                   [](Entity* e) { return e->GetComponent<CameraComponent>(); });
+                   [](auto& t) { return std::get<1>(t); });
 
     std::sort(cameras.begin(), cameras.end(),
               [](const CameraComponent* l, const CameraComponent* r) { return l->Depth() < r->Depth(); });

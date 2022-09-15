@@ -38,10 +38,10 @@ void AudioSystem::Update()
 {
     // Update listeners
     auto audioListeners = GetComponents<AudioListener>();
-    for (auto* audioListenerEntity : audioListeners)
+    for (auto& audioTuple : audioListeners)
     {
-        auto* audioListener = audioListenerEntity->GetComponent<AudioListener>();
-        auto* audioListenerTransform = audioListenerEntity->GetComponent<Transform>();
+        auto* audioListener = std::get<1>( audioTuple );
+        auto* audioListenerTransform = std::get<0>( audioTuple )->GetComponent<Transform>();
 
         FMOD_VECTOR oldPos = FmodUtils::Convert(audioListener->m_lastFramePos);
         FMOD_VECTOR currentPos = FmodUtils::Convert(audioListenerTransform->GetPosition());
@@ -73,9 +73,9 @@ void AudioSystem::Update()
 
     // Update audio sources
     auto audioSources = GetComponents<AudioSource>();
-    for (auto* entity : audioSources)
+    for (auto& sourceTuple : audioSources)
     {
-        auto* audioSource = entity->GetComponent<AudioSource>();
+        auto* audioSource = std::get<1>( sourceTuple );
         auto resource = audioSource->GetResource();
 
         if (resource->GetLoadState() != LoadState::STATE_LOADED)

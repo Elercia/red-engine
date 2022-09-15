@@ -30,9 +30,9 @@ void PhysicSystem::ManageEntities()
     PROFILER_EVENT_CATEGORY("PhysicSystem::ManageEntities", ProfilerCategory::Physics)
 
     auto bodies = GetComponents<PhysicBody>();
-    for (auto* entity : bodies)
+    for (auto& tuple : bodies)
     {
-        auto* physicBody = entity->GetComponent<PhysicBody>();
+        auto* physicBody = std::get<1>( tuple );
 
         if (physicBody->m_status == ComponentStatus::VALID)
             continue;
@@ -45,16 +45,16 @@ void PhysicSystem::ManageEntities()
     }
 
     auto colliders = GetComponents<ColliderList>();
-    for (auto* entity : colliders)
+    for (auto& tuple : colliders)
     {
-        auto* colliderList = entity->GetComponent<ColliderList>();
+        auto* colliderList = std::get<1>( tuple );
         if (colliderList->m_status == ComponentStatus::VALID)
             continue;
 
-        auto* physicBody = entity->GetComponentInParent<PhysicBody>(true);
+        auto* physicBody = std::get<0>( tuple )->GetComponentInParent<PhysicBody>(true);
         if (physicBody == nullptr)
         {
-            RED_LOG_WARNING("Collider list added without parenting physicbody (in {})", entity->GetName());
+            RED_LOG_WARNING("Collider list added without parenting physicbody (in {})", std::get<0>( tuple )->GetName());
             continue;
         }
 
@@ -80,9 +80,9 @@ void PhysicSystem::ManageEntities()
 void PhysicSystem::Finalise()
 {
     auto bodies =  GetComponents<PhysicBody>();
-    for (auto* entity :bodies)
+    for (auto& tuple :bodies)
     {
-        auto* physicBody = entity->GetComponent<PhysicBody>();
+        auto* physicBody = std::get<1>( tuple );
 
         m_physicsWorld->DestroyPhysicsBody(physicBody);  // Destroying a body will destroy all the fixture attached
     }
@@ -97,20 +97,20 @@ void PhysicSystem::Update()
     ManageEntities();
 
     auto bodies =  GetComponents<PhysicBody>();
-    for (auto* entity : bodies)
+    for (auto& tuple : bodies)
     {
-        auto* transform = entity->GetComponent<Transform>();
-        auto* physicBody = entity->GetComponent<PhysicBody>();
+        auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
+        auto* physicBody = std::get<1>( tuple );
 
         physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), transform->GetRotationRad());
     }
 
     m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 
-    for (auto* entity : bodies)
+    for (auto& tuple : bodies)
     {
-        auto* transform = entity->GetComponent<Transform>();
-        auto* physicBody = entity->GetComponent<PhysicBody>();
+        auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
+        auto* physicBody = std::get<1>( tuple );
 
         transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
         transform->SetRotationRad(physicBody->GetBody()->GetAngle());
