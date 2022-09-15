@@ -158,4 +158,14 @@ void PhysicsWorld::AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physic
 
     m_frameTriggerInfo.push_back(collisionInfo);
 }
+
+void PhysicsWorld::SetGravity(const Vector2& gravity)
+{
+    m_internalPhysicsWorld->SetGravity(ConvertToPhysicsVector(gravity));
+}
+
+Vector2 PhysicsWorld::GetGravity() const
+{
+    return ConvertFromPhysicsVector(m_internalPhysicsWorld->GetGravity());
+}
 }  // namespace red

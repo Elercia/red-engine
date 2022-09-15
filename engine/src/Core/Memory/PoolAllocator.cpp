@@ -41,7 +41,10 @@ void VirtualPoolAllocator::Realloc()
 void* VirtualPoolAllocator::AllocateElement()
 {
     if (m_nextFreeBlock == nullptr)
+    {
+        RED_LOG_ERROR("OutOfMemory in virtual allocator");
         return nullptr;
+    }
 
     void* ptr = (void*)(m_nextFreeBlock + 1);
 

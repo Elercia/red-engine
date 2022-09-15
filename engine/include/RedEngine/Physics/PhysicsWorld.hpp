@@ -23,6 +23,9 @@ public:
 
     void ClearForces();
 
+    void SetGravity(const Vector2& gravity);
+    Vector2 GetGravity() const;
+
     const Array<CollisionInfo>& GetCollisions() const;
     const Array<TriggerInfo>& GetTriggers() const;
 

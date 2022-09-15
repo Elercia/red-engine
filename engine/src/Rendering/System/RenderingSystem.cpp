@@ -187,12 +187,12 @@ void RenderingSystem::UpdateWindowAsNeeded()
     }
 }
 
-Array<CameraComponent*> RenderingSystem::GetSortedCameras()
+Array<CameraComponent*, DoubleLinearArrayAllocator> RenderingSystem::GetSortedCameras()
 {
     PROFILER_EVENT_CATEGORY("RenderingSystem::GetSortedCameras", ProfilerCategory::Rendering)
 
     auto cameraEntities = GetComponents<CameraComponent>();
-    Array<CameraComponent*> cameras;
+    Array<CameraComponent*, DoubleLinearArrayAllocator> cameras;
     cameras.resize(cameraEntities.size());
     std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(),
                    [](Entity* e) { return e->GetComponent<CameraComponent>(); });

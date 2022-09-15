@@ -8,6 +8,7 @@ namespace red
 {
 struct Color
 {
+    constexpr Color();
     constexpr Color(uint8 r, uint8 g, uint8 b);
     constexpr Color(uint8 r, uint8 g, uint8 b, uint8 a);
 
@@ -18,6 +19,10 @@ struct Color
     uint8 b;
     uint8 a;
 };
+
+constexpr Color::Color() : r(0), g(0), b(0), a(255)
+{
+}
 
 constexpr Color::Color(uint8 r, uint8 g, uint8 b) : r(r), g(g), b(b), a(255)
 {
