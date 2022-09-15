@@ -22,7 +22,7 @@ namespace red
 static int s_nameCounter = 0;
 
 World::World()
-    : m_entityAllocator(sizeof(Entity), 1000)
+    : m_entityAllocator(sizeof(Entity), 6000)
     , m_componentManager(new ComponentManager(this))
     , m_componentRegistry(new ComponentRegistry())
     , m_currentLevel(nullptr)
