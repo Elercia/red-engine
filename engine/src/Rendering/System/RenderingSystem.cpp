@@ -139,7 +139,7 @@ void RenderingSystem::RenderDebug()
             {
                 auto* polygon = static_cast<DebugPolygon*>(shape.get());
 
-                m_renderer->DrawDebugLines(polygon->points, polygon->color);
+                //m_renderer->DrawDebugLines(polygon->points, polygon->color);
             }
             break;
             case DebugShapeType::SEGMENT:

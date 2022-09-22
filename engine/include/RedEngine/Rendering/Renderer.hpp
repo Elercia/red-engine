@@ -25,6 +25,9 @@ using OpenGlContext = void*;
 
 struct RenderingData
 {
+    RenderLayerIndex renderLayerIndex;
+    RenderEntityType type;
+
     Matrix44 worldMatrix;
     Geometry* geometry;
     MaterialInstance materialInstance;
@@ -69,11 +72,9 @@ public:
 
     void DrawDebugLine(const Vector2& first, const Vector2& second, const Color& color = ColorConstant::RED);
 
-    void DrawDebugLines(const Array<Vector2>& points, const Color& color = ColorConstant::RED, bool isFilled = false);
-
     void DrawDebugCircle(const Vector2& center, float radius, const Color& color = ColorConstant::RED);
 
-    void DrawDebugPoint(const Vector2& coord, const Color& color = ColorConstant::RED);
+    void DrawDebugPoint(const Vector2& coord, const Color& color = ColorConstant::YELLOW);
 
     // Draw passes
     void BeginCameraRendering(CameraComponent* camera);
@@ -94,8 +95,7 @@ public:
     void ReCreateWindow(WindowComponent* window);
 
 private:
-    ArrayView<RenderingData> GetAndCullRederingDataForCamera(RenderEntityType type, RenderLayerIndex layer,
-                                                             CameraComponent* camera);
+    void CullRenderDataForCamera(CameraComponent* camera);
 
     void UseMaterial(const MaterialInstance& mat);
     void UseGeometry(const Geometry* geom);
@@ -103,14 +103,23 @@ private:
     void FillCameraBuffer(const CameraComponent& camera);
     void FillEntityBuffer(const RenderingData& data);
 
-    Array<RenderingData>& GetRenderArray(RenderEntityType renderType, RenderLayerIndex renderLayerIndex);
-
 private:
     OpenGlContext m_glContext;
     WindowComponent* m_window;
 
-    RenderDataPerLayer m_renderingData;
+    // Complex drawed sprites
+    Array<RenderingData> m_renderingData;
 
+    // Debug data (rendered rebug primitives)
+    Array<Vector2> m_debugLines;
+    Array<Color> m_debugLineColors;
+
+    // Tmp data used per camera
+    Array<RenderingData, DoubleLinearArrayAllocator> m_culledAndSortedRenderingData;
+    uint32 m_maxRenderDataLastFrame;
+    ArrayView<RenderingData> m_renderingDataPerLayer[32];
+
+    // Rendering data sent to GPU
     GPUBuffer m_perInstanceData;
     GPUBuffer m_perCameraData;
 };

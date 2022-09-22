@@ -6,7 +6,7 @@ project ("RedEngineTest")
 	
 	rtti("Off")
 	cppdialect(cppDialect)
-	warnings("Extra")
+	warnings("High")
 	flags("NoPCH")
 	staticruntime("Off")
 

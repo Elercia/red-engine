@@ -24,6 +24,7 @@ struct AnimationFrameDesc
 struct AnimationDesc
 {
     std::string name;
+    bool useTransparency{false};
     bool loop{false};
     std::shared_ptr<Texture2D> texture;  ///< The animation spritesheet
     Array<AnimationFrameDesc> frames;

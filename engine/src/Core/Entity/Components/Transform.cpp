@@ -59,10 +59,11 @@ Vector2& Transform::GetScale()
 
 float Transform::GetDepth() const
 {
-    auto* parent = GetOwner()->GetParent();
+    /*auto* parent = GetOwner()->GetParent();
     Transform* parentTransform = parent != nullptr ? parent->GetComponent<Transform>() : nullptr;
 
-    return parentTransform != nullptr ? m_localDepth + parentTransform->GetDepth() : m_localDepth;
+    return parentTransform != nullptr ? m_localDepth + parentTransform->GetDepth() : m_localDepth;*/
+    return 0.f;
 }
 
 float Transform::GetRotationDeg() const
@@ -93,10 +94,11 @@ void Transform::SetRotationRad(float rotationRad)
     m_dirtyWorldMatrix = true;
 }
 
-void Transform::SetDepth(float depth)
+void Transform::SetDepth(float /*depth*/)
 {
-    m_localDepth = depth;
-    m_dirtyWorldMatrix = true;
+    //m_localDepth = depth;
+    //m_dirtyWorldMatrix = true;
+    RedAssertNotReached();
 }
 
 void Transform::UpdateWorldMatrixIfNeeded()
@@ -107,7 +109,7 @@ void Transform::UpdateWorldMatrixIfNeeded()
 
     if (m_dirtyWorldMatrix)
     {
-        m_localWorldMatrix = Math::Translate(Matrix44::Identity(), Vector3(m_localPosition, m_localDepth));
+        m_localWorldMatrix = Math::Translate(Matrix44::Identity(), Vector3(m_localPosition, /*m_localDepth*/0.f));
 
         m_localWorldMatrix = Math::Translate(m_localWorldMatrix, Vector3(m_localRotationAnchor, 0.0f));
         m_localWorldMatrix = Math::Rotate(m_localWorldMatrix, Vector3(0.0f, 0.0f, Math::ToRadians(m_localRotation)));

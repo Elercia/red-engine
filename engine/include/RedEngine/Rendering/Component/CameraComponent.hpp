@@ -77,7 +77,7 @@ private:
     /// Background color (color to clear the screen before rendering)
     Color m_cleanColor{ColorConstant::BLACK};
 
-    float m_zNear{0.1f};
+    float m_zNear{0.001f};
     float m_zFar{1000.0f};
 
     Matrix44 m_viewMatrix;

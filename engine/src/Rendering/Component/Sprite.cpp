@@ -30,10 +30,6 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
                            ->GetResourceLoader<SpriteResourceLoader>()
                            ->LoadResource(resourceId);
 
-    m_material.material = m_owner->GetWorld()
-                              ->GetWorldComponent<ResourceHolderComponent>()
-                              ->GetResourceLoader<MaterialResourceLoader>()
-                              ->LoadResource(Path::Resource("BASE_OPAQUE_MATERIAL"));
     m_geometry = m_owner->GetWorld()
                      ->GetWorldComponent<ResourceHolderComponent>()
                      ->GetResourceLoader<GeometryResourceLoader>()
@@ -44,6 +40,8 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
         m_currentAnimationInfo.currentAnimation = m_spriteResource->m_animations.begin();
         m_currentAnimationInfo.currentAnimationFrame = m_spriteResource->m_animations[0].frames.begin();
         m_currentAnimationInfo.deltaTimeAccumulator = 0;
+
+        ChangeMaterialForAnimation();
     }
 }
 
@@ -74,6 +72,8 @@ void Sprite::NextFrame()
             }
         }
     }
+
+       ChangeMaterialForAnimation();
 
     UpdateRenderData();
 }
@@ -120,9 +120,28 @@ void Sprite::UpdateRenderData()
     binding.type = BindingType::Texture;
 
     const Vector2i& sizei = m_currentAnimationInfo.currentAnimationFrame->size;
-    m_size = {(float) sizei.x, (float) sizei.y};
 
-    m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetPosition(), m_size);
+    m_size = Vector2((float) sizei.x, (float) sizei.y) * GetOwner()->GetComponent<Transform>()->GetScale();
+
+    m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetPosition(), m_size);  // * scale
+}
+
+void Sprite::ChangeMaterialForAnimation()
+{
+    if ( m_spriteResource == nullptr || m_currentAnimationInfo.currentAnimation->useTransparency == false )
+    {
+        m_material.material = m_owner->GetWorld()
+                                  ->GetWorldComponent<ResourceHolderComponent>()
+                                  ->GetResourceLoader<MaterialResourceLoader>()
+                                  ->LoadResource(Path::Resource("BASE_OPAQUE_MATERIAL"));
+    }
+    else
+    {
+        m_material.material = m_owner->GetWorld()
+                                  ->GetWorldComponent<ResourceHolderComponent>()
+                                  ->GetResourceLoader<MaterialResourceLoader>()
+                                  ->LoadResource(Path::Resource("BASE_TRANSPARENT_MATERIAL"));
+    }
 }
 
 }  // namespace red

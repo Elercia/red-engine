@@ -49,6 +49,7 @@ bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resourc
             textureResourceLoader->LoadResource(Path::Resource(utils::ToUnicodeString(spriteSheetPathStr)));
 
         animationDesc.loop = animationJson["loop"];
+        animationDesc.useTransparency = animationJson["using_transparency"];
 
         auto framesJson = animationJson.find("frames");
         if (framesJson == animationJson.end())

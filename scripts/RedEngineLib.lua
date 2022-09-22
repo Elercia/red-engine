@@ -6,7 +6,7 @@ project "RedEngineLib"
 
 	rtti("Off")
 	exceptionhandling("Off")
-	warnings("Extra")
+	warnings("High")
 	flags("NoPCH")
 	staticruntime("Off")
 

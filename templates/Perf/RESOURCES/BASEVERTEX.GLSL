@@ -11,7 +11,7 @@ layout(std430, binding = 0) buffer PerCameraDataStruct
 layout(std430, binding = 1) buffer PerInstanceDataStruct
 {
     mat4 world;
-    vec2 size;
+    vec2 size; 
 } PerInstanceData;
 
 layout(location = 0) out vec2 texture_uv_out;

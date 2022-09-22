@@ -17,7 +17,7 @@ public:
     RED_MEMBER("scale", m_localScale, "The local scale of the entity", 0);
     RED_MEMBER("rotation", m_localRotation, "The local rotation of the entity", 0);
     RED_MEMBER("rotationAnchor", m_localRotationAnchor, "The local rotation anchor ", 0);
-    RED_MEMBER("depth", m_localDepth, "The local rotation of the entity", 0);
+    //RED_MEMBER("depth", m_localDepth, "The local rotation of the entity", 0);
     RED_END_COMPONENT_REGISTER()
 
     Transform(Entity* entity);
@@ -57,7 +57,7 @@ private:
     float m_localRotation{0.f};  // degrees
     Vector2 m_localRotationAnchor{0.f, 0.f};
 
-    float m_localDepth{0.f};
+    //float m_localDepth{0.f};
 
     Matrix44 m_localWorldMatrix;
     Matrix44 m_worldMatrix; // include parent transforms

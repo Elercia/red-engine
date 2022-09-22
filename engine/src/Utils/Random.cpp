@@ -33,12 +33,12 @@ uint32 RandomRange(uint32 min, uint32 max)
 {
     const auto fRandValue = (float) RandomUint32() / (float) UINT_MAX;
 
-    return (uint32)(fRandValue * max) + min;
+    return (uint32)(fRandValue * (max-min)) + min;
 }
 
 float RandomFloatRange(float min, float max)
 {
     const auto fRandValue = (float) RandomUint32() / (float) UINT_MAX;
-    return ( fRandValue * max) + min;
+    return ( fRandValue * (max - min)) + min;
 }
 }  // namespace red

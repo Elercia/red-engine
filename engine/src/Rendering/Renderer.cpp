@@ -40,6 +40,8 @@ const int PrimitiveTypesAsGLTypes[] = {
 Renderer::Renderer()
     : m_glContext(nullptr)
     , m_window(nullptr)
+    , m_renderingData()
+    , m_maxRenderDataLastFrame(0)
     , m_perInstanceData(1, sizeof(PerInstanceData))
     , m_perCameraData(1, sizeof(PerCameraData))
 {
@@ -150,14 +152,7 @@ void Renderer::BeginRenderFrame()
 
 void Renderer::EndRenderFrame()
 {
-    // Clear the current render data for the current camera
-    for (RenderDataArrayPerType& perLayer : m_renderingData)
-    {
-        for (Array<RenderingData>& perType : perLayer)
-        {
-            perType.clear();
-        }
-    }
+    m_renderingData.clear();
 
     SDL_GL_SwapWindow(m_window->GetSDLWindow());
 }
@@ -171,10 +166,13 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 
     glClearColor(cameraComponent->m_cleanColor.r / 255.f, cameraComponent->m_cleanColor.g / 255.f,
                  cameraComponent->m_cleanColor.b / 255.f, cameraComponent->m_cleanColor.a / 255.f);
+
+    CullRenderDataForCamera(cameraComponent);
 }
 
 void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
 {
+    m_culledAndSortedRenderingData.clearAndFree();
 }
 
 void Renderer::Draw(const Renderable* renderable, const Transform* transform)
@@ -185,19 +183,18 @@ void Renderer::Draw(const Renderable* renderable, const Transform* transform)
     data.worldMatrix = transform->GetWorldMatrix();
     data.aabb = renderable->m_aabb;
     data.size = renderable->m_size;
+    data.renderLayerIndex = renderable->m_layerIndex;
+    data.type = renderable->m_material.material->GetRenderType();
 
-    auto& renderData =
-        GetRenderArray(data.materialInstance.material->GetRenderType(), renderable->GetRenderLayerIndex());
-    renderData.push_back(std::move(data));
+    m_renderingData.push_back(std::move(data));
 }
 
-void Renderer::DrawDebugLine(const Vector2& /*first*/, const Vector2& /*second*/, const Color& /*color*/)
+void Renderer::DrawDebugLine(const Vector2& first, const Vector2& second, const Color& color)
 {
-}
+    m_debugLines.push_back(first);
+    m_debugLines.push_back(second);
 
-void Renderer::DrawDebugLines(const Array<Vector2>& /*points*/, const Color& /*color*/ /*= ColorConstant::RED*/,
-                              bool /*isFilled*/ /*= false*/)  // TODO isFilled
-{
+    m_debugLineColors.push_back(color);
 }
 
 void Renderer::DrawDebugCircle(const Vector2& /*center*/, float /*radius*/,
@@ -205,8 +202,9 @@ void Renderer::DrawDebugCircle(const Vector2& /*center*/, float /*radius*/,
 {
 }
 
-void Renderer::DrawDebugPoint(const Vector2& /*coord*/, const Color& /*color*/ /*= ColorConstant::RED*/)
+void Renderer::DrawDebugPoint(const Vector2& coord, const Color& color /*= ColorConstant::RED*/)
 {
+    DrawDebugCircle(coord, 0.1f, color);
 }
 
 void Renderer::RenderLayerOpaque(RenderLayerIndex layerIndex, CameraComponent* camera)
@@ -233,11 +231,12 @@ void Renderer::RenderLayerTransparency(RenderLayerIndex layerIndex, CameraCompon
 
 void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 {
-    PROFILER_EVENT_CATEGORY(desc.name, ProfilerCategory::Rendering);
+    auto& toRender = m_renderingDataPerLayer[desc.layerIndex];
 
-    auto datas = GetAndCullRederingDataForCamera(desc.renderType, desc.layerIndex, camera);
-    if (datas.empty())
+    if (toRender.empty())
         return;
+
+    PROFILER_EVENT_CATEGORY(desc.name, ProfilerCategory::Rendering);
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, desc.name);
 
@@ -251,10 +250,11 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
+
     // Do the actual render calls to the camera render target
-    for (uint32 i = 0; i < datas.size(); i++)
+    for (uint32 i = 0; i < toRender.size(); i++)
     {
-        auto& renderData = datas[i];
+        auto& renderData = toRender[i];
 
         UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);
@@ -276,6 +276,8 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 
 void Renderer::RenderDebug(CameraComponent* /*camera*/)
 {
+    m_debugLines.clear();
+    m_debugLineColors.clear();
 }
 
 void Renderer::RenderGlobalDebug()
@@ -352,33 +354,48 @@ void Renderer::UseGeometry(const Geometry* geom)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_gpuIndexBuffer);
 }
 
-ArrayView<RenderingData> Renderer::GetAndCullRederingDataForCamera(RenderEntityType type, RenderLayerIndex layer,
-                                                                   CameraComponent* camera)
+void Renderer::CullRenderDataForCamera(CameraComponent* camera)
 {
-    PROFILER_EVENT_CATEGORY("Renderer::GetAndCullRederingDataForCamera", ProfilerCategory::Rendering);
+    PROFILER_EVENT_CATEGORY("Renderer::CullRenderDataForCamera", ProfilerCategory::Rendering);
+    RedAssert(m_culledAndSortedRenderingData.empty(),
+              "The camera data is not empty. Maybe EndCameraRendering has not been called");
 
-    auto& renderData = GetRenderArray(type, layer);
-    if (renderData.empty())
-        return ArrayView<RenderingData>();
-
-    uint32 end = renderData.size();
-    for (uint32 i = 0; i < end; i++)
+    for (RenderingData& data : m_renderingData)
     {
-        auto data = renderData[i];
-        if (!camera->IsVisibleFrom(data.aabb))
+        if (camera->IsVisibleFrom(data.aabb))
         {
-            end--;
-            std::swap(renderData[i], renderData[end]);
-            i--;
+            m_culledAndSortedRenderingData.push_back(data);
         }
     }
 
-    return ArrayView(renderData, end);
-}
+    std::sort(m_culledAndSortedRenderingData.begin(), m_culledAndSortedRenderingData.end(),
+              [](auto& l, auto& r) { return l.renderLayerIndex < r.renderLayerIndex && l.type < r.type; });
 
-Array<RenderingData>& Renderer::GetRenderArray(RenderEntityType renderType, RenderLayerIndex renderLayerIndex)
-{
-    return m_renderingData[renderLayerIndex][(uint8) renderType];
+    uint32 renderLayerIndex = 0;
+    uint32 start = 0;
+    uint32 count = 0;
+    for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
+    {
+        if (m_culledAndSortedRenderingData[i].renderLayerIndex != renderLayerIndex)
+        {
+            count = i - start;
+
+            m_renderingDataPerLayer[renderLayerIndex] = ArrayView(m_culledAndSortedRenderingData, start, count);
+
+            start = i;
+            renderLayerIndex++;
+        }
+    }
+
+    m_renderingDataPerLayer[renderLayerIndex] =
+        ArrayView(m_culledAndSortedRenderingData, start, m_culledAndSortedRenderingData.size() - start);
+
+    renderLayerIndex++;
+
+    for (int i = renderLayerIndex; i < 32; i++)
+    {
+        m_renderingDataPerLayer[i] = ArrayView(m_culledAndSortedRenderingData, 0, 0);
+    }
 }
 
 }  // namespace red

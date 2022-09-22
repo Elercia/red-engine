@@ -122,8 +122,6 @@ void CameraComponent::UpdateState()
     if (m_attachedWindow == nullptr)
         return;
 
-    auto windowInfo = m_attachedWindow->GetComponent<WindowComponent>()->GetWindowInfo();
-
     auto* transform = GetOwner()->GetComponent<Transform>();
 
     m_projectionMatrix = Math::Ortho(0.f, (float) m_size.x, 0.f, (float) m_size.y, m_zNear, m_zFar);

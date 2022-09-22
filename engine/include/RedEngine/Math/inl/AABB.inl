@@ -19,7 +19,8 @@ AABB& AABB::Grow(const Vector2& point)
 
 bool AABB::Intersect(const AABB& other)
 {
-    return other.m_min.x >= m_min.x && other.m_min.y >= m_min.y && other.m_max.x <= m_max.x && other.m_max.y <= m_max.y;
+    return Math::Between(other.m_min.x, m_min.x, m_max.x) || Math::Between(other.m_max.x, m_min.x, m_max.x) ||
+           Math::Between(other.m_min.y, m_min.y, m_max.y) || Math::Between(other.m_max.y, m_min.y, m_max.y);
 }
 
 }  // namespace red

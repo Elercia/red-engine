@@ -6,7 +6,6 @@
 			"type": "texture",
 			"binding_index": 0
 		},
-
 		{
 			"type": "float4",
 			"binding_index": 1

@@ -65,6 +65,8 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 
 	staticruntime("Off")
 
+	warnings("Off")
+
 	if IsStaticLib ~= nil then
 		if IsStaticLib then
 			kind("StaticLib")

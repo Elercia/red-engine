@@ -9,7 +9,7 @@ function TemplateProject(Name)
 	
 	rtti("Off")
 	exceptionhandling("Off")
-	warnings("Extra")
+	warnings("Everything")
 	flags("NoPCH")
 	staticruntime("Off")
 
