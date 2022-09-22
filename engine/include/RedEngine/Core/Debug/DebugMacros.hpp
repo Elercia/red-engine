@@ -34,6 +34,7 @@ bool HandleAssert(bool expr, const char* filename, int line, const std::string& 
     {                                                                    \
         if (red::HandleAssert(false, __FILE__, __LINE__, ##__VA_ARGS__)) \
             debug_break();                                               \
+        std::abort();                                                    \
     } while (0);
 
 #define RedAssert(expr, ...)                                            \
@@ -50,7 +51,8 @@ bool HandleAssert(bool expr, const char* filename, int line, const std::string& 
 
 #endif  // RED_DEBUG
 
-#define RedError(...) RedAssert(false, ##__VA_ARGS__)
+#define RedError(...)            RedAssert(false, ##__VA_ARGS__)
+#define RedAssertNotReached(...) RedAssert(false, ##__VA_ARGS__)
 
 #define CheckReturn(EXPR)      \
     {                          \
