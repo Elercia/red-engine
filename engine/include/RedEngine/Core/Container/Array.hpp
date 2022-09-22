@@ -86,6 +86,7 @@ public:
     void shrink_to_fit();
 
     void clear();
+    void clearAndFree();
 
     void resize(size_type count);
     void resize(size_type count, const T& t);

@@ -234,6 +234,16 @@ void Array<T, Allocator>::clear()
 }
 
 template <typename T, typename Allocator>
+void Array<T, Allocator>::clearAndFree()
+{
+    Destroy(begin(), end());
+    Allocator::Free(m_data);
+    m_data = nullptr;
+    m_size = 0;
+    m_capacity = 0;
+}
+
+template <typename T, typename Allocator>
 void Array<T, Allocator>::shrink_to_fit()
 {
     SetCapacity(m_size);
