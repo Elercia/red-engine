@@ -250,11 +250,12 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-
     // Do the actual render calls to the camera render target
     for (uint32 i = 0; i < toRender.size(); i++)
     {
         auto& renderData = toRender[i];
+
+        RedAssert(desc.layerIndex == renderData.renderLayerIndex);
 
         UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);

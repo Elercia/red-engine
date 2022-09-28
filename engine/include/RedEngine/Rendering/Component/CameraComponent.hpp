@@ -34,7 +34,7 @@ public:
     RED_END_COMPONENT_REGISTER()
 
     CameraComponent(Entity* entity);
-    CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, const Vector2i& size);
+    CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, const Vector2& size);
     virtual ~CameraComponent();
 
     // Return true if the given AABB is visible from the given camera
@@ -68,7 +68,7 @@ private:
     Vector4 m_screenViewport;
 
     // Describe the size of the camera inside the world
-    Vector2i m_size;
+    Vector2 m_size;
 
     /// Depth of the camera (defaulted to 0)
     /// Higher depth camera are rendered after (to be on top of another)

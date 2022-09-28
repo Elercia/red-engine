@@ -22,13 +22,13 @@ CameraComponent::CameraComponent(Entity* entity)
     , m_attachedWindow(nullptr)
     , m_frameBuffer(true, 1)
     , m_screenViewport(0.f, 0.f, 1.f, 1.f)
-    , m_size(1, 1)
+    , m_size(0.f, 0.f)
 {
     UpdateState();
 }
 
 CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& sceenViewport,
-                                 const Vector2i& size)
+                                 const Vector2& size)
     : Component(entity)
     , m_attachedWindow(attachedWindow->GetOwner())
     , m_frameBuffer(true, 1)
@@ -45,7 +45,8 @@ CameraComponent::~CameraComponent()
 
 bool CameraComponent::IsVisibleFrom(const AABB& aabb) const
 {
-    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetPosition(), {(float) m_size.x, (float) m_size.y}); // TODO put it in camera cached state
+    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetPosition(),
+                  {m_size.x, m_size.y});  // TODO put it in camera cached state
 
     return thisAabb.Intersect(aabb);
 }
@@ -124,10 +125,10 @@ void CameraComponent::UpdateState()
 
     auto* transform = GetOwner()->GetComponent<Transform>();
 
-    m_projectionMatrix = Math::Ortho(0.f, (float) m_size.x, 0.f, (float) m_size.y, m_zNear, m_zFar);
+    m_projectionMatrix = Math::Ortho(0, m_size.x, 0.f, m_size.y, m_zNear, m_zFar);
     m_viewMatrix = transform->GetWorldMatrix();
 
-    m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
+    m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 
     // m_frameBuffer.Init(Vector2i(viewportRect.width, viewportRect.height));
 }
