@@ -26,16 +26,15 @@
 void PongLevel::Init()
 {
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
-    auto info = window->GetWindowInfo();
 
-    float paddlePosHeight = (info.height / 2.F) - (100.F / 2.F);
-
-    red::Vector2 center{info.width / 2.F, info.height / 2.F};
-
-    const auto onCollision = [](const red::CollisionInfo& collisionInfo)
-    { collisionInfo.firstPhysicBody->GetOwner()->GetComponent<red::AudioSource>()->Play(); };
-
+    const red::Vector2 paddleSize = {30.f, 100.f};
     const float ballSize = 30.f;
+    const float paddleOffsetFromBorder = 100.f;
+
+    const red::Vector2 arenaSize = {800, 600};
+    const red::Vector2 arenaCenter{arenaSize.width / 2.f, arenaSize.height / 2.f};
+
+    const float paddlePosHeight = (arenaSize.height / 2.f) - (paddleSize.y / 2.f);
 
     red::PhysicBodyCreationDesc ballBodyDesc = {red::PhysicsBodyType::DYNAMIC_BODY};
     red::CircleColliderDesc ballColliderDesc;
@@ -47,63 +46,88 @@ void PongLevel::Init()
     red::PhysicBodyCreationDesc paddleBodyDesc = {red::PhysicsBodyType::KINEMATIC_BODY};
     red::PolygonColliderDesc paddleColliderDesc;
     paddleColliderDesc.isTrigger = false;
-    paddleColliderDesc.points = {{0, 0}, {30, 0}, {30, 100}, {0, 100}};
+    paddleColliderDesc.points = {{0, 0}, {paddleSize.x, 0}, {paddleSize.x, paddleSize.y}, {0, paddleSize.y}};
     paddleColliderDesc.restitution = 1.f;
 
     red::SoundDesc ballbounding;
     ballbounding.name = "ball_bouncing";
 
-    auto* ball = CreateEntity("Ball");
-    ball->AddComponent<red::Sprite>(red::Path::Resource("ball"))->SetRenderLayerIndex(1);
-    ball->GetComponent<red::Transform>()->SetPosition(center);
+    red::Entity* ballEntity = nullptr;
+    red::Entity* paddleOne = nullptr;
+    red::Entity* paddleTwo = nullptr;
 
-    auto* ballPhysicBody = ball->AddComponent<red::PhysicBody>(ballBodyDesc);
-    ballPhysicBody->AddCircleCollider(ballColliderDesc);
-    ball->AddComponent<red::AudioSource>(ballbounding);
+    red::PhysicBody* ballPhysicBody = nullptr;
 
-    auto slot = ballPhysicBody->m_collisionSignal.Connect(onCollision);
+    // Init ball entity
+    {
+        ballEntity = CreateEntity("Ball");
+        ballEntity->AddComponent<red::Sprite>(red::Path::Resource("ball"))->SetRenderLayerIndex(1);
+        ballEntity->GetComponent<red::Transform>()->SetPosition(arenaCenter);
 
-    auto* paddleOne = CreateEntity("PaddleOne");
-    paddleOne->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
-    paddleOne->GetComponent<red::Transform>()->SetPosition({100.F, paddlePosHeight});
+        ballPhysicBody = ballEntity->AddComponent<red::PhysicBody>(ballBodyDesc);
+        ballPhysicBody->AddCircleCollider(ballColliderDesc);
+        ballEntity->AddComponent<red::AudioSource>(ballbounding);
+    }
 
-    auto* paddleOneBody = paddleOne->AddComponent<red::PhysicBody>(paddleBodyDesc);
-    paddleOneBody->AddPolygonCollider(paddleColliderDesc);
+    // setup left paddle
+    {
+        paddleOne = CreateEntity("PaddleOne");
+        paddleOne->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
+        paddleOne->GetComponent<red::Transform>()->SetPosition({paddleOffsetFromBorder, paddlePosHeight});
 
-    auto* paddleTwo = CreateEntity("PaddleTwo");
-    paddleTwo->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
-    paddleTwo->GetComponent<red::Transform>()->SetPosition(
-        red::Vector2(info.width - 100.F - (30.F / 2.F), paddlePosHeight));
+        auto* paddleOneBody = paddleOne->AddComponent<red::PhysicBody>(paddleBodyDesc);
+        paddleOneBody->AddPolygonCollider(paddleColliderDesc);
+    }
 
-    auto* paddleTwoBody = paddleTwo->AddComponent<red::PhysicBody>(paddleBodyDesc);
-    paddleTwoBody->AddPolygonCollider(paddleColliderDesc);
+    // Setup right paddle
+    {
+        paddleTwo = CreateEntity("PaddleTwo");
+        paddleTwo->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
+        paddleTwo->GetComponent<red::Transform>()->SetPosition(
+            red::Vector2(arenaSize.width - paddleOffsetFromBorder - paddleSize.x, paddlePosHeight));
 
-    auto* manager = CreateEntity("Manager");
-    manager->AddComponent<ScoreComponent>();
-    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f), red::Vector2i{800, 600});
-    manager->AddComponent<red::AudioListener>();
+        auto* paddleTwoBody = paddleTwo->AddComponent<red::PhysicBody>(paddleBodyDesc);
+        paddleTwoBody->AddPolygonCollider(paddleColliderDesc);
+    }
 
-    auto* walls = CreateEntity("Walls");
+    // Create camera
+    {
+        auto* manager = CreateEntity("Camera");
+        manager->AddComponent<ScoreComponent>();
+        manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f), arenaSize);
+        manager->AddComponent<red::AudioListener>();
+    }
 
-    red::EdgeColliderDesc wallUpColliderDesc;
-    wallUpColliderDesc.isTrigger = false;
-    wallUpColliderDesc.start = {0.f, 0.f};
-    wallUpColliderDesc.end = red::Vector2((float) info.width, 0.f);
+    // Create walls
+    {
+        auto* walls = CreateEntity("Walls");
 
-    red::EdgeColliderDesc wallDownColliderDesc;
-    wallDownColliderDesc.isTrigger = false;
-    wallDownColliderDesc.start = {0.f, (float) info.height};
-    wallDownColliderDesc.end = {(float) info.width, (float) info.height};
+        red::EdgeColliderDesc wallUpColliderDesc;
+        wallUpColliderDesc.isTrigger = false;
+        wallUpColliderDesc.start = {0.f, 0.f};
+        wallUpColliderDesc.end = red::Vector2((float) arenaSize.width, 0.f);
 
-    red::PhysicBodyCreationDesc wallBodyDesc = {red::PhysicsBodyType::STATIC_BODY};
-    auto wallsBody = walls->AddComponent<red::PhysicBody>(wallBodyDesc);
+        red::EdgeColliderDesc wallDownColliderDesc;
+        wallDownColliderDesc.isTrigger = false;
+        wallDownColliderDesc.start = {0.f, (float) arenaSize.height};
+        wallDownColliderDesc.end = {(float) arenaSize.width, (float) arenaSize.height};
 
-    wallsBody->AddEdgeCollider(wallUpColliderDesc);
-    wallsBody->AddEdgeCollider(wallDownColliderDesc);
+        red::PhysicBodyCreationDesc wallBodyDesc = {red::PhysicsBodyType::STATIC_BODY};
+        auto wallsBody = walls->AddComponent<red::PhysicBody>(wallBodyDesc);
 
-    auto* logicSystem = m_world->AddSystem<GameLogicSystem>(paddleOne, paddleTwo, ball);
-    logicSystem->m_paddlecollisionSignal = slot;
-    m_world->AddSystem<GameControlSystem>(paddleOne, paddleTwo);
+        wallsBody->AddEdgeCollider(wallUpColliderDesc);
+        wallsBody->AddEdgeCollider(wallDownColliderDesc);
+    }
+
+    // Setup systems
+    {
+        m_world->AddSystem<GameControlSystem>(paddleOne, paddleTwo);
+
+        auto* logicSystem = m_world->AddSystem<GameLogicSystem>(paddleOne, paddleTwo, ballEntity);
+        const auto onCollisionCallback = [](const red::CollisionInfo& collisionInfo)
+        { collisionInfo.firstPhysicBody->GetOwner()->GetComponent<red::AudioSource>()->Play(); };
+        logicSystem->m_paddlecollisionSignal = ballPhysicBody->m_collisionSignal.Connect(onCollisionCallback);
+    }
 }
 
 void PongLevel::Finalize()
