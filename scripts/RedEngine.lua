@@ -31,6 +31,21 @@ elseif os.istarget("windows") then
 	table.insert(libsToLink, "Advapi32")
 end
 
+function RedDefaultProjectOptions()
+	language("C++")
+	cppdialect(cppDialect)
+
+	rtti("Off")
+	exceptionhandling("Off")
+	warnings("Extra")
+	flags("NoPCH")
+	staticruntime("Off")
+
+	location(projectsFilesLocation)
+	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
+	objdir (rootPath .. "/output/obj/" .. outputDirSementic)
+end
+
 workspace "RedEngine"
 	startproject "Pong"
 

@@ -4,16 +4,8 @@ project "RedEngineLib"
 	language("C++")
 	cppdialect(cppDialect)
 
-	rtti("Off")
-	exceptionhandling("Off")
-	warnings("High")
-	flags("NoPCH")
-	staticruntime("Off")
-
-	location(projectsFilesLocation)
-	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
-	objdir(rootPath .. "/output/obj/" .. outputDirSementic)
-
+	RedDefaultProjectOptions()
+	
 	files
 	{
 		enginePath .. "/compile.cpp",

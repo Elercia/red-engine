@@ -4,18 +4,8 @@ function TemplateProject(Name)
 	group("Template")
 	project(Name)
 	kind("ConsoleApp")
-	language("C++")
-	cppdialect(cppDialect)
-	
-	rtti("Off")
-	exceptionhandling("Off")
-	warnings("Everything")
-	flags("NoPCH")
-	staticruntime("Off")
 
-	location(projectsFilesLocation)
-	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
-	objdir (rootPath .. "/output/obj/" .. outputDirSementic)
+	RedDefaultProjectOptions()
 
 	local templatePath = rootPath .. "/templates/"..Name
 

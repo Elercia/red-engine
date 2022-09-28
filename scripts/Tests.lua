@@ -4,16 +4,7 @@ project ("RedEngineTest")
 	kind "ConsoleApp"
 	language("C++")
 	
-	rtti("Off")
-	cppdialect(cppDialect)
-	warnings("High")
-	flags("NoPCH")
-	staticruntime("Off")
-
-	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
-	objdir(rootPath .. "/output/obj/" .. outputDirSementic)
-
-	location(projectsFilesLocation)
+	RedDefaultProjectOptions()
 
 	local testPath = rootPath .. "test/"
 	files {
