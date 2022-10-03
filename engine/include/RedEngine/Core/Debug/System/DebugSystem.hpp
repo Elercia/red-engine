@@ -18,6 +18,6 @@ public:
 
 private:
 
-    void RenderConsole(DebugComponent* debug);
+    static void RenderConsole(DebugComponent* debug);
 };
 }  // namespace red

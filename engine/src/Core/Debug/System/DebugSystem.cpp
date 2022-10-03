@@ -31,27 +31,13 @@ void DebugSystem::Init()
     auto* debugComp = m_world->CreateWorldEntity("DebugSystemEntity")->AddComponent<DebugComponent>();
 
     GetRedLogger()->AddOutput([=](const Logger::LogOoutputInfo& out) { debugComp->AddLog(out); });
+
+    debugComp->m_drawers.push_back(DebugDrawer{"Console", &DebugSystem::RenderConsole});
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
 {
     PROFILER_EVENT_CATEGORY("DebugSystem::RenderConsole", ProfilerCategory::Debug)
-
-    static bool open = true;
-    if (!ImGui::Begin("Console", &open))
-    {
-        ImGui::End();
-        return;
-    }
-
-    // Header
-
-    if (ImGui::BeginPopupContextItem())
-    {
-        if (ImGui::MenuItem("Close"))
-            open = false;
-        ImGui::EndPopup();
-    }
 
     if (ImGui::SmallButton("Clear"))
     {
@@ -217,8 +203,6 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     ImGui::SetItemDefaultFocus();
     if (reclaimFocus)
         ImGui::SetKeyboardFocusHere(-1);  // Auto focus previous widget
-
-    ImGui::End();
 }
 
 void DebugSystem::Update()
@@ -228,7 +212,25 @@ void DebugSystem::Update()
     auto* events = m_world->GetWorldComponent<EventsComponent>();
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
-    RenderConsole(debugComp);
+    static bool open = true;
+    if (ImGui::Begin("Debug menu", &open))
+    {
+        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+        if (ImGui::BeginTabBar("MenuDebugTabBar", tab_bar_flags))
+        {
+            for (auto& drawer : debugComp->m_drawers)
+            {
+                if (ImGui::BeginTabItem(drawer.name.c_str()))
+                {
+                    drawer.callback(debugComp);
+
+                    ImGui::EndTabItem();
+                }
+            }
+            ImGui::EndTabBar();
+        }
+    }
+    ImGui::End();
 
     if (events->GetKeyDown(KeyCodes::KEY_F1))
     {

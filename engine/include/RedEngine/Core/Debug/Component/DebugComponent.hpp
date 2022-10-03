@@ -49,7 +49,14 @@ struct DebugPoint : public DebugShape
 
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(DebugComponent)
 
-// TODO Add console component (add utilities like "console debug (OR should I make a 'log into console bool ?')")
+using DebugMenuDrawerFunc = void(*)(DebugComponent*);
+
+struct DebugDrawer
+{
+    std::string name;
+    DebugMenuDrawerFunc callback;
+};
+
 class DebugComponent : public Component
 {
     friend class DebugSystem;
@@ -76,5 +83,6 @@ private:
     Array<std::unique_ptr<DebugShape>> m_frameShapes;
     std::unique_ptr<PhysicsDebugDrawer> m_physicsDebugDrawer;
     Array<Logger::LogOoutputInfo> m_logs;
+    Array<DebugDrawer> m_drawers;
 };
 }  // namespace red
