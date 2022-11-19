@@ -28,7 +28,7 @@ struct RenderingData
     RenderLayerIndex renderLayerIndex;
     RenderEntityType type;
 
-    Matrix44 worldMatrix;
+    Matrix33 worldMatrix;
     Geometry* geometry;
     MaterialInstance materialInstance;
     AABB aabb;
@@ -37,12 +37,13 @@ struct RenderingData
 
 struct PerCameraData
 {
-    Matrix44 viewProj;
+    Matrix33 worldToView;
+    Matrix33 viewToClip;
 };
 
 struct PerInstanceData
 {
-    Matrix44 world;
+    Matrix33 world;
     Vector2 size;
 };
 

@@ -2,6 +2,7 @@
 
 #include "RedEngine/Rendering/RenderingModule.hpp"
 
+#include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
@@ -36,6 +37,8 @@ namespace red
 const int PrimitiveTypesAsGLTypes[] = {
     GL_TRIANGLES, GL_QUADS, GL_LINES, GL_POINTS, GL_LINE_LOOP, GL_LINE_STRIP, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN,
 };
+
+CVar<bool> s_enableCulling("EnableCulling", "Rendering", true);
 
 Renderer::Renderer()
     : m_glContext(nullptr)
@@ -243,11 +246,11 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
     if (desc.alphaBlending)
     {
         glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
     else
     {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_BLEND);
     }
 
     // Do the actual render calls to the camera render target
@@ -294,7 +297,7 @@ void Renderer::RenderGlobalDebug()
 void Renderer::FillCameraBuffer(const CameraComponent& camera)
 {
     PerCameraData* perCamera = m_perCameraData.Map<PerCameraData>(MapType::WRITE);
-    perCamera->viewProj = camera.GetViewProjection();
+    perCamera->worldToView = camera.GetView();
     m_perCameraData.UnMap();
 }
 
@@ -363,7 +366,7 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
 
     for (RenderingData& data : m_renderingData)
     {
-        if (camera->IsVisibleFrom(data.aabb))
+        if (!s_enableCulling || camera->IsVisibleFrom(data.aabb))
         {
             m_culledAndSortedRenderingData.push_back(data);
         }

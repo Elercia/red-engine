@@ -54,6 +54,35 @@ namespace Math
         return translationMatrix * mat;
     }
 
+    Matrix33 Translate(const Matrix33& mat, const Vector2& trans)
+    {
+        // clang-format off
+		Matrix33 translationMatrix = {
+			1.f, 0.f, trans.x,
+			0.f, 1.f, trans.y,
+			0.f, 0.f, 1.f,
+		};
+        // clang-format on
+
+        return translationMatrix * mat;
+    }
+
+    Matrix33 Rotate(const Matrix33& mat, float angle)
+    {
+        float cosTeta = Cos(angle);
+        float sinTeta = Sin(angle);
+
+        // clang-format off
+		Matrix33 rotation = {
+			cosTeta, -sinTeta, 0,
+			sinTeta, cosTeta, 0,
+			0, 0, 1
+		};
+        // clang-format on
+
+        return rotation * mat;
+    }
+
     Matrix44 Rotate(const Matrix44& mat, const Vector3& angles)
     {
         float cosX = Cos(angles.x);
@@ -85,6 +114,19 @@ namespace Math
         // clang-format on
 
         return rotationMatrixX * rotationMatrixY * rotationMatrixZ * mat;
+    }
+
+    Matrix33 Scale(const Matrix33& mat, const Vector2& scales)
+    {
+        // clang-format off
+		Matrix33 scaleMatrix = {
+			scales.x, 	0.f, 		0.f, 	
+			0.f, 		scales.y, 	0.f, 	
+			0.f, 		0.f, 		1.f,
+		};
+        // clang-format on
+
+        return scaleMatrix * mat;
     }
 
     Matrix44 Scale(const Matrix44& mat, const Vector3& scales)

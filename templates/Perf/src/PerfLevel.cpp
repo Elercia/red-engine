@@ -66,7 +66,7 @@ public:
 };
 
 const float s_worldSizeMin = 0.f;
-const float s_worldSizeMax = 50.f;
+const float s_worldSizeMax = 100.f;
 
 void PerfLevel::Init()
 {
@@ -139,9 +139,9 @@ void PerfLevel::Init()
 
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
 
-    auto* manager = CreateEntity("Manager");
+    auto* manager = CreateEntity("Camera");
     manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f), red::Vector2{200.f, 200.f});
-    manager->GetComponent<Transform>()->SetPosition({-50.f, -50.f});
+    manager->GetComponent<Transform>()->SetPosition({0.f, 0.f});
 
     m_world->AddSystem<CameraManager>(manager);
 }

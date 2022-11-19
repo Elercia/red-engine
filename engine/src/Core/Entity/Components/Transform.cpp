@@ -109,12 +109,12 @@ void Transform::UpdateWorldMatrixIfNeeded()
 
     if (m_dirtyWorldMatrix)
     {
-        m_localWorldMatrix = Math::Translate(Matrix44::Identity(), Vector3(m_localPosition, /*m_localDepth*/0.f));
+        m_localWorldMatrix = Math::Translate(Matrix33::Identity(), Vector2(m_localPosition));
 
-        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, Vector3(m_localRotationAnchor, 0.0f));
-        m_localWorldMatrix = Math::Rotate(m_localWorldMatrix, Vector3(0.0f, 0.0f, Math::ToRadians(m_localRotation)));
-        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, -Vector3(m_localRotationAnchor, 0.0f));
-        m_localWorldMatrix = Math::Scale(m_localWorldMatrix, Vector3(m_localScale, 1.0f));
+        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, m_localRotationAnchor);
+        m_localWorldMatrix = Math::Rotate(m_localWorldMatrix, Math::ToRadians(m_localRotation));
+        m_localWorldMatrix = Math::Translate(m_localWorldMatrix, -m_localRotationAnchor);
+        m_localWorldMatrix = Math::Scale(m_localWorldMatrix, m_localScale);
     }
 
     if ((m_dirtyWorldMatrix || parentDirty) && parentTransform != nullptr)
@@ -130,24 +130,24 @@ void Transform::UpdateWorldMatrixIfNeeded()
     m_dirtyWorldMatrix = false;
 }
 
-const Matrix44& Transform::GetLocalWorldMatrix() const
+const Matrix33& Transform::GetLocalWorldMatrix() const
 {
     return m_localWorldMatrix;
 }
 
-Matrix44& Transform::GetLocalWorldMatrix()
+Matrix33& Transform::GetLocalWorldMatrix()
 {
     UpdateWorldMatrixIfNeeded();
 
     return m_localWorldMatrix;
 }
 
-const Matrix44& Transform::GetWorldMatrix() const
+const Matrix33& Transform::GetWorldMatrix() const
 {
     return m_worldMatrix;
 }
 
-Matrix44& Transform::GetWorldMatrix()
+Matrix33& Transform::GetWorldMatrix()
 {
     UpdateWorldMatrixIfNeeded();
 

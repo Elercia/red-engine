@@ -45,10 +45,10 @@ public:
 
     void UpdateWorldMatrixIfNeeded();
 
-    const Matrix44& GetLocalWorldMatrix() const;
-    Matrix44& GetLocalWorldMatrix();
-    const Matrix44& GetWorldMatrix() const;
-    Matrix44& GetWorldMatrix();
+    const Matrix33& GetLocalWorldMatrix() const;
+    Matrix33& GetLocalWorldMatrix();
+    const Matrix33& GetWorldMatrix() const;
+    Matrix33& GetWorldMatrix();
 
 private:
     // World position
@@ -59,8 +59,8 @@ private:
 
     //float m_localDepth{0.f};
 
-    Matrix44 m_localWorldMatrix;
-    Matrix44 m_worldMatrix; // include parent transforms
+    Matrix33 m_localWorldMatrix;
+    Matrix33 m_worldMatrix; // include parent transforms
     bool m_dirtyWorldMatrix{true};
 };
 }  // namespace red

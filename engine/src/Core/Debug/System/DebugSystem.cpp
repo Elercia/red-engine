@@ -215,7 +215,7 @@ void DebugSystem::Update()
     static bool open = true;
     if (ImGui::Begin("Debug menu", &open))
     {
-        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+        const ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_NoCloseWithMiddleMouseButton;
         if (ImGui::BeginTabBar("MenuDebugTabBar", tab_bar_flags))
         {
             for (auto& drawer : debugComp->m_drawers)
@@ -275,7 +275,5 @@ void DebugSystem::Update()
     {
         m_world->LoadLevel(Path::Resource("serializedLevel.json"));
     }
-
-    // TODO add the management of the in-game console
 }
 }  // namespace red

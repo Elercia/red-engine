@@ -57,7 +57,7 @@ public:
 
     void UpdateState();
 
-    const Matrix44& GetViewProjection() const;
+    const Matrix33& GetView() const;
 
 private:
     Entity* m_attachedWindow;
@@ -80,8 +80,6 @@ private:
     float m_zNear{0.001f};
     float m_zFar{1000.0f};
 
-    Matrix44 m_viewMatrix;
-    Matrix44 m_projectionMatrix;
-    Matrix44 m_viewProjectionMatrix;
+    Matrix33 m_viewMatrix;
 };
 }  // namespace red
