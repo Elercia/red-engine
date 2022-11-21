@@ -542,7 +542,7 @@ typename ArrayView<T>::const_iterator ArrayView<T>::end() const
 }
 
 template <typename T>
-ArrayView<T>::size_type ArrayView<T>::size() const
+typename ArrayView<T>::size_type ArrayView<T>::size() const
 {
     return m_count;
 }
