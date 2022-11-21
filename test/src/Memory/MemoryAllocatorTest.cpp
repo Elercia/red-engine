@@ -80,11 +80,13 @@ TEST_CASE("Virtual pool allocator", "[MEMORY]")
 
     REQUIRE(inc == 50);
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 200; i++)
     {
         MyStruct* p = pool.Allocate<MyStruct>(&inc);
         REQUIRE(p != nullptr);
 
         ptrs.push_back(p);
     }
+
+    REQUIRE(inc == 250);
 }
