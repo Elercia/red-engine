@@ -67,7 +67,7 @@ bool GeometryResourceLoader::InitResource(std::shared_ptr<GeometryResourceWrappe
     return true;
 }
 
-void GeometryResourceLoader::FinalizeResource(std::shared_ptr<GeometryResourceWrapper> resource)
+void GeometryResourceLoader::FinalizeResource(std::shared_ptr<GeometryResourceWrapper> /*resource*/)
 {
 }
 }  // namespace red
