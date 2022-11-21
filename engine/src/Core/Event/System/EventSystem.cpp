@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Input/InputDefinitionTranslationUnit.hpp"
 
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <imgui.h>
 #include <imgui_impl_sdl.h>
@@ -21,6 +22,11 @@ void EventSystem::Init()
 {
     System::Init();
     m_world->CreateWorldEntity("EventSystemEntity")->AddComponent<EventsComponent>();
+
+    if (SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) < 0)
+    {
+        RED_LOG_ERROR("Failed to init subsystem event");
+    }
 }
 
 void EventSystem::PreUpdate()

@@ -2,16 +2,8 @@
   {
     "name": "first",
     "spritesheet": "SPRITE_TEST/paddle.png",
-    "opacity": {
-      "hasOpacity": true,
-      "color": {
-        "r": 0,
-        "v": 0,
-        "b": 0,
-        "a": 0
-      }
-    },
     "loop": true,
+    "using_transparency" : true,
     "frames": [
       {
         "rect": {
@@ -59,15 +51,7 @@
     "name": "second",
     "spritesheet": "SPRITE_TEST/paddle.png",
     "loop": true,
-    "opacity": {
-      "hasOpacity": true,
-      "color": {
-        "r": 0,
-        "v": 0,
-        "b": 0,
-        "a": 0
-      }
-    },
+    "using_transparency": true,
     "frames": [
       {
         "rect": {
