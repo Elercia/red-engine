@@ -241,7 +241,7 @@ Entity* World::CreateEntity(Entity* parent)
 {
     Entity* e = m_entityAllocator.Allocate<Entity>(this, GetNewEntityId());
 
-    e->SetName("Unnamed" + s_nameCounter++);
+    e->SetName("Unnamed" + std::to_string(s_nameCounter++));
     e->SetParent(parent);
 
     OnAddEntity(e);
@@ -256,7 +256,7 @@ Entity* World::CreateEntity(Entity* parent, EntityId id)
 
     Entity* e = m_entityAllocator.Allocate<Entity>(this, id);
 
-    e->SetName("Unnamed" + s_nameCounter++);
+    e->SetName("Unnamed" + std::to_string(s_nameCounter++));
     e->SetParent(parent);
 
     OnAddEntity(e);
