@@ -98,7 +98,7 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 bool Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator::operator==(
     const typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator& other) const
 {
-    return m_index == other.m_index;
+    return this->m_index == other.m_index;
 }
 
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
