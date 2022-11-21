@@ -117,7 +117,6 @@ private:
 
     // Tmp data used per camera
     Array<RenderingData, DoubleLinearArrayAllocator> m_culledAndSortedRenderingData;
-    uint32 m_maxRenderDataLastFrame;
     ArrayView<RenderingData> m_renderingDataPerLayer[32];
 
     // Rendering data sent to GPU
