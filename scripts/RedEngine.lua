@@ -1,3 +1,8 @@
+newoption {
+   trigger = "asan",
+   description = "Build projects with address sanitizer"
+}
+
 outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}-" .. _ACTION .. "/%{prj.name}"
 
 rootPath 				= "%{wks.location}/../../../"
@@ -44,6 +49,12 @@ function RedDefaultProjectOptions()
 	location(projectsFilesLocation)
 	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
 	objdir (rootPath .. "/output/obj/" .. outputDirSementic)
+
+	filter { "options:asan" }
+		sanitize { "Address" }
+		defines{"_DISABLE_VECTOR_ANNOTATION", "_DISABLE_STRING_ANNOTATION"}
+	filter {}
+
 end
 
 workspace "RedEngine"
