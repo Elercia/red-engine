@@ -44,7 +44,6 @@ Renderer::Renderer()
     : m_glContext(nullptr)
     , m_window(nullptr)
     , m_renderingData()
-    , m_maxRenderDataLastFrame(0)
     , m_perInstanceData(1, sizeof(PerInstanceData))
     , m_perCameraData(1, sizeof(PerCameraData))
 {
