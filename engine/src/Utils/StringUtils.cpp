@@ -57,6 +57,42 @@ std::wstring ToUnicodeString(const std::string_view str)
     return unicodeStr;
 }
 
+std::string::size_type Find(const std::string_view& in, const std::string_view& toFind,
+                            bool caseInsensitive /*= false*/)
+{
+    if (in.size() < toFind.size())
+        return std::string::npos;
+
+    for (size_t i = 0; i < in.size() - toFind.size(); i++)
+    {
+        bool ok = true;
+        for (size_t j = 0; j < toFind.size(); j++)
+        {
+            if ((caseInsensitive && tolower(in[i + j]) != tolower(toFind[j])) ||
+                (!caseInsensitive && in[i + j] != toFind[j]))
+            {
+                ok = false;
+                break;
+            }
+        }
+
+        if (ok)
+            return i;
+    }
+
+    return std::string::npos;
+}
+
+void ToLowerCase(std::string& str)
+{
+    std::for_each(str.begin(), str.end(), [](char& c) { c = (char) std::tolower(c); });
+}
+
+void ToLowerCase(std::wstring& str)
+{
+    std::for_each(str.begin(), str.end(), [](wchar_t& c) { c = (char) std::tolower(c); });
+}
+
 void ToUpperCase(std::string& str)
 {
     std::for_each(str.begin(), str.end(), [](char& c) { c = (char) std::toupper(c); });
