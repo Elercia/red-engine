@@ -277,6 +277,9 @@ void DebugSystem::Update()
     {
         m_world->LoadLevel(Path::Resource("serializedLevel.json"));
     }
+
+    bool open = true;
+    ImGui::ShowDemoWindow(&open);
 }
 
 void ShowEntityList(DebugComponent* debug)
@@ -387,8 +390,5 @@ void DebugSystem::RenderEntityTree(DebugComponent* debug)
             ShowEntityTree(debug);
             break;
     }
-
-    bool open = true;
-    ImGui::ShowDemoWindow(&open);
 }
 }  // namespace red
