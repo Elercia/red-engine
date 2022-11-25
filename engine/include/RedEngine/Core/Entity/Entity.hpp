@@ -53,6 +53,7 @@ public:
     [[nodiscard]] EntityId GetId() const;
     void SetId(EntityId id);
 
+    const std::string GetFullName() const;
     const std::string& GetName() const;
     void SetName(const std::string& name);
 

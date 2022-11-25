@@ -59,6 +59,11 @@ void Entity::SetId(EntityId id)
     m_id = id;
 }
 
+const std::string Entity::GetFullName() const
+{
+    return m_parent != nullptr ? m_parent->GetFullName() + "." + GetName() : GetName();
+}
+
 const std::string& Entity::GetName() const
 {
     return m_name;
