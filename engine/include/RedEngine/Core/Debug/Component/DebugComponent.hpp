@@ -78,11 +78,13 @@ public:
     const Array<Logger::LogOoutputInfo>& GetLogBuffer() const;
     void HandleCommand(const std::string& str);
     void AddLog(const Logger::LogOoutputInfo& str);
+    Array<Entity*>& GetFilteredEntities();
 
 private:
     Array<std::unique_ptr<DebugShape>> m_frameShapes;
     std::unique_ptr<PhysicsDebugDrawer> m_physicsDebugDrawer;
     Array<Logger::LogOoutputInfo> m_logs;
     Array<DebugDrawer> m_drawers;
+    Array<Entity*> m_filteredEntities;
 };
 }  // namespace red

@@ -19,5 +19,6 @@ public:
 private:
 
     static void RenderConsole(DebugComponent* debug);
+    static void RenderEntityTree(DebugComponent* debug);
 };
 }  // namespace red

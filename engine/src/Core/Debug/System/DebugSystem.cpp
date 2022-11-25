@@ -33,6 +33,7 @@ void DebugSystem::Init()
     GetRedLogger()->AddOutput([=](const Logger::LogOoutputInfo& out) { debugComp->AddLog(out); });
 
     debugComp->m_drawers.push_back(DebugDrawer{"Console", &DebugSystem::RenderConsole});
+    debugComp->m_drawers.push_back(DebugDrawer{"Entities", &DebugSystem::RenderEntityTree});
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
@@ -215,7 +216,8 @@ void DebugSystem::Update()
     static bool open = true;
     if (ImGui::Begin("Debug menu", &open))
     {
-        const ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_NoCloseWithMiddleMouseButton;
+        const ImGuiTabBarFlags tab_bar_flags =
+            ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_NoCloseWithMiddleMouseButton;
         if (ImGui::BeginTabBar("MenuDebugTabBar", tab_bar_flags))
         {
             for (auto& drawer : debugComp->m_drawers)
@@ -275,5 +277,118 @@ void DebugSystem::Update()
     {
         m_world->LoadLevel(Path::Resource("serializedLevel.json"));
     }
+}
+
+void ShowEntityList(DebugComponent* debug)
+{
+    auto* world = debug->GetWorld();
+    const auto& entities = world->GetEntities();
+    auto& filteredEntities = debug->GetFilteredEntities();
+
+    static char searchStr[512] = {};
+    static bool caseInsensitive = true;
+
+    bool textModified = ImGui::InputText("##SearchText", searchStr, 512, ImGuiInputTextFlags_EnterReturnsTrue);
+    if (textModified)
+        ImGui::SetKeyboardFocusHere(-1);
+    textModified = ImGui::IsItemDeactivatedAfterEdit() || textModified;
+    ImGui::SameLine();
+    textModified = ImGui::Button("Search") || textModified;
+    ImGui::SameLine();
+    textModified = ImGui::Checkbox("Ignore case", &caseInsensitive) || textModified;
+
+    static bool bFirst = true;
+    if (textModified || bFirst)
+    {
+        bFirst = false;
+
+        filteredEntities.clear();
+        if (searchStr[0] == '\0')
+        {
+            filteredEntities = entities;
+        }
+        else
+        {
+            for (auto e : entities)
+            {
+                if (utils::Find(e->GetName(), searchStr, caseInsensitive) != std::string::npos)
+                {
+                    filteredEntities.push_back(e);
+                }
+            }
+        }
+    }
+
+    ImVec2 size = {0, 300};
+    if (ImGui::BeginTable("split", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable,
+                          size))
+    {
+        ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableSetupColumn("Position", ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableHeadersRow();
+
+        for (auto* e : filteredEntities)
+        {
+            ImGui::TableNextRow();
+
+            ImGui::TableNextColumn();
+            ImGui::TextUnformatted(e->GetName().c_str());
+
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("%s", e->GetFullName().c_str());
+            }
+
+            auto* transform = e->GetComponent<Transform>();
+            auto pos = transform->GetPosition();
+            auto scale = transform->GetScale();
+            auto rot = transform->GetRotationDeg();
+
+            ImGui::TableNextColumn();
+            ImGui::Text("%.2f ; %.2f", pos.x, pos.y);
+
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Position %.2f ; %.2f\nScale %.2f ; %.2f\nRotation %.2f", pos.x, pos.y, scale.x,
+                                  scale.y, rot);
+            }
+        }
+        ImGui::EndTable();
+    }
+}
+
+void ShowEntityTree(DebugComponent* /*debug*/)
+{
+}
+
+enum EntityDisplayMode
+{
+    List,
+    Tree,
+
+    Count
+};
+
+void DebugSystem::RenderEntityTree(DebugComponent* debug)
+{
+    const char* sDisplayMode[] = {"List", "Tree"};
+
+    static int currentMode = EntityDisplayMode::List;
+    ImGui::Combo("Display mode", &currentMode, sDisplayMode, EntityDisplayMode::Count);
+
+    ImGui::Separator();
+
+    switch (currentMode)
+    {
+        case EntityDisplayMode::List:
+            ShowEntityList(debug);
+            break;
+        case EntityDisplayMode::Tree:
+            ShowEntityTree(debug);
+            break;
+    }
+
+    bool open = true;
+    ImGui::ShowDemoWindow(&open);
 }
 }  // namespace red

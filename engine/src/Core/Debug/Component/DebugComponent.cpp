@@ -61,4 +61,8 @@ void DebugComponent::AddLog(const Logger::LogOoutputInfo& str)
     if (m_logs.size() > 1000)
         m_logs.erase(m_logs.begin(), m_logs.begin() + 100);
 }
+Array<Entity*>& DebugComponent::GetFilteredEntities()
+{
+    return m_filteredEntities;
+}
 }  // namespace red
