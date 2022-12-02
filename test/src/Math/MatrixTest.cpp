@@ -40,7 +40,7 @@ TEST_CASE("Matrix initialization", "[MATH]")
 		};
         // clang-format on
 
-       /* REQUIRE(matrix(0, 0) == 1.0f);
+        REQUIRE(matrix(0, 0) == 1.0f);
         REQUIRE(matrix(0, 1) == 2.0f);
         REQUIRE(matrix(0, 2) == 3.0f);
         REQUIRE(matrix(0, 3) == 4.0f);
@@ -58,7 +58,7 @@ TEST_CASE("Matrix initialization", "[MATH]")
         REQUIRE(matrix(3, 0) == 13.0f);
         REQUIRE(matrix(3, 1) == 14.0f);
         REQUIRE(matrix(3, 2) == 15.0f);
-        REQUIRE(matrix(3, 3) == 16.0f);*/
+        REQUIRE(matrix(3, 3) == 16.0f);
     }
 }
 
@@ -76,15 +76,31 @@ TEST_CASE("Matrix-scalar mul", "[MATH]")
 
 TEST_CASE("Matrix-matrix mul", "[MATH]")
 {
-    Matrix44 matrix1 = Matrix44::Identity();
-    Matrix44 matrix2 = Matrix44::Identity() * 2.f;
+    // clang-format off
+	Matrix44 matrix1 = {
+		1.f,	2.f,	3.f,	4.f,
+		5.f,	6.f,	7.f,	8.f,
+		9.f,	10.f,	11.f,	12.f,
+		13.f,	14.f,	15.f,	16.f,
+	};
+    Matrix44 matrix2 = {
+		17.f,	18.f,	19.f,	20.f,
+		21.f,	22.f,	23.f,	24.f,
+		25.f,	26.f,	27.f,	28.f,
+		29.f,	30.f,	31.f,	32.f,
+	};
+
+    Matrix44 res = {
+		250.f,	260.f,	270.f,	280.f,
+		618.f,	644.f,	670.f,	696.f,
+		986.f,	1028.f,	1070.f,	1112.f,
+		1354.f,	1412.f,	1470.f,	1528.f,
+	};
+    // clang-format on
 
     Matrix44 m2 = matrix1 * matrix2;
 
-    REQUIRE(m2(0, 0) == 2.0f);
-    REQUIRE(m2(1, 1) == 2.0f);
-    REQUIRE(m2(2, 2) == 2.0f);
-    REQUIRE(m2(3, 3) == 2.0f);
+    REQUIRE(m2.EqualsEpsilon(res, 0.01f));
 }
 
 TEST_CASE("Matrix det", "[MATH]")

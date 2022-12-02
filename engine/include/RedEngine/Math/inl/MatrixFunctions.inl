@@ -51,7 +51,7 @@ namespace Math
 		};
         // clang-format on
 
-        return translationMatrix * mat;
+        return mat * translationMatrix;
     }
 
     Matrix33 Translate(const Matrix33& mat, const Vector2& trans)
@@ -64,7 +64,7 @@ namespace Math
 		};
         // clang-format on
 
-        return translationMatrix * mat;
+        return mat * translationMatrix;
     }
 
     Matrix33 Rotate(const Matrix33& mat, float angle)
@@ -80,7 +80,7 @@ namespace Math
 		};
         // clang-format on
 
-        return rotation * mat;
+        return mat * rotation;
     }
 
     Matrix44 Rotate(const Matrix44& mat, const Vector3& angles)
@@ -113,7 +113,7 @@ namespace Math
 		};
         // clang-format on
 
-        return rotationMatrixX * rotationMatrixY * rotationMatrixZ * mat;
+        return mat * rotationMatrixX * rotationMatrixY * rotationMatrixZ;
     }
 
     Matrix33 Scale(const Matrix33& mat, const Vector2& scales)
@@ -126,7 +126,7 @@ namespace Math
 		};
         // clang-format on
 
-        return scaleMatrix * mat;
+        return mat * scaleMatrix;
     }
 
     Matrix44 Scale(const Matrix44& mat, const Vector3& scales)
@@ -140,7 +140,7 @@ namespace Math
 		};
         // clang-format on
 
-        return scaleMatrix * mat;
+        return mat * scaleMatrix;
     }
 }  // namespace Math
 }  // namespace red
