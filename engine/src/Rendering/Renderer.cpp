@@ -296,15 +296,16 @@ void Renderer::RenderGlobalDebug()
 void Renderer::FillCameraBuffer(const CameraComponent& camera)
 {
     PerCameraData* perCamera = m_perCameraData.Map<PerCameraData>(MapType::WRITE);
-    perCamera->worldToView = camera.GetView();
+    perCamera->viewProj = camera.GetViewProj();
     m_perCameraData.UnMap();
 }
 
 void Renderer::FillEntityBuffer(const RenderingData& data)
 {
     PerInstanceData* perInstance = m_perInstanceData.Map<PerInstanceData>(MapType::WRITE);
-    perInstance->size = data.size;
     perInstance->world = data.worldMatrix;
+    perInstance->size = data.size;
+    perInstance->padding = 1.f;
     m_perInstanceData.UnMap();
 }
 
@@ -314,7 +315,7 @@ void Renderer::UseMaterial(const MaterialInstance& materialInstance)
     const auto& defaultBindings = material->m_defaultBindings.bindings;
     const auto& overiddenBindings = materialInstance.overiddenBindings.bindings;
 
-    // TODO fix crash when a invalid handle is used
+    // FIXME fix crash when a invalid handle is used
     glUseProgram(material->GetShaderProgram()->m_handle);
 
     // Bind textures and buffers

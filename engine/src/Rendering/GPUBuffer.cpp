@@ -7,7 +7,8 @@
 namespace red
 {
 
-GPUBuffer::GPUBuffer(uint32 nbElements, uint32 elementSize) : m_nbElements(nbElements), m_elementSize(elementSize)
+GPUBuffer::GPUBuffer(uint32 nbElements, uint32 elementSize)
+    : mappedData(nullptr), m_nbElements(nbElements), m_elementSize(elementSize), m_gpuBufferHandle(0)
 {
 }
 

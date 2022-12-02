@@ -3,6 +3,8 @@
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
+#include <initializer_list>
+
 namespace red
 {
 

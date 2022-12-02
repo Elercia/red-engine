@@ -37,14 +37,14 @@ struct RenderingData
 
 struct PerCameraData
 {
-    Matrix33 worldToView;
-    Matrix33 viewToClip;
+    Matrix44 viewProj;
 };
 
 struct PerInstanceData
 {
     Matrix33 world;
     Vector2 size;
+    float padding;
 };
 
 using RenderDataArrayPerType = std::array<Array<RenderingData>, (uint8) RenderEntityType::Count>;

@@ -140,7 +140,8 @@ void PerfLevel::Init()
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
 
     auto* manager = CreateEntity("Camera");
-    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f), red::Vector2{200.f, 200.f});
+    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f),
+                                                red::Vector2{s_worldSizeMax, s_worldSizeMax});
     manager->GetComponent<Transform>()->SetPosition({0.f, 0.f});
 
     m_world->AddSystem<CameraManager>(manager);

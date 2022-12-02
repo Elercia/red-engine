@@ -278,8 +278,8 @@ void DebugSystem::Update()
         m_world->LoadLevel(Path::Resource("serializedLevel.json"));
     }
 
-    bool open = true;
-    ImGui::ShowDemoWindow(&open);
+    bool demoOpen = true;
+    ImGui::ShowDemoWindow(&demoOpen);
 }
 
 void ShowEntityList(DebugComponent* debug)

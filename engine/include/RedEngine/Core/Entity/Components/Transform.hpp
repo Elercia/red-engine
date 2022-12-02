@@ -25,8 +25,8 @@ public:
     Transform(Entity* entity, Vector2 position);
     virtual ~Transform() = default;
 
-    [[nodiscard]] const Vector2& GetPosition() const;
-    [[nodiscard]] Vector2& GetPosition();
+    [[nodiscard]] const Vector2& GetPosition() const;// TODO rename to GetLocalPosition 
+    [[nodiscard]] Vector2& GetPosition(); // TODO Add GetWorldPosisition
 
     [[nodiscard]] const Vector2& GetScale() const;
     [[nodiscard]] Vector2& GetScale();

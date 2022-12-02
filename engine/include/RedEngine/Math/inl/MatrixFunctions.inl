@@ -6,10 +6,10 @@ namespace Math
     {
         // clang-format off
 		Matrix44 ortho = {
-			2.f / (right - left), 0.f, 0.f, 	-((right+left) / (right-left)),
-			0.f, 2.f / (top - bottom), 0.f, 	-((top+bottom) / (top-bottom)),
-			0.f, 0.f, -2.f / (zFar- zNear) , 	-((zFar+zNear) / (zFar-zNear)),
-			0.f, 0.f, 0.f, 						1.f,
+			2.f / (right - left),               0.f,                                0.f,                                0.f,
+			0.f,                                2.f / (top - bottom),               0.f, 	                            0.f,
+			0.f,                                0.f,                                -2.f / (zFar- zNear),               0.f,
+			-((right+left) / (right-left)),     -((top+bottom) / (top-bottom)),     -((zFar+zNear) / (zFar-zNear)),     1.f,
 		};
         // clang-format on
 
@@ -44,10 +44,10 @@ namespace Math
     {
         // clang-format off
 		Matrix44 translationMatrix = {
-			1.f, 0.f, 0.f, trans.x,
-			0.f, 1.f, 0.f, trans.y,
-			0.f, 0.f, 1.f, trans.z,
-			0.f, 0.f, 0.f, 1.f,
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			trans.x, trans.y, trans.z, 1.f,
 		};
         // clang-format on
 
@@ -58,9 +58,9 @@ namespace Math
     {
         // clang-format off
 		Matrix33 translationMatrix = {
-			1.f, 0.f, trans.x,
-			0.f, 1.f, trans.y,
-			0.f, 0.f, 1.f,
+			1.f,        0.f,        0.f,
+			0.f,        1.f,        0.f,
+			trans.x,    trans.y,    1.f,
 		};
         // clang-format on
 
@@ -74,8 +74,8 @@ namespace Math
 
         // clang-format off
 		Matrix33 rotation = {
-			cosTeta, -sinTeta, 0,
-			sinTeta, cosTeta, 0,
+			cosTeta,  sinTeta, 0,
+			-sinTeta, cosTeta, 0,
 			0, 0, 1
 		};
         // clang-format on
@@ -91,23 +91,23 @@ namespace Math
         float sinY = Sin(angles.y);
         float cosZ = Cos(angles.z);
         float sinZ = Sin(angles.z);
-
+        //TODO row major
         // clang-format off
 		Matrix44 rotationMatrixX = {
 			1.f, 		0.f, 		0.f, 		0.f,
-			0.f, 		cosX, 		-sinX, 		0.f,
-			0.f, 		sinX, 		cosX,		0.f,
+			0.f, 		cosX, 		sinX, 		0.f,
+			0.f, 		-sinX, 		cosX,		0.f,
 			0.f, 		0.f, 		0.f, 		1.f,
 		};
 		Matrix44 rotationMatrixY = {
-			cosY, 		0.f, 		sinY, 		0.f,
+			cosY, 		0.f, 		-sinY, 		0.f,
 			0.f, 		1.f, 		0.f, 		0.f,
-			-sinY, 		0.f, 		cosY,		0.f,
+			sinY, 		0.f, 		cosY,		0.f,
 			0.f, 		0.f, 		0.f, 		1.f,
 		};
 		Matrix44 rotationMatrixZ = {
-			cosZ, 		-sinZ, 		0.f, 		0.f,
-			sinZ, 		cosZ, 		0.f, 		0.f,
+			cosZ, 		sinZ, 		0.f, 		0.f,
+			-sinZ, 		cosZ, 		0.f, 		0.f,
 			0.f, 		0.f, 		1.f,		0.f,
 			0.f, 		0.f, 		0.f, 		1.f,
 		};

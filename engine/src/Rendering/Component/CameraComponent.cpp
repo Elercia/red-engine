@@ -101,9 +101,9 @@ void CameraComponent::SetClearColor(const Color& color)
     m_cleanColor = color;
 }
 
-const Matrix33& CameraComponent::GetView() const
+const Matrix44& CameraComponent::GetViewProj() const
 {
-    return m_viewMatrix;
+    return m_viewProj;
 }
 
 const WindowComponent* CameraComponent::GetAttachedWindow() const
@@ -124,7 +124,15 @@ void CameraComponent::UpdateState()
         return;
 
     auto* transform = GetOwner()->GetComponent<Transform>();
-    m_viewMatrix = transform->GetWorldMatrix();
+    auto rotRad = transform->GetRotationRad();
+    auto& scale = transform->GetScale();
+
+    Matrix44 view = Math::Translate(Matrix44::Identity(), Vector3(transform->GetPosition(), 0.f));
+    view = Math::Rotate(view, Vector3(0.f, 0.f, rotRad));
+    view = Math::Scale(view, Vector3(scale, 1.f));
+
+    Matrix44 proj = Math::Ortho(0.0f, m_size.x, m_size.y, 0.f, -1.0f, 1.0f);
+    m_viewProj = proj /** view*/;
 
     // m_frameBuffer.Init(Vector2i(viewportRect.width, viewportRect.height));
 }

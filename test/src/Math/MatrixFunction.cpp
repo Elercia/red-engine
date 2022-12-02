@@ -11,17 +11,17 @@
 
 TEST_CASE("Orthogonal_transformation", "[MATH]")
 {
-	Matrix44 m = Math::Ortho(0.f, 800.f, 0.f, 600.f, 0.01f, 100.f);
-	
-	Vector4 v0(0.f, 0.f, 0.f, 1.f);
-	Vector4 v1(800.f, 600.f, 0.f, 1.f);
+    Matrix44 m = Math::Ortho(0.f, 800.f, 0.f, 600.f, 0.01f, 100.f);
 
-	Vector4 transformedv0 = m * v0;
-	Vector4 transformedv1 = m * v1;
+    Vector4 v0(0.f, 0.f, 0.f, 1.f);
+    Vector4 v1(800.f, 600.f, 0.f, 1.f);
 
-	REQUIRE(Math::EqualsEpsilon(transformedv0.x, -1.f, 0.01f));
-	REQUIRE(Math::EqualsEpsilon(transformedv0.y, -1.f, 0.01f));
+    Vector4 transformedv0 = m * v0;
+    Vector4 transformedv1 = m * v1;
 
-	REQUIRE(Math::EqualsEpsilon(transformedv1.x, 1.f, 0.01f));
-	REQUIRE(Math::EqualsEpsilon(transformedv1.y, 1.f, 0.01f));
+    REQUIRE(Math::EqualsEpsilon(transformedv0.x, -1.f, 0.01f));
+    REQUIRE(Math::EqualsEpsilon(transformedv0.y, -1.f, 0.01f));
+
+    REQUIRE(Math::EqualsEpsilon(transformedv1.x, 1.f, 0.01f));
+    REQUIRE(Math::EqualsEpsilon(transformedv1.y, 1.f, 0.01f));
 }

@@ -120,7 +120,7 @@ void Transform::UpdateWorldMatrixIfNeeded()
     if ((m_dirtyWorldMatrix || parentDirty) && parentTransform != nullptr)
     {
         parentTransform->UpdateWorldMatrixIfNeeded();
-        m_worldMatrix = parentTransform->GetWorldMatrix() * m_localWorldMatrix;
+        m_worldMatrix = parentTransform->GetWorldMatrix() * m_localWorldMatrix; // FIXME Inv
     }
     else
     {
