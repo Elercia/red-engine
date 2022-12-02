@@ -3,12 +3,15 @@
 layout(location = 0) in vec2 vertex_position;
 layout(location = 1) in vec2 tex_uv;
 
-layout(std140, transposed, binding = 0) buffer PerCameraDataStruct
+layout(std140, binding = 0) buffer PerCameraDataStruct
 {
-    mat4 view_projection;
+    vec4 view_projection1;
+    vec4 view_projection2;
+    vec4 view_projection3;
+    vec4 view_projection4;
 } PerCameraData;
 
-layout(std140, binding = 1) buffer PerInstanceDataStruct
+layout(std430, binding = 1) buffer PerInstanceDataStruct
 {
     vec4 world1;
     vec4 world2;
@@ -24,14 +27,22 @@ mat3 toMat3(vec4 world1, vec4 world2, vec4 world3)
                 world2[2], world2[3], world3[0]);
 }
 
+mat4 toMat4(vec4 view_projection1, vec4 view_projection2, vec4 view_projection3, vec4 view_projection4)
+{
+    return mat4(view_projection1,
+                view_projection2,
+                view_projection3,
+                view_projection4);
+}
+
 void main() 
 {
     vec3 inputPosition = vec3(vertex_position.xy * PerInstanceData.world3_size.yz, 1.f);
     mat3 world = toMat3(PerInstanceData.world1, PerInstanceData.world2, PerInstanceData.world3_size);
-    vec3 position2DWS = inputPosition * world;
+    vec3 position2DWS = world * inputPosition;
     vec4 positionWS = vec4(position2DWS.xy, 0.f, 1.f);
 
-    vec4 outPos = positionWS * PerCameraData.view_projection;
+    vec4 outPos = (toMat4(PerCameraData.view_projection1, PerCameraData.view_projection2, PerCameraData.view_projection3, PerCameraData.view_projection4)) * positionWS;
 
     gl_Position = outPos;
     texture_uv_out = tex_uv;

@@ -8,7 +8,7 @@ namespace Math
 		Matrix44 ortho = {
 			2.f / (right - left),               0.f,                                0.f,                                0.f,
 			0.f,                                2.f / (top - bottom),               0.f, 	                            0.f,
-			0.f,                                0.f,                                -2.f / (zFar- zNear),               0.f,
+			0.f,                                0.f,                                -2.f / (zFar - zNear),              0.f,
 			-((right+left) / (right-left)),     -((top+bottom) / (top-bottom)),     -((zFar+zNear) / (zFar-zNear)),     1.f,
 		};
         // clang-format on

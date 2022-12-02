@@ -39,10 +39,10 @@ void main()
 {
     vec3 inputPosition = vec3(vertex_position.xy * PerInstanceData.world3_size.yz, 1.f);
     mat3 world = toMat3(PerInstanceData.world1, PerInstanceData.world2, PerInstanceData.world3_size);
-    vec3 position2DWS = inputPosition * (world);
+    vec3 position2DWS = world * inputPosition;
     vec4 positionWS = vec4(position2DWS.xy, 0.f, 1.f);
 
-    vec4 outPos = positionWS * transpose(toMat4(PerCameraData.view_projection1, PerCameraData.view_projection2, PerCameraData.view_projection3, PerCameraData.view_projection4));
+    vec4 outPos = (toMat4(PerCameraData.view_projection1, PerCameraData.view_projection2, PerCameraData.view_projection3, PerCameraData.view_projection4)) * positionWS;
 
     gl_Position = outPos;
     texture_uv_out = tex_uv;

@@ -131,8 +131,8 @@ void CameraComponent::UpdateState()
     view = Math::Rotate(view, Vector3(0.f, 0.f, rotRad));
     view = Math::Scale(view, Vector3(scale, 1.f));
 
-    Matrix44 proj = Math::Ortho(0.0f, m_size.x, m_size.y, 0.f, -1.0f, 1.0f);
-    m_viewProj = proj /** view*/;
+    Matrix44 proj = Math::Ortho(0.0f, m_size.x, 0.f, m_size.y, -1.f, 1.0f);
+    m_viewProj = proj * view;
 
     // m_frameBuffer.Init(Vector2i(viewportRect.width, viewportRect.height));
 }
