@@ -50,6 +50,8 @@ public:
     const Matrix33& GetWorldMatrix() const;
     Matrix33& GetWorldMatrix();
 
+    void SetLocked(bool locked);
+
 private:
     // World position
     Vector2 m_localPosition{0.f, 0.f};
@@ -57,7 +59,7 @@ private:
     float m_localRotation{0.f};  // degrees
     Vector2 m_localRotationAnchor{0.f, 0.f};
 
-    //float m_localDepth{0.f};
+    bool m_locked{false};
 
     Matrix33 m_localWorldMatrix;
     Matrix33 m_worldMatrix; // include parent transforms

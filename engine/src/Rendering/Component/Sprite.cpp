@@ -33,7 +33,7 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
     m_geometry = m_owner->GetWorld()
                      ->GetWorldComponent<ResourceHolderComponent>()
                      ->GetResourceLoader<GeometryResourceLoader>()
-                     ->LoadResource(Path::Resource("BASE_GEOMETRY"));
+                     ->LoadResource(Path::Resource("ENGINE_RESOURCES/SPRITE_GEOMETRY"));
 
     if (m_spriteResource)
     {
@@ -133,14 +133,14 @@ void Sprite::ChangeMaterialForAnimation()
         m_material.material = m_owner->GetWorld()
                                   ->GetWorldComponent<ResourceHolderComponent>()
                                   ->GetResourceLoader<MaterialResourceLoader>()
-                                  ->LoadResource(Path::Resource("BASE_OPAQUE_MATERIAL"));
+                                  ->LoadResource(Path::Resource("ENGINE_RESOURCES/SPRITE_OPAQUE_MATERIAL"));
     }
     else
     {
         m_material.material = m_owner->GetWorld()
                                   ->GetWorldComponent<ResourceHolderComponent>()
                                   ->GetResourceLoader<MaterialResourceLoader>()
-                                  ->LoadResource(Path::Resource("BASE_TRANSPARENT_MATERIAL"));
+                                  ->LoadResource(Path::Resource("ENGINE_RESOURCES/SPRITE_TRANSPARENT_MATERIAL"));
     }
 }
 

@@ -2,9 +2,8 @@
 
 #include "RedEngine/Core/CoreModule.hpp"
 
-#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
-
 #include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 
 namespace red
 {
@@ -16,7 +15,7 @@ PhysicsDebugDrawer::~PhysicsDebugDrawer() = default;
 
 void PhysicsDebugDrawer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    Array<Vector2> points;
+    Array<Vector2, DoubleLinearArrayAllocator> points;
 
     points.reserve(vertexCount);
     for (int32 i = 0; i < vertexCount; i++)
@@ -24,12 +23,13 @@ void PhysicsDebugDrawer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, 
         points.push_back(ConvertFromPhysicsVector(vertices[i]));
     }
 
-    m_debugComponent->AddPolygon(points, Color(uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)));
+    m_debugComponent->AddPolygon(ArrayView(points),
+                                 Color(uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)));
 }
 
 void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    Array<Vector2> points;
+    Array<Vector2, DoubleLinearArrayAllocator> points;
 
     points.reserve(vertexCount);
     for (int i = 0; i < vertexCount; i++)
@@ -37,8 +37,8 @@ void PhysicsDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCo
         points.push_back(ConvertFromPhysicsVector(vertices[i]));
     }
 
-    m_debugComponent->AddPolygon(points, Color(uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)),
-                                 true);
+    m_debugComponent->AddPolygon(ArrayView(points),
+                                 Color(uint8_t(color.r * 255), uint8_t(color.g * 255), uint8_t(color.b * 255)), true);
 }
 
 void PhysicsDebugDrawer::DrawCircle(const b2Vec2& center, float radius, const b2Color& color)

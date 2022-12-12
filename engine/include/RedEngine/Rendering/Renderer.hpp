@@ -33,6 +33,8 @@ struct RenderingData
     MaterialInstance materialInstance;
     AABB aabb;
     Vector2 size;
+
+    bool hasBeenRendered;
 };
 
 struct PerCameraData
@@ -71,12 +73,6 @@ public:
     // Push the renderable to the corresponding render queue
     void Draw(const Renderable* renderable, const Transform* transform);
 
-    void DrawDebugLine(const Vector2& first, const Vector2& second, const Color& color = ColorConstant::RED);
-
-    void DrawDebugCircle(const Vector2& center, float radius, const Color& color = ColorConstant::RED);
-
-    void DrawDebugPoint(const Vector2& coord, const Color& color = ColorConstant::YELLOW);
-
     // Draw passes
     void BeginCameraRendering(CameraComponent* camera);
     void EndCameraRendering(CameraComponent* camera);
@@ -84,8 +80,8 @@ public:
     void RenderLayerOpaque(RenderLayerIndex layerIndex, CameraComponent* camera);
     void RenderLayerTransparency(RenderLayerIndex layerIndex, CameraComponent* camera);
 
-    void RenderDebug(CameraComponent* camera);
-    void RenderGlobalDebug();
+    void RenderDebug(CameraComponent* camera, DebugComponent* debug);
+    void RenderDebugUI();
 
     void RenderPass(CameraComponent* camera, const RenderPassDesc& desc);
 
@@ -111,17 +107,16 @@ private:
     // Complex drawed sprites
     Array<RenderingData> m_renderingData;
 
-    // Debug data (rendered rebug primitives)
-    Array<Vector2> m_debugLines;
-    Array<Color> m_debugLineColors;
-
     // Tmp data used per camera
     Array<RenderingData, DoubleLinearArrayAllocator> m_culledAndSortedRenderingData;
-    ArrayView<RenderingData> m_renderingDataPerLayer[32];
+    ArrayView<RenderingData> m_renderingDataPerLayer[32][(int)RenderEntityType::Count];
 
     // Rendering data sent to GPU
     GPUBuffer m_perInstanceData;
     GPUBuffer m_perCameraData;
+
+    uint32 m_lineVertexColorVBO;
+    uint32 m_lineVAO;
 };
 
 }  // namespace red

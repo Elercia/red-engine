@@ -24,6 +24,7 @@ namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
 {
+    m_priority = 100;
 }
 
 void RenderingSystem::Init()
@@ -52,8 +53,8 @@ void RenderingSystem::Update()
 
     for (auto& comps : spriteEntities)
     {
-        auto* spriteEntity = std::get<0>( comps );
-        auto* sprite = std::get<1>( comps );
+        auto* spriteEntity = std::get<0>(comps);
+        auto* sprite = std::get<1>(comps);
         if (!sprite->IsValid())
             continue;
 
@@ -65,7 +66,7 @@ void RenderingSystem::Update()
         m_renderer->Draw(sprite, transform);
     }
 
-    RenderDebug();
+    DrawDebug();
 }
 
 void RenderingSystem::BeginRender()
@@ -94,15 +95,16 @@ void RenderingSystem::EndRender()
             m_renderer->RenderLayerTransparency(i, cameraComponent);
         }
 
-        #ifdef RED_DEBUG
-               m_renderer->RenderDebug(cameraComponent);
-        #endif
+#ifdef RED_DEBUG
+        auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+        m_renderer->RenderDebug(cameraComponent, debugComp);
+#endif
 
         m_renderer->EndCameraRendering(cameraComponent);
     }
 
 #ifdef RED_DEBUG
-    m_renderer->RenderGlobalDebug();
+    m_renderer->RenderDebugUI();
 #endif
 
     m_renderer->EndRenderFrame();
@@ -113,53 +115,15 @@ Renderer* RenderingSystem::GetRenderer()
     return m_renderer;
 }
 
-void RenderingSystem::RenderDebug()
+void RenderingSystem::DrawDebug()
 {
-    PROFILER_EVENT_CATEGORY("RenderDebug", ProfilerCategory::Rendering);
+    PROFILER_EVENT_CATEGORY("DrawDebug", ProfilerCategory::Rendering);
 
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
     if (debugComp == nullptr)
         return;
 
     m_world->GetPhysicsWorld()->DrawDebug();
-
-    // Draw debug information
-    for (auto& shape : debugComp->m_frameShapes)
-    {
-        switch (shape->type)
-        {
-            case DebugShapeType::CIRCLE:
-            {
-                auto* circle = static_cast<DebugCircle*>(shape.get());
-
-                m_renderer->DrawDebugCircle(circle->center, circle->radius, circle->color);
-            }
-            break;
-            case DebugShapeType::POLYGON:
-            {
-                //auto* polygon = static_cast<DebugPolygon*>(shape.get());
-
-                //m_renderer->DrawDebugLines(polygon->points, polygon->color);
-            }
-            break;
-            case DebugShapeType::SEGMENT:
-            {
-                auto* segment = static_cast<DebugSegment*>(shape.get());
-
-                m_renderer->DrawDebugLine(segment->point1, segment->point2, segment->color);
-            }
-            break;
-            case DebugShapeType::POINT:
-            {
-                auto* point = static_cast<DebugPoint*>(shape.get());
-
-                m_renderer->DrawDebugPoint(point->coord, point->color);
-            }
-            break;
-        }
-    }
-
-    debugComp->m_frameShapes.clear();
 }
 
 void RenderingSystem::UpdateWindowAsNeeded()
@@ -171,7 +135,7 @@ void RenderingSystem::UpdateWindowAsNeeded()
     for (auto& windowTuple : windowEntities)
     {
         // TODO what about window cvars ?
-        auto* windowComp = std::get<1>( windowTuple );
+        auto* windowComp = std::get<1>(windowTuple);
 
         if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
         {
@@ -181,7 +145,7 @@ void RenderingSystem::UpdateWindowAsNeeded()
 
     for (auto& cameras : cameraEntities)
     {
-        auto* cameraComp = std::get<1>( cameras );
+        auto* cameraComp = std::get<1>(cameras);
 
         // This is required because the camera could have moved last frame
         cameraComp->UpdateState();

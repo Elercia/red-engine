@@ -66,7 +66,7 @@ public:
 };
 
 const float s_worldSizeMin = 0.f;
-const float s_worldSizeMax = 100.f;
+const float s_worldSizeMax = 2000.f;
 
 void PerfLevel::Init()
 {
@@ -76,7 +76,7 @@ void PerfLevel::Init()
         colors[i] = Color((uint8) RandomRange(0, 255), (uint8) RandomRange(0, 255), (uint8) RandomRange(0, 255));
     }
 
-    //m_world->GetPhysicsWorld()->SetGravity({0.f, 1.f});
+    m_world->GetPhysicsWorld()->SetGravity({0.f, 1.f});
 
     // setup walls on the arena
     auto* wallEntity = CreateEntity("Walls");
@@ -102,36 +102,39 @@ void PerfLevel::Init()
     wallColliderDesc.end = {s_worldSizeMin, s_worldSizeMin};
     wallsBody->AddEdgeCollider(wallColliderDesc);
 
+
+    float boundMin = s_worldSizeMin + 60;
+    float boundMax = s_worldSizeMax - 60;
     {
-        const Vector2 position = {s_worldSizeMin, s_worldSizeMin};
+        const Vector2 position = {boundMin, boundMin};
 
         std::string name = "Ball_1";
         AddEntity(name, position, 1, colors);
     }
 
     {
-        const Vector2 position = {s_worldSizeMin, s_worldSizeMax};
+        const Vector2 position = {boundMin, boundMax};
 
         std::string name = "Ball_2";
         AddEntity(name, position, 1, colors);
     }
 
     {
-        const Vector2 position = {s_worldSizeMax, s_worldSizeMin};
+        const Vector2 position = {boundMax, boundMin};
 
         std::string name = "Ball_3";
         AddEntity(name, position, 1, colors);
     }
 
     {
-        const Vector2 position = {s_worldSizeMax, s_worldSizeMax};
+        const Vector2 position = {boundMax, boundMax};
 
         std::string name = "Ball_4";
         AddEntity(name, position, 1, colors);
     }
 
     {
-        const Vector2 position = {s_worldSizeMax / 2.f, s_worldSizeMax / 2.f};
+        const Vector2 position = {boundMax / 2.f, boundMax / 2.f};
 
         std::string name = "Ball_center";
         AddEntity(name, position, 2, colors);
@@ -181,7 +184,7 @@ void PerfLevel::AddEntity(const std::string& name, const red::Vector2& position,
 
     ball->GetComponent<Transform>()->SetPosition(position);
     ball->GetComponent<Transform>()->SetScale(axisscale);
-    /*auto ballBody = ball->AddComponent<PhysicBody>(bodyDesc);
-    ballBody->AddCircleCollider(colliderDesc);*/
+    auto ballBody = ball->AddComponent<PhysicBody>(bodyDesc);
+    ballBody->AddCircleCollider(colliderDesc);
 }
 }  // namespace perf

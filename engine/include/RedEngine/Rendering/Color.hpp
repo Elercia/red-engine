@@ -6,6 +6,7 @@
 
 namespace red
 {
+// TODO To float 0-1
 struct Color
 {
     constexpr Color();

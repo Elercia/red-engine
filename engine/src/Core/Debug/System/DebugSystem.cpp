@@ -34,6 +34,7 @@ void DebugSystem::Init()
 
     debugComp->m_drawers.push_back(DebugDrawer{"Console", &DebugSystem::RenderConsole});
     debugComp->m_drawers.push_back(DebugDrawer{"Entities", &DebugSystem::RenderEntityTree});
+    debugComp->m_drawers.push_back(DebugDrawer{"Physics", &DebugSystem::RenderDebugPhysicsControls});
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
@@ -234,22 +235,6 @@ void DebugSystem::Update()
     }
     ImGui::End();
 
-    if (events->GetKeyDown(KeyCodes::KEY_F1))
-    {
-        if (debugComp->m_physicsDebugDrawer == nullptr)
-        {
-            debugComp->m_physicsDebugDrawer = std::make_unique<PhysicsDebugDrawer>(debugComp);
-            debugComp->m_physicsDebugDrawer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_aabbBit |
-                                                      b2Draw::e_pairBit | b2Draw::e_centerOfMassBit);
-        }
-        else
-        {
-            debugComp->m_physicsDebugDrawer.release();
-        }
-
-        m_world->GetPhysicsWorld()->SetDebugDrawer(debugComp->m_physicsDebugDrawer.get());
-    }
-
     if (events->GetKeyDown(KeyCodes::KEY_F2))
     {
         CVar<FullScreenMode::Enum> fullscreen{"fullscreen_mode", "window", FullScreenMode::WINDOWED};
@@ -390,5 +375,42 @@ void DebugSystem::RenderEntityTree(DebugComponent* debug)
             ShowEntityTree(debug);
             break;
     }
+}
+
+void DebugSystem::RenderDebugPhysicsControls(DebugComponent* debug)
+{
+    static bool enabled = false;
+    bool enabledChanged = ImGui::Checkbox("Enable debug drawer", &enabled);
+
+    ImGui::Separator();
+
+    int flagValue = 0;
+    static bool flags[5] = {true, true, true, true, true};
+    static const char* flagsStr[5] = {"Shapes", "Joints", "Bounding boxes", "Pairs", "Center of mass"};
+    for (int i = 0; i < 5; i++)
+    {
+        ImGui::Checkbox(flagsStr[i], &flags[i]);
+
+        flagValue |= (int) (flags[i]) << i;
+    }
+
+    if (enabledChanged)
+    {
+        auto* world = debug->GetWorld();
+
+        if (enabled)
+        {
+            debug->m_physicsDebugDrawer = std::make_unique<PhysicsDebugDrawer>(debug);
+        }
+        else
+        {
+            debug->m_physicsDebugDrawer.release();
+        }
+
+        world->GetPhysicsWorld()->SetDebugDrawer(debug->m_physicsDebugDrawer.get());
+    }
+
+    if (debug->m_physicsDebugDrawer != nullptr)
+        debug->m_physicsDebugDrawer->SetFlags(flagValue);
 }
 }  // namespace red

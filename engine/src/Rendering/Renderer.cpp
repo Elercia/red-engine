@@ -46,6 +46,8 @@ Renderer::Renderer()
     , m_renderingData()
     , m_perInstanceData(1, sizeof(PerInstanceData))
     , m_perCameraData(1, sizeof(PerCameraData))
+    , m_lineVertexColorVBO(0)
+    , m_lineVAO(0)
 {
 }
 
@@ -114,6 +116,19 @@ void Renderer::InitRenderer(WindowComponent* window)
 
     m_perInstanceData.Init();
     m_perCameraData.Init();
+
+    // Create the
+    glGenBuffers(1, &m_lineVertexColorVBO);
+
+    glGenVertexArrays(1, &m_lineVAO);
+    glBindVertexArray(m_lineVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_lineVertexColorVBO);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(0, 4, GL_INT, GL_FALSE, 2 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(1);
 }
 
 void Renderer::ReCreateWindow(WindowComponent* /*window*/)
@@ -174,6 +189,11 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 
 void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
 {
+    for (auto& r : m_culledAndSortedRenderingData)
+    {
+        RedAssert(r.hasBeenRendered);
+    }
+
     m_culledAndSortedRenderingData.clearAndFree();
 }
 
@@ -187,26 +207,9 @@ void Renderer::Draw(const Renderable* renderable, const Transform* transform)
     data.size = renderable->m_size;
     data.renderLayerIndex = renderable->m_layerIndex;
     data.type = renderable->m_material.material->GetRenderType();
+    data.hasBeenRendered = false;
 
     m_renderingData.push_back(std::move(data));
-}
-
-void Renderer::DrawDebugLine(const Vector2& first, const Vector2& second, const Color& color)
-{
-    m_debugLines.push_back(first);
-    m_debugLines.push_back(second);
-
-    m_debugLineColors.push_back(color);
-}
-
-void Renderer::DrawDebugCircle(const Vector2& /*center*/, float /*radius*/,
-                               const Color& /*color*/ /*= ColorConstant::RED*/)
-{
-}
-
-void Renderer::DrawDebugPoint(const Vector2& coord, const Color& color /*= ColorConstant::RED*/)
-{
-    DrawDebugCircle(coord, 0.1f, color);
 }
 
 void Renderer::RenderLayerOpaque(RenderLayerIndex layerIndex, CameraComponent* camera)
@@ -233,7 +236,7 @@ void Renderer::RenderLayerTransparency(RenderLayerIndex layerIndex, CameraCompon
 
 void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 {
-    auto& toRender = m_renderingDataPerLayer[desc.layerIndex];
+    auto& toRender = m_renderingDataPerLayer[desc.layerIndex][(int) desc.renderType];
 
     if (toRender.empty())
         return;
@@ -245,7 +248,7 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
     if (desc.alphaBlending)
     {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
     }
     else
     {
@@ -258,6 +261,10 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
         auto& renderData = toRender[i];
 
         RedAssert(desc.layerIndex == renderData.renderLayerIndex);
+        RedAssert(desc.renderType == renderData.type);
+
+        RedAssert(!renderData.hasBeenRendered);
+        renderData.hasBeenRendered = true;
 
         UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);
@@ -277,15 +284,34 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
     glPopDebugGroup();
 }
 
-void Renderer::RenderDebug(CameraComponent* /*camera*/)
+void Renderer::RenderDebug(CameraComponent* camera, DebugComponent* debug)
 {
-    m_debugLines.clear();
-    m_debugLineColors.clear();
+    auto shader = debug->GetLineShader();
+    auto& lines = debug->GetDebugLines();
+
+    if (lines.empty())
+        return;
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug lines");
+
+    glNamedBufferSubData(m_lineVertexColorVBO, 0, lines.size() * sizeof(DebugLinePoint), lines.data());
+
+    FillCameraBuffer(*camera);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_perCameraData.m_gpuBufferHandle);
+    
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(m_lineVAO);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, m_lineVertexColorVBO);
+
+    glDrawArrays(GL_LINES, 0, lines.size());
+
+    glPopDebugGroup();
 }
 
-void Renderer::RenderGlobalDebug()
+void Renderer::RenderDebugUI()
 {
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug");
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug UI");
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -372,34 +398,55 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
         }
     }
 
-    std::sort(m_culledAndSortedRenderingData.begin(), m_culledAndSortedRenderingData.end(),
-              [](auto& l, auto& r) { return l.renderLayerIndex < r.renderLayerIndex && l.type < r.type; });
-
-    uint32 renderLayerIndex = 0;
-    uint32 start = 0;
-    uint32 count = 0;
-    for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
+    // Reset the rendering data
+    for (int layer = 0; layer < 32; layer++)
     {
-        if (m_culledAndSortedRenderingData[i].renderLayerIndex != renderLayerIndex)
+        for (int type = 0; type < (int) RenderEntityType::Count; type++)
         {
-            count = i - start;
-
-            m_renderingDataPerLayer[renderLayerIndex] = ArrayView(m_culledAndSortedRenderingData, start, count);
-
-            start = i;
-            renderLayerIndex++;
+            m_renderingDataPerLayer[layer][type] = ArrayView<RenderingData>();
         }
     }
 
-    m_renderingDataPerLayer[renderLayerIndex] =
-        ArrayView(m_culledAndSortedRenderingData, start, m_culledAndSortedRenderingData.size() - start);
+    // Sort the culled data
+    std::sort(m_culledAndSortedRenderingData.begin(), m_culledAndSortedRenderingData.end(),
+              [](auto& l, auto& r) { return l.renderLayerIndex < r.renderLayerIndex && l.type < r.type; });
+
+    uint32 renderType = 0;
+    uint32 renderLayerIndex = 0;
+    uint32 start = 0;
+    for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
+    {
+        bool differentLayer = m_culledAndSortedRenderingData[i].renderLayerIndex != renderLayerIndex;
+        bool differentType = (int) m_culledAndSortedRenderingData[i].type != renderType;
+
+        if (differentLayer || differentType)
+        {
+            m_renderingDataPerLayer[renderLayerIndex][renderType] =
+                ArrayView(m_culledAndSortedRenderingData, start, i - start);
+
+            start = i;
+        }
+
+        if (differentLayer)
+        {
+            renderLayerIndex = m_culledAndSortedRenderingData[i].renderLayerIndex;
+            renderType = (int) m_culledAndSortedRenderingData[i].type;
+        }
+        if (differentType)
+        {
+            renderType = (int) m_culledAndSortedRenderingData[i].type;
+
+            RedAssert(renderType < (int) RenderEntityType::Count);
+        }
+    }
+
+    if (renderLayerIndex < 32 && renderType < (int) RenderEntityType::Count)
+    {
+        m_renderingDataPerLayer[renderLayerIndex][renderType] =
+            ArrayView(m_culledAndSortedRenderingData, start, m_culledAndSortedRenderingData.size() - start);
+    }
 
     renderLayerIndex++;
-
-    for (int i = renderLayerIndex; i < 32; i++)
-    {
-        m_renderingDataPerLayer[i] = ArrayView(m_culledAndSortedRenderingData, 0, 0);
-    }
 }
 
 }  // namespace red

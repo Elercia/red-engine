@@ -44,6 +44,8 @@ void* GPUBuffer::MapData(MapType mapType)
 
     mappedData = ptr;
 
+    RedAssert(mappedData != nullptr);
+
     return mappedData;
 }
 

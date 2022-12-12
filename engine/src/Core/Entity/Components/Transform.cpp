@@ -37,12 +37,14 @@ Vector2& Transform::GetPosition()
 
 void Transform::SetPosition(const Vector2& pos)
 {
+    RedAssert(!m_locked);
     m_localPosition = pos;
     m_dirtyWorldMatrix = true;
 }
 
 void Transform::SetPosition(float x, float y)
 {
+    RedAssert(!m_locked);
     m_localPosition = Vector2(x, y);
     m_dirtyWorldMatrix = true;
 }
@@ -78,24 +80,28 @@ float Transform::GetRotationRad() const
 
 void Transform::SetScale(const Vector2& scale)
 {
+    RedAssert(!m_locked);
     m_localScale = scale;
     m_dirtyWorldMatrix = true;
 }
 
 void Transform::SetRotationDeg(float rotationDeg)
 {
+    RedAssert(!m_locked);
     m_localRotation = rotationDeg;
     m_dirtyWorldMatrix = true;
 }
 
 void Transform::SetRotationRad(float rotationRad)
 {
+    RedAssert(!m_locked);
     m_localRotation = Math::ToDegrees(rotationRad);
     m_dirtyWorldMatrix = true;
 }
 
 void Transform::SetDepth(float /*depth*/)
 {
+    RedAssert(!m_locked);
     //m_localDepth = depth;
     //m_dirtyWorldMatrix = true;
     RedAssertNotReached();
@@ -152,6 +158,11 @@ Matrix33& Transform::GetWorldMatrix()
     UpdateWorldMatrixIfNeeded();
 
     return m_worldMatrix;
+}
+
+void Transform::SetLocked(bool locked)
+{
+    m_locked = locked;
 }
 
 }  // namespace red

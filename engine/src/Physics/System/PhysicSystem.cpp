@@ -46,6 +46,8 @@ void PhysicSystem::Update()
         auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
         auto* physicBody = std::get<1>( tuple );
 
+        transform->SetLocked(true);
+
         physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), transform->GetRotationRad());
     }
 
@@ -55,6 +57,8 @@ void PhysicSystem::Update()
     {
         auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
         auto* physicBody = std::get<1>( tuple );
+
+        transform->SetLocked(false);
 
         transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
         transform->SetRotationRad(physicBody->GetBody()->GetAngle());

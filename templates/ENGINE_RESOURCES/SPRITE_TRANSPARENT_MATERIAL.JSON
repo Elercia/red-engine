@@ -1,6 +1,6 @@
 {
-	"shader_program" : "BASE_SHADER_PROGRAM",
-	"rendering_type" : 1,
+	"shader_program": "ENGINE_RESOURCES/SPRITE_SHADER_PROGRAM",
+	"rendering_type": 1,
 	"pixel_uniforms": [
 		{
 			"type": "texture",

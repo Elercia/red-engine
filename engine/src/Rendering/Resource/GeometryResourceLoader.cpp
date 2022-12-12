@@ -57,7 +57,7 @@ bool GeometryResourceLoader::InitResource(std::shared_ptr<GeometryResourceWrappe
     glBindVertexArray(geom.m_gpuBufferHandle);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); // TODO size of 2
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
