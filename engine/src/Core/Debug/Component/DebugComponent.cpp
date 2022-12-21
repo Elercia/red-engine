@@ -21,8 +21,8 @@ DebugComponent::DebugComponent(Entity* entity)
 
 void DebugComponent::AddLine(const Vector2& from, const Vector2& to, const Color& c /* = ColorConstant::BLACK */)
 {
-    m_debugLines.push_back({from, c});
-    m_debugLines.push_back({to, c});
+    m_debugLines.push_back({{from.x, from.y, 0.f, 0.f}, c});
+    m_debugLines.push_back({{to.x, to.y, 0.f, 0.f}, c});
 }
 
 void DebugComponent::AddCircle(const Vector2& center, float radius, const Color& c /*= ColorConstant::BLACK*/)
@@ -31,7 +31,7 @@ void DebugComponent::AddCircle(const Vector2& center, float radius, const Color&
     // Each points of this approximation is drawn with a certain angle.
     constexpr int nbLines = 30;
 
-    const float stepAngle = Math::PI / (float) nbLines;
+    const float stepAngle = (2.f * Math::PI) / (float) nbLines;
     for (int i = 0; i <= nbLines; i++)
     {
         const float startAngle = stepAngle * (float) i;
@@ -53,7 +53,8 @@ void DebugComponent::AddPolygon(const ArrayView<Vector2>& points, const Color& c
     }
 }
 
-void DebugComponent::AddPoint(const Vector2& coord, const Color& c /*= ColorConstant::BLACK*/, bool /*isSolid*/ /*= false*/)
+void DebugComponent::AddPoint(const Vector2& coord, const Color& c /*= ColorConstant::BLACK*/,
+                              bool /*isSolid*/ /*= false*/)
 {
     AddCircle(coord, 0.1f, c);
 }
@@ -66,6 +67,11 @@ std::shared_ptr<ShaderProgram> DebugComponent::GetLineShader()
 const Array<DebugLinePoint>& DebugComponent::GetDebugLines() const
 {
     return m_debugLines;
+}
+
+void DebugComponent::ClearDebug()
+{
+    m_debugLines.clear();
 }
 
 void DebugComponent::ClearLogs()

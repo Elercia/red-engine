@@ -115,7 +115,7 @@ bool Sprite::IsValid() const
 
 void Sprite::UpdateRenderData()
 {
-    auto& binding = m_material.overiddenBindings.bindings[BindingIndex::Diffuse];
+    auto& binding = m_material.overriddenBindings.bindings[BindingIndex::Diffuse];
     binding.texture = m_currentAnimationInfo.currentAnimation->texture.get();
     binding.type = BindingType::Texture;
 

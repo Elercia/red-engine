@@ -64,8 +64,8 @@ int PhysicBody::AddCircleCollider(const CircleColliderDesc& desc)
     Collider collider;
 
     b2CircleShape shape;
-    shape.m_p.Set(desc.center.x, desc.center.y);
-    shape.m_radius = desc.radius;
+    shape.m_p = ConvertToPhysicsVector(desc.center);
+    shape.m_radius = ConvertToPhysicsDistance(desc.radius);
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &shape;

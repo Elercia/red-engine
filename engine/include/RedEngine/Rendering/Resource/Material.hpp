@@ -57,7 +57,7 @@ class Material;
 struct MaterialInstance
 {
     std::shared_ptr<Material> material;
-    MaterialBindings overiddenBindings;
+    MaterialBindings overriddenBindings;
 };
 
 class Material : public IResource

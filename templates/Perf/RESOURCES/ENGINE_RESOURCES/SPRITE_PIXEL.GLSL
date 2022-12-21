@@ -9,6 +9,5 @@ out vec4 frag_colour;
 
 void main()
 {
-    vec4 sampledColor = texture( texture_sampler, texture_uv );
-    frag_colour = vec4( sampledColor.rgb * in_color.rgb, sampledColor.a);
+    frag_colour = vec4(texture( texture_sampler, texture_uv ).rgb * in_color.rgb, 1);
 }

@@ -100,7 +100,7 @@ void Renderer::InitRenderer(WindowComponent* window)
 #ifdef RED_DEBUG
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(OpenGLMessageCallback, nullptr);
+    glDebugMessageCallback((GLDEBUGPROC)&red::OpenGLMessageCallback, nullptr);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -117,23 +117,23 @@ void Renderer::InitRenderer(WindowComponent* window)
     m_perInstanceData.Init();
     m_perCameraData.Init();
 
-    // Create the
-    glGenBuffers(1, &m_lineVertexColorVBO);
-
+    // Create the VBO & VAO for the debug draw primitive
     glGenVertexArrays(1, &m_lineVAO);
     glBindVertexArray(m_lineVAO);
 
+    glGenBuffers(1, &m_lineVertexColorVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_lineVertexColorVBO);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(0, 4, GL_INT, GL_FALSE, 2 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // TODO: Change this to vec2
+
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
 }
 
 void Renderer::ReCreateWindow(WindowComponent* /*window*/)
 {
-    // TODO recreate frame buffer etc
+    // TODO recreate frame buffer etc if needed
 }
 
 void Renderer::Finalise()
@@ -156,7 +156,7 @@ void Renderer::BeginRenderFrame()
 {
     auto windowInfo = m_window->GetWindowInfo();
     glViewport(0, 0, windowInfo.width, windowInfo.height);
-    glClearColor(0.f, 0.f, 0.f, 0.f);
+    glClearColor(0.5f, 0.5f, 0.5f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #ifdef RED_DEBUG
@@ -181,8 +181,8 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 
     glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 
-    glClearColor(cameraComponent->m_cleanColor.r / 255.f, cameraComponent->m_cleanColor.g / 255.f,
-                 cameraComponent->m_cleanColor.b / 255.f, cameraComponent->m_cleanColor.a / 255.f);
+    glClearColor(cameraComponent->m_cleanColor.r, cameraComponent->m_cleanColor.g,
+                 cameraComponent->m_cleanColor.b, cameraComponent->m_cleanColor.a);
 
     CullRenderDataForCamera(cameraComponent);
 }
@@ -287,22 +287,23 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 void Renderer::RenderDebug(CameraComponent* camera, DebugComponent* debug)
 {
     auto shader = debug->GetLineShader();
-    auto& lines = debug->GetDebugLines();
+    const auto& lines = debug->GetDebugLines();
 
     if (lines.empty())
         return;
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug lines");
 
-    glNamedBufferSubData(m_lineVertexColorVBO, 0, lines.size() * sizeof(DebugLinePoint), lines.data());
+    glUseProgram(shader->m_handle);
+
+    glNamedBufferData(m_lineVertexColorVBO, lines.size() * sizeof(DebugLinePoint), lines.data(), GL_STATIC_DRAW);
 
     FillCameraBuffer(*camera);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_perCameraData.m_gpuBufferHandle);
-    
-    glEnableVertexAttribArray(0);
-    glBindVertexArray(m_lineVAO);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, m_lineVertexColorVBO);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(m_lineVAO);
 
     glDrawArrays(GL_LINES, 0, lines.size());
 
@@ -339,7 +340,7 @@ void Renderer::UseMaterial(const MaterialInstance& materialInstance)
 {
     const auto& material = materialInstance.material;
     const auto& defaultBindings = material->m_defaultBindings.bindings;
-    const auto& overiddenBindings = materialInstance.overiddenBindings.bindings;
+    const auto& overriddenBindings = materialInstance.overriddenBindings.bindings;
 
     // FIXME fix crash when a invalid handle is used
     glUseProgram(material->GetShaderProgram()->m_handle);
@@ -350,10 +351,10 @@ void Renderer::UseMaterial(const MaterialInstance& materialInstance)
         const BindingValue* value = nullptr;
 
         const auto& defaultBinding = defaultBindings[i];
-        const auto& overidenBinding = overiddenBindings[i];
-        if (overidenBinding.type != BindingType::Undefined)
+        const auto& overriddenBinding = overriddenBindings[i];
+        if (overriddenBinding.type != BindingType::Undefined)
         {
-            value = &overidenBinding;
+            value = &overriddenBinding;
         }
         else if (defaultBinding.type != BindingType::Undefined)
         {
@@ -379,6 +380,7 @@ void Renderer::UseMaterial(const MaterialInstance& materialInstance)
 void Renderer::UseGeometry(const Geometry* geom)
 {
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
     glBindVertexArray(geom->m_gpuBufferHandle);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_gpuIndexBuffer);
@@ -399,11 +401,11 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
     }
 
     // Reset the rendering data
-    for (int layer = 0; layer < 32; layer++)
+    for (auto & layer : m_renderingDataPerLayer)
     {
         for (int type = 0; type < (int) RenderEntityType::Count; type++)
         {
-            m_renderingDataPerLayer[layer][type] = ArrayView<RenderingData>();
+            layer[type] = ArrayView<RenderingData>();
         }
     }
 
@@ -445,8 +447,6 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
         m_renderingDataPerLayer[renderLayerIndex][renderType] =
             ArrayView(m_culledAndSortedRenderingData, start, m_culledAndSortedRenderingData.size() - start);
     }
-
-    renderLayerIndex++;
 }
 
 }  // namespace red

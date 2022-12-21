@@ -10,6 +10,11 @@ namespace red
 {
 class PhysicsDebugDrawer;
 
+float ConvertToPhysicsDistance(float f);
+float ConvertFromPhysicsDistance(float f);
+b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
+Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2);
+
 class PhysicsWorld : public b2ContactListener
 {
 public:

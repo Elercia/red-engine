@@ -74,7 +74,7 @@ function TemplateProject(Name)
 		symbols "on"
 	filter {}
 
-	postbuildcommands { "{COPY} %{cfg.buildtarget.directory}/* " .. rootPath .. "templates/%{prj.name}" }
+	--postbuildcommands { "{COPY} \"%{cfg.buildtarget.directory}/*\" \"" .. rootPath .. "templates/%{prj.name}\"" }
 end
 
 TemplateProject("Pong")

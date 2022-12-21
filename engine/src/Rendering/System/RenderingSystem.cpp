@@ -107,6 +107,9 @@ void RenderingSystem::EndRender()
     m_renderer->RenderDebugUI();
 #endif
 
+    auto* debug = m_world->GetWorldComponent<DebugComponent>();
+    debug->ClearDebug();
+
     m_renderer->EndRenderFrame();
 }
 

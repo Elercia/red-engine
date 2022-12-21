@@ -16,7 +16,7 @@ class ShaderProgram;
 
 struct DebugLinePoint
 {
-    Vector2 pos;
+    Vector4 pos;
     Color color;
 };
 
@@ -47,6 +47,7 @@ public:
 
     std::shared_ptr<ShaderProgram> GetLineShader();
     const Array<DebugLinePoint>& GetDebugLines() const;
+    void ClearDebug();
 
     void ClearLogs();
     const Array<Logger::LogOoutputInfo>& GetLogBuffer() const;

@@ -11,6 +11,28 @@
 
 namespace red
 {
+constexpr float s_physicDistanceFactor = 0.01f;
+
+float ConvertToPhysicsDistance(float f)
+{
+    return f * s_physicDistanceFactor;
+}
+
+float ConvertFromPhysicsDistance(float f)
+{
+    return f * (1 / s_physicDistanceFactor);
+}
+
+b2Vec2 ConvertToPhysicsVector(const Vector2& vector2)
+{
+    return b2Vec2(vector2.x * s_physicDistanceFactor, vector2.y * s_physicDistanceFactor);
+}
+
+Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2)
+{
+    return Vector2(vector2.x, vector2.y) * (1.f / s_physicDistanceFactor);
+}
+
 PhysicsWorld::PhysicsWorld() : m_internalPhysicsWorld(new b2World({0.f, 0.f}))
 {
     m_internalPhysicsWorld->SetContactListener(this);
@@ -141,7 +163,7 @@ void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* phys
     {
         const auto& manifoldPoint = manifold->points[i];
         collisionInfo.contactPoints.push_back({ConvertFromPhysicsVector(manifoldPoint.localPoint),
-                                               manifoldPoint.normalImpulse, manifoldPoint.tangentImpulse});
+                                               manifoldPoint.normalImpulse, manifoldPoint.tangentImpulse}); // TODO missing some converts
     }
 
     m_frameCollisionInfo.push_back(std::move(collisionInfo));

@@ -96,4 +96,4 @@ static inline void OpenGLMessageCallback(GLenum source, GLenum type, GLuint /*id
         RED_LOG_ERROR("OpenGL {}::{} raised from {}: {}\n", typeStr, severityStr, sourceStr, message);
     }
 }
-}  // namespace red 
+}  // namespace red

@@ -1,7 +1,7 @@
 #version 440 core
 
-layout(location = 0) in vec2 vertex_position;
-layout(location = 1) in ivec4 vertex_color;
+layout(location = 0) in vec4 vertex_position;
+layout(location = 1) in vec4 vertex_color;
 
 layout(std140, binding = 0) buffer PerCameraDataStruct
 {

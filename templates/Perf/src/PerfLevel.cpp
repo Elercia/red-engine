@@ -73,10 +73,10 @@ void PerfLevel::Init()
     Color colors[32];
     for (int i = 0; i < 32; i++)
     {
-        colors[i] = Color((uint8) RandomRange(0, 255), (uint8) RandomRange(0, 255), (uint8) RandomRange(0, 255));
+        colors[i] = Color( RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f));
     }
 
-    m_world->GetPhysicsWorld()->SetGravity({0.f, 1.f});
+    //m_world->GetPhysicsWorld()->SetGravity({0.f, 1.f});
 
     // setup walls on the arena
     auto* wallEntity = CreateEntity("Walls");
@@ -180,7 +180,7 @@ void PerfLevel::AddEntity(const std::string& name, const red::Vector2& position,
     auto* ball = CreateEntity(name);
     auto* s = ball->AddComponent<Sprite>(Path::Resource("ball"));
     s->SetRenderLayerIndex(layerIndex);
-    s->GetMaterial().overiddenBindings.bindings[BindingIndex::Color] = value;
+    s->GetMaterial().overriddenBindings.bindings[BindingIndex::Color] = value;
 
     ball->GetComponent<Transform>()->SetPosition(position);
     ball->GetComponent<Transform>()->SetScale(axisscale);

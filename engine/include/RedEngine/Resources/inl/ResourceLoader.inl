@@ -23,14 +23,14 @@ std::shared_ptr<Type> ResourceLoader<Type>::GetOrCreateFromCache(const Path& pat
 {
     auto ptr = GetFromCache(path);
 
-    if (ptr)
+    if (ptr != nullptr)
         return ptr;
 
-    ptr = std::make_shared<Type>(path);
+    auto newptr = std::make_shared<Type>(path);
 
-    m_loadedResources.insert({path, ptr});
+    m_loadedResources.insert({path, newptr});
 
-    return ptr;
+    return newptr;
 }
 
 template <typename Type>

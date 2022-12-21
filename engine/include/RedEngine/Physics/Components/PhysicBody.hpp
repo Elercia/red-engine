@@ -40,7 +40,7 @@ using ColliderId = uint32;
 struct Collider
 {
     b2FixtureDef m_fixtureDef;
-    b2Fixture* m_fixture;
+    b2Fixture* m_fixture{nullptr};
 
     bool IsTrigger() const
     {
