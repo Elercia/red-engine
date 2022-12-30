@@ -19,7 +19,7 @@ GPUBuffer::~GPUBuffer()
 void GPUBuffer::Init()
 {
     glCreateBuffers(1, &m_gpuBufferHandle);
-    glNamedBufferData(m_gpuBufferHandle, m_elementSize * m_nbElements, nullptr, GL_DYNAMIC_DRAW);
+    glNamedBufferData(m_gpuBufferHandle, m_elementSize * m_nbElements, nullptr, GL_STATIC_DRAW);
 }
 
 void GPUBuffer::Finalize()

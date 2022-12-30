@@ -23,8 +23,8 @@ void GameControlSystem::Update()
     constexpr float velocity = 300.F;
 
     auto* userInputComponent = m_world->GetWorldComponent<UserInputComponent>();
-    auto& paddleOnePos = m_paddleOne->GetComponent<Transform>()->GetPosition();
-    auto& paddleTwoPos = m_paddleTwo->GetComponent<Transform>()->GetPosition();
+    auto& paddleOnePos = m_paddleOne->GetComponent<Transform>()->GetLocalPosition();
+    auto& paddleTwoPos = m_paddleTwo->GetComponent<Transform>()->GetLocalPosition();
 
     if (userInputComponent->GetKey("1moveDown"))
     {

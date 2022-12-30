@@ -45,7 +45,7 @@ CameraComponent::~CameraComponent()
 
 bool CameraComponent::IsVisibleFrom(const AABB& aabb) const
 {
-    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetPosition(),
+    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetLocalPosition(),
                   {m_size.x, m_size.y});  // TODO put it in camera cached state
 
     return thisAabb.Intersect(aabb);
@@ -124,10 +124,10 @@ void CameraComponent::UpdateState()
         return;
 
     auto* transform = GetOwner()->GetComponent<Transform>();
-    auto rotRad = transform->GetRotationRad();
+    auto rotRad = transform->GetLocalRotationRad();
     auto& scale = transform->GetScale();
 
-    Matrix44 view = Math::Translate(Matrix44::Identity(), Vector3(transform->GetPosition(), 0.f));
+    Matrix44 view = Math::Translate(Matrix44::Identity(), Vector3(transform->GetLocalPosition(), 0.f));
     view = Math::Rotate(view, Vector3(0.f, 0.f, rotRad));
     view = Math::Scale(view, Vector3(scale, 1.f));
 

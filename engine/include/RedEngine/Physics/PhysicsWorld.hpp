@@ -40,7 +40,7 @@ public:
     void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
 
 private:
-    void UpdateContactInfos();
+    void ClearContactInfo();
     void AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1, Collider* collider2);
     void AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1, Collider* collider2,
                              const b2Contact* contact);

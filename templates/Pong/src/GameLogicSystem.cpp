@@ -17,7 +17,7 @@ void GameLogicSystem::Update()
 {
     auto* ballTransform = m_ball->GetComponent<Transform>();
 
-    auto& ballPos = ballTransform->GetPosition();
+    auto& ballPos = ballTransform->GetLocalPosition();
 
     CheckPoints(ballPos);
 }

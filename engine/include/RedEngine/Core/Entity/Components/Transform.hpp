@@ -25,23 +25,20 @@ public:
     Transform(Entity* entity, Vector2 position);
     virtual ~Transform() = default;
 
-    [[nodiscard]] const Vector2& GetPosition() const;// TODO rename to GetLocalPosition 
-    [[nodiscard]] Vector2& GetPosition(); // TODO Add GetWorldPosisition
+    [[nodiscard]] const Vector2& GetLocalPosition() const;// TODO rename to GetLocalPosition 
+    [[nodiscard]] Vector2& GetLocalPosition(); // TODO Add GetWorldPosisition
 
     [[nodiscard]] const Vector2& GetScale() const;
     [[nodiscard]] Vector2& GetScale();
 
-    [[nodiscard]] float GetDepth() const;
+    [[nodiscard]] float GetLocalRotationDeg() const;
+    [[nodiscard]] float GetLocalRotationRad() const;
 
-    [[nodiscard]] float GetRotationDeg() const;
-    [[nodiscard]] float GetRotationRad() const;
-
-    void SetPosition(const Vector2& pos);
-    void SetPosition(float x, float y);
+    void SetLocalPosition(const Vector2& pos);
+    void SetLocalPosition(float x, float y);
     void SetScale(const Vector2& scale);
-    void SetRotationDeg(float rotationDeg);
-    void SetRotationRad(float rotationRad);
-    void SetDepth(float depth);
+    void SetLocalRotationDeg(float rotationDeg);
+    void SetLocalRotationRad(float rotationRad);
 
     void UpdateWorldMatrixIfNeeded();
 

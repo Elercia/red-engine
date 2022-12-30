@@ -62,7 +62,7 @@ void PongLevel::Init()
     {
         ballEntity = CreateEntity("Ball");
         ballEntity->AddComponent<red::Sprite>(red::Path::Resource("ball"))->SetRenderLayerIndex(1);
-        ballEntity->GetComponent<red::Transform>()->SetPosition(arenaCenter);
+        ballEntity->GetComponent<red::Transform>()->SetLocalPosition(arenaCenter);
 
         ballPhysicBody = ballEntity->AddComponent<red::PhysicBody>(ballBodyDesc);
         ballPhysicBody->AddCircleCollider(ballColliderDesc);
@@ -73,7 +73,7 @@ void PongLevel::Init()
     {
         paddleOne = CreateEntity("PaddleOne");
         paddleOne->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
-        paddleOne->GetComponent<red::Transform>()->SetPosition({paddleOffsetFromBorder, paddlePosHeight});
+        paddleOne->GetComponent<red::Transform>()->SetLocalPosition({paddleOffsetFromBorder, paddlePosHeight});
 
         auto* paddleOneBody = paddleOne->AddComponent<red::PhysicBody>(paddleBodyDesc);
         paddleOneBody->AddPolygonCollider(paddleColliderDesc);
@@ -83,7 +83,7 @@ void PongLevel::Init()
     {
         paddleTwo = CreateEntity("PaddleTwo");
         paddleTwo->AddComponent<red::Sprite>(red::Path::Resource("paddle"))->SetRenderLayerIndex(1);
-        paddleTwo->GetComponent<red::Transform>()->SetPosition(
+        paddleTwo->GetComponent<red::Transform>()->SetLocalPosition(
             red::Vector2(arenaSize.width - paddleOffsetFromBorder - paddleSize.x, paddlePosHeight));
 
         auto* paddleTwoBody = paddleTwo->AddComponent<red::PhysicBody>(paddleBodyDesc);

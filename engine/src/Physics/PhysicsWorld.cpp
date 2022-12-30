@@ -11,7 +11,8 @@
 
 namespace red
 {
-constexpr float s_physicDistanceFactor = 0.01f;
+ constexpr float s_physicDistanceFactor = 0.01f;
+// constexpr float s_physicDistanceFactor = 1.f;
 
 float ConvertToPhysicsDistance(float f)
 {
@@ -81,7 +82,7 @@ void PhysicsWorld::Step(float timeStep, int32 velocityIterations, int32 position
 {
     PROFILER_EVENT_CATEGORY("PhysicsWorld::Step", ProfilerCategory::Physics)
 
-    UpdateContactInfos();
+    ClearContactInfo();
 
     m_internalPhysicsWorld->Step(timeStep, velocityIterations, positionIterations);
 }
@@ -136,7 +137,7 @@ void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*
     }
 }
 
-void PhysicsWorld::UpdateContactInfos()
+void PhysicsWorld::ClearContactInfo()
 {
     m_frameCollisionInfo.clear();
     m_frameTriggerInfo.clear();
@@ -163,7 +164,8 @@ void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* phys
     {
         const auto& manifoldPoint = manifold->points[i];
         collisionInfo.contactPoints.push_back({ConvertFromPhysicsVector(manifoldPoint.localPoint),
-                                               manifoldPoint.normalImpulse, manifoldPoint.tangentImpulse}); // TODO missing some converts
+                                               manifoldPoint.normalImpulse,
+                                               manifoldPoint.tangentImpulse});  // TODO missing some converts
     }
 
     m_frameCollisionInfo.push_back(std::move(collisionInfo));

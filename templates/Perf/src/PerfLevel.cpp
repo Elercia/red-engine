@@ -59,7 +59,7 @@ public:
 
         auto* transform = m_camera->GetComponent<Transform>();
 
-        transform->SetPosition(transform->GetPosition() + (direction * speed));
+        transform->SetLocalPosition(transform->GetLocalPosition() + (direction * speed));
     }
 
     Entity* m_camera;
@@ -71,12 +71,12 @@ const float s_worldSizeMax = 2000.f;
 void PerfLevel::Init()
 {
     Color colors[32];
-    for (int i = 0; i < 32; i++)
+    for (auto & color : colors)
     {
-        colors[i] = Color( RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f));
+        color = Color(RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f));
     }
 
-    //m_world->GetPhysicsWorld()->SetGravity({0.f, 1.f});
+    m_world->GetPhysicsWorld()->SetGravity({0.f, 9.f});
 
     // setup walls on the arena
     auto* wallEntity = CreateEntity("Walls");
@@ -102,10 +102,9 @@ void PerfLevel::Init()
     wallColliderDesc.end = {s_worldSizeMin, s_worldSizeMin};
     wallsBody->AddEdgeCollider(wallColliderDesc);
 
-
     float boundMin = s_worldSizeMin + 60;
     float boundMax = s_worldSizeMax - 60;
-    {
+    /*{
         const Vector2 position = {boundMin, boundMin};
 
         std::string name = "Ball_1";
@@ -138,6 +137,14 @@ void PerfLevel::Init()
 
         std::string name = "Ball_center";
         AddEntity(name, position, 2, colors);
+    }*/
+
+    for (int i = 0; i < 1000; i++)
+    {
+        const Vector2 position = {RandomFloatRange(boundMin, boundMax), RandomFloatRange(boundMin, boundMax)};
+
+        std::string name = "Ball";
+        AddEntity(name, position, (RenderLayerIndex)RandomRange(0,31), colors);
     }
 
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
@@ -145,7 +152,7 @@ void PerfLevel::Init()
     auto* manager = CreateEntity("Camera");
     manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f),
                                                 red::Vector2{s_worldSizeMax, s_worldSizeMax});
-    manager->GetComponent<Transform>()->SetPosition({0.f, 0.f});
+    manager->GetComponent<Transform>()->SetLocalPosition({0.f, 0.f});
 
     m_world->AddSystem<CameraManager>(manager);
 }
@@ -169,7 +176,7 @@ void PerfLevel::AddEntity(const std::string& name, const red::Vector2& position,
     colliderDesc.isTrigger = false;
     colliderDesc.center = {size / 2.f, size / 2.f};
     colliderDesc.radius = size / 2.f;
-    colliderDesc.restitution = 1.f;
+    colliderDesc.restitution = 0.9f;
 
     auto vec4Color = colors[layerIndex % 32].AsVector4();
 
@@ -182,7 +189,7 @@ void PerfLevel::AddEntity(const std::string& name, const red::Vector2& position,
     s->SetRenderLayerIndex(layerIndex);
     s->GetMaterial().overriddenBindings.bindings[BindingIndex::Color] = value;
 
-    ball->GetComponent<Transform>()->SetPosition(position);
+    ball->GetComponent<Transform>()->SetLocalPosition(position);
     ball->GetComponent<Transform>()->SetScale(axisscale);
     auto ballBody = ball->AddComponent<PhysicBody>(bodyDesc);
     ballBody->AddCircleCollider(colliderDesc);

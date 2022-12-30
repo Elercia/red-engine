@@ -105,10 +105,10 @@ void RenderingSystem::EndRender()
 
 #ifdef RED_DEBUG
     m_renderer->RenderDebugUI();
-#endif
 
     auto* debug = m_world->GetWorldComponent<DebugComponent>();
     debug->ClearDebug();
+#endif
 
     m_renderer->EndRenderFrame();
 }

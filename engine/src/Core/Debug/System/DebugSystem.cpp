@@ -328,9 +328,9 @@ void ShowEntityList(DebugComponent* debug)
             }
 
             auto* transform = e->GetComponent<Transform>();
-            auto pos = transform->GetPosition();
+            auto pos = transform->GetLocalPosition();
             auto scale = transform->GetScale();
-            auto rot = transform->GetRotationDeg();
+            auto rot = transform->GetLocalRotationDeg();
 
             ImGui::TableNextColumn();
             ImGui::Text("%.2f ; %.2f", pos.x, pos.y);

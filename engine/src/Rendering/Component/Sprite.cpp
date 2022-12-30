@@ -123,7 +123,7 @@ void Sprite::UpdateRenderData()
 
     m_size = Vector2((float) sizei.x, (float) sizei.y) * GetOwner()->GetComponent<Transform>()->GetScale();
 
-    m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetPosition(), m_size);  // * scale
+    m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetLocalPosition(), m_size);  // * scale
 }
 
 void Sprite::ChangeMaterialForAnimation()

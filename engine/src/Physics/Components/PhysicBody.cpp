@@ -22,6 +22,11 @@ PhysicBody::~PhysicBody()
 {
 }
 
+bool PhysicBody::IsStatic() const
+{
+    return m_desc.type == PhysicsBodyType::STATIC_BODY;
+}
+
 void PhysicBody::ApplyForce(const Vector2& force, const Vector2& relativePosition)
 {
     auto worldPosition = ConvertFromPhysicsVector(m_body->GetPosition()) + relativePosition;

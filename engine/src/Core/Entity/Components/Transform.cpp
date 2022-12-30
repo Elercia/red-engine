@@ -25,24 +25,24 @@ Transform::Transform(Entity* entity, Vector2 position)
 {
 }
 
-const Vector2& Transform::GetPosition() const
+const Vector2& Transform::GetLocalPosition() const
 {
     return m_localPosition;
 }
 
-Vector2& Transform::GetPosition()
+Vector2& Transform::GetLocalPosition()
 {
     return m_localPosition;
 }
 
-void Transform::SetPosition(const Vector2& pos)
+void Transform::SetLocalPosition(const Vector2& pos)
 {
     RedAssert(!m_locked);
     m_localPosition = pos;
     m_dirtyWorldMatrix = true;
 }
 
-void Transform::SetPosition(float x, float y)
+void Transform::SetLocalPosition(float x, float y)
 {
     RedAssert(!m_locked);
     m_localPosition = Vector2(x, y);
@@ -59,21 +59,12 @@ Vector2& Transform::GetScale()
     return m_localScale;
 }
 
-float Transform::GetDepth() const
-{
-    /*auto* parent = GetOwner()->GetParent();
-    Transform* parentTransform = parent != nullptr ? parent->GetComponent<Transform>() : nullptr;
-
-    return parentTransform != nullptr ? m_localDepth + parentTransform->GetDepth() : m_localDepth;*/
-    return 0.f;
-}
-
-float Transform::GetRotationDeg() const
+float Transform::GetLocalRotationDeg() const
 {
     return m_localRotation;
 }
 
-float Transform::GetRotationRad() const
+float Transform::GetLocalRotationRad() const
 {
     return Math::ToRadians(m_localRotation);
 }
@@ -85,26 +76,18 @@ void Transform::SetScale(const Vector2& scale)
     m_dirtyWorldMatrix = true;
 }
 
-void Transform::SetRotationDeg(float rotationDeg)
+void Transform::SetLocalRotationDeg(float rotationDeg)
 {
     RedAssert(!m_locked);
     m_localRotation = rotationDeg;
     m_dirtyWorldMatrix = true;
 }
 
-void Transform::SetRotationRad(float rotationRad)
+void Transform::SetLocalRotationRad(float rotationRad)
 {
     RedAssert(!m_locked);
     m_localRotation = Math::ToDegrees(rotationRad);
     m_dirtyWorldMatrix = true;
-}
-
-void Transform::SetDepth(float /*depth*/)
-{
-    RedAssert(!m_locked);
-    //m_localDepth = depth;
-    //m_dirtyWorldMatrix = true;
-    RedAssertNotReached();
 }
 
 void Transform::UpdateWorldMatrixIfNeeded()

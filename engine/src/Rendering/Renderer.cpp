@@ -157,7 +157,7 @@ void Renderer::BeginRenderFrame()
     auto windowInfo = m_window->GetWindowInfo();
     glViewport(0, 0, windowInfo.width, windowInfo.height);
     glClearColor(0.5f, 0.5f, 0.5f, 0.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 
 #ifdef RED_DEBUG
     // Start the Dear ImGui frame
@@ -189,8 +189,9 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 
 void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
 {
-    for (auto& r : m_culledAndSortedRenderingData)
+    for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
     {
+        auto& r = m_culledAndSortedRenderingData[i];
         RedAssert(r.hasBeenRendered);
     }
 
@@ -322,18 +323,20 @@ void Renderer::RenderDebugUI()
 
 void Renderer::FillCameraBuffer(const CameraComponent& camera)
 {
-    PerCameraData* perCamera = m_perCameraData.Map<PerCameraData>(MapType::WRITE);
-    perCamera->viewProj = camera.GetViewProj();
-    m_perCameraData.UnMap();
+    PerCameraData data;
+    data.viewProj = camera.GetViewProj();
+    
+    glNamedBufferSubData(m_perCameraData.m_gpuBufferHandle, 0, sizeof(PerCameraData), &data);
 }
 
 void Renderer::FillEntityBuffer(const RenderingData& data)
 {
-    PerInstanceData* perInstance = m_perInstanceData.Map<PerInstanceData>(MapType::WRITE);
-    perInstance->world = data.worldMatrix;
-    perInstance->size = data.size;
-    perInstance->padding = 1.f;
-    m_perInstanceData.UnMap();
+    PerInstanceData instanceData;
+    instanceData.world = data.worldMatrix;
+    instanceData.size = data.size;
+    instanceData.padding = 1.f;
+
+    glNamedBufferSubData(m_perInstanceData.m_gpuBufferHandle, 0, sizeof(PerInstanceData), &instanceData);
 }
 
 void Renderer::UseMaterial(const MaterialInstance& materialInstance)
@@ -403,15 +406,23 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
     // Reset the rendering data
     for (auto & layer : m_renderingDataPerLayer)
     {
-        for (int type = 0; type < (int) RenderEntityType::Count; type++)
+        for (auto & type : layer)
         {
-            layer[type] = ArrayView<RenderingData>();
+            type = ArrayView<RenderingData>();
         }
     }
 
     // Sort the culled data
     std::sort(m_culledAndSortedRenderingData.begin(), m_culledAndSortedRenderingData.end(),
-              [](auto& l, auto& r) { return l.renderLayerIndex < r.renderLayerIndex && l.type < r.type; });
+              [](auto& l, auto& r)
+              {
+                  if (l.renderLayerIndex < r.renderLayerIndex)
+                      return true;
+                  if (l.type < r.type)
+                      return true;
+
+                  return false;
+              });
 
     uint32 renderType = 0;
     uint32 renderLayerIndex = 0;
@@ -446,6 +457,20 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
     {
         m_renderingDataPerLayer[renderLayerIndex][renderType] =
             ArrayView(m_culledAndSortedRenderingData, start, m_culledAndSortedRenderingData.size() - start);
+    }
+
+    for (int i = 0; i < 32; i++)
+    {
+        for (int type = 0; type < 2; type++)
+        {
+            auto& ar = m_renderingDataPerLayer[i][type];
+
+            for (auto& e : ar)
+            {
+                RedAssert(e.renderLayerIndex == (RenderLayerIndex)i);
+                RedAssert(e.type == (RenderEntityType) type);
+            }
+        }
     }
 }
 

@@ -82,6 +82,8 @@ public:
     PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc);
     ~PhysicBody();
 
+    bool IsStatic() const;
+
     void ApplyForce(const Vector2& force, const Vector2& relativePosition);
 
     int AddCircleCollider(const CircleColliderDesc& desc);

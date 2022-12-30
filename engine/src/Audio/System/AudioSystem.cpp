@@ -44,8 +44,8 @@ void AudioSystem::Update()
         auto* audioListenerTransform = std::get<0>( audioTuple )->GetComponent<Transform>();
 
         FMOD_VECTOR oldPos = FmodUtils::Convert(audioListener->m_lastFramePos);
-        FMOD_VECTOR currentPos = FmodUtils::Convert(audioListenerTransform->GetPosition());
-        audioListener->m_lastFramePos = audioListenerTransform->GetPosition();
+        FMOD_VECTOR currentPos = FmodUtils::Convert(audioListenerTransform->GetLocalPosition());
+        audioListener->m_lastFramePos = audioListenerTransform->GetLocalPosition();
 
         FMOD_VECTOR velocity;
         velocity.x = (currentPos.x - oldPos.x) * (1000 / Time::DeltaTime());

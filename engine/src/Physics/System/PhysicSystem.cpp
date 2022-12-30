@@ -40,15 +40,22 @@ void PhysicSystem::Update()
 
     m_physicsWorld->ClearForces();
 
-    auto bodies =  GetComponents<PhysicBody>();
+    auto bodies = GetComponents<PhysicBody>();
     for (auto& tuple : bodies)
     {
         auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
         auto* physicBody = std::get<1>( tuple );
 
+        if (physicBody->IsStatic())
+        {
+            continue;
+        }
+
         transform->SetLocked(true);
 
-        physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetPosition()), transform->GetRotationRad());
+        // FIXME : Manage object scale. Need to scale the different fixtures of the body
+        physicBody->GetBody()->SetTransform(ConvertToPhysicsVector(transform->GetLocalPosition()),
+                                            transform->GetLocalRotationRad());
     }
 
     m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
@@ -58,10 +65,16 @@ void PhysicSystem::Update()
         auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
         auto* physicBody = std::get<1>( tuple );
 
+        if (physicBody->IsStatic())
+        {
+            continue;
+        }
+
         transform->SetLocked(false);
 
-        transform->SetPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
-        transform->SetRotationRad(physicBody->GetBody()->GetAngle());
+        transform->SetLocalPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
+        transform->SetLocalRotationRad(physicBody->GetBody()->GetAngle());
+        transform->UpdateWorldMatrixIfNeeded();
     }
 
     ManageCollisions();
