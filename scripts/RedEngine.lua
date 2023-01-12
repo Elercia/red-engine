@@ -3,9 +3,11 @@ newoption {
    description = "Build projects with address sanitizer"
 }
 
+include "Helpers.lua"
+
 outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}-" .. _ACTION .. "/%{prj.name}"
 
-rootPath 				= "%{wks.location}/../../../"
+rootPath 				= os.getcwd() .. "/../"
 enginePath 				= rootPath .. "engine/"
 externalPath 			= rootPath .. "external/"
 projectsFilesLocation 	= "./projects/" .. os.target() .. "_" .. _ACTION

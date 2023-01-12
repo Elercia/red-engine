@@ -74,7 +74,10 @@ function TemplateProject(Name)
 		symbols "on"
 	filter {}
 
-	--postbuildcommands { "{COPY} \"%{cfg.buildtarget.directory}/*\" \"" .. rootPath .. "templates/%{prj.name}\"" }
+	postbuildcommands { '{COPY} "%{cfg.buildtarget.directory}/*" "' .. rootPath .. 'templates/%{prj.name}"' }
+
+	print("Copying engine resources for template " .. Name)
+	CopyFile(rootPath.."templates/ENGINE_RESOURCES/*", rootPath.."templates/"..Name.."/RESOURCES/ENGINE_RESOURCES/*")
 end
 
 TemplateProject("Pong")

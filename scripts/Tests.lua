@@ -49,4 +49,4 @@ project ("RedEngineTest")
 		symbols "on"
 	filter {}
 
-	--postbuildcommands { "{COPY} \"%{cfg.buildtarget.directory}/*\" \"" .. rootPath .. "test\"" }
+	postbuildcommands { "{COPY} \"%{cfg.buildtarget.directory}/*\" \"" .. rootPath .. "test\"" }
