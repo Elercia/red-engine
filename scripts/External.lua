@@ -190,17 +190,15 @@ ExternalLibs("ImGui", true, "/imgui/")
 ExternalLibs("glm", true, "/glm/include")
 	files
 	{
-		externalDirectoryPath .. "/glm/**.h",
-		externalDirectoryPath .. "/glm/**.c",
-		externalDirectoryPath .. "/glm/**.hpp",
-		externalDirectoryPath .. "/glm/**.cpp",
+		externalDirectoryPath .. "/glm/glm/**.h",
+		externalDirectoryPath .. "/glm/glm/**.c",
+		externalDirectoryPath .. "/glm/glm/**.hpp",
+		externalDirectoryPath .. "/glm/glm/**.cpp",
 	}
 
 	includedirs
 	{
-		externalDirectoryPath .. "/glm",
-		externalDirectoryPath .. "/"
+		externalDirectoryPath .. "/glm"
 	}
 
 	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/glm/")
-	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/")
