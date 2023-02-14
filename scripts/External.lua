@@ -186,3 +186,21 @@ ExternalLibs("ImGui", true, "/imgui/")
 
 	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/imgui/")
 	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/imgui/backends/")
+
+ExternalLibs("glm", true, "/glm/include")
+	files
+	{
+		externalDirectoryPath .. "/glm/**.h",
+		externalDirectoryPath .. "/glm/**.c",
+		externalDirectoryPath .. "/glm/**.hpp",
+		externalDirectoryPath .. "/glm/**.cpp",
+	}
+
+	includedirs
+	{
+		externalDirectoryPath .. "/glm",
+		externalDirectoryPath .. "/"
+	}
+
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/glm/")
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/")

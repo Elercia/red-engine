@@ -8,7 +8,7 @@
 namespace red
 {
 
-// Row major matrix
+// Column major matrix
 template <typename T, uint8 L, uint8 C>
 class MatrixT
 {
@@ -50,7 +50,7 @@ constexpr MatrixT<T, L, C> operator*(typename MatrixT<T, L, C>::DataType v, cons
 template<typename T, uint8 L, uint8 C>
 constexpr MatrixT<T, L, C> operator*(const MatrixT<T, L, C>& l, const MatrixT<T, L, C>& r);
 
-constexpr Vector4 operator*(const Vector4& v, const Matrix44& m);
+constexpr Vector4 operator*(const Matrix44& m, const Vector4& v);
 
 }  // namespace red
 

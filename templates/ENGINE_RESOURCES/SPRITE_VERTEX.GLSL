@@ -43,7 +43,7 @@ void main()
     vec4 positionWS = vec4(position2DWS.xy, 0.f, 1.f);
 
     vec4 outPos = (toMat4(PerCameraData.view_projection1, PerCameraData.view_projection2, PerCameraData.view_projection3, PerCameraData.view_projection4)) * positionWS;
-    outPos.xy *= -1;
+    outPos.y *= -1;
 
     gl_Position = outPos;
     texture_uv_out = tex_uv;

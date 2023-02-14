@@ -26,17 +26,17 @@ namespace Math
 
         Matrix44 Result;
         Result(0, 0) = s.x;
-        Result(1, 0) = s.y;
-        Result(2, 0) = s.z;
-        Result(0, 1) = u.x;
+        Result(0, 1) = s.y;
+        Result(0, 2) = s.z;
+        Result(1, 0) = u.x;
         Result(1, 1) = u.y;
-        Result(2, 1) = u.z;
-        Result(0, 2) = -f.x;
-        Result(1, 2) = -f.y;
+        Result(1, 2) = u.z;
+        Result(2, 0) = -f.x;
+        Result(2, 1) = -f.y;
         Result(2, 2) = -f.z;
-        Result(3, 0) = -Dot(s, eye);
-        Result(3, 1) = -Dot(u, eye);
-        Result(3, 2) = Dot(f, eye);
+        Result(0, 3) = -Dot(s, eye);
+        Result(1, 3) = -Dot(u, eye);
+        Result(2, 3) = Dot(f, eye);
         return Result;
     }
 
@@ -91,7 +91,7 @@ namespace Math
         float sinY = Sin(angles.y);
         float cosZ = Cos(angles.z);
         float sinZ = Sin(angles.z);
-        //TODO row major
+        
         // clang-format off
 		Matrix44 rotationMatrixX = {
 			1.f, 		0.f, 		0.f, 		0.f,

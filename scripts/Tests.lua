@@ -28,6 +28,7 @@ project ("RedEngineTest")
 	links
 	{
 		"RedEngineLib",
+		"glm",
 		libsToLink
 	}
 
