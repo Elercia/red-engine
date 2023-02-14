@@ -59,7 +59,7 @@ void ReqEquals(float r, float glm)
     REQUIRE(Math::EqualsEpsilon(r, glm, 0.01f));
 }
 
-void ReqEqualsPtr(const float const* r, const float const* glm, int size)
+void ReqEqualsPtr(float const* r, float const* glm, int size)
 {
     for (int i = 0; i < size; i++)
     {
