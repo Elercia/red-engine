@@ -194,3 +194,4 @@ test/RedEngineTest
 test/RESOURCES/TMP_OUT/
 
 templates/Pong/Pong
+templates/*/RESOURCES/ENGINE_RESOURCES
