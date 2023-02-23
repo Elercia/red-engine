@@ -46,7 +46,7 @@ struct PerInstanceData
 {
     Matrix33 world;
     Vector2 size;
-    float padding;
+    float renderLayer;
 };
 
 using RenderDataArrayPerType = std::array<Array<RenderingData>, (uint8) RenderEntityType::Count>;
@@ -60,7 +60,6 @@ private:
         bool alphaBlending = false;
         const char* name = "Unknown";
         RenderEntityType renderType = RenderEntityType::Opaque;
-        RenderLayerIndex layerIndex = 0;
     };
 
 public:
@@ -77,8 +76,8 @@ public:
     void BeginCameraRendering(CameraComponent* camera);
     void EndCameraRendering(CameraComponent* camera);
 
-    void RenderLayerOpaque(RenderLayerIndex layerIndex, CameraComponent* camera);
-    void RenderLayerTransparency(RenderLayerIndex layerIndex, CameraComponent* camera);
+    void RenderOpaqueQueue(CameraComponent* camera);
+    void RenderTransparencyQueue(CameraComponent* camera);
 
     void RenderDebug(CameraComponent* camera, DebugComponent* debug);
     void RenderDebugUI();
@@ -109,7 +108,7 @@ private:
 
     // Tmp data used per camera
     Array<RenderingData, DoubleLinearArrayAllocator> m_culledAndSortedRenderingData;
-    ArrayView<RenderingData> m_renderingDataPerLayer[32][(int)RenderEntityType::Count];
+    ArrayView<RenderingData> m_renderingDataPerQueue[(int)RenderEntityType::Count];
 
     // Rendering data sent to GPU
     GPUBuffer m_perInstanceData;

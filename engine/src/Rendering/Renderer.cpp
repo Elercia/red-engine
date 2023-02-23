@@ -100,7 +100,7 @@ void Renderer::InitRenderer(WindowComponent* window)
 #ifdef RED_DEBUG
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback((GLDEBUGPROC)&red::OpenGLMessageCallback, nullptr);
+    glDebugMessageCallback((GLDEBUGPROC) &red::OpenGLMessageCallback, nullptr);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -125,10 +125,10 @@ void Renderer::InitRenderer(WindowComponent* window)
     glBindBuffer(GL_ARRAY_BUFFER, m_lineVertexColorVBO);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // TODO: Change this to vec2
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);  // TODO: Change this to vec2
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (4 * sizeof(float)));
 }
 
 void Renderer::ReCreateWindow(WindowComponent* /*window*/)
@@ -156,8 +156,8 @@ void Renderer::BeginRenderFrame()
 {
     auto windowInfo = m_window->GetWindowInfo();
     glViewport(0, 0, windowInfo.width, windowInfo.height);
-    glClearColor(0.5f, 0.5f, 0.5f, 0.f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #ifdef RED_DEBUG
     // Start the Dear ImGui frame
@@ -181,19 +181,21 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 
     glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 
-    glClearColor(cameraComponent->m_cleanColor.r, cameraComponent->m_cleanColor.g,
-                 cameraComponent->m_cleanColor.b, cameraComponent->m_cleanColor.a);
+    glClearColor(cameraComponent->m_cleanColor.r, cameraComponent->m_cleanColor.g, cameraComponent->m_cleanColor.b,
+                 cameraComponent->m_cleanColor.a);
 
     CullRenderDataForCamera(cameraComponent);
 }
 
 void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
 {
+#ifdef RED_DEBUG
     for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
     {
         auto& r = m_culledAndSortedRenderingData[i];
         RedAssert(r.hasBeenRendered);
     }
+#endif
 
     m_culledAndSortedRenderingData.clearAndFree();
 }
@@ -213,31 +215,29 @@ void Renderer::Draw(const Renderable* renderable, const Transform* transform)
     m_renderingData.push_back(std::move(data));
 }
 
-void Renderer::RenderLayerOpaque(RenderLayerIndex layerIndex, CameraComponent* camera)
+void Renderer::RenderOpaqueQueue(CameraComponent* camera)
 {
     RenderPassDesc desc;
     desc.alphaBlending = false;
     desc.name = "opaque";
     desc.renderType = RenderEntityType::Opaque;
-    desc.layerIndex = layerIndex;
 
     RenderPass(camera, desc);
 }
 
-void Renderer::RenderLayerTransparency(RenderLayerIndex layerIndex, CameraComponent* camera)
+void Renderer::RenderTransparencyQueue(CameraComponent* camera)
 {
     RenderPassDesc desc;
     desc.alphaBlending = true;
     desc.name = "transparency";
     desc.renderType = RenderEntityType::Transparency;
-    desc.layerIndex = layerIndex;
 
     RenderPass(camera, desc);
 }
 
 void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 {
-    auto& toRender = m_renderingDataPerLayer[desc.layerIndex][(int) desc.renderType];
+    auto& toRender = m_renderingDataPerQueue[(int) desc.renderType];
 
     if (toRender.empty())
         return;
@@ -246,7 +246,10 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, desc.name);
 
-    if (desc.alphaBlending)
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    /*if (desc.alphaBlending)
     {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
@@ -254,14 +257,13 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
     else
     {
         glDisable(GL_BLEND);
-    }
+    }*/
 
     // Do the actual render calls to the camera render target
     for (uint32 i = 0; i < toRender.size(); i++)
     {
         auto& renderData = toRender[i];
 
-        RedAssert(desc.layerIndex == renderData.renderLayerIndex);
         RedAssert(desc.renderType == renderData.type);
 
         RedAssert(!renderData.hasBeenRendered);
@@ -295,6 +297,8 @@ void Renderer::RenderDebug(CameraComponent* camera, DebugComponent* debug)
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug lines");
 
+    glDisable(GL_DEPTH_TEST);
+
     glUseProgram(shader->m_handle);
 
     glNamedBufferData(m_lineVertexColorVBO, lines.size() * sizeof(DebugLinePoint), lines.data(), GL_STATIC_DRAW);
@@ -325,7 +329,7 @@ void Renderer::FillCameraBuffer(const CameraComponent& camera)
 {
     PerCameraData data;
     data.viewProj = camera.GetViewProj();
-    
+
     glNamedBufferSubData(m_perCameraData.m_gpuBufferHandle, 0, sizeof(PerCameraData), &data);
 }
 
@@ -334,7 +338,7 @@ void Renderer::FillEntityBuffer(const RenderingData& data)
     PerInstanceData instanceData;
     instanceData.world = data.worldMatrix;
     instanceData.size = data.size;
-    instanceData.padding = 1.f;
+    instanceData.renderLayer = (float) data.renderLayerIndex;
 
     glNamedBufferSubData(m_perInstanceData.m_gpuBufferHandle, 0, sizeof(PerInstanceData), &instanceData);
 }
@@ -404,73 +408,33 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
     }
 
     // Reset the rendering data
-    for (auto & layer : m_renderingDataPerLayer)
+    for (auto& queue : m_renderingDataPerQueue)
     {
-        for (auto & type : layer)
-        {
-            type = ArrayView<RenderingData>();
-        }
+        queue = ArrayView<RenderingData>();
     }
 
     // Sort the culled data
     std::sort(m_culledAndSortedRenderingData.begin(), m_culledAndSortedRenderingData.end(),
               [](auto& l, auto& r)
               {
-                  if (l.renderLayerIndex < r.renderLayerIndex)
-                      return true;
                   if (l.type < r.type)
                       return true;
 
                   return false;
               });
 
-    uint32 renderType = 0;
-    uint32 renderLayerIndex = 0;
+    uint32 i = 0;
     uint32 start = 0;
-    for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
+    for (int type = 0; type < (int)RenderEntityType::Count; type++)
     {
-        bool differentLayer = m_culledAndSortedRenderingData[i].renderLayerIndex != renderLayerIndex;
-        bool differentType = (int) m_culledAndSortedRenderingData[i].type != renderType;
-
-        if (differentLayer || differentType)
+        while (i < m_culledAndSortedRenderingData.size() &&
+               m_culledAndSortedRenderingData[i].type == (RenderEntityType) type)
         {
-            m_renderingDataPerLayer[renderLayerIndex][renderType] =
-                ArrayView(m_culledAndSortedRenderingData, start, i - start);
-
-            start = i;
+            i++;
         }
-
-        if (differentLayer)
-        {
-            renderLayerIndex = m_culledAndSortedRenderingData[i].renderLayerIndex;
-            renderType = (int) m_culledAndSortedRenderingData[i].type;
-        }
-        if (differentType)
-        {
-            renderType = (int) m_culledAndSortedRenderingData[i].type;
-
-            RedAssert(renderType < (int) RenderEntityType::Count);
-        }
-    }
-
-    if (renderLayerIndex < 32 && renderType < (int) RenderEntityType::Count)
-    {
-        m_renderingDataPerLayer[renderLayerIndex][renderType] =
-            ArrayView(m_culledAndSortedRenderingData, start, m_culledAndSortedRenderingData.size() - start);
-    }
-
-    for (int i = 0; i < 32; i++)
-    {
-        for (int type = 0; type < 2; type++)
-        {
-            auto& ar = m_renderingDataPerLayer[i][type];
-
-            for (auto& e : ar)
-            {
-                RedAssert(e.renderLayerIndex == (RenderLayerIndex)i);
-                RedAssert(e.type == (RenderEntityType) type);
-            }
-        }
+        
+        m_renderingDataPerQueue[type] = ArrayView<RenderingData>(m_culledAndSortedRenderingData, start, i);
+        start = i;
     }
 }
 
