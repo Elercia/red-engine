@@ -59,6 +59,7 @@ int PhysicBody::AddCollider(Collider&& collider, const ColliderDesc& desc)
     colliderInserted.m_fixtureDef.restitution = desc.restitution;
     colliderInserted.m_fixtureDef.friction = desc.friction;
     colliderInserted.m_fixtureDef.density = 1.0f;
+    colliderInserted.m_fixtureDef.restitutionThreshold = 0.f;
     colliderInserted.m_fixture = m_body->CreateFixture(&colliderInserted.m_fixtureDef);
 
     return mapPair->first;
