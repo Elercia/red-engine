@@ -86,6 +86,8 @@ void PerfLevel::Init()
 
     red::EdgeColliderDesc wallColliderDesc;
     wallColliderDesc.isTrigger = false;
+    wallColliderDesc.restitution = 1.f;
+
     wallColliderDesc.start = {s_worldSizeMin, s_worldSizeMin};
     wallColliderDesc.end = {s_worldSizeMax, s_worldSizeMin};
     wallsBody->AddEdgeCollider(wallColliderDesc);
@@ -139,7 +141,7 @@ void PerfLevel::Init()
         AddEntity(name, position, 2, colors);
     }*/
 
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 100; i++)
     {
         const Vector2 position = {RandomFloatRange(boundMin, boundMax), RandomFloatRange(boundMin, boundMax)};
 
