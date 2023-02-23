@@ -25,6 +25,17 @@ DebugSystem::DebugSystem(World* world) : System(world)
     m_priority = 10;
 }
 
+void ShowImGuiDemo(DebugComponent* /*debug*/)
+{
+    static bool demoOpen = false;
+    ImGui::Checkbox("Show ImGui demo", &demoOpen);
+
+    if(demoOpen)
+    {
+        ImGui::ShowDemoWindow(&demoOpen);
+    }
+}
+
 void DebugSystem::Init()
 {
     System::Init();
@@ -32,9 +43,10 @@ void DebugSystem::Init()
 
     GetRedLogger()->AddOutput([=](const Logger::LogOoutputInfo& out) { debugComp->AddLog(out); });
 
-    debugComp->m_drawers.push_back(DebugDrawer{"Console", &DebugSystem::RenderConsole});
-    debugComp->m_drawers.push_back(DebugDrawer{"Entities", &DebugSystem::RenderEntityTree});
-    debugComp->m_drawers.push_back(DebugDrawer{"Physics", &DebugSystem::RenderDebugPhysicsControls});
+    debugComp->AddDebugDrawer("Console", &DebugSystem::RenderConsole);
+    debugComp->AddDebugDrawer("Entities", &DebugSystem::RenderEntityTree);
+    debugComp->AddDebugDrawer("Physics", &DebugSystem::RenderDebugPhysicsControls);
+    debugComp->AddDebugDrawer("Misc", &ShowImGuiDemo);
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
@@ -262,9 +274,6 @@ void DebugSystem::Update()
     {
         m_world->LoadLevel(Path::Resource("serializedLevel.json"));
     }
-
-    bool demoOpen = true;
-    ImGui::ShowDemoWindow(&demoOpen);
 }
 
 void ShowEntityList(DebugComponent* debug)

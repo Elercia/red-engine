@@ -24,6 +24,7 @@ using DebugMenuDrawerFunc = void(*)(DebugComponent*);
 
 struct DebugDrawer
 {
+    int id;
     std::string name;
     DebugMenuDrawerFunc callback;
 };
@@ -44,6 +45,9 @@ public:
     void AddCircle(const Vector2& center, float radius, const Color& c = ColorConstant::BLACK);
     void AddPolygon(const ArrayView<Vector2>& points, const Color& c = ColorConstant::BLACK, bool isSolid = false);
     void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK, bool isSolid = false);
+
+    int AddDebugDrawer(const char* name, DebugMenuDrawerFunc&& callback);
+    void RemoveDebugDrawer(int id);
 
     std::shared_ptr<ShaderProgram> GetLineShader();
     const Array<DebugLinePoint>& GetDebugLines() const;

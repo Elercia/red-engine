@@ -59,6 +59,23 @@ void DebugComponent::AddPoint(const Vector2& coord, const Color& c /*= ColorCons
     AddCircle(coord, 0.1f, c);
 }
 
+int DebugComponent::AddDebugDrawer(const char* name, DebugMenuDrawerFunc&& callback)
+{
+    static int debugDrawerIndex = 0;
+    m_drawers.push_back({debugDrawerIndex++, name, std::move(callback)});
+
+    return debugDrawerIndex - 1;
+}
+
+void DebugComponent::RemoveDebugDrawer(int id)
+{
+    auto index = m_drawers.Find([=](const DebugDrawer& e) { return e.id == id; });
+    if (index != m_drawers.npos)
+    {
+        m_drawers.erase(m_drawers.begin() + index);
+    }
+}
+
 std::shared_ptr<ShaderProgram> DebugComponent::GetLineShader()
 {
     return m_lineShaderProgram;
