@@ -33,6 +33,7 @@ public:
     using const_reference = const T&;
 
     using size_type = uint32;
+    static const size_type npos = (size_type)-1;
 
     /// Constructors
     Array();
@@ -106,6 +107,11 @@ public:
 
     template <class InputIterator>
     iterator insert(const_iterator position, InputIterator first, InputIterator last);
+
+    size_type Find(const T& toFind) const;
+
+    template <typename Predicate>
+    size_type Find(Predicate&& pred) const;
 
 private:
     void SetCapacity(size_type askedCapacity);

@@ -481,6 +481,27 @@ void Array<T, Allocator>::Destroy(iterator from, iterator to)
         }
     }
 }
+
+template <typename T, typename Allocator>
+typename Array<T, Allocator>::size_type Array<T, Allocator>::Find(const T& toFind) const
+{
+    return Find([&toFind](const T& elem) { return elem == toFind; });
+}
+
+template <typename T, typename Allocator>
+template <typename Predicate>
+typename Array<T, Allocator>::size_type Array<T, Allocator>::Find(Predicate&& pred) const
+{
+    for(int i = 0, max = size(); i < max; i++)
+    {
+        const T& elem = at(i);
+        if (pred(elem))
+            return i;
+    }
+
+    return Array<T, Allocator>::npos;
+}
+
 #endif  // RED_USE_ARRAY
 
 template <typename T>
