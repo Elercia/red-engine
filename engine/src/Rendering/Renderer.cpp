@@ -97,7 +97,7 @@ void Renderer::InitRenderer(WindowComponent* window)
         return;
     }
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback((GLDEBUGPROC) &red::OpenGLMessageCallback, nullptr);
@@ -141,7 +141,7 @@ void Renderer::Finalise()
     m_perInstanceData.Finalize();
     m_perCameraData.Finalize();
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
@@ -159,7 +159,7 @@ void Renderer::BeginRenderFrame()
     glClearColor(0.5f, 0.5f, 0.5f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();

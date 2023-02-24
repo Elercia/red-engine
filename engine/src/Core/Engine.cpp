@@ -117,7 +117,7 @@ bool Engine::RegisterComponentTypes()
     return true;
 }
 
-#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+#if defined(RED_WINDOWS) && defined(RED_DEVBUILD)
 static void LogToDebugger(const Logger::LogOoutputInfo& out)
 {
     OutputDebugStringA(out.str.c_str());
@@ -132,17 +132,17 @@ void Engine::SetupLogger()
     int standarOutputFuncIndex = -1;
     int debugOutputFuncIndex = -1;
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
     // Always add standard output when debugging
     standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
-#endif
+#endif // RED_DEVBUILD
 
-#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+#if defined(RED_WINDOWS) && defined(RED_DEVBUILD)
     if (IsDebuggerPresent() != 0)
     {
         debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
     }
-#endif
+#endif // defined(RED_WINDOWS) && defined(RED_DEVBUILD)
 
     if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
     {
@@ -189,7 +189,7 @@ bool Engine::Create()
     m_world->AddSystem<UserInputSystem>();
     m_world->AddSystem<AudioSystem>();
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
     m_world->AddSystem<DebugSystem>();
 #endif
 

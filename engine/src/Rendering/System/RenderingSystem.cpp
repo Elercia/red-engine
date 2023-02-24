@@ -93,7 +93,7 @@ void RenderingSystem::EndRender()
         m_renderer->RenderTransparencyQueue(cameraComponent);
         
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
         auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
         m_renderer->RenderDebug(cameraComponent, debugComp);
 #endif
@@ -101,7 +101,7 @@ void RenderingSystem::EndRender()
         m_renderer->EndCameraRendering(cameraComponent);
     }
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
     m_renderer->RenderDebugUI();
 
     auto* debug = m_world->GetWorldComponent<DebugComponent>();

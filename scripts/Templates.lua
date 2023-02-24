@@ -34,46 +34,6 @@ function TemplateProject(Name)
 		libsToLink
 	}
 
-	defines
-	{
-		"RED_USE_PROFILER",
-		"FMT_EXCEPTIONS=0",
-	}
-
-	filter "platforms:Win64"
-		systemversion "latest"
-
-		defines
-		{
-			"RED_WINDOWS"
-		}
-
-		links
-		{
-			"SDL2main",
-		}
-	filter {}
-
-	filter "platforms:Linux64"
-		defines
-		{
-			"RED_LINUX"
-		}
-	filter {}
-
-	filter "configurations:Debug"
-		defines {"RED_DEBUG", "RED_BREAK_ON_ASSERT" }
-		runtime "Debug"
-		symbols "on"
-	filter {}
-
-	filter "configurations:Release"
-		defines "RED_RELEASE"
-		runtime "Release"
-		optimize "on"
-		symbols "on"
-	filter {}
-
 	postbuildcommands { '{COPY} "%{cfg.buildtarget.directory}/*" "' .. rootPath .. 'templates/%{prj.name}"' }
 
 	print("Copying engine resources for template " .. Name)

@@ -53,7 +53,7 @@ void EventSystem::PreUpdate()
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
     {
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
         if (ImGui::GetCurrentContext() != nullptr)
             ImGui_ImplSDL2_ProcessEvent(&event);
 #endif

@@ -25,6 +25,7 @@ libsToLink 				= {
 							"optick",
 							"STBI",
 							"ImGui",
+							"marl",
 						}
 
 availablePlatforms={}
@@ -57,6 +58,74 @@ function RedDefaultProjectOptions()
 		defines{"_DISABLE_VECTOR_ANNOTATION", "_DISABLE_STRING_ANNOTATION"}
 	filter {}
 
+	filter{ "platforms:Linux64" }
+  		buildoptions {}
+	filter {}
+
+	filter { "toolset:msc" }
+		linkoptions 
+		{
+			"/NODEFAULTLIB:library"
+		}
+	filter {}
+
+	filter { "platforms:Win64" }
+		systemversion "latest"
+
+		defines
+		{
+			"RED_WINDOWS"
+		}
+
+		links
+		{
+			"SDL2main.lib"
+		}
+	filter {}
+
+	filter { "platforms:Linux64" }
+		defines
+		{
+			"RED_LINUX"
+		}
+	filter {}
+
+	filter { "configurations:Debug" }
+		defines 
+		{
+			"RED_DEBUG", 
+			"RED_DEVBUILD", 
+			"RED_BREAK_ON_ASSERT",
+			"RED_USE_PROFILER" 
+		}
+
+		runtime "Debug"
+		symbols "Full"
+	filter {}
+
+	filter { "configurations:ReleaseWithDebugInfo" }
+		defines 
+		{
+			"RED_DEBUG_RELEASE",
+			"RED_DEVBUILD",
+			"RED_USE_PROFILER"
+		}
+
+		runtime "Release"
+		optimize "on"
+		symbols "Full"
+	filter {}
+
+	filter { "configurations:Release" }
+		defines "RED_RELEASE"
+		runtime "Release"
+		optimize "on"
+	filter {}
+
+	defines
+	{
+		"FMT_EXCEPTIONS=0",
+	}
 end
 
 workspace "RedEngine"
@@ -65,6 +134,7 @@ workspace "RedEngine"
 	configurations
 	{
 		"Debug",
+		"ReleaseWithDebugInfo",
 		"Release"
 	}
 

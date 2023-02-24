@@ -202,3 +202,22 @@ ExternalLibs("glm", true, "/glm/include")
 	}
 
 	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/glm/")
+
+ExternalLibs("marl", true, "/marl/include")
+	local marlSourcePath = externalDirectoryPath .. "/marl"
+
+	files
+	{
+		marlSourcePath .. "/src/debug.cpp",
+		marlSourcePath .. "/src/memory.cpp",
+		marlSourcePath .. "/src/scheduler.cpp",
+		marlSourcePath .. "/src/thread.cpp",
+		marlSourcePath .. "/src/trace.cpp",
+	}
+
+	includedirs
+	{
+		marlSourcePath .. "/include/"
+	}
+
+	table.insert(ExternalIncludeDirs, marlSourcePath .. "/include/")
