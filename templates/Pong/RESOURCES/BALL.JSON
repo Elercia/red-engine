@@ -3,7 +3,7 @@
     "name": "default",
     "spritesheet": "BALL_SPRITESHEET",
     "loop": false,
-    "using_transparency" : true,
+    "material": "ENGINE_RESOURCES/SPRITE_TRANSPARENT_MATERIAL",
     "frames": [
       {
         "rect": {
