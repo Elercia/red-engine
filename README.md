@@ -45,6 +45,7 @@ Hierarchy :
     - ``Physics`` Physics system of the engine. Including physics related components, resources and system.
     - ``Rendering`` Rendering system of the engine. Including rendering related components, resources and system.
     - ``Resources`` Base classes and systems used to load and manage systems.
+    - ``Thread`` Thread scheduler and Thread utilities.
     - ``Utils`` Everything that don't go inside other categories.
 - ``external`` External library (using Git sub modules or downloaded from there repositories)
 - ``scripts`` Useful scripts such as generating project
@@ -78,4 +79,5 @@ The engine uses the following dependencies :
 - [STB (image related)](https://github.com/nothings/stb) to load / write images on CPU side.
 - [GL3W](https://github.com/skaslev/gl3w) to load OpenGL functions.  
 - [Dear ImGui](https://github.com/ocornut/imgui) to display debug / utils.
-
+- [GLM](https://github.com/g-truc/glm) just to make sure the math are correct (just in case)
+- [Marl](https://github.com/google/marl) to manage Threads & Fibers.
