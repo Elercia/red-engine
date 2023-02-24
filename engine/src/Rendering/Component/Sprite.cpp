@@ -41,7 +41,7 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
         m_currentAnimationInfo.currentAnimationFrame = m_spriteResource->m_animations[0].frames.begin();
         m_currentAnimationInfo.deltaTimeAccumulator = 0;
 
-        ChangeMaterialForAnimation();
+        m_material.material = m_currentAnimationInfo.currentAnimation->material;
     }
 }
 
@@ -72,8 +72,6 @@ void Sprite::NextFrame()
             }
         }
     }
-
-       ChangeMaterialForAnimation();
 
     UpdateRenderData();
 }
@@ -119,29 +117,13 @@ void Sprite::UpdateRenderData()
     binding.texture = m_currentAnimationInfo.currentAnimation->texture.get();
     binding.type = BindingType::Texture;
 
+    m_material.material = m_currentAnimationInfo.currentAnimation->material;
+
     const Vector2i& sizei = m_currentAnimationInfo.currentAnimationFrame->size;
 
     m_size = Vector2((float) sizei.x, (float) sizei.y) * GetOwner()->GetComponent<Transform>()->GetScale();
 
     m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetLocalPosition(), m_size);  // * scale
-}
-
-void Sprite::ChangeMaterialForAnimation()
-{
-    if ( m_spriteResource == nullptr || m_currentAnimationInfo.currentAnimation->useTransparency == false )
-    {
-        m_material.material = m_owner->GetWorld()
-                                  ->GetWorldComponent<ResourceHolderComponent>()
-                                  ->GetResourceLoader<MaterialResourceLoader>()
-                                  ->LoadResource(Path::Resource("ENGINE_RESOURCES/SPRITE_OPAQUE_MATERIAL"));
-    }
-    else
-    {
-        m_material.material = m_owner->GetWorld()
-                                  ->GetWorldComponent<ResourceHolderComponent>()
-                                  ->GetResourceLoader<MaterialResourceLoader>()
-                                  ->LoadResource(Path::Resource("ENGINE_RESOURCES/SPRITE_TRANSPARENT_MATERIAL"));
-    }
 }
 
 }  // namespace red
