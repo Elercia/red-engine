@@ -214,6 +214,29 @@ ExternalLibs("marl", true, "/marl/include")
 		marlSourcePath .. "/src/thread.cpp",
 		marlSourcePath .. "/src/trace.cpp",
 	}
+	
+	filter { "platforms:Linux64" }
+		files
+		{
+			marlSourcePath .. "/src/osfiber_aarch64.c",
+			marlSourcePath .. "/src/osfiber_arm.c",
+			marlSourcePath .. "/src/osfiber_asm_aarch64.S",
+			marlSourcePath .. "/src/osfiber_asm_arm.S",
+			marlSourcePath .. "/src/osfiber_asm_loongarch64.S",
+			marlSourcePath .. "/src/osfiber_asm_mips64.S",
+			marlSourcePath .. "/src/osfiber_asm_ppc64.S",
+			marlSourcePath .. "/src/osfiber_asm_rv64.S",
+			marlSourcePath .. "/src/osfiber_asm_x64.S",
+			marlSourcePath .. "/src/osfiber_asm_x86.S",
+			marlSourcePath .. "/src/osfiber_loongarch64.c",
+			marlSourcePath .. "/src/osfiber_mips64.c",
+			marlSourcePath .. "/src/osfiber_ppc64.c",
+			marlSourcePath .. "/src/osfiber_rv64.c",
+			marlSourcePath .. "/src/osfiber_x64.c",
+			marlSourcePath .. "/src/osfiber_x86.c",
+		}
+	filter {}
+
 
 	includedirs
 	{
