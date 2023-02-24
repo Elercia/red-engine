@@ -3,7 +3,7 @@
     "name": "first",
     "spritesheet": "SPRITE_TEST/paddle.png",
     "loop": true,
-    "using_transparency" : true,
+    "material": "ENGINE_RESOURCES/SPRITE_TRANSPARENT_MATERIAL",
     "frames": [
       {
         "rect": {
@@ -51,7 +51,7 @@
     "name": "second",
     "spritesheet": "SPRITE_TEST/paddle.png",
     "loop": true,
-    "using_transparency": true,
+    "material": "ENGINE_RESOURCES/SPRITE_TRANSPARENT_MATERIAL",
     "frames": [
       {
         "rect": {
