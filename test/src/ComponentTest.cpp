@@ -1,23 +1,26 @@
+#include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
-#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Utils/SystemInfo.hpp"
 
-#include <SystemTest.hpp>
+#include <catch2/catch.hpp>
+#include <vector>
 
+#include "EngineTest.hpp"
+#include "SystemTest.hpp"
 #include "TestModule.hpp"
 
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent1)
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent11)
 RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent2)
 
-#include <catch2/catch.hpp>
-#include <vector>
-
 TEST_CASE("Component", "[ECS]")
 {
     SECTION("Bulk add remove")
     {
+        red::InitSystemInfo();
+
         red::World world;
         world.Init();
 
@@ -48,7 +51,6 @@ TEST_CASE("Component", "[ECS]")
                 auto* component = entity->AddComponent<MockComponent1>();
 
                 REQUIRE(component != nullptr);
-                REQUIRE(entity->HasComponent<MockComponent1>());
                 REQUIRE(entity->GetComponent<MockComponent1>() == component);
             }
 
@@ -57,11 +59,10 @@ TEST_CASE("Component", "[ECS]")
                 auto* component = entity->AddComponent<MockComponent2>();
 
                 REQUIRE(component != nullptr);
-                REQUIRE(entity->HasComponent<MockComponent2>());
                 REQUIRE(entity->GetComponent<MockComponent2>() == component);
 
                 // Check that entity don't have mock2
-                REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
+                REQUIRE_FALSE(entity->GetComponent<MockComponent1>() != nullptr);
             }
 
             for (auto* entity : entitiesWithMock1)
@@ -69,8 +70,8 @@ TEST_CASE("Component", "[ECS]")
                 entity->RemoveComponent<MockComponent1>();
 
                 // Check that entity don't have mock1 or mock2
-                REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
-                REQUIRE_FALSE(entity->HasComponent<MockComponent2>());
+                REQUIRE_FALSE(entity->GetComponent<MockComponent1>() != nullptr);
+                REQUIRE_FALSE(entity->GetComponent<MockComponent2>() != nullptr);
             }
         }
 
@@ -79,13 +80,13 @@ TEST_CASE("Component", "[ECS]")
             for (auto& entity : entitiesWithMock1)
             {
                 entity->AddComponent<MockComponent1>();
-                REQUIRE(entity->HasComponent<MockComponent1>());
+                REQUIRE(entity->GetComponent<MockComponent1>() != nullptr);
 
                 entity->RemoveComponent<MockComponent1>();
-                REQUIRE_FALSE(entity->HasComponent<MockComponent1>());
+                REQUIRE_FALSE(entity->GetComponent<MockComponent1>() != nullptr);
 
                 entity->AddComponent<MockComponent1>();
-                REQUIRE(entity->HasComponent<MockComponent1>());
+                REQUIRE(entity->GetComponent<MockComponent1>() != nullptr);
             }
         }
     }
@@ -183,7 +184,7 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     using namespace red;
     using namespace EntityDestroyRemoveComp;
 
-    red::CreateEngineFrom<red::Engine>(0, nullptr); // For double allocator
+    red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
 
     red::World world;
     world.Init();

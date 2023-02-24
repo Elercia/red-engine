@@ -4,18 +4,8 @@ function TemplateProject(Name)
 	group("Template")
 	project(Name)
 	kind("ConsoleApp")
-	language("C++")
-	cppdialect(cppDialect)
-	
-	rtti("Off")
-	exceptionhandling("Off")
-	warnings("Extra")
-	flags("NoPCH")
-	staticruntime("Off")
 
-	location(projectsFilesLocation)
-	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
-	objdir (rootPath .. "/output/obj/" .. outputDirSementic)
+	RedDefaultProjectOptions()
 
 	local templatePath = rootPath .. "/templates/"..Name
 
@@ -44,47 +34,11 @@ function TemplateProject(Name)
 		libsToLink
 	}
 
-	defines
-	{
-		"RED_USE_PROFILER",
-		"FMT_EXCEPTIONS=0",
-	}
+	postbuildcommands { '{COPY} "%{cfg.buildtarget.abspath}" "' .. rootPath .. 'templates/%{prj.name}"' }
 
-	filter "platforms:Win64"
-		systemversion "latest"
-
-		defines
-		{
-			"RED_WINDOWS"
-		}
-
-		links
-		{
-			"SDL2main",
-		}
-	filter {}
-
-	filter "platforms:Linux64"
-		defines
-		{
-			"RED_LINUX"
-		}
-	filter {}
-
-	filter "configurations:Debug"
-		defines {"RED_DEBUG", "RED_BREAK_ON_ASSERT" }
-		runtime "Debug"
-		symbols "on"
-	filter {}
-
-	filter "configurations:Release"
-		defines "RED_RELEASE"
-		runtime "Release"
-		optimize "on"
-		symbols "on"
-	filter {}
-
-	postbuildcommands { "{COPY} %{cfg.buildtarget.directory}/* " .. rootPath .. "templates/%{prj.name}" }
+	print("Copying engine resources for template " .. Name)
+	CopyFile(rootPath.."templates/ENGINE_RESOURCES/", rootPath.."templates/"..Name.."/RESOURCES/ENGINE_RESOURCES/")
 end
 
 TemplateProject("Pong")
+TemplateProject("Perf")

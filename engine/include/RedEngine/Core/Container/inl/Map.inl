@@ -95,6 +95,20 @@ Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator::operator->() const
 }
 
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
+bool Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator::operator==(
+    const typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator& other) const
+{
+    return this->m_index == other.m_index;
+}
+
+template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
+bool Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator::operator!=(
+    const typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::const_iterator& other) const
+{
+    return !(*this == other);
+}
+
+template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 Map<KeyT, ValueT, HashOpT, EqualsOpT>::Map() : m_values(), m_size(0)
 {
 }

@@ -4,16 +4,7 @@ project ("RedEngineTest")
 	kind "ConsoleApp"
 	language("C++")
 	
-	rtti("Off")
-	cppdialect(cppDialect)
-	warnings("Extra")
-	flags("NoPCH")
-	staticruntime("Off")
-
-	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
-	objdir(rootPath .. "/output/obj/" .. outputDirSementic)
-
-	location(projectsFilesLocation)
+	RedDefaultProjectOptions()
 
 	local testPath = rootPath .. "test/"
 	files {
@@ -37,25 +28,8 @@ project ("RedEngineTest")
 	links
 	{
 		"RedEngineLib",
+		"glm",
 		libsToLink
 	}
 
-	defines
-	{
-		"FMT_EXCEPTIONS=0",
-	}
-
-	filter "configurations:Debug"
-		defines {"RED_DEBUG", "RED_BREAK_ON_ASSERT" }
-		runtime "Debug"
-		symbols "Full"
-	filter {}
-
-	filter "configurations:Release"
-		defines "RED_RELEASE"
-		runtime "Release"
-		optimize "on"
-		symbols "on"
-	filter {}
-
-	postbuildcommands { "{COPY} %{cfg.buildtarget.directory}/* " .. rootPath .. "test" }
+	postbuildcommands { "{COPY} \"%{cfg.buildtarget.abspath}\" \"" .. rootPath .. "test\"" }

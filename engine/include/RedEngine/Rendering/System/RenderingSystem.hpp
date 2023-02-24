@@ -24,9 +24,9 @@ public:
     Renderer* GetRenderer();
 
 private:
-    void RenderDebug();
+    void DrawDebug();
     void UpdateWindowAsNeeded();
-    Array<CameraComponent*> GetSortedCameras();
+    Array<CameraComponent*, DoubleLinearArrayAllocator> GetSortedCameras();
 
 private:
     Renderer* m_renderer;

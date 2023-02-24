@@ -17,9 +17,10 @@ TEST_CASE("Raw input handling", "[Input]")
     world.Init();
     world.RegisterComponentType<EventsComponent>();
 
-    auto* e = world.CreateWorldEntity("a");
-    auto* eventsComonent = e->AddComponent<EventsComponent>();
     auto* eventSystem = world.AddSystem<EventSystem>();
+    eventSystem->Init();
+
+    auto* eventsComonent = world.GetWorldComponent<EventsComponent>();
 
     eventsComonent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
 

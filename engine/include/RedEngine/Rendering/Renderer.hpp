@@ -25,11 +25,16 @@ using OpenGlContext = void*;
 
 struct RenderingData
 {
-    Matrix44 worldMatrix;
+    RenderLayerIndex renderLayerIndex;
+    RenderEntityType type;
+
+    Matrix33 worldMatrix;
     Geometry* geometry;
     MaterialInstance materialInstance;
     AABB aabb;
     Vector2 size;
+
+    bool hasBeenRendered;
 };
 
 struct PerCameraData
@@ -39,9 +44,13 @@ struct PerCameraData
 
 struct PerInstanceData
 {
-    Matrix44 world;
+    Matrix33 world;
     Vector2 size;
+    float renderLayer;
 };
+
+using RenderDataArrayPerType = std::array<Array<RenderingData>, (uint8) RenderEntityType::Count>;
+using RenderDataPerLayer = std::array<RenderDataArrayPerType, 32>;
 
 class Renderer
 {
@@ -63,22 +72,15 @@ public:
     // Push the renderable to the corresponding render queue
     void Draw(const Renderable* renderable, const Transform* transform);
 
-    void DrawDebugLine(const Vector2& first, const Vector2& second, const Color& color = ColorConstant::RED);
-
-    void DrawDebugLines(const Array<Vector2>& points, const Color& color = ColorConstant::RED, bool isFilled = false);
-
-    void DrawDebugCircle(const Vector2& center, float radius, const Color& color = ColorConstant::RED);
-
-    void DrawDebugPoint(const Vector2& coord, const Color& color = ColorConstant::RED);
-
     // Draw passes
     void BeginCameraRendering(CameraComponent* camera);
     void EndCameraRendering(CameraComponent* camera);
 
-    void RenderOpaque(CameraComponent* camera);
-    void RenderTransparency(CameraComponent* camera);
-    void RenderDebug(CameraComponent* camera);
-    void RenderGlobalDebug();
+    void RenderOpaqueQueue(CameraComponent* camera);
+    void RenderTransparencyQueue(CameraComponent* camera);
+
+    void RenderDebug(CameraComponent* camera, DebugComponent* debug);
+    void RenderDebugUI();
 
     void RenderPass(CameraComponent* camera, const RenderPassDesc& desc);
 
@@ -89,8 +91,7 @@ public:
     void ReCreateWindow(WindowComponent* window);
 
 private:
-    Array<RenderingData>& GetVisibleRenderDatasForType(RenderEntityType type, CameraComponent* camera,
-                                                       uint32& renderDataCount);
+    void CullRenderDataForCamera(CameraComponent* camera);
 
     void UseMaterial(const MaterialInstance& mat);
     void UseGeometry(const Geometry* geom);
@@ -102,11 +103,19 @@ private:
     OpenGlContext m_glContext;
     WindowComponent* m_window;
 
-    // Render entities push for this frame, these will be then culled and rendered
-    Array<RenderingData> m_renderingData[(uint8)RenderEntityType::Count];
+    // Complex drawed sprites
+    Array<RenderingData> m_renderingData;
 
+    // Tmp data used per camera
+    Array<RenderingData, DoubleLinearArrayAllocator> m_culledAndSortedRenderingData;
+    ArrayView<RenderingData> m_renderingDataPerQueue[(int)RenderEntityType::Count];
+
+    // Rendering data sent to GPU
     GPUBuffer m_perInstanceData;
     GPUBuffer m_perCameraData;
+
+    uint32 m_lineVertexColorVBO;
+    uint32 m_lineVAO;
 };
 
 }  // namespace red

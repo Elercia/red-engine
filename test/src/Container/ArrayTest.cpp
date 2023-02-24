@@ -433,4 +433,92 @@ TEST_CASE("Array benchmark", "[Array_Benchmark]")
 }
 #endif  // RED_TEST_BENCHMARK
 
+TEST_CASE("View from array", "[ArrayView]")
+{
+    Array<int> intArray;
+
+    for (int i = 0; i < 100; i++)
+        intArray.push_back(i);
+
+    SECTION("Whole array")
+    {
+        ArrayView view(intArray);
+
+        REQUIRE(view.size() == 100);
+
+        for (int i = 0; i < 100; i++)
+        {
+            REQUIRE(view[i] == i);
+        }
+    }
+
+    SECTION("Array section from start")
+    {
+        ArrayView view(intArray, 50);
+
+        REQUIRE(view.size() == 50);
+
+        for (int i = 0; i < 50; i++)
+        {
+            REQUIRE(view[i] == i);
+        }
+    }
+
+    SECTION("Array section")
+    {
+        ArrayView view(intArray, 50, 50);
+
+        REQUIRE(view.size() == 50);
+
+        for (int i = 0; i < 50; i++)
+        {
+            REQUIRE(view[i] == i + 50);
+        }
+    }
+}
+
+TEST_CASE("View from ray data", "[ArrayView]")
+{
+    int intArray[100];
+
+    for (int i = 0; i < 100; i++)
+        intArray[i] = i;
+
+    SECTION("Whole array")
+    {
+        ArrayView view(intArray, 100);
+
+        REQUIRE(view.size() == 100);
+
+        for (int i = 0; i < 100; i++)
+        {
+            REQUIRE(view[i] == i);
+        }
+    }
+
+    SECTION("Array section from start")
+    {
+        ArrayView view(intArray, 50);
+
+        REQUIRE(view.size() == 50);
+
+        for (int i = 0; i < 50; i++)
+        {
+            REQUIRE(view[i] == i);
+        }
+    }
+
+    SECTION("Array section")
+    {
+        ArrayView view(intArray, 50, 50);
+
+        REQUIRE(view.size() == 50);
+
+        for (int i = 0; i < 50; i++)
+        {
+            REQUIRE(view[i] == i + 50);
+        }
+    }
+}
+
 #endif  // RED_USE_ARRAY

@@ -1,3 +1,4 @@
+
 #include "RedEngine/Core/Engine.hpp"
 
 #include "RedEngine/Core/CoreModule.hpp"
@@ -18,7 +19,6 @@
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Input/System/UserInputSystem.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
@@ -35,8 +35,9 @@
 #include "RedEngine/Utils/Random.hpp"
 
 #ifdef RED_WINDOWS
-#include <windows.h> // For some reason, some include above define some macros that break everything with a #error "No Target Architecture"
+#define NOMINMAX 1
 #include <debugapi.h>
+#include <windows.h>  // For some reason, some include above define some macros that break everything with a #error "No Target Architecture"
 #endif
 
 namespace red
@@ -104,7 +105,6 @@ bool Engine::RegisterComponentTypes()
     CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
 
     // Physics
-    CheckReturn(m_world->RegisterComponentType<ColliderList>());
     CheckReturn(m_world->RegisterComponentType<PhysicBody>());
 
     // Resources
@@ -117,7 +117,7 @@ bool Engine::RegisterComponentTypes()
     return true;
 }
 
-#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+#if defined(RED_WINDOWS) && defined(RED_DEVBUILD)
 static void LogToDebugger(const Logger::LogOoutputInfo& out)
 {
     OutputDebugStringA(out.str.c_str());
@@ -132,17 +132,17 @@ void Engine::SetupLogger()
     int standarOutputFuncIndex = -1;
     int debugOutputFuncIndex = -1;
 
-#ifdef RED_DEBUG
+#ifdef RED_DEVBUILD
     // Always add standard output when debugging
     standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
-#endif
+#endif // RED_DEVBUILD
 
-#if defined(RED_WINDOWS) && defined(RED_DEBUG)
+#if defined(RED_WINDOWS) && defined(RED_DEVBUILD)
     if (IsDebuggerPresent() != 0)
     {
         debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
     }
-#endif
+#endif // defined(RED_WINDOWS) && defined(RED_DEVBUILD)
 
     if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
     {
@@ -166,6 +166,8 @@ bool Engine::Create()
 
     InitRandomEngine(42);
 
+    m_scheduler.Init();
+
     m_world = new World;
 
     RegisterComponentTypes();
@@ -185,10 +187,13 @@ bool Engine::Create()
 
     m_world->AddSystem<RenderingSystem>();
     m_world->AddSystem<PhysicSystem>();
-    m_world->AddSystem<DebugSystem>();
     m_world->AddSystem<EventSystem>();
     m_world->AddSystem<UserInputSystem>();
     m_world->AddSystem<AudioSystem>();
+
+#ifdef RED_DEVBUILD
+    m_world->AddSystem<DebugSystem>();
+#endif
 
     m_world->InitSystems();
 
@@ -207,6 +212,8 @@ bool Engine::Destroy()
 
     delete m_world;
 
+    m_scheduler.Finalize();
+
     PROFILER_SHUTDOWN();
 
     return true;
@@ -220,6 +227,11 @@ std::string_view Engine::GetGameName() const
 DoubleLinearAllocator& Engine::GetFrameAllocator()
 {
     return m_frameAllocator;
+}
+
+ThreadScheduler& Engine::GetScheduler()
+{
+    return m_scheduler;
 }
 
 }  // namespace red

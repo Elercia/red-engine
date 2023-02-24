@@ -4,7 +4,6 @@
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
-#include "RedEngine/Physics/Components/Collider.hpp"
 
 #include <box2d/b2_contact.h>
 #include <box2d/b2_draw.h>
@@ -12,6 +11,29 @@
 
 namespace red
 {
+ constexpr float s_physicDistanceFactor = 0.01f;
+// constexpr float s_physicDistanceFactor = 1.f;
+
+float ConvertToPhysicsDistance(float f)
+{
+    return f * s_physicDistanceFactor;
+}
+
+float ConvertFromPhysicsDistance(float f)
+{
+    return f * (1 / s_physicDistanceFactor);
+}
+
+b2Vec2 ConvertToPhysicsVector(const Vector2& vector2)
+{
+    return b2Vec2(vector2.x * s_physicDistanceFactor, vector2.y * s_physicDistanceFactor);
+}
+
+Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2)
+{
+    return Vector2(vector2.x, vector2.y) * (1.f / s_physicDistanceFactor);
+}
+
 PhysicsWorld::PhysicsWorld() : m_internalPhysicsWorld(new b2World({0.f, 0.f}))
 {
     m_internalPhysicsWorld->SetContactListener(this);
@@ -58,7 +80,9 @@ void PhysicsWorld::DestroyPhysicsBody(PhysicBody* physicBody)
 
 void PhysicsWorld::Step(float timeStep, int32 velocityIterations, int32 positionIterations)
 {
-    UpdateContactInfos();
+    PROFILER_EVENT_CATEGORY("PhysicsWorld::Step", ProfilerCategory::Physics)
+
+    ClearContactInfo();
 
     m_internalPhysicsWorld->Step(timeStep, velocityIterations, positionIterations);
 }
@@ -113,7 +137,7 @@ void PhysicsWorld::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*
     }
 }
 
-void PhysicsWorld::UpdateContactInfos()
+void PhysicsWorld::ClearContactInfo()
 {
     m_frameCollisionInfo.clear();
     m_frameTriggerInfo.clear();
@@ -140,7 +164,8 @@ void PhysicsWorld::AddCollisionContact(PhysicBody* physicBody1, PhysicBody* phys
     {
         const auto& manifoldPoint = manifold->points[i];
         collisionInfo.contactPoints.push_back({ConvertFromPhysicsVector(manifoldPoint.localPoint),
-                                               manifoldPoint.normalImpulse, manifoldPoint.tangentImpulse});
+                                               manifoldPoint.normalImpulse,
+                                               manifoldPoint.tangentImpulse});  // TODO missing some converts
     }
 
     m_frameCollisionInfo.push_back(std::move(collisionInfo));
@@ -156,5 +181,15 @@ void PhysicsWorld::AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physic
     collisionInfo.secondCollider = collider2;
 
     m_frameTriggerInfo.push_back(collisionInfo);
+}
+
+void PhysicsWorld::SetGravity(const Vector2& gravity)
+{
+    m_internalPhysicsWorld->SetGravity(ConvertToPhysicsVector(gravity));
+}
+
+Vector2 PhysicsWorld::GetGravity() const
+{
+    return ConvertFromPhysicsVector(m_internalPhysicsWorld->GetGravity());
 }
 }  // namespace red

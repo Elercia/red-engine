@@ -11,6 +11,7 @@ namespace red
 {
 
 class World;
+class Transform;
 
 enum class EntityState
 {
@@ -30,8 +31,8 @@ public:
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity& entity) = delete;
 
-    Entity(Entity&&) = default;
-    Entity& operator=(Entity&& entity) = default;
+    Entity(Entity&&) = delete;
+    Entity& operator=(Entity&& entity) = delete;
 
     template <typename T, typename... Args>
     T* AddComponent(Args&&... args);
@@ -49,12 +50,10 @@ public:
 
     Array<Component*> GetComponents() const;
 
-    template <typename T>
-    bool HasComponent();
-
     [[nodiscard]] EntityId GetId() const;
     void SetId(EntityId id);
 
+    const std::string GetFullName() const;
     const std::string& GetName() const;
     void SetName(const std::string& name);
 
@@ -76,6 +75,7 @@ public:
 protected:
     World* m_world{nullptr};
     EntityId m_id{0};
+    Transform* m_transform;
     std::string m_name;
 
     Entity* m_parent{nullptr};

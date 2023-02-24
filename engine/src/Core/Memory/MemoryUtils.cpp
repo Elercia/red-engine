@@ -1,6 +1,7 @@
 #include "RedEngine/Core/Memory/MemoryUtils.hpp"
 
 #ifdef RED_WINDOWS
+#define NOMINMAX 1
 #include <memoryapi.h>
 #endif
 

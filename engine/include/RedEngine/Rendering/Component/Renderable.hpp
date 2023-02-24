@@ -11,6 +11,8 @@ class Renderable;
 
 RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Renderable)
 
+using RenderLayerIndex = uint32;
+
 class Renderable : public Component
 {
     friend class Renderer;
@@ -22,12 +24,18 @@ public:
 
 public:
     Renderable(Entity* owner);
+    Renderable(Entity* owner, RenderLayerIndex layerIndex);
     ~Renderable();
 
-    MaterialInstance GetMaterial();
+    MaterialInstance& GetMaterial();
+    const MaterialInstance& GetMaterial() const;
     std::shared_ptr<GeometryResourceWrapper> GetGeometry();
 
+    void SetRenderLayerIndex(RenderLayerIndex layerIndex);
+    RenderLayerIndex GetRenderLayerIndex() const;
+
 protected:
+    RenderLayerIndex m_layerIndex;
     Vector2 m_size;
     AABB m_aabb;
     std::shared_ptr<GeometryResourceWrapper> m_geometry;

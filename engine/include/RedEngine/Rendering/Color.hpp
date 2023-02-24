@@ -8,21 +8,33 @@ namespace red
 {
 struct Color
 {
-    constexpr Color(uint8 r, uint8 g, uint8 b);
-    constexpr Color(uint8 r, uint8 g, uint8 b, uint8 a);
+    constexpr Color();
+    constexpr Color(float r, float g, float b);
+    constexpr Color(float r, float g, float b, float a);
 
-    uint8 r;
-    uint8 g;
-    uint8 b;
-    uint8 a;
+    constexpr Vector4 AsVector4() const;
+
+    float r;
+    float g;
+    float b;
+    float a;
 };
 
-constexpr Color::Color(uint8 r, uint8 g, uint8 b) : r(r), g(g), b(b), a(255)
+constexpr Color::Color() : r(0), g(0), b(0), a(0.f)
 {
 }
 
-constexpr Color::Color(uint8 r, uint8 g, uint8 b, uint8 a) : r(r), g(g), b(b), a(a)
+constexpr Color::Color(float r, float g, float b) : r(r), g(g), b(b), a(0.f)
 {
+}
+
+constexpr Color::Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a)
+{
+}
+
+constexpr Vector4 Color::AsVector4() const
+{
+    return {r, g, b, a};
 }
 
 }  // namespace red

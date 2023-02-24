@@ -9,12 +9,18 @@ namespace red
 void LogAssert(const char* filename, int line, const std::string& s);
 
 template <typename... Args>
-bool HandleAssert(bool expr, const char* filename, int line, const std::string& message = "", Args... args)
+bool HandleAssert(bool expr, std::string_view exprStr, const char* filename, int line, const std::string& message = "",
+                  Args... args)
 {
     if (expr)
         return false;
 
-    std::string logString = fmt::format(message, std::forward<Args>(args)...);
+    std::string logString = fmt::format("Assertion failed {}", exprStr);
+
+    if (!message.empty())
+    {
+        logString = fmt::format("{} : {}", logString, message, std::forward<Args>(args)...);
+    }
 
     LogAssert(filename, line, logString);
 
@@ -29,18 +35,19 @@ bool HandleAssert(bool expr, const char* filename, int line, const std::string& 
 #ifdef RED_DEBUG
 
 // TODO Add a abort reason (out of memory for exemple)
-#define RedAbort(...)                                                    \
-    do                                                                   \
-    {                                                                    \
-        if (red::HandleAssert(false, __FILE__, __LINE__, ##__VA_ARGS__)) \
-            debug_break();                                               \
+#define RedAbort(...)                                                             \
+    do                                                                            \
+    {                                                                             \
+        if (red::HandleAssert(false, "abort", __FILE__, __LINE__, ##__VA_ARGS__)) \
+            debug_break();                                                        \
+        std::abort();                                                             \
     } while (0);
 
-#define RedAssert(expr, ...)                                            \
-    do                                                                  \
-    {                                                                   \
-        if (red::HandleAssert(expr, __FILE__, __LINE__, ##__VA_ARGS__)) \
-            debug_break();                                              \
+#define RedAssert(expr, ...)                                                   \
+    do                                                                         \
+    {                                                                          \
+        if (red::HandleAssert(expr, #expr, __FILE__, __LINE__, ##__VA_ARGS__)) \
+            debug_break();                                                     \
     } while (0);
 
 #else
@@ -50,7 +57,8 @@ bool HandleAssert(bool expr, const char* filename, int line, const std::string& 
 
 #endif  // RED_DEBUG
 
-#define RedError(...) RedAssert(false, ##__VA_ARGS__)
+#define RedError(...)            RedAssert(false, ##__VA_ARGS__)
+#define RedAssertNotReached(...) RedAssert(false, ##__VA_ARGS__)
 
 #define CheckReturn(EXPR)      \
     {                          \

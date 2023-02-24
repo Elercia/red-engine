@@ -6,10 +6,22 @@
 
 namespace red
 {
+using TypeTraitsId = uint32;
+
 struct TypeTraits
 {
     std::string_view name;
-    uint32 typeId;
+    TypeTraitsId typeId;
+
+    bool operator==(const TypeTraits& other)
+    {
+        return other.typeId == typeId;
+    }
+
+    bool operator!=(const TypeTraits& other)
+    {
+        return other.typeId != typeId;
+    }
 };
 
 constexpr TypeTraits EmptyTypeTraits{"invalid", (uint32) -1};
@@ -38,6 +50,8 @@ constexpr TypeTraits EmptyTypeTraits{"invalid", (uint32) -1};
 
 template <typename T>
 constexpr TypeTraits TypeInfo();
+
+inline TypeTraits GetTypeInfoFromTypeName(std::string_view name);
 }  // namespace red
 
 #include "inl/TypesInfo.inl"

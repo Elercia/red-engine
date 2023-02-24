@@ -24,6 +24,7 @@ namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
 {
+    m_priority = 100;
 }
 
 void RenderingSystem::Init()
@@ -50,9 +51,10 @@ void RenderingSystem::Update()
 
     auto spriteEntities = GetComponents<Sprite>();
 
-    for (auto* spriteEntity : spriteEntities)
+    for (auto& comps : spriteEntities)
     {
-        auto* sprite = spriteEntity->GetComponent<Sprite>();
+        auto* spriteEntity = std::get<0>(comps);
+        auto* sprite = std::get<1>(comps);
         if (!sprite->IsValid())
             continue;
 
@@ -64,7 +66,7 @@ void RenderingSystem::Update()
         m_renderer->Draw(sprite, transform);
     }
 
-    RenderDebug();
+    DrawDebug();
 }
 
 void RenderingSystem::BeginRender()
@@ -87,18 +89,23 @@ void RenderingSystem::EndRender()
     {
         m_renderer->BeginCameraRendering(cameraComponent);
 
-        m_renderer->RenderOpaque(cameraComponent);
-        m_renderer->RenderTransparency(cameraComponent);
+        m_renderer->RenderOpaqueQueue(cameraComponent);
+        m_renderer->RenderTransparencyQueue(cameraComponent);
+        
 
-#ifdef RED_DEBUG
-        m_renderer->RenderDebug(cameraComponent);
+#ifdef RED_DEVBUILD
+        auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+        m_renderer->RenderDebug(cameraComponent, debugComp);
 #endif
 
         m_renderer->EndCameraRendering(cameraComponent);
     }
 
-#ifdef RED_DEBUG
-    m_renderer->RenderGlobalDebug();
+#ifdef RED_DEVBUILD
+    m_renderer->RenderDebugUI();
+
+    auto* debug = m_world->GetWorldComponent<DebugComponent>();
+    debug->ClearDebug();
 #endif
 
     m_renderer->EndRenderFrame();
@@ -109,49 +116,15 @@ Renderer* RenderingSystem::GetRenderer()
     return m_renderer;
 }
 
-void RenderingSystem::RenderDebug()
+void RenderingSystem::DrawDebug()
 {
+    PROFILER_EVENT_CATEGORY("DrawDebug", ProfilerCategory::Rendering);
+
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+    if (debugComp == nullptr)
+        return;
 
     m_world->GetPhysicsWorld()->DrawDebug();
-
-    // Draw debug information
-    for (auto& shape : debugComp->m_frameShapes)
-    {
-        switch (shape->type)
-        {
-            case DebugShapeType::CIRCLE:
-            {
-                auto* circle = static_cast<DebugCircle*>(shape.get());
-
-                m_renderer->DrawDebugCircle(circle->center, circle->radius, circle->color);
-            }
-            break;
-            case DebugShapeType::POLYGON:
-            {
-                auto* polygon = static_cast<DebugPolygon*>(shape.get());
-
-                m_renderer->DrawDebugLines(polygon->points, polygon->color);
-            }
-            break;
-            case DebugShapeType::SEGMENT:
-            {
-                auto* segment = static_cast<DebugSegment*>(shape.get());
-
-                m_renderer->DrawDebugLine(segment->point1, segment->point2, segment->color);
-            }
-            break;
-            case DebugShapeType::POINT:
-            {
-                auto* point = static_cast<DebugPoint*>(shape.get());
-
-                m_renderer->DrawDebugPoint(point->coord, point->color);
-            }
-            break;
-        }
-    }
-
-    debugComp->m_frameShapes.clear();
 }
 
 void RenderingSystem::UpdateWindowAsNeeded()
@@ -160,10 +133,10 @@ void RenderingSystem::UpdateWindowAsNeeded()
     auto cameraEntities = GetComponents<CameraComponent>();
     auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
 
-    for (auto* windowEntity : windowEntities)
+    for (auto& windowTuple : windowEntities)
     {
         // TODO what about window cvars ?
-        auto* windowComp = windowEntity->GetComponent<WindowComponent>();
+        auto* windowComp = std::get<1>(windowTuple);
 
         if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
         {
@@ -171,22 +144,24 @@ void RenderingSystem::UpdateWindowAsNeeded()
         }
     }
 
-    for (auto* cameraEntity : cameraEntities)
+    for (auto& cameras : cameraEntities)
     {
-        auto* cameraComp = cameraEntity->GetComponent<CameraComponent>();
+        auto* cameraComp = std::get<1>(cameras);
 
         // This is required because the camera could have moved last frame
         cameraComp->UpdateState();
     }
 }
 
-Array<CameraComponent*> RenderingSystem::GetSortedCameras()
+Array<CameraComponent*, DoubleLinearArrayAllocator> RenderingSystem::GetSortedCameras()
 {
+    PROFILER_EVENT_CATEGORY("RenderingSystem::GetSortedCameras", ProfilerCategory::Rendering)
+
     auto cameraEntities = GetComponents<CameraComponent>();
-    Array<CameraComponent*> cameras;
+    Array<CameraComponent*, DoubleLinearArrayAllocator> cameras;
     cameras.resize(cameraEntities.size());
     std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(),
-                   [](Entity* e) { return e->GetComponent<CameraComponent>(); });
+                   [](auto& t) { return std::get<1>(t); });
 
     std::sort(cameras.begin(), cameras.end(),
               [](const CameraComponent* l, const CameraComponent* r) { return l->Depth() < r->Depth(); });

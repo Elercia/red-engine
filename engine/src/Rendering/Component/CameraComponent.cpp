@@ -22,12 +22,13 @@ CameraComponent::CameraComponent(Entity* entity)
     , m_attachedWindow(nullptr)
     , m_frameBuffer(true, 1)
     , m_screenViewport(0.f, 0.f, 1.f, 1.f)
-    , m_size(1, 1)
+    , m_size(0.f, 0.f)
 {
     UpdateState();
 }
 
-CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& sceenViewport, const Vector2i& size)
+CameraComponent::CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& sceenViewport,
+                                 const Vector2& size)
     : Component(entity)
     , m_attachedWindow(attachedWindow->GetOwner())
     , m_frameBuffer(true, 1)
@@ -42,10 +43,12 @@ CameraComponent::~CameraComponent()
     m_frameBuffer.Finalize();
 }
 
-bool CameraComponent::IsVisibleFrom(const AABB& /*aabb*/) const
+bool CameraComponent::IsVisibleFrom(const AABB& aabb) const
 {
-    // TODO implement
-    return true;
+    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetLocalPosition(),
+                  {m_size.x, m_size.y});  // TODO put it in camera cached state
+
+    return thisAabb.Intersect(aabb);
 }
 
 Vector4i CameraComponent::GetWindowRect() const
@@ -98,9 +101,9 @@ void CameraComponent::SetClearColor(const Color& color)
     m_cleanColor = color;
 }
 
-const Matrix44& CameraComponent::GetViewProjection() const
+const Matrix44& CameraComponent::GetViewProj() const
 {
-    return m_viewProjectionMatrix;
+    return m_viewProj;
 }
 
 const WindowComponent* CameraComponent::GetAttachedWindow() const
@@ -120,14 +123,16 @@ void CameraComponent::UpdateState()
     if (m_attachedWindow == nullptr)
         return;
 
-    auto windowInfo = m_attachedWindow->GetComponent<WindowComponent>()->GetWindowInfo();
-
     auto* transform = GetOwner()->GetComponent<Transform>();
+    auto rotRad = transform->GetLocalRotationRad();
+    auto& scale = transform->GetScale();
 
-    m_projectionMatrix = Math::Ortho(0.f, (float) m_size.x, 0.f, (float) m_size.y, m_zNear, m_zFar);
-    m_viewMatrix = transform->GetWorldMatrix();
+    Matrix44 view = Math::Translate(Matrix44::Identity(), Vector3(transform->GetLocalPosition(), 0.f));
+    view = Math::Rotate(view, Vector3(0.f, 0.f, rotRad));
+    view = Math::Scale(view, Vector3(scale, 1.f));
 
-    m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
+    Matrix44 proj = Math::Ortho(0.0f, m_size.x, 0.f, m_size.y, -1.f, 100.0f);
+    m_viewProj = proj * view;
 
     // m_frameBuffer.Init(Vector2i(viewportRect.width, viewportRect.height));
 }

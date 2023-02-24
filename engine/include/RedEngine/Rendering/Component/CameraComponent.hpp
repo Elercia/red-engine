@@ -34,7 +34,7 @@ public:
     RED_END_COMPONENT_REGISTER()
 
     CameraComponent(Entity* entity);
-    CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, const Vector2i& size);
+    CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, const Vector2& size);
     virtual ~CameraComponent();
 
     // Return true if the given AABB is visible from the given camera
@@ -57,7 +57,7 @@ public:
 
     void UpdateState();
 
-    const Matrix44& GetViewProjection() const;
+    const Matrix44& GetViewProj() const;
 
 private:
     Entity* m_attachedWindow;
@@ -68,7 +68,7 @@ private:
     Vector4 m_screenViewport;
 
     // Describe the size of the camera inside the world
-    Vector2i m_size;
+    Vector2 m_size;
 
     /// Depth of the camera (defaulted to 0)
     /// Higher depth camera are rendered after (to be on top of another)
@@ -77,11 +77,9 @@ private:
     /// Background color (color to clear the screen before rendering)
     Color m_cleanColor{ColorConstant::BLACK};
 
-    float m_zNear{0.1f};
+    float m_zNear{0.001f};
     float m_zFar{1000.0f};
 
-    Matrix44 m_viewMatrix;
-    Matrix44 m_projectionMatrix;
-    Matrix44 m_viewProjectionMatrix;
+    Matrix44 m_viewProj;
 };
 }  // namespace red

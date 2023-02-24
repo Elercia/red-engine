@@ -30,20 +30,18 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
                            ->GetResourceLoader<SpriteResourceLoader>()
                            ->LoadResource(resourceId);
 
-    m_material.material = m_owner->GetWorld()
-                        ->GetWorldComponent<ResourceHolderComponent>()
-                        ->GetResourceLoader<MaterialResourceLoader>()
-                       ->LoadResource(Path::Resource("BASE_OPAQUE_MATERIAL"));
     m_geometry = m_owner->GetWorld()
-                        ->GetWorldComponent<ResourceHolderComponent>()
-                        ->GetResourceLoader<GeometryResourceLoader>()
-                       ->LoadResource(Path::Resource("BASE_GEOMETRY"));
+                     ->GetWorldComponent<ResourceHolderComponent>()
+                     ->GetResourceLoader<GeometryResourceLoader>()
+                     ->LoadResource(Path::Resource("ENGINE_RESOURCES/SPRITE_GEOMETRY"));
 
     if (m_spriteResource)
     {
         m_currentAnimationInfo.currentAnimation = m_spriteResource->m_animations.begin();
         m_currentAnimationInfo.currentAnimationFrame = m_spriteResource->m_animations[0].frames.begin();
         m_currentAnimationInfo.deltaTimeAccumulator = 0;
+
+        m_material.material = m_currentAnimationInfo.currentAnimation->material;
     }
 }
 
@@ -109,17 +107,23 @@ const CurrentAnimationDesc& Sprite::GetCurrentAnimationInfo() const
 
 bool Sprite::IsValid() const
 {
-    return m_material.material != nullptr && m_geometry != nullptr && m_spriteResource != nullptr && m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
+    return m_material.material != nullptr && m_geometry != nullptr && m_spriteResource != nullptr &&
+           m_spriteResource->GetLoadState() == LoadState::STATE_LOADED;
 }
 
 void Sprite::UpdateRenderData()
 {
-    auto& binding = m_material.overiddenBindings.bindings[BindingIndex::Diffuse];
+    auto& binding = m_material.overriddenBindings.bindings[BindingIndex::Diffuse];
     binding.texture = m_currentAnimationInfo.currentAnimation->texture.get();
     binding.type = BindingType::Texture;
 
+    m_material.material = m_currentAnimationInfo.currentAnimation->material;
+
     const Vector2i& sizei = m_currentAnimationInfo.currentAnimationFrame->size;
-    m_size = {(float)sizei.x, (float)sizei.y};
+
+    m_size = Vector2((float) sizei.x, (float) sizei.y) * GetOwner()->GetComponent<Transform>()->GetScale();
+
+    m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetLocalPosition(), m_size);  // * scale
 }
 
 }  // namespace red

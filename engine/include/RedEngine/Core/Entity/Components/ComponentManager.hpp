@@ -19,35 +19,31 @@ public:
     ComponentManager(World* world);
     ~ComponentManager();
 
-    template <typename ComponentType_t, typename... Args>
-    ComponentType_t* CreateComponent(Entity* owner, Args&&... args);
+    template <typename ComponentTypeT, typename... Args>
+    ComponentTypeT* CreateComponent(Entity* owner, Args&&... args);
 
-    template <typename ComponentType_t>
+    template <typename ComponentTypeT>
     bool RemoveComponent(Entity* owner);
 
     void RemoveAllComponentsOf(Entity* owner);
 
     Array<Component*> GetComponents(const Entity* entity) const;
 
-    template <class ComponentType_t>
-    bool HasComponent(Entity* entity);
+    template <typename ComponentTypeT>
+    ComponentTypeT* GetComponent(Entity* entity);
 
-    template <typename ComponentType_t>
-    ComponentType_t* GetComponent(Entity* entity);
-
-    bool HasComponent(Entity* entity, const std::string& componentName);
-    Component* GetComponent(Entity* entity, const std::string& componentName);
-    bool RemoveComponent(Entity* entity, const std::string& componentName);
-    Component* CreateComponentFromName(Entity* entity, const std::string& componentName);
+    Component* GetComponent(Entity* entity, const TypeTraits& componentTraits);
+    bool RemoveComponent(Entity* entity, const TypeTraits& componentTraits);
+    Component* CreateComponentFromName(Entity* entity, const TypeTraits& componentTraits);
 
 private:
-    ComponentPoolType& GetComponentPool(std::size_t componentTypeId);
+    ComponentPoolType& GetComponentPool(const TypeTraits& componentTraits);
 
     void AddComponent(Entity* entity, Component* component);
 
 private:
     World* m_world;
-    Map<std::size_t, ComponentPoolType> m_components;
+    Map<TypeTraitsId, ComponentPoolType> m_components;
 };
 }  // namespace red
 

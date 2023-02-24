@@ -10,46 +10,25 @@
 
 namespace red
 {
-enum class DebugShapeType
-{
-    SEGMENT,
-    POLYGON,
-    CIRCLE,
-    POINT
-};
+RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(DebugComponent)
 
-struct DebugShape
+class ShaderProgram;
+
+struct DebugLinePoint
 {
-    DebugShapeType type;
-    bool isFilled;
+    Vector4 pos;
     Color color;
 };
 
-struct DebugCircle : public DebugShape
+using DebugMenuDrawerFunc = void(*)(DebugComponent*);
+
+struct DebugDrawer
 {
-    Vector2 center;
-    float radius;
+    int id;
+    std::string name;
+    DebugMenuDrawerFunc callback;
 };
 
-struct DebugSegment : public DebugShape
-{
-    Vector2 point1;
-    Vector2 point2;
-};
-
-struct DebugPolygon : public DebugShape
-{
-    Array<Vector2> points;
-};
-
-struct DebugPoint : public DebugShape
-{
-    Vector2 coord;
-};
-
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(DebugComponent)
-
-// TODO Add console component (add utilities like "console debug (OR should I make a 'log into console bool ?')")
 class DebugComponent : public Component
 {
     friend class DebugSystem;
@@ -64,17 +43,31 @@ public:
 
     void AddLine(const Vector2& from, const Vector2& to, const Color& c = ColorConstant::BLACK);
     void AddCircle(const Vector2& center, float radius, const Color& c = ColorConstant::BLACK);
-    void AddPolygon(const Array<Vector2>& points, const Color& c = ColorConstant::BLACK, bool isSolid = false);
+    void AddPolygon(const ArrayView<Vector2>& points, const Color& c = ColorConstant::BLACK, bool isSolid = false);
     void AddPoint(const Vector2& coord, const Color& c = ColorConstant::BLACK, bool isSolid = false);
+
+    int AddDebugDrawer(const char* name, DebugMenuDrawerFunc&& callback);
+    void RemoveDebugDrawer(int id);
+
+    std::shared_ptr<ShaderProgram> GetLineShader();
+    const Array<DebugLinePoint>& GetDebugLines() const;
+    void ClearDebug();
 
     void ClearLogs();
     const Array<Logger::LogOoutputInfo>& GetLogBuffer() const;
     void HandleCommand(const std::string& str);
     void AddLog(const Logger::LogOoutputInfo& str);
+    Array<Entity*>& GetFilteredEntities();
 
 private:
-    Array<std::unique_ptr<DebugShape>> m_frameShapes;
+
+    std::shared_ptr<ShaderProgram> m_lineShaderProgram;
+
+    Array<DebugLinePoint> m_debugLines;
+
     std::unique_ptr<PhysicsDebugDrawer> m_physicsDebugDrawer;
     Array<Logger::LogOoutputInfo> m_logs;
+    Array<DebugDrawer> m_drawers;
+    Array<Entity*> m_filteredEntities;
 };
 }  // namespace red

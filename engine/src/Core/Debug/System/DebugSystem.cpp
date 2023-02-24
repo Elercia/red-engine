@@ -25,31 +25,33 @@ DebugSystem::DebugSystem(World* world) : System(world)
     m_priority = 10;
 }
 
+void ShowImGuiDemo(DebugComponent* /*debug*/)
+{
+    static bool demoOpen = false;
+    ImGui::Checkbox("Show ImGui demo", &demoOpen);
+
+    if(demoOpen)
+    {
+        ImGui::ShowDemoWindow(&demoOpen);
+    }
+}
+
 void DebugSystem::Init()
 {
     System::Init();
     auto* debugComp = m_world->CreateWorldEntity("DebugSystemEntity")->AddComponent<DebugComponent>();
 
     GetRedLogger()->AddOutput([=](const Logger::LogOoutputInfo& out) { debugComp->AddLog(out); });
+
+    debugComp->AddDebugDrawer("Console", &DebugSystem::RenderConsole);
+    debugComp->AddDebugDrawer("Entities", &DebugSystem::RenderEntityTree);
+    debugComp->AddDebugDrawer("Physics", &DebugSystem::RenderDebugPhysicsControls);
+    debugComp->AddDebugDrawer("Misc", &ShowImGuiDemo);
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
 {
-    static bool open = true;
-    if (!ImGui::Begin("Console", &open))
-    {
-        ImGui::End();
-        return;
-    }
-
-    // Header
-
-    if (ImGui::BeginPopupContextItem())
-    {
-        if (ImGui::MenuItem("Close"))
-            open = false;
-        ImGui::EndPopup();
-    }
+    PROFILER_EVENT_CATEGORY("DebugSystem::RenderConsole", ProfilerCategory::Debug)
 
     if (ImGui::SmallButton("Clear"))
     {
@@ -215,34 +217,35 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     ImGui::SetItemDefaultFocus();
     if (reclaimFocus)
         ImGui::SetKeyboardFocusHere(-1);  // Auto focus previous widget
-
-    ImGui::End();
 }
 
 void DebugSystem::Update()
 {
-    PROFILER_EVENT_CATEGORY("Debug", ProfilerCategory::Input);
+    PROFILER_EVENT_CATEGORY("DebugSystem::Update", ProfilerCategory::Debug);
 
     auto* events = m_world->GetWorldComponent<EventsComponent>();
     auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
 
-    RenderConsole(debugComp);
-
-    if (events->GetKeyDown(KeyCodes::KEY_F1))
+    static bool open = true;
+    if (ImGui::Begin("Debug menu", &open))
     {
-        if (debugComp->m_physicsDebugDrawer == nullptr)
+        const ImGuiTabBarFlags tab_bar_flags =
+            ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_NoCloseWithMiddleMouseButton;
+        if (ImGui::BeginTabBar("MenuDebugTabBar", tab_bar_flags))
         {
-            debugComp->m_physicsDebugDrawer = std::make_unique<PhysicsDebugDrawer>(debugComp);
-            debugComp->m_physicsDebugDrawer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_aabbBit |
-                                                      b2Draw::e_pairBit | b2Draw::e_centerOfMassBit);
-        }
-        else
-        {
-            debugComp->m_physicsDebugDrawer.release();
-        }
+            for (auto& drawer : debugComp->m_drawers)
+            {
+                if (ImGui::BeginTabItem(drawer.name.c_str()))
+                {
+                    drawer.callback(debugComp);
 
-        m_world->GetPhysicsWorld()->SetDebugDrawer(debugComp->m_physicsDebugDrawer.get());
+                    ImGui::EndTabItem();
+                }
+            }
+            ImGui::EndTabBar();
+        }
     }
+    ImGui::End();
 
     if (events->GetKeyDown(KeyCodes::KEY_F2))
     {
@@ -271,7 +274,152 @@ void DebugSystem::Update()
     {
         m_world->LoadLevel(Path::Resource("serializedLevel.json"));
     }
+}
 
-    // TODO add the management of the in-game console
+void ShowEntityList(DebugComponent* debug)
+{
+    auto* world = debug->GetWorld();
+    const auto& entities = world->GetEntities();
+    auto& filteredEntities = debug->GetFilteredEntities();
+
+    static char searchStr[512] = {};
+    static bool caseInsensitive = true;
+
+    bool textModified = ImGui::InputText("##SearchText", searchStr, 512, ImGuiInputTextFlags_EnterReturnsTrue);
+    if (textModified)
+        ImGui::SetKeyboardFocusHere(-1);
+    textModified = ImGui::IsItemDeactivatedAfterEdit() || textModified;
+    ImGui::SameLine();
+    textModified = ImGui::Button("Search") || textModified;
+    ImGui::SameLine();
+    textModified = ImGui::Checkbox("Ignore case", &caseInsensitive) || textModified;
+
+    static bool bFirst = true;
+    if (textModified || bFirst)
+    {
+        bFirst = false;
+
+        filteredEntities.clear();
+        if (searchStr[0] == '\0')
+        {
+            filteredEntities = entities;
+        }
+        else
+        {
+            for (auto e : entities)
+            {
+                if (utils::Find(e->GetName(), searchStr, caseInsensitive) != std::string::npos)
+                {
+                    filteredEntities.push_back(e);
+                }
+            }
+        }
+    }
+
+    ImVec2 size = {0, 300};
+    if (ImGui::BeginTable("split", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable,
+                          size))
+    {
+        ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableSetupColumn("Position", ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableHeadersRow();
+
+        for (auto* e : filteredEntities)
+        {
+            ImGui::TableNextRow();
+
+            ImGui::TableNextColumn();
+            ImGui::TextUnformatted(e->GetName().c_str());
+
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("%s", e->GetFullName().c_str());
+            }
+
+            auto* transform = e->GetComponent<Transform>();
+            auto pos = transform->GetLocalPosition();
+            auto scale = transform->GetScale();
+            auto rot = transform->GetLocalRotationDeg();
+
+            ImGui::TableNextColumn();
+            ImGui::Text("%.2f ; %.2f", pos.x, pos.y);
+
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Position %.2f ; %.2f\nScale %.2f ; %.2f\nRotation %.2f", pos.x, pos.y, scale.x,
+                                  scale.y, rot);
+            }
+        }
+        ImGui::EndTable();
+    }
+}
+
+void ShowEntityTree(DebugComponent* /*debug*/)
+{
+}
+
+enum EntityDisplayMode
+{
+    List,
+    Tree,
+
+    Count
+};
+
+void DebugSystem::RenderEntityTree(DebugComponent* debug)
+{
+    const char* sDisplayMode[] = {"List", "Tree"};
+
+    static int currentMode = EntityDisplayMode::List;
+    ImGui::Combo("Display mode", &currentMode, sDisplayMode, EntityDisplayMode::Count);
+
+    ImGui::Separator();
+
+    switch (currentMode)
+    {
+        case EntityDisplayMode::List:
+            ShowEntityList(debug);
+            break;
+        case EntityDisplayMode::Tree:
+            ShowEntityTree(debug);
+            break;
+    }
+}
+
+void DebugSystem::RenderDebugPhysicsControls(DebugComponent* debug)
+{
+    static bool enabled = false;
+    bool enabledChanged = ImGui::Checkbox("Enable debug drawer", &enabled);
+
+    ImGui::Separator();
+
+    int flagValue = 0;
+    static bool flags[5] = {true, true, true, true, true};
+    static const char* flagsStr[5] = {"Shapes", "Joints", "Bounding boxes", "Pairs", "Center of mass"};
+    for (int i = 0; i < 5; i++)
+    {
+        ImGui::Checkbox(flagsStr[i], &flags[i]);
+
+        flagValue |= (int) (flags[i]) << i;
+    }
+
+    if (enabledChanged)
+    {
+        auto* world = debug->GetWorld();
+
+        if (enabled)
+        {
+            debug->m_physicsDebugDrawer = std::make_unique<PhysicsDebugDrawer>(debug);
+        }
+        else
+        {
+            debug->m_physicsDebugDrawer.release();
+        }
+
+        world->GetPhysicsWorld()->SetDebugDrawer(debug->m_physicsDebugDrawer.get());
+    }
+
+    if (debug->m_physicsDebugDrawer != nullptr)
+        debug->m_physicsDebugDrawer->SetFlags(flagValue);
 }
 }  // namespace red

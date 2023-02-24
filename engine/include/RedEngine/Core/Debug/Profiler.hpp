@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef RED_USE_PROFILER
+#if defined(RED_USE_PROFILER)
 
 #ifdef None
 #undef None  // seems to be define inside X11
@@ -11,6 +11,7 @@
 struct ProfilerCategory
 {
     static inline auto Rendering = Optick::Category::Rendering;
+    static inline auto Physics = Optick::Category::Physics;
     static inline auto Input = Optick::Category::Input;
     static inline auto Debug = Optick::Category::Input;
     static inline auto None = Optick::Category::Input;
@@ -21,13 +22,14 @@ struct ProfilerCategory
 #define PROFILER_FRAME(...)                OPTICK_FRAME(#__VA_ARGS__)
 #define PROFILER_EVENT(...)                OPTICK_EVENT(#__VA_ARGS__)
 #define PROFILER_EVENT_CATEGORY(MSG, CAT)  OPTICK_CATEGORY(MSG, CAT)
-#define PROFILER_THREAD(...)               OPTICK_THREAD(#__VA_ARGS__)
+#define PROFILER_THREAD(...)               OPTICK_START_THREAD(#__VA_ARGS__)
 
 #else
 
 enum class ProfilerCategory
 {
     Rendering,
+    Physics,
     Input,
     Debug,
     None

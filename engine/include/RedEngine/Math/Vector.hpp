@@ -148,6 +148,8 @@ template <typename T>
 constexpr Vector2T<T> operator*(const Vector2T<T>& l, const Vector2T<T>& r);
 template <typename T>
 constexpr Vector2T<T> operator*(const Vector2T<T>& l, T scalar);
+template <typename T>
+constexpr Vector2T<T> operator/(const Vector2T<T>& l, T scalar);
 
 template <typename T>
 constexpr Vector3T<T> operator+(const Vector3T<T>& l, const Vector3T<T>& r);
@@ -157,6 +159,8 @@ template <typename T>
 constexpr Vector3T<T> operator*(const Vector3T<T>& l, const Vector3T<T>& r);
 template <typename T>
 constexpr Vector3T<T> operator*(const Vector3T<T>& l, T scalar);
+template <typename T>
+constexpr Vector3T<T> operator/(const Vector3T<T>& l, T scalar);
 
 template <typename T>
 constexpr Vector2T<T> operator-(const Vector2T<T>& l);
@@ -180,10 +184,6 @@ template <typename T>
 constexpr T Dot(const Vector2T<T>& a, const Vector2T<T>& b);
 template <typename T>
 constexpr T Dot(const Vector3T<T>& a, const Vector3T<T>& b);
-
-// TODO move this to a physics header
-b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
-Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2);
 
 }  // namespace red
 

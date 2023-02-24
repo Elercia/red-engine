@@ -33,6 +33,7 @@ public:
     using const_reference = const T&;
 
     using size_type = uint32;
+    static const size_type npos = (size_type)-1;
 
     /// Constructors
     Array();
@@ -86,6 +87,7 @@ public:
     void shrink_to_fit();
 
     void clear();
+    void clearAndFree();
 
     void resize(size_type count);
     void resize(size_type count, const T& t);
@@ -105,6 +107,11 @@ public:
 
     template <class InputIterator>
     iterator insert(const_iterator position, InputIterator first, InputIterator last);
+
+    size_type Find(const T& toFind) const;
+
+    template <typename Predicate>
+    size_type Find(Predicate&& pred) const;
 
 private:
     void SetCapacity(size_type askedCapacity);
@@ -127,5 +134,48 @@ using Array = std::vector<T>;
 }  // namespace red
 
 #endif  // else RED_USE_ARRAY
+
+namespace red
+{
+template <typename T>
+class ArrayView
+{
+    using size_type = uint32;
+    using iterator = T*;
+    using const_iterator = const T*;
+
+public:
+    ArrayView();
+
+    template <typename A>
+    explicit ArrayView(Array<T, A>& ar);
+
+    template <typename A>
+    ArrayView(Array<T, A>& ar, size_type start, size_type count);
+
+    template <typename A>
+    ArrayView(Array<T, A>& ar, size_type count);
+
+    ArrayView(T* data, size_type count);
+    ArrayView(T* data, size_type start, size_type count);
+
+    iterator begin();
+    const_iterator begin() const;
+
+    iterator end();
+    const_iterator end() const;
+
+    bool empty() const;
+    size_type size() const;
+    T* data();
+
+    T& operator[](size_type index);
+    const T& operator[](size_type index) const;
+
+private:
+    T* m_offsetData;
+    size_type m_count;
+};
+}  // namespace red
 
 #include "inl/Array.inl"

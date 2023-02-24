@@ -25,10 +25,14 @@ SpriteResourceLoader::~SpriteResourceLoader()
 {
 }
 
-bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resource, const Path& path, nlohmann::json jsonContent)
+bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resource, const Path& path,
+                                        nlohmann::json jsonContent)
 {
     auto* textureResourceLoader =
         m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<TextureResourceLoader>();
+
+    auto* materialLoader =
+        m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<MaterialResourceLoader>();
 
     for (auto animationJson : jsonContent)
     {
@@ -44,11 +48,11 @@ bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resourc
         }
 
         std::string spriteSheetPathStr = spriteSheetJson.value();
-
         animationDesc.texture =
             textureResourceLoader->LoadResource(Path::Resource(utils::ToUnicodeString(spriteSheetPathStr)));
 
-        animationDesc.loop = animationJson["loop"];
+        std::string materialName = animationJson["material"];
+        animationDesc.material = materialLoader->LoadResource(Path::Resource(utils::ToUnicodeString(materialName)));
 
         auto framesJson = animationJson.find("frames");
         if (framesJson == animationJson.end())
@@ -56,6 +60,8 @@ bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resourc
             RED_LOG_WARNING("Animation {} has no frame", animationName);
             continue;
         }
+
+        animationDesc.loop = animationJson["loop"];
 
         for (auto& frameIt : framesJson.value())
         {

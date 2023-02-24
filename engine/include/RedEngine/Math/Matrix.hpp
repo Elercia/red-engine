@@ -3,10 +3,12 @@
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
+#include <initializer_list>
+
 namespace red
 {
 
-// Row major matrix
+// Column major matrix
 template <typename T, uint8 L, uint8 C>
 class MatrixT
 {

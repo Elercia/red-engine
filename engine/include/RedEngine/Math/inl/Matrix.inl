@@ -7,14 +7,14 @@ constexpr MatrixT<T, L, C> MatrixT<T, L, C>::Identity()
 {
     MatrixT<T, L, C> id;
 
-    for (uint8 i = 0; i < L; i++)
+    for (uint8 c = 0; c < C; c++)
     {
-        for (uint8 j = 0; j < C; j++)
+        for (uint8 r = 0; r < L; r++)
         {
-            if (i == j)
-                id(i, j) = 1;
+            if (c == r)
+                id(c, r) = 1;
             else
-                id(i, j) = 0;
+                id(c, r) = 0;
         }
     }
 
@@ -22,15 +22,15 @@ constexpr MatrixT<T, L, C> MatrixT<T, L, C>::Identity()
 }
 
 template <typename T, uint8 L, uint8 C>
-constexpr T& MatrixT<T, L, C>::operator()(uint8 i, uint8 j)
+constexpr T& MatrixT<T, L, C>::operator()(uint8 column, uint8 row)
 {
-    return m_data[C * i + j];
+    return m_data[L * column + row];
 }
 
 template <typename T, uint8 L, uint8 C>
-constexpr const T& MatrixT<T, L, C>::operator()(uint8 i, uint8 j) const
+constexpr const T& MatrixT<T, L, C>::operator()(uint8 column, uint8 row) const
 {
-    return m_data[C * i + j];
+    return m_data[L * column + row];
 }
 
 /*template <typename T, uint8 L, uint8 C>
@@ -48,9 +48,9 @@ ThisType MatrixT<T, L, C>::Inverse() const
 template <typename T, uint8 L, uint8 C>
 constexpr bool MatrixT<T, L, C>::EqualsEpsilon(const ThisType& other, const T& epsilon) const
 {
-    for (uint8 i = 0; i < L; i++)
+    for (uint8 i = 0; i < C; i++)
     {
-        for (uint8 j = 0; j < C; j++)
+        for (uint8 j = 0; j < L; j++)
         {
             if (!Math::EqualsEpsilon(operator()(i, j), other(i, j), epsilon))
             {
@@ -79,9 +79,9 @@ constexpr MatrixT<T, L, C> operator+(const MatrixT<T, L, C>& l, const MatrixT<T,
 {
     MatrixT<T, L, C> ret;
 
-    for (uint8 i = 0; i < L; i++)
+    for (uint8 i = 0; i < C; i++)
     {
-        for (uint8 j = 0; j < C; j++)
+        for (uint8 j = 0; j < L; j++)
         {
             ret(i, j) = l(i, j) + r(i, j);
         }
@@ -95,9 +95,9 @@ constexpr MatrixT<T, L, C> operator-(const MatrixT<T, L, C>& l, const MatrixT<T,
 {
     MatrixT<T, L, C> ret;
 
-    for (uint8 i = 0; i < L; i++)
+    for (uint8 i = 0; i < C; i++)
     {
-        for (uint8 j = 0; j < C; j++)
+        for (uint8 j = 0; j < L; j++)
         {
             ret(i, j) = l(i, j) - r(i, j);
         }
@@ -111,9 +111,9 @@ constexpr MatrixT<T, L, C> operator*(const MatrixT<T, L, C>& mat, typename Matri
 {
     MatrixT<T, L, C> ret;
 
-    for (uint8 i = 0; i < L; i++)
+    for (uint8 i = 0; i < C; i++)
     {
-        for (uint8 j = 0; j < C; j++)
+        for (uint8 j = 0; j < L; j++)
         {
             ret(i, j) = mat(i, j) * v;
         }
@@ -139,7 +139,7 @@ constexpr MatrixT<T, L, C> operator*(const MatrixT<T, L, C>& l, const MatrixT<T,
         {
             for (uint8 k = 0; k < C; k++)
             {
-                ret(i, j) += l(i, k) * r(k, j);
+                ret(j, i) += l(k, i) * r(j, k);
             }
         }
     }
@@ -152,15 +152,15 @@ constexpr MatrixT<T, L, C> MatrixT<T, L, C>::Transpose() const
 {
     MatrixT<T, L, C> res;
 
-    for (uint8 i = 0; i < L; i++)
+    for (uint8 i = 0; i < C; i++)
     {
-        for (uint8 j = 0; j < C; j++)
+        for (uint8 j = 0; j < L; j++)
         {
-            res(j,i) = operator()(i,j);
+            res(j, i) = operator()(i, j);
         }
     }
 
-    return res;   
+    return res;
 }
 
 template <>
@@ -177,15 +177,15 @@ constexpr inline MatrixT<float, 2, 2>::ThisType MatrixT<float, 2, 2>::Inverse() 
     if (det == 0)
         return Identity();
 
-    const float& a = operator()(0, 0);
-    const float& b = operator()(0, 1);
-    const float& c = operator()(1, 0);
-    const float& d = operator()(1, 1);
+    const float a = operator()(0, 0);
+    const float b = operator()(1, 0);
+    const float c = operator()(0, 1);
+    const float d = operator()(1, 1);
 
     // clang-format off
     Matrix22 m = {
-         d,  -b,
-        -c,   a,
+         d,  -c,
+        -b,   a,
     };
     // clang-format on
 
@@ -195,17 +195,17 @@ constexpr inline MatrixT<float, 2, 2>::ThisType MatrixT<float, 2, 2>::Inverse() 
 template <>
 constexpr inline float MatrixT<float, 3, 3>::Det() const
 {
-    const float& a = operator()(0, 0);
-    const float& b = operator()(0, 1);
-    const float& c = operator()(0, 2);
+    const float a = operator()(0, 0);
+    const float b = operator()(1, 0);
+    const float c = operator()(2, 0);
 
-    const float& d = operator()(1, 0);
-    const float& e = operator()(1, 1);
-    const float& f = operator()(1, 2);
+    const float d = operator()(0, 1);
+    const float e = operator()(1, 1);
+    const float f = operator()(2, 1);
 
-    const float& g = operator()(2, 0);
-    const float& h = operator()(2, 1);
-    const float& i = operator()(2, 2);
+    const float g = operator()(0, 2);
+    const float h = operator()(1, 2);
+    const float i = operator()(2, 2);
 
     // clang-format off
     return      a * e * i 
@@ -224,33 +224,33 @@ constexpr inline MatrixT<float, 3, 3>::ThisType MatrixT<float, 3, 3>::Inverse() 
     if (det == 0)
         return Identity();
 
-    const float& a = operator()(0, 0);
-    const float& b = operator()(0, 1);
-    const float& c = operator()(0, 2);
+    const float a = operator()(0, 0);
+    const float b = operator()(1, 0);
+    const float c = operator()(2, 0);
 
-    const float& d = operator()(1, 0);
-    const float& e = operator()(1, 1);
-    const float& f = operator()(1, 2);
+    const float d = operator()(0, 1);
+    const float e = operator()(1, 1);
+    const float f = operator()(2, 1);
 
-    const float& g = operator()(2, 0);
-    const float& h = operator()(2, 1);
-    const float& i = operator()(2, 2);
+    const float g = operator()(0, 2);
+    const float h = operator()(1, 2);
+    const float i = operator()(2, 2);
 
-    const float& A = e * i - f * h;
-    const float& B = -(d * i - f * g);
-    const float& C = d * h - e * g;
-    const float& D = -(b * i - c * h);
-    const float& E = a * i - c * g;
-    const float& F = -(a * h - b * g);
-    const float& G = b * f - c * e;
-    const float& H = -(a * f - c * d);
-    const float& I = a * e - b * d;
+    const float A = e * i - f * h;
+    const float B = -(d * i - f * g);
+    const float C = d * h - e * g;
+    const float D = -(b * i - c * h);
+    const float E = a * i - c * g;
+    const float F = -(a * h - b * g);
+    const float G = b * f - c * e;
+    const float H = -(a * f - c * d);
+    const float I = a * e - b * d;
 
     // clang-format off
     MatrixT<float, 3, 3> mat = {
-        A, D, G,
-        B, E, H,
-        C, F, I
+        A, B, C,
+        D, E, F, 
+        G, H, I
     };
     // clang-format on
 
@@ -260,42 +260,42 @@ constexpr inline MatrixT<float, 3, 3>::ThisType MatrixT<float, 3, 3>::Inverse() 
 template <>
 constexpr inline float MatrixT<float, 4, 4>::Det() const
 {
-    const float& a = operator()(0, 0);
-    const float& b = operator()(0, 1);
-    const float& c = operator()(0, 2);
-    const float& d = operator()(0, 3);
+    const float a = operator()(0, 0);
+    const float b = operator()(1, 0);
+    const float c = operator()(2, 0);
+    const float d = operator()(3, 0);
 
-    const float& e = operator()(1, 0);
-    const float& f = operator()(1, 1);
-    const float& g = operator()(1, 2);
-    const float& h = operator()(1, 3);
+    const float e = operator()(0, 1);
+    const float f = operator()(1, 1);
+    const float g = operator()(2, 1);
+    const float h = operator()(3, 1);
 
-    const float& i = operator()(2, 0);
-    const float& j = operator()(2, 1);
-    const float& k = operator()(2, 2);
-    const float& l = operator()(2, 3);
+    const float i = operator()(0, 2);
+    const float j = operator()(1, 2);
+    const float k = operator()(2, 2);
+    const float l = operator()(3, 2);
 
-    const float& m = operator()(3, 0);
-    const float& n = operator()(3, 1);
-    const float& o = operator()(3, 2);
-    const float& p = operator()(3, 3);
+    const float m = operator()(0, 3);
+    const float n = operator()(1, 3);
+    const float o = operator()(2, 3);
+    const float p = operator()(3, 3);
 
     // clang-format off
-    MatrixT<float, 3, 3> A = {  f, g, h, 
-                                j, k, l,
-                                n, o, p };
+    MatrixT<float, 3, 3> A = {  f, j, n,
+                                g, k, o,
+                                h, l, p };
 
-    MatrixT<float, 3, 3> B = {  e, g, h, 
-                                i, k, l,
-                                m, o, p };
+    MatrixT<float, 3, 3> B = {  e, i, m, 
+                                g, k, o,
+                                h, l, p };
 
-    MatrixT<float, 3, 3> C = {  e, f, h, 
-                                i, j, l,
-                                m, n, p };
+    MatrixT<float, 3, 3> C = {  e, i, m, 
+                                f, j, n,
+                                h, l, p };
 
-    MatrixT<float, 3, 3> D = {  e, f, g, 
-                                i, j, k,
-                                m, n, o };
+    MatrixT<float, 3, 3> D = {  e, i, m, 
+                                f, j, n,
+                                g, k, o };
     // clang-format on
 
     return a * A.Det() - b * B.Det() + c * C.Det() - d * D.Det();
@@ -308,25 +308,25 @@ constexpr inline MatrixT<float, 4, 4>::ThisType MatrixT<float, 4, 4>::Inverse() 
     if (det == 0)
         return Identity();
 
-    const float& a = operator()(0, 0);
-    const float& b = operator()(0, 1);
-    const float& c = operator()(0, 2);
-    const float& d = operator()(0, 3);
+    const float a = operator()(0, 0);
+    const float b = operator()(1, 0);
+    const float c = operator()(2, 0);
+    const float d = operator()(3, 0);
 
-    const float& e = operator()(1, 0);
-    const float& f = operator()(1, 1);
-    const float& g = operator()(1, 2);
-    const float& h = operator()(1, 3);
+    const float e = operator()(0, 1);
+    const float f = operator()(1, 1);
+    const float g = operator()(2, 1);
+    const float h = operator()(3, 1);
 
-    const float& i = operator()(2, 0);
-    const float& j = operator()(2, 1);
-    const float& k = operator()(2, 2);
-    const float& l = operator()(2, 3);
+    const float i = operator()(0, 2);
+    const float j = operator()(1, 2);
+    const float k = operator()(2, 2);
+    const float l = operator()(3, 2);
 
-    const float& m = operator()(3, 0);
-    const float& n = operator()(3, 1);
-    const float& o = operator()(3, 2);
-    const float& p = operator()(3, 3);
+    const float m = operator()(0, 3);
+    const float n = operator()(1, 3);
+    const float o = operator()(2, 3);
+    const float p = operator()(3, 3);
 
     float a11 = -h * k * n + g * l * n + h * j * o - f * l * o - g * j * p + f * k * p;
     float a12 = d * k * n - c * l * n - d * j * o + b * l * o + c * j * p - b * k * p;
@@ -347,10 +347,10 @@ constexpr inline MatrixT<float, 4, 4>::ThisType MatrixT<float, 4, 4>::Inverse() 
 
     // clang-format off
     MatrixT<float, 4, 4> adj = {
-        a11, a12, a13, a14,
-        a21, a22, a23, a24,
-        a31, a32, a33, a34,
-        a41, a42, a43, a44,
+        a11, a21, a31, a41, 
+        a12, a22, a32, a42, 
+        a13, a23, a33, a43, 
+        a14, a24, a34, a44
     };
     // clang-format on
 
@@ -361,10 +361,10 @@ constexpr inline Vector4 operator*(const Matrix44& m, const Vector4& v)
 {
     Vector4 ret;
 
-    ret.x = m(0,0) * v.x + m(0,1) * v.y + m(0,2) * v.z + m(0,3) * v.w;
-    ret.y = m(1,0) * v.x + m(1,1) * v.y + m(1,2) * v.z + m(1,3) * v.w;
-    ret.z = m(2,0) * v.x + m(2,1) * v.y + m(2,2) * v.z + m(2,3) * v.w;
-    ret.w = m(3,0) * v.x + m(3,1) * v.y + m(3,2) * v.z + m(3,3) * v.w;
+    ret.w = m(0, 3) * v.x + m(1, 3) * v.y + m(2, 3) * v.z + m(3, 3) * v.w;
+    ret.x = m(0, 0) * v.x + m(1, 0) * v.y + m(2, 0) * v.z + m(3, 0) * v.w;
+    ret.y = m(0, 1) * v.x + m(1, 1) * v.y + m(2, 1) * v.z + m(3, 1) * v.w;
+    ret.z = m(0, 2) * v.x + m(1, 2) * v.y + m(2, 2) * v.z + m(3, 2) * v.w;
 
     return ret;
 }

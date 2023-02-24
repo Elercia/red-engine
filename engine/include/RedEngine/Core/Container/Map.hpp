@@ -105,6 +105,9 @@ public:
         using iterator::operator==;
         using iterator::operator!=;
 
+        bool operator==(const const_iterator& other) const;
+        bool operator!=(const const_iterator& other) const;
+
         using iterator::operator*;
 
         using iterator::operator->;

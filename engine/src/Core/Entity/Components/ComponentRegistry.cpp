@@ -6,24 +6,23 @@
 
 namespace red
 {
-std::pair<bool, ComponentTraits*> ComponentRegistry::CreateNewComponentTraits(const std::string& componentName)
+std::pair<bool, ComponentTraits*> ComponentRegistry::CreateNewComponentTraits(TypeTraitsId componentId)
 {
-    auto* otherCompTraits = GetComponentTraitsInternal(componentName);
+    auto* otherCompTraits = GetComponentTraitsInternal(componentId);
 
     if (otherCompTraits != nullptr)
     {
-        RED_LOG_ERROR("ComponentRegistry already have registered a component named {}", componentName);
         return {false, otherCompTraits};
     }
 
-    m_componentDatas.insert({componentName, ComponentTraits()});
+    m_componentDatas.insert({componentId, ComponentTraits()});
 
-    return {true, &m_componentDatas[componentName]};
+    return {true, &m_componentDatas[componentId]};
 }
 
-const ComponentTraits* ComponentRegistry::GetComponentTraits(const std::string& componentName) const
+const ComponentTraits* ComponentRegistry::GetComponentTraits(TypeTraitsId componentId) const
 {
-    auto foundIt = m_componentDatas.find(componentName);
+    auto foundIt = m_componentDatas.find(componentId);
     if (foundIt == m_componentDatas.end())
     {
         return nullptr;
@@ -32,9 +31,9 @@ const ComponentTraits* ComponentRegistry::GetComponentTraits(const std::string& 
     return &foundIt->second;
 }
 
-ComponentTraits* ComponentRegistry::GetComponentTraitsInternal(const std::string& componentName)
+ComponentTraits* ComponentRegistry::GetComponentTraitsInternal(TypeTraitsId componentId)
 {
-    auto foundIt = m_componentDatas.find(componentName);
+    auto foundIt = m_componentDatas.find(componentId);
     if (foundIt == m_componentDatas.end())
     {
         return nullptr;

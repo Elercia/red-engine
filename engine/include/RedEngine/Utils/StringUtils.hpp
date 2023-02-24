@@ -16,8 +16,13 @@ namespace utils
 
     std::wstring ToUnicodeString(const std::string_view str);
 
+    void ToLowerCase(std::string& str);
+    void ToLowerCase(std::wstring& str);
+
     void ToUpperCase(std::string& str);
     void ToUpperCase(std::wstring& str);
+
+    std::string::size_type Find(const std::string_view& in, const std::string_view& toFind, bool caseInsensitive = false);
 
     namespace StringParser
     {

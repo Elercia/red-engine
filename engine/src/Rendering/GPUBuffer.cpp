@@ -7,7 +7,8 @@
 namespace red
 {
 
-GPUBuffer::GPUBuffer(uint32 nbElements, uint32 elementSize) : m_nbElements(nbElements), m_elementSize(elementSize)
+GPUBuffer::GPUBuffer(uint32 nbElements, uint32 elementSize)
+    : mappedData(nullptr), m_nbElements(nbElements), m_elementSize(elementSize), m_gpuBufferHandle(0)
 {
 }
 
@@ -18,7 +19,7 @@ GPUBuffer::~GPUBuffer()
 void GPUBuffer::Init()
 {
     glCreateBuffers(1, &m_gpuBufferHandle);
-    glNamedBufferData(m_gpuBufferHandle, m_elementSize * m_nbElements, nullptr, GL_DYNAMIC_DRAW);
+    glNamedBufferData(m_gpuBufferHandle, m_elementSize * m_nbElements, nullptr, GL_STATIC_DRAW);
 }
 
 void GPUBuffer::Finalize()
@@ -42,6 +43,8 @@ void* GPUBuffer::MapData(MapType mapType)
     void* ptr = glMapNamedBuffer(m_gpuBufferHandle, glMap);
 
     mappedData = ptr;
+
+    RedAssert(mappedData != nullptr);
 
     return mappedData;
 }

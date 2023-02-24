@@ -30,6 +30,7 @@ struct BindingIndex
     enum
     {
         Diffuse = 0,
+        Color = 1,
         Max = 16,
     };
 };
@@ -56,7 +57,7 @@ class Material;
 struct MaterialInstance
 {
     std::shared_ptr<Material> material;
-    MaterialBindings overiddenBindings;
+    MaterialBindings overriddenBindings;
 };
 
 class Material : public IResource

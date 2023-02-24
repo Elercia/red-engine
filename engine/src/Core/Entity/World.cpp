@@ -22,7 +22,7 @@ namespace red
 static int s_nameCounter = 0;
 
 World::World()
-    : m_entityAllocator(sizeof(Entity), 1000)
+    : m_entityAllocator(sizeof(Entity), 100)
     , m_componentManager(new ComponentManager(this))
     , m_componentRegistry(new ComponentRegistry())
     , m_currentLevel(nullptr)
@@ -207,11 +207,6 @@ void World::ChangeLevel(Level* newLevel)
         RED_LOG_INFO("Change level {}", newLevel->GetName());
 
         m_currentLevel->InternInit();
-
-        for (auto* system : m_systems)
-        {
-            system->ManageEntities();
-        }
     }
 }
 
@@ -246,7 +241,7 @@ Entity* World::CreateEntity(Entity* parent)
 {
     Entity* e = m_entityAllocator.Allocate<Entity>(this, GetNewEntityId());
 
-    e->SetName("Unnamed" + s_nameCounter++);
+    e->SetName("Unnamed" + std::to_string(s_nameCounter++));
     e->SetParent(parent);
 
     OnAddEntity(e);
@@ -261,7 +256,7 @@ Entity* World::CreateEntity(Entity* parent, EntityId id)
 
     Entity* e = m_entityAllocator.Allocate<Entity>(this, id);
 
-    e->SetName("Unnamed" + s_nameCounter++);
+    e->SetName("Unnamed" + std::to_string(s_nameCounter++));
     e->SetParent(parent);
 
     OnAddEntity(e);

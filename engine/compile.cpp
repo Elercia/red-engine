@@ -31,7 +31,8 @@
 #include "RedEngine/Utils/Uncopyable.hpp"
 #include "RedEngine/Utils/SystemInfo.hpp"
 
-#include "RedEngine/Core/CoreModule.hpp"
+#include "RedEngine/Thread/Thread.hpp"
+
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
@@ -87,7 +88,6 @@
 #include "RedEngine/Level/LevelLoader.hpp"
 #include "RedEngine/Level/LevelSerializer.hpp"
 
-#include "RedEngine/Physics/Components/Collider.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/ContactInfo.hpp"
 #include "RedEngine/Physics/PhysicsModule.hpp"
@@ -103,13 +103,13 @@
 #include "RedEngine/Rendering/FrameBuffer.hpp"
 #include "RedEngine/Rendering/GPUBuffer.hpp"
 #include "RedEngine/Rendering/RenderDebugUtils.hpp"
-#include "RedEngine/Rendering/Renderer.hpp"
 #include "RedEngine/Rendering/Resource/Geometry.hpp"
 #include "RedEngine/Rendering/Resource/GeometryResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/Material.hpp"
 #include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgram.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
+#include "RedEngine/Rendering/Renderer.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResource.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
@@ -166,6 +166,8 @@
 #include "Core/Time/FrameCounter.cpp"
 #include "Core/Time/Time.cpp"
 
+#include "Thread/Thread.cpp"
+
 #include "Filesystem/File.cpp"
 #include "Filesystem/Path.cpp"
 #include "Input/Component/UserInput.cpp"
@@ -182,7 +184,6 @@
 #include "Math/SerializationFunction.cpp"
 #include "Math/Vector.cpp"
 
-#include "Physics/Components/Collider.cpp"
 #include "Physics/Components/PhysicBody.cpp"
 #include "Physics/ContactInfo.cpp"
 #include "Physics/PhysicsWorld.cpp"

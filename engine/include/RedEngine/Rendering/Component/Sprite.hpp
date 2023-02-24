@@ -46,6 +46,7 @@ private:
 
 private:
     std::shared_ptr<SpriteResource> m_spriteResource;
+
     CurrentAnimationDesc m_currentAnimationInfo;
 };
 }  // namespace red

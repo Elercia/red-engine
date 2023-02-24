@@ -66,9 +66,6 @@ Entity* Level::GetRootEntity() const
 Entity* Level::CreateEntity()
 {
     Entity* e = m_world->CreateEntity(GetRootEntity());
-
-    e->SetParent(GetRootEntity());
-
     return e;
 }
 
@@ -77,7 +74,6 @@ Entity* Level::CreateEntity(const std::string& name)
     Entity* e = m_world->CreateEntity(GetRootEntity());
 
     e->SetName(name);
-    e->SetParent(GetRootEntity());
 
     return e;
 }

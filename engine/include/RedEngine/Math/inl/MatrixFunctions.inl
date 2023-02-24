@@ -6,10 +6,10 @@ namespace Math
     {
         // clang-format off
 		Matrix44 ortho = {
-			2.f / (right - left), 0.f, 0.f, 	-((right+left) / (right-left)),
-			0.f, 2.f / (top - bottom), 0.f, 	-((top+bottom) / (top-bottom)),
-			0.f, 0.f, -2.f / (zFar- zNear) , 	-((zFar+zNear) / (zFar-zNear)),
-			0.f, 0.f, 0.f, 						1.f,
+			2.f / (right - left),               0.f,                                0.f,                                0.f,
+			0.f,                                2.f / (top - bottom),               0.f, 	                            0.f,
+			0.f,                                0.f,                                -2.f / (zFar - zNear),              0.f,
+			-((right+left) / (right-left)),     -((top+bottom) / (top-bottom)),     -((zFar+zNear) / (zFar-zNear)),     1.f,
 		};
         // clang-format on
 
@@ -26,17 +26,17 @@ namespace Math
 
         Matrix44 Result;
         Result(0, 0) = s.x;
-        Result(1, 0) = s.y;
-        Result(2, 0) = s.z;
-        Result(0, 1) = u.x;
+        Result(0, 1) = s.y;
+        Result(0, 2) = s.z;
+        Result(1, 0) = u.x;
         Result(1, 1) = u.y;
-        Result(2, 1) = u.z;
-        Result(0, 2) = -f.x;
-        Result(1, 2) = -f.y;
+        Result(1, 2) = u.z;
+        Result(2, 0) = -f.x;
+        Result(2, 1) = -f.y;
         Result(2, 2) = -f.z;
-        Result(3, 0) = -Dot(s, eye);
-        Result(3, 1) = -Dot(u, eye);
-        Result(3, 2) = Dot(f, eye);
+        Result(0, 3) = -Dot(s, eye);
+        Result(1, 3) = -Dot(u, eye);
+        Result(2, 3) = Dot(f, eye);
         return Result;
     }
 
@@ -44,14 +44,43 @@ namespace Math
     {
         // clang-format off
 		Matrix44 translationMatrix = {
-			1.f, 0.f, 0.f, trans.x,
-			0.f, 1.f, 0.f, trans.y,
-			0.f, 0.f, 1.f, trans.z,
-			0.f, 0.f, 0.f, 1.f,
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			trans.x, trans.y, trans.z, 1.f,
 		};
         // clang-format on
 
-        return translationMatrix * mat;
+        return mat * translationMatrix;
+    }
+
+    Matrix33 Translate(const Matrix33& mat, const Vector2& trans)
+    {
+        // clang-format off
+		Matrix33 translationMatrix = {
+			1.f,        0.f,        0.f,
+			0.f,        1.f,        0.f,
+			trans.x,    trans.y,    1.f,
+		};
+        // clang-format on
+
+        return mat * translationMatrix;
+    }
+
+    Matrix33 Rotate(const Matrix33& mat, float angle)
+    {
+        float cosTeta = Cos(angle);
+        float sinTeta = Sin(angle);
+
+        // clang-format off
+		Matrix33 rotation = {
+			cosTeta,  sinTeta, 0,
+			-sinTeta, cosTeta, 0,
+			0, 0, 1
+		};
+        // clang-format on
+
+        return mat * rotation;
     }
 
     Matrix44 Rotate(const Matrix44& mat, const Vector3& angles)
@@ -62,29 +91,42 @@ namespace Math
         float sinY = Sin(angles.y);
         float cosZ = Cos(angles.z);
         float sinZ = Sin(angles.z);
-
+        
         // clang-format off
 		Matrix44 rotationMatrixX = {
 			1.f, 		0.f, 		0.f, 		0.f,
-			0.f, 		cosX, 		-sinX, 		0.f,
-			0.f, 		sinX, 		cosX,		0.f,
+			0.f, 		cosX, 		sinX, 		0.f,
+			0.f, 		-sinX, 		cosX,		0.f,
 			0.f, 		0.f, 		0.f, 		1.f,
 		};
 		Matrix44 rotationMatrixY = {
-			cosY, 		0.f, 		sinY, 		0.f,
+			cosY, 		0.f, 		-sinY, 		0.f,
 			0.f, 		1.f, 		0.f, 		0.f,
-			-sinY, 		0.f, 		cosY,		0.f,
+			sinY, 		0.f, 		cosY,		0.f,
 			0.f, 		0.f, 		0.f, 		1.f,
 		};
 		Matrix44 rotationMatrixZ = {
-			cosZ, 		-sinZ, 		0.f, 		0.f,
-			sinZ, 		cosZ, 		0.f, 		0.f,
+			cosZ, 		sinZ, 		0.f, 		0.f,
+			-sinZ, 		cosZ, 		0.f, 		0.f,
 			0.f, 		0.f, 		1.f,		0.f,
 			0.f, 		0.f, 		0.f, 		1.f,
 		};
         // clang-format on
 
-        return rotationMatrixX * rotationMatrixY * rotationMatrixZ * mat;
+        return mat * rotationMatrixX * rotationMatrixY * rotationMatrixZ;
+    }
+
+    Matrix33 Scale(const Matrix33& mat, const Vector2& scales)
+    {
+        // clang-format off
+		Matrix33 scaleMatrix = {
+			scales.x, 	0.f, 		0.f, 	
+			0.f, 		scales.y, 	0.f, 	
+			0.f, 		0.f, 		1.f,
+		};
+        // clang-format on
+
+        return mat * scaleMatrix;
     }
 
     Matrix44 Scale(const Matrix44& mat, const Vector3& scales)
@@ -98,7 +140,7 @@ namespace Math
 		};
         // clang-format on
 
-        return scaleMatrix * mat;
+        return mat * scaleMatrix;
     }
 }  // namespace Math
 }  // namespace red

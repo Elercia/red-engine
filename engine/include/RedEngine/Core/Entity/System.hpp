@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Memory/LinearAllocator.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
 
@@ -40,11 +41,9 @@ public:
     /// Called once the system is shutting down to manage system-specific shutdown
     virtual void Finalise();
 
-    virtual void ManageEntities(){};
-
     // TODO Create the same inside world (fallback call to world)
     template <class... ComponentTypes>
-    Array<Entity*, red::DoubleLinearArrayAllocator> GetComponents() const;
+    Array<std::tuple<Entity*, ComponentTypes*...>, red::DoubleLinearArrayAllocator> GetComponents() const;
 
     // Utilities functions
     void DebugDrawLine(const Vector2& from, const Vector2& to);

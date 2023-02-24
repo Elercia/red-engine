@@ -32,7 +32,7 @@ private:
     void* MapData(MapType mapType);
 
 private:
-    void* mappedData{nullptr};
+    void* mappedData;
 
     uint32 m_nbElements;
     uint32 m_elementSize;

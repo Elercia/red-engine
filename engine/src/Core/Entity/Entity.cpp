@@ -13,7 +13,7 @@ namespace red
 {
 Entity::Entity(World* world, EntityId id) : m_world(world), m_id(id)
 {
-    AddComponent<Transform>(0.F, 0.F);
+    m_transform = AddComponent<Transform>(0.F, 0.F);
 }
 
 void Entity::Destroy()
@@ -31,13 +31,15 @@ Component* Entity::AddComponent(const std::string& name)
 {
     auto* componentManager = GetComponentManager();
 
-    if (componentManager->HasComponent(this, name))
+    auto inferedTraits = GetTypeInfoFromTypeName(name);
+
+    if (auto* comp = componentManager->GetComponent(this, inferedTraits); comp != nullptr)
     {
         RED_LOG_WARNING("Entity {} already has the component {}", m_name, name);
-        return componentManager->GetComponent(this, name);
+        return comp;
     }
 
-    auto componentPtr = componentManager->CreateComponentFromName(this, name);
+    auto componentPtr = componentManager->CreateComponentFromName(this, inferedTraits);
 
     return componentPtr;
 }
@@ -55,6 +57,11 @@ EntityId Entity::GetId() const
 void Entity::SetId(EntityId id)
 {
     m_id = id;
+}
+
+const std::string Entity::GetFullName() const
+{
+    return m_parent != nullptr ? m_parent->GetFullName() + "." + GetName() : GetName();
 }
 
 const std::string& Entity::GetName() const

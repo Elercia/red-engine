@@ -65,6 +65,8 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 
 	staticruntime("Off")
 
+	warnings("Off")
+
 	if IsStaticLib ~= nil then
 		if IsStaticLib then
 			kind("StaticLib")
@@ -184,3 +186,61 @@ ExternalLibs("ImGui", true, "/imgui/")
 
 	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/imgui/")
 	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/imgui/backends/")
+
+ExternalLibs("glm", true, "/glm/include")
+	files
+	{
+		externalDirectoryPath .. "/glm/glm/**.h",
+		externalDirectoryPath .. "/glm/glm/**.c",
+		externalDirectoryPath .. "/glm/glm/**.hpp",
+		externalDirectoryPath .. "/glm/glm/**.cpp",
+	}
+
+	includedirs
+	{
+		externalDirectoryPath .. "/glm"
+	}
+
+	table.insert(ExternalIncludeDirs, externalDirectoryPath .. "/glm/")
+
+ExternalLibs("marl", true, "/marl/include")
+	local marlSourcePath = externalDirectoryPath .. "/marl"
+
+	files
+	{
+		marlSourcePath .. "/src/debug.cpp",
+		marlSourcePath .. "/src/memory.cpp",
+		marlSourcePath .. "/src/scheduler.cpp",
+		marlSourcePath .. "/src/thread.cpp",
+		marlSourcePath .. "/src/trace.cpp",
+	}
+	
+	filter { "platforms:Linux64" }
+		files
+		{
+			marlSourcePath .. "/src/osfiber_aarch64.c",
+			marlSourcePath .. "/src/osfiber_arm.c",
+			marlSourcePath .. "/src/osfiber_asm_aarch64.S",
+			marlSourcePath .. "/src/osfiber_asm_arm.S",
+			marlSourcePath .. "/src/osfiber_asm_loongarch64.S",
+			marlSourcePath .. "/src/osfiber_asm_mips64.S",
+			marlSourcePath .. "/src/osfiber_asm_ppc64.S",
+			marlSourcePath .. "/src/osfiber_asm_rv64.S",
+			marlSourcePath .. "/src/osfiber_asm_x64.S",
+			marlSourcePath .. "/src/osfiber_asm_x86.S",
+			marlSourcePath .. "/src/osfiber_loongarch64.c",
+			marlSourcePath .. "/src/osfiber_mips64.c",
+			marlSourcePath .. "/src/osfiber_ppc64.c",
+			marlSourcePath .. "/src/osfiber_rv64.c",
+			marlSourcePath .. "/src/osfiber_x64.c",
+			marlSourcePath .. "/src/osfiber_x86.c",
+		}
+	filter {}
+
+
+	includedirs
+	{
+		marlSourcePath .. "/include/"
+	}
+
+	table.insert(ExternalIncludeDirs, marlSourcePath .. "/include/")

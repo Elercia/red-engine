@@ -74,8 +74,8 @@ TEST_CASE("Level serialisation", "[LEVEL]")
 
     Entity* e1 = level.CreateEntity("Test");
     Entity* e2 = level.CreateEntity("Test2");
-    e1->GetComponent<Transform>()->SetPosition({0.f, 10.f});
-    e2->GetComponent<Transform>()->SetPosition({10.f, 0.f});
+    e1->GetComponent<Transform>()->SetLocalPosition({0.f, 10.f});
+    e2->GetComponent<Transform>()->SetLocalPosition({10.f, 0.f});
 
     Entity* child1 = level.CreateEntity("Test1", e1);
     level.CreateEntity("Test11", child1);

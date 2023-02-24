@@ -10,6 +10,11 @@ namespace red
 {
 class PhysicsDebugDrawer;
 
+float ConvertToPhysicsDistance(float f);
+float ConvertFromPhysicsDistance(float f);
+b2Vec2 ConvertToPhysicsVector(const Vector2& vector2);
+Vector2 ConvertFromPhysicsVector(const b2Vec2& vector2);
+
 class PhysicsWorld : public b2ContactListener
 {
 public:
@@ -23,6 +28,9 @@ public:
 
     void ClearForces();
 
+    void SetGravity(const Vector2& gravity);
+    Vector2 GetGravity() const;
+
     const Array<CollisionInfo>& GetCollisions() const;
     const Array<TriggerInfo>& GetTriggers() const;
 
@@ -32,7 +40,7 @@ public:
     void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
 
 private:
-    void UpdateContactInfos();
+    void ClearContactInfo();
     void AddTriggerContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1, Collider* collider2);
     void AddCollisionContact(PhysicBody* physicBody1, PhysicBody* physicBody2, Collider* collider1, Collider* collider2,
                              const b2Contact* contact);

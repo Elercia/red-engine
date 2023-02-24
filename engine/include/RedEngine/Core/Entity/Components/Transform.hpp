@@ -17,7 +17,7 @@ public:
     RED_MEMBER("scale", m_localScale, "The local scale of the entity", 0);
     RED_MEMBER("rotation", m_localRotation, "The local rotation of the entity", 0);
     RED_MEMBER("rotationAnchor", m_localRotationAnchor, "The local rotation anchor ", 0);
-    RED_MEMBER("depth", m_localDepth, "The local rotation of the entity", 0);
+    //RED_MEMBER("depth", m_localDepth, "The local rotation of the entity", 0);
     RED_END_COMPONENT_REGISTER()
 
     Transform(Entity* entity);
@@ -25,30 +25,29 @@ public:
     Transform(Entity* entity, Vector2 position);
     virtual ~Transform() = default;
 
-    [[nodiscard]] const Vector2& GetPosition() const;
-    [[nodiscard]] Vector2& GetPosition();
+    [[nodiscard]] const Vector2& GetLocalPosition() const;// TODO rename to GetLocalPosition 
+    [[nodiscard]] Vector2& GetLocalPosition(); // TODO Add GetWorldPosisition
 
     [[nodiscard]] const Vector2& GetScale() const;
     [[nodiscard]] Vector2& GetScale();
 
-    [[nodiscard]] float GetDepth() const;
+    [[nodiscard]] float GetLocalRotationDeg() const;
+    [[nodiscard]] float GetLocalRotationRad() const;
 
-    [[nodiscard]] float GetRotationDeg() const;
-    [[nodiscard]] float GetRotationRad() const;
-
-    void SetPosition(const Vector2& pos);
-    void SetPosition(float x, float y);
+    void SetLocalPosition(const Vector2& pos);
+    void SetLocalPosition(float x, float y);
     void SetScale(const Vector2& scale);
-    void SetRotationDeg(float rotationDeg);
-    void SetRotationRad(float rotationRad);
-    void SetDepth(float depth);
+    void SetLocalRotationDeg(float rotationDeg);
+    void SetLocalRotationRad(float rotationRad);
 
     void UpdateWorldMatrixIfNeeded();
 
-    const Matrix44& GetLocalWorldMatrix() const;
-    Matrix44& GetLocalWorldMatrix();
-    const Matrix44& GetWorldMatrix() const;
-    Matrix44& GetWorldMatrix();
+    const Matrix33& GetLocalWorldMatrix() const;
+    Matrix33& GetLocalWorldMatrix();
+    const Matrix33& GetWorldMatrix() const;
+    Matrix33& GetWorldMatrix();
+
+    void SetLocked(bool locked);
 
 private:
     // World position
@@ -57,10 +56,10 @@ private:
     float m_localRotation{0.f};  // degrees
     Vector2 m_localRotationAnchor{0.f, 0.f};
 
-    float m_localDepth{0.f};
+    bool m_locked{false};
 
-    Matrix44 m_localWorldMatrix;
-    Matrix44 m_worldMatrix; // include parent transforms
+    Matrix33 m_localWorldMatrix;
+    Matrix33 m_worldMatrix; // include parent transforms
     bool m_dirtyWorldMatrix{true};
 };
 }  // namespace red

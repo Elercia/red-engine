@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Utils/Types.hpp"
+#include "RedEngine/Utils/TypesInfo.hpp"
 
 #include <functional>
 #include <string>
@@ -34,9 +35,8 @@ struct ComponentMemberTraits
 
 struct ComponentTraits
 {
-    std::string_view componentName;
-    uint32 componentTypeId;
-    std::string_view inheritedComponentName;
+    TypeTraits componentTypeTraits;
+    TypeTraits inheritedComponentTraits;
     Array<ComponentTraits*> childComponentTraits;
     Map<std::string, ComponentMemberTraits> members;  // member name to Traits
     std::function<Component*(Entity* owner)> creator;
@@ -54,15 +54,15 @@ public:
     ComponentRegistry() = default;
     ~ComponentRegistry() = default;
 
-    std::pair<bool, ComponentTraits*> CreateNewComponentTraits(const std::string& componentName);
+    std::pair<bool, ComponentTraits*> CreateNewComponentTraits(TypeTraitsId componentName);
 
-    const ComponentTraits* GetComponentTraits(const std::string& componentName) const;
-
-private:
-    ComponentTraits* GetComponentTraitsInternal(const std::string& componentName);
+    const ComponentTraits* GetComponentTraits(TypeTraitsId componentName) const;
 
 private:
-    Map<std::string, ComponentTraits> m_componentDatas;
+    ComponentTraits* GetComponentTraitsInternal(TypeTraitsId componentName);
+
+private:
+    Map<TypeTraitsId, ComponentTraits> m_componentDatas;
 };
 }  // namespace red
 

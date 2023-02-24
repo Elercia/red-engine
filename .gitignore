@@ -186,9 +186,12 @@ scripts/projects/
 *.sublime-workspace
 .cache
 
+# Ignone imgui save state
+**/imgui.ini
+
 # Ignore executable inside test & template folder
 test/RedEngineTest
 test/RESOURCES/TMP_OUT/
 
 templates/Pong/Pong
-templates/Pong/imgui.ini
+templates/*/RESOURCES/ENGINE_RESOURCES

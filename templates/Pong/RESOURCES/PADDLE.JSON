@@ -3,6 +3,7 @@
     "name": "default",
     "spritesheet": "PADDLE_SPRITESHEET",
     "loop" :  false,
+    "material": "ENGINE_RESOURCES/SPRITE_TRANSPARENT_MATERIAL",
     "frames": [
       {
         "rect": {

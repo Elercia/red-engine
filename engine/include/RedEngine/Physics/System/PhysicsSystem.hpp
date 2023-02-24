@@ -21,8 +21,6 @@ public:
 
     void Update() override;
 
-    virtual void ManageEntities() override;
-
 private:
     void ManageCollisions();
     void ManageTriggers();
@@ -30,7 +28,7 @@ private:
 private:
     PhysicsWorld* m_physicsWorld;
     float timeStep = 1.0f / 60.f;
-    int32 velocityIterations = 10;
-    int32 positionIterations = 8;
+    int32 velocityIterations = 6;
+    int32 positionIterations = 2;
 };
 }  // namespace red
