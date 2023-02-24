@@ -50,7 +50,7 @@ void ThreadScheduler::Init()
         if (sl_thread.GetId() == -1)
             sl_thread = Thread(Thread::s_nextThreadId++, "Worker");
 
-        OPTICK_START_THREAD(sl_thread.GetName());
+        PROFILER_THREAD(sl_thread.GetName());
     };
 
     Thread::InitMainThread();

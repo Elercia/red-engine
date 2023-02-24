@@ -22,7 +22,7 @@ struct ProfilerCategory
 #define PROFILER_FRAME(...)                OPTICK_FRAME(#__VA_ARGS__)
 #define PROFILER_EVENT(...)                OPTICK_EVENT(#__VA_ARGS__)
 #define PROFILER_EVENT_CATEGORY(MSG, CAT)  OPTICK_CATEGORY(MSG, CAT)
-#define PROFILER_THREAD(...)               OPTICK_THREAD(#__VA_ARGS__)
+#define PROFILER_THREAD(...)               OPTICK_START_THREAD(#__VA_ARGS__)
 
 #else
 
