@@ -40,7 +40,7 @@ void main()
     vec3 inputPosition = vec3(vertex_position.xy * PerInstanceData.world3_size.yz, 1.f);
     mat3 world = toMat3(PerInstanceData.world1, PerInstanceData.world2, PerInstanceData.world3_size);
     vec3 position2DWS = world * inputPosition;
-    vec4 positionWS = vec4(position2DWS.xy, PerInstanceData.world3_size.w, 1.f);
+    vec4 positionWS = vec4(position2DWS.xy, PerInstanceData.world3_size.w / 32.f, 1.f);
 
     vec4 outPos = (toMat4(PerCameraData.view_projection1, PerCameraData.view_projection2, PerCameraData.view_projection3, PerCameraData.view_projection4)) * positionWS;
     outPos.y *= -1;
