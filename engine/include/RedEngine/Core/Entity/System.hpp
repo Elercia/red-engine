@@ -3,6 +3,7 @@
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Memory/LinearAllocator.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
 

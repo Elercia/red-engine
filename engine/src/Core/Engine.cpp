@@ -166,6 +166,8 @@ bool Engine::Create()
 
     InitRandomEngine(42);
 
+    m_scheduler.Init();
+
     m_world = new World;
 
     RegisterComponentTypes();
@@ -210,6 +212,8 @@ bool Engine::Destroy()
 
     delete m_world;
 
+    m_scheduler.Finalize();
+
     PROFILER_SHUTDOWN();
 
     return true;
@@ -223,6 +227,11 @@ std::string_view Engine::GetGameName() const
 DoubleLinearAllocator& Engine::GetFrameAllocator()
 {
     return m_frameAllocator;
+}
+
+ThreadScheduler& Engine::GetScheduler()
+{
+    return m_scheduler;
 }
 
 }  // namespace red

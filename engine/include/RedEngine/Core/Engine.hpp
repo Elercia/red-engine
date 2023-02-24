@@ -2,6 +2,7 @@
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Memory/LinearAllocator.hpp"
+#include "RedEngine/Thread/Thread.hpp"
 
 #include <string_view>
 #include <type_traits>
@@ -37,6 +38,8 @@ public:
 
     DoubleLinearAllocator& GetFrameAllocator();
 
+    ThreadScheduler& GetScheduler();
+
 protected:
     int m_argc;
     char** m_argv;
@@ -44,6 +47,8 @@ protected:
     World* m_world;
 
     DoubleLinearAllocator m_frameAllocator;
+
+    ThreadScheduler m_scheduler;
 
 private:
     static Engine* s_engine;

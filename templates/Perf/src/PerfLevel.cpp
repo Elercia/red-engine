@@ -3,6 +3,7 @@
 #include "RedEngine/Audio/AudioEvent.hpp"
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 #include "RedEngine/Audio/Component/AudioSource.hpp"
+#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
@@ -65,13 +66,47 @@ public:
     Entity* m_camera;
 };
 
+class EntityManager : public System
+{
+public:
+    EntityManager(red::World* world) : System(world)
+    {
+        m_debugId = 0;
+    }
+    ~EntityManager() override = default;
+
+    void Init() override
+    {
+        auto* debug = m_world->GetWorldComponent<DebugComponent>();
+        if (debug != nullptr)
+        {
+            m_debugId = debug->AddDebugDrawer("PerfLevel", &EntityManager::DebugMenu);
+        }
+    }
+
+    void Finalise() override
+    {
+        auto* debug = m_world->GetWorldComponent<DebugComponent>();
+        if (debug != nullptr)
+        {
+            debug->RemoveDebugDrawer(m_debugId);
+        }
+    }
+
+    static void DebugMenu(DebugComponent* comp)
+    {
+    }
+
+    int m_debugId;
+};
+
 const float s_worldSizeMin = 0.f;
 const float s_worldSizeMax = 2000.f;
 
 void PerfLevel::Init()
 {
     Color colors[32];
-    for (auto & color : colors)
+    for (auto& color : colors)
     {
         color = Color(RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f), RandomFloatRange(0.f, 1.f));
     }
@@ -106,47 +141,13 @@ void PerfLevel::Init()
 
     float boundMin = s_worldSizeMin + 60;
     float boundMax = s_worldSizeMax - 60;
-    /*{
-        const Vector2 position = {boundMin, boundMin};
-
-        std::string name = "Ball_1";
-        AddEntity(name, position, 1, colors);
-    }
-
-    {
-        const Vector2 position = {boundMin, boundMax};
-
-        std::string name = "Ball_2";
-        AddEntity(name, position, 1, colors);
-    }
-
-    {
-        const Vector2 position = {boundMax, boundMin};
-
-        std::string name = "Ball_3";
-        AddEntity(name, position, 1, colors);
-    }
-
-    {
-        const Vector2 position = {boundMax, boundMax};
-
-        std::string name = "Ball_4";
-        AddEntity(name, position, 1, colors);
-    }
-
-    {
-        const Vector2 position = {boundMax / 2.f, boundMax / 2.f};
-
-        std::string name = "Ball_center";
-        AddEntity(name, position, 2, colors);
-    }*/
 
     for (int i = 0; i < 100; i++)
     {
         const Vector2 position = {RandomFloatRange(boundMin, boundMax), RandomFloatRange(boundMin, boundMax)};
 
         std::string name = "Ball";
-        AddEntity(name, position, (RenderLayerIndex)RandomRange(0,31), colors);
+        AddEntity(name, position, (RenderLayerIndex) RandomRange(0, 31), colors);
     }
 
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
@@ -157,6 +158,7 @@ void PerfLevel::Init()
     manager->GetComponent<Transform>()->SetLocalPosition({0.f, 0.f});
 
     m_world->AddSystem<CameraManager>(manager);
+    m_world->AddSystem<EntityManager>();
 }
 
 void PerfLevel::Finalize()

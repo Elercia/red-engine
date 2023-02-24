@@ -6,6 +6,8 @@ namespace red
 template <class... ComponentTypes>
 Array<std::tuple<Entity*, ComponentTypes*...>, red::DoubleLinearArrayAllocator> System::GetComponents() const
 {
+    PROFILER_EVENT_CATEGORY("System::GetComponents", ProfilerCategory::None)
+
     Array<std::tuple<Entity*, ComponentTypes*...>, DoubleLinearArrayAllocator> selectedEntities;
 
     auto& worldentities = GetWorldEntities();

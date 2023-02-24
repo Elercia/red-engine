@@ -31,7 +31,8 @@
 #include "RedEngine/Utils/Uncopyable.hpp"
 #include "RedEngine/Utils/SystemInfo.hpp"
 
-#include "RedEngine/Core/CoreModule.hpp"
+#include "RedEngine/Thread/Thread.hpp"
+
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
@@ -164,6 +165,8 @@
 #include "Core/SerializationFunction.cpp"
 #include "Core/Time/FrameCounter.cpp"
 #include "Core/Time/Time.cpp"
+
+#include "Thread/Thread.cpp"
 
 #include "Filesystem/File.cpp"
 #include "Filesystem/Path.cpp"

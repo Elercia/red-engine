@@ -40,11 +40,14 @@ void PhysicSystem::Update()
 
     m_physicsWorld->ClearForces();
 
+    auto& scheduler = Engine::GetInstance()->GetScheduler();
+
     auto bodies = GetComponents<PhysicBody>();
+
     for (auto& tuple : bodies)
     {
-        auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
-        auto* physicBody = std::get<1>( tuple );
+        auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
+        auto* physicBody = std::get<1>(tuple);
 
         if (physicBody->IsStatic())
         {
@@ -60,22 +63,32 @@ void PhysicSystem::Update()
 
     m_physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 
-    for (auto& tuple : bodies)
-    {
-        auto* transform = std::get<0>( tuple )->GetComponent<Transform>();
-        auto* physicBody = std::get<1>( tuple );
-
-        if (physicBody->IsStatic())
+    auto wgEnd = scheduler.SplitWorkLoad(
+        bodies.size(),
+        [&](const ThreadScheduler::WorkRange& range, int /*taskId*/)
         {
-            continue;
-        }
+            PROFILER_EVENT_CATEGORY("PhysicSystem::CopyBackPositions", ProfilerCategory::Physics)
 
-        transform->SetLocked(false);
+            for (int i = range.start; i < range.end; i++)
+            {
+                auto& tuple = bodies[i];
+                auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
+                auto* physicBody = std::get<1>(tuple);
 
-        transform->SetLocalPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
-        transform->SetLocalRotationRad(physicBody->GetBody()->GetAngle());
-        transform->UpdateWorldMatrixIfNeeded();
-    }
+                if (physicBody->IsStatic())
+                {
+                    continue;
+                }
+
+                transform->SetLocked(false);
+
+                transform->SetLocalPosition(ConvertFromPhysicsVector(physicBody->GetBody()->GetPosition()));
+                transform->SetLocalRotationRad(physicBody->GetBody()->GetAngle());
+                transform->UpdateWorldMatrixIfNeeded();
+            }
+        });
+
+    wgEnd.Wait();
 
     ManageCollisions();
     ManageTriggers();
