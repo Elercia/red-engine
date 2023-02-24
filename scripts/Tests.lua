@@ -32,4 +32,4 @@ project ("RedEngineTest")
 		libsToLink
 	}
 
-	postbuildcommands { "{COPY} \"%{cfg.buildtarget.directory}/*\" \"" .. rootPath .. "test\"" }
+	postbuildcommands { "{COPY} \"%{cfg.buildtarget.abspath}\" \"" .. rootPath .. "test\"" }
