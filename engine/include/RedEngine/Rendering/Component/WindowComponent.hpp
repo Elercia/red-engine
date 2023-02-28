@@ -25,21 +25,16 @@ struct WindowInfo
     FullScreenMode::Enum fullscreenMode;
 };
 
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(WindowComponent)
-
 class WindowComponent : public Component
 {
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(WindowComponent, Component)
-    RED_END_COMPONENT_REGISTER()
-
     static CVar<std::string> s_title;
     static CVar<int> s_height;
     static CVar<int> s_width;
     static CVar<FullScreenMode::Enum> s_fullscreen;
 
     WindowComponent(Entity* owner);
-    virtual ~WindowComponent();
+    ~WindowComponent();
 
     WindowInfo GetWindowInfo() const;
 

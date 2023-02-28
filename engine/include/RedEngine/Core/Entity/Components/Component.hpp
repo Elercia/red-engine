@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
-#include "RedEngine/Core/Entity/Components/ComponentRegistryFunction.hpp"
 #include "RedEngine/Core/SerializationFunction.hpp"
 #include "RedEngine/Math/SerializationFunction.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
@@ -14,6 +13,7 @@ class Entity;
 class World;
 class Component;
 class ILevelComponentData;
+class ComponentManager;
 
 using ComponentId = uint32_t;
 
@@ -24,26 +24,32 @@ enum class ComponentStatus
     VALID
 };
 
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Component)
+template <typename T>
+void RegisterMembers(ComponentTraits& traits);
 
 class Component : public Uncopyable
 {
-public:
-    RED_START_COMPONENT_REGISTER(Component)
-    RED_END_COMPONENT_REGISTER()
+    friend World;
+    friend ComponentManager;
 
+public:
     explicit Component(Entity* entity);
-    virtual ~Component() = default;
+    ~Component() = default;
 
     Component(Component&&) = default;
     Component& operator=(Component&&) = default;
 
     [[nodiscard]] Entity* GetOwner() const;
+    [[nodiscard]] TypeTraits GetTypeTraits() const;
+
     [[nodiscard]] World* GetWorld() const;
 
 protected:
     Entity* m_owner;
+    TypeTraits m_typeTraits;
     ComponentStatus m_status;
 };
 
 }  // namespace red
+
+#include "inl/Component.inl"

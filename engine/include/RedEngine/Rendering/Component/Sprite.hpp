@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
@@ -7,22 +8,16 @@
 
 #include <memory>
 #include <string>
-#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
 class SpriteResource;
 
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Sprite)
-
-class Sprite : public Renderable
+class Sprite : public Component
 {
     friend class Renderer;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(Sprite, Renderable)
-    RED_END_COMPONENT_REGISTER()
-
     Sprite(Entity* entity);
     Sprite(Entity* entity, const Path& resourceId);
 
@@ -39,14 +34,27 @@ public:
 
     const CurrentAnimationDesc& GetCurrentAnimationInfo() const;
 
+    MaterialInstance& GetMaterial();
+    const MaterialInstance& GetMaterial() const;
+    std::shared_ptr<GeometryResourceWrapper> GetGeometry();
+
+    void SetRenderLayerIndex(RenderLayerIndex layerIndex);
+    RenderLayerIndex GetRenderLayerIndex() const;
+
     bool IsValid() const;
+
+    friend void RegisterMembers<Sprite>(ComponentTraits& traits);
 
 private:
     void UpdateRenderData();
 
 private:
+    RenderLayerIndex m_layerIndex;
+    Vector2 m_size;
+    AABB m_aabb;
+    std::shared_ptr<GeometryResourceWrapper> m_geometry;
+    MaterialInstance m_material;
     std::shared_ptr<SpriteResource> m_spriteResource;
-
     CurrentAnimationDesc m_currentAnimationInfo;
 };
 }  // namespace red

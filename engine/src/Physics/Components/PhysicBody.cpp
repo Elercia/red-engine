@@ -6,7 +6,10 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(PhysicBody)
+template <>
+void RegisterMembers<PhysicBody>(ComponentTraits& /*traits*/)
+{
+}
 
 PhysicBody::PhysicBody(Entity* entity) : Component(entity), m_desc(), m_body(nullptr), m_nextColliderIndex(0)
 {

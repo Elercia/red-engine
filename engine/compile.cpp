@@ -53,7 +53,6 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
-#include "RedEngine/Core/Entity/Components/ComponentRegistryFunction.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Event/Delegate.hpp"
@@ -147,7 +146,6 @@
 #include "Core/Entity/Components/Component.cpp"
 #include "Core/Entity/Components/ComponentManager.cpp"
 #include "Core/Entity/Components/ComponentRegistry.cpp"
-#include "Core/Entity/Components/ComponentRegistryFunction.cpp"
 #include "Core/Entity/Components/Transform.cpp"
 #include "Core/Entity/Entity.cpp"
 #include "Core/Entity/System.cpp"
@@ -191,6 +189,7 @@
 
 #include "Rendering/Component/CameraComponent.cpp"
 #include "Rendering/Component/Renderable.cpp"
+#include "Rendering/Color.cpp"
 #include "Rendering/Component/Sprite.cpp"
 #include "Rendering/Component/WindowComponent.cpp"
 #include "Rendering/FrameBuffer.cpp"

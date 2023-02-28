@@ -10,7 +10,14 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(Transform)
+template <>
+void RegisterMembers<Transform>(ComponentTraits& traits)
+{
+    traits.AddMember("Position", &Transform::m_localPosition, "The local position of the object", 0);
+    traits.AddMember("Scale", &Transform::m_localScale, "The local scale of the object", 0);
+    traits.AddMember("Rotation", &Transform::m_localRotation, "The local rotation of the object", 0);
+    traits.AddMember("Rotation anchor", &Transform::m_localRotationAnchor, "The local rotation achor of the object", 0);
+}
 
 Transform::Transform(Entity* entity) : Transform(entity, {0.f, 0.f})
 {

@@ -4,8 +4,6 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(UserInputComponent)
-
 UserInputComponent::UserInputComponent(Entity* entity) : Component(entity)
 {
 }

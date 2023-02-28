@@ -4,8 +4,6 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(ResourceHolderComponent)
-
 ResourceHolderComponent::ResourceHolderComponent(Entity* owner) : Component(owner)
 {
 }

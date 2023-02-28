@@ -11,7 +11,7 @@ namespace red
 {
 class World;
 
-constexpr uint32 RED_DEFAULT_FRAMEALLOCATOR_SIZE = 10 * 1024 * 1024; // 10 Mo
+constexpr uint32 RED_DEFAULT_FRAMEALLOCATOR_SIZE = 50 * 1024 * 1024; // 10 Mo
 
 class Engine
 {

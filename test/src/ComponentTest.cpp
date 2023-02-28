@@ -11,10 +11,6 @@
 #include "SystemTest.hpp"
 #include "TestModule.hpp"
 
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent1)
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent11)
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent2)
-
 TEST_CASE("Component", "[ECS]")
 {
     SECTION("Bulk add remove")
@@ -119,44 +115,6 @@ TEST_CASE("Component", "[ECS]")
         REQUIRE(componentGettedA != componentGettedB);
         REQUIRE(componentGettedA == componentAddedA);
         REQUIRE(componentGettedB == componentAddedB);
-    }
-}
-
-TEST_CASE("Component inheritance", "[ECS]")
-{
-    red::World world;
-    world.Init();
-
-    world.RegisterComponentType<MockComponent1>();
-    world.RegisterComponentType<MockComponent11>();
-
-    auto* entityA = world.CreateWorldEntity("a");
-    REQUIRE(entityA != nullptr);
-
-    SECTION("Hierarchy working")
-    {
-        auto* componentAddedA = entityA->AddComponent<MockComponent11>();
-        REQUIRE(componentAddedA != nullptr);
-
-        auto* componentGettedA = entityA->GetComponent<MockComponent1>();
-        REQUIRE(componentAddedA == componentGettedA);
-
-        REQUIRE(entityA->RemoveComponent<MockComponent1>());
-        REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
-    }
-
-    SECTION("Inverse hierarchy not working")
-    {
-        auto* componentAddedA = entityA->AddComponent<MockComponent1>();
-        REQUIRE(componentAddedA != nullptr);
-
-        auto* mock11 = entityA->GetComponent<MockComponent11>();
-        REQUIRE(mock11 == nullptr);
-
-        REQUIRE(entityA->RemoveComponent<MockComponent11>() == false);
-        REQUIRE(entityA->GetComponent<MockComponent1>() != nullptr);
-        REQUIRE(entityA->RemoveComponent<MockComponent1>());
-        REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
     }
 }
 

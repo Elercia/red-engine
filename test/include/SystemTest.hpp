@@ -8,26 +8,15 @@ class MockComponent1;
 class MockComponent11;
 class MockComponent2;
 
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(MockComponent1)
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(MockComponent11)
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(MockComponent2)
-
-
 class MockComponent1 : public red::Component
 {
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(MockComponent1, red::Component)
-    RED_END_COMPONENT_REGISTER()
-
     explicit MockComponent1(red::Entity* entity) : red::Component(entity) {}
 };
 
 class MockComponent11 : public MockComponent1
 {
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(MockComponent11, MockComponent1)
-    RED_END_COMPONENT_REGISTER()
-
     explicit MockComponent11(red::Entity* entity) : MockComponent1(entity)
     {
     }
@@ -36,9 +25,6 @@ public:
 class MockComponent2 : public red::Component
 {
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(MockComponent2, red::Component)
-    RED_END_COMPONENT_REGISTER()
-
     explicit MockComponent2(red::Entity* entity) : red::Component(entity) {}
 };
 

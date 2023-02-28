@@ -53,17 +53,28 @@ void RenderingSystem::Update()
 
     for (auto& comps : spriteEntities)
     {
-        auto* spriteEntity = std::get<0>(comps);
         auto* sprite = std::get<1>(comps);
         if (!sprite->IsValid())
             continue;
 
-        auto* transform = spriteEntity->GetComponent<Transform>();
-
         sprite->NextFrame();
 
         // Push this entity to the list of entity to render
-        m_renderer->Draw(sprite, transform);
+        //m_renderer->Draw(sprite, transform);
+    }
+
+    auto renderableEntities = GetComponents<Renderable>();
+
+    for (auto& comps : renderableEntities)
+    {
+        auto* entity = std::get<0>(comps);
+        auto* renderable = std::get<1>(comps);
+        if (!renderable->IsValid())
+            continue;
+
+        auto* transform = entity->GetComponent<Transform>();
+
+        m_renderer->Draw(renderable, transform);
     }
 
     DrawDebug();

@@ -18,6 +18,7 @@ ComponentTypeT* ComponentManager::CreateComponent(Entity* owner, Args&&... args)
     }
 
     auto* createdComponent = new ComponentTypeT(owner, std::forward<Args>(args)...);
+    createdComponent->m_typeTraits = TypeInfo<ComponentTypeT>();
 
     AddComponent(owner, createdComponent);
 

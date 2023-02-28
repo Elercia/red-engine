@@ -36,8 +36,6 @@ struct ComponentMemberTraits
 struct ComponentTraits
 {
     TypeTraits componentTypeTraits;
-    TypeTraits inheritedComponentTraits;
-    Array<ComponentTraits*> childComponentTraits;
     Map<std::string, ComponentMemberTraits> members;  // member name to Traits
     std::function<Component*(Entity* owner)> creator;
 

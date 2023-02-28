@@ -77,30 +77,22 @@ template <typename T>
 bool World::RegisterComponentType()
 {
     static_assert(std::is_base_of<Component, T>::value, "RegisterComponentType called on non component type");
+    static_assert(!std::is_polymorphic<T>::value, "RegisterComponentType called with a component that is virtual. This is not allowed");
 
-    auto [inserted, compData] = m_componentRegistry->CreateNewComponentTraits(TypeInfo<T>().typeId);
+    auto type = TypeInfo<T>();
+    auto [inserted, compData] = m_componentRegistry->CreateNewComponentTraits(type.typeId);
 
     // component may have been already registered
     if (inserted)
     {
-        T::RegisterComponentTypeTraits(compData);
-
-        if (compData->inheritedComponentTraits != EmptyTypeTraits &&
-            compData->inheritedComponentTraits.name != "red::Component")
+        compData->componentTypeTraits = type;
+        compData->creator = [=](Entity* owner)
         {
-            auto* inheritedCompTraits =
-                m_componentRegistry->GetComponentTraitsInternal(compData->inheritedComponentTraits.typeId);
-
-            if (inheritedCompTraits == nullptr)
-            {
-                RED_LOG_ERROR("Failed to find inherited component {}. Please make sure to register {} before {}",
-                              compData->inheritedComponentTraits.name, compData->inheritedComponentTraits.name,
-                              TypeInfo<T>().name);
-                return false;
-            }
-
-            inheritedCompTraits->childComponentTraits.push_back(compData);
-        }
+            auto comp = new T(owner);
+            comp->m_typeTraits = type;
+            return comp;
+        };
+        RegisterMembers<T>(*compData);
     }
 
     return true;

@@ -15,7 +15,14 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(CameraComponent)
+template <>
+void RegisterMembers<CameraComponent>(ComponentTraits& traits)
+{
+    traits.AddMember("Screen Viewport", &CameraComponent::m_screenViewport, "The position inside the view of the camera (0-1)", 0);
+    traits.AddMember("Size", &CameraComponent::m_size, "The size of the camera inside the world", 0);
+    traits.AddMember("Order", &CameraComponent::m_depth, "The order of rendering", 0);
+    traits.AddMember("Clear color", &CameraComponent::m_cleanColor, "The color used to clear the buffer of this camera", 0);
+}
 
 CameraComponent::CameraComponent(Entity* entity)
     : Component(entity)

@@ -6,8 +6,6 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(DebugComponent)
-
 DebugComponent::DebugComponent(Entity* entity)
     : Component(entity), m_lineShaderProgram(nullptr), m_physicsDebugDrawer(nullptr)
 {

@@ -17,25 +17,15 @@ class Renderable;
 class Entity;
 class WindowComponent;
 
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(CameraComponent)
-
 class CameraComponent : public Component
 {
     friend class Renderer;
     friend class RenderingSystem;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(CameraComponent, Component)
-    RED_MEMBER("viewport", m_screenViewport, "The viewport (postion on window & size) of the camera", 0);
-    RED_MEMBER("size", m_size, "The size of this camera in the world", 0);
-    RED_MEMBER("depth", m_depth, "The depth of the camera", 0);
-    RED_MEMBER("zNear", m_zNear, "The projection zNear", 0);
-    RED_MEMBER("zFar", m_zFar, "The projection zFar", 0);
-    RED_END_COMPONENT_REGISTER()
-
     CameraComponent(Entity* entity);
     CameraComponent(Entity* entity, WindowComponent* attachedWindow, const Vector4& viewport, const Vector2& size);
-    virtual ~CameraComponent();
+    ~CameraComponent();
 
     // Return true if the given AABB is visible from the given camera
     [[nodiscard]] bool IsVisibleFrom(const AABB& aabb) const;
@@ -59,6 +49,8 @@ public:
 
     const Matrix44& GetViewProj() const;
 
+    friend void RegisterMembers<CameraComponent>(ComponentTraits& traits);
+
 private:
     Entity* m_attachedWindow;
     FrameBuffer m_frameBuffer;
@@ -75,10 +67,10 @@ private:
     int m_depth{0};
 
     /// Background color (color to clear the screen before rendering)
-    Color m_cleanColor{ColorConstant::BLACK};
+    Color m_cleanColor;
 
-    float m_zNear{0.001f};
-    float m_zFar{1000.0f};
+    float m_zNear;
+    float m_zFar;
 
     Matrix44 m_viewProj;
 };

@@ -7,16 +7,11 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(AudioListener)
-
 class AudioListener : public Component
 {
     friend class AudioSystem;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(AudioListener, Component)
-    RED_END_COMPONENT_REGISTER()
-
     AudioListener(Entity* owner);
     ~AudioListener();
 

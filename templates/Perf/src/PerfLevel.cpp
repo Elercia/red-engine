@@ -101,7 +101,7 @@ public:
 };
 
 const float s_worldSizeMin = 0.f;
-const float s_worldSizeMax = 2000.f;
+const float s_worldSizeMax = 5000.f;
 
 void PerfLevel::Init()
 {
@@ -142,7 +142,7 @@ void PerfLevel::Init()
     float boundMin = s_worldSizeMin + 60;
     float boundMax = s_worldSizeMax - 60;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 5000; i++)
     {
         const Vector2 position = {RandomFloatRange(boundMin, boundMax), RandomFloatRange(boundMin, boundMax)};
 

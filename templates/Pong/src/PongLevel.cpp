@@ -135,5 +135,3 @@ void PongLevel::Finalize()
     m_world->RemoveSystem<GameLogicSystem>();
     m_world->RemoveSystem<GameControlSystem>();
 }
-
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(ScoreComponent)

@@ -61,30 +61,11 @@ ComponentPoolType& ComponentManager::GetComponentPool(const TypeTraits& componen
 
 Component* ComponentManager::GetComponent(Entity* entity, const TypeTraits& componentTraits)
 {
-    auto* registry = m_world->GetComponentRegistry();
-    auto* traits = registry->GetComponentTraits(componentTraits.typeId);
-
-    if (traits == nullptr)
-    {
-        RED_LOG_ERROR("Failed to get component with name {} because it is not registered", componentTraits.name);
-        return nullptr;
-    }
-
-    auto& componentPool = GetComponentPool(traits->componentTypeTraits);
+    auto& componentPool = GetComponentPool(componentTraits);
     auto compIt = componentPool.find(entity->GetId());
 
     if (compIt == componentPool.end())
     {
-        for (const auto* childCompTraits : traits->childComponentTraits)
-        {
-            auto* component = GetComponent(entity, childCompTraits->componentTypeTraits);
-
-            if (component != nullptr)
-            {
-                return component;
-            }
-        }
-
         return nullptr;
     }
 
@@ -93,33 +74,14 @@ Component* ComponentManager::GetComponent(Entity* entity, const TypeTraits& comp
 
 void ComponentManager::AddComponent(Entity* entity, Component* component)
 {
-    auto* registry = m_world->GetComponentRegistry();
-    auto* traits = registry->GetComponentTraits(component->GetComponentTraits().typeId);
-
-    if (traits == nullptr)
-    {
-        RED_LOG_ERROR("Failed to create component with name {} because it is not registered",
-                      component->GetComponentTraits().name);
-        return;
-    }
-
-    auto& componentPool = GetComponentPool(traits->componentTypeTraits);
+    auto& componentPool = GetComponentPool(component->GetTypeTraits());
 
     componentPool[entity->GetId()] = component;
 }
 
 bool ComponentManager::RemoveComponent(Entity* entity, const TypeTraits& componentTraits)
 {
-    auto* registry = m_world->GetComponentRegistry();
-    auto* traits = registry->GetComponentTraits(componentTraits.typeId);
-
-    if (traits == nullptr)
-    {
-        RED_LOG_ERROR("Failed to remove component with name {} because it is not registered", componentTraits.name);
-        return false;
-    }
-
-    auto& componentPool = GetComponentPool(traits->componentTypeTraits);
+    auto& componentPool = GetComponentPool(componentTraits);
 
     auto it = componentPool.find(entity->GetId());
 
@@ -128,16 +90,6 @@ bool ComponentManager::RemoveComponent(Entity* entity, const TypeTraits& compone
         delete it->second;
         componentPool.erase(it);
         return true;
-    }
-
-    for (const auto* childCompTraits : traits->childComponentTraits)
-    {
-        auto removed = RemoveComponent(entity, childCompTraits->componentTypeTraits);
-
-        if (removed)
-        {
-            return true;
-        }
     }
 
     return false;

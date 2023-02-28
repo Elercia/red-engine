@@ -7,23 +7,13 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Transform)
-
 class Transform : public Component
 {
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(Transform, Component)
-    RED_MEMBER("position", m_localPosition, "The local position of the entity", 0);
-    RED_MEMBER("scale", m_localScale, "The local scale of the entity", 0);
-    RED_MEMBER("rotation", m_localRotation, "The local rotation of the entity", 0);
-    RED_MEMBER("rotationAnchor", m_localRotationAnchor, "The local rotation anchor ", 0);
-    //RED_MEMBER("depth", m_localDepth, "The local rotation of the entity", 0);
-    RED_END_COMPONENT_REGISTER()
-
     Transform(Entity* entity);
     Transform(Entity* entity, float x, float y);
     Transform(Entity* entity, Vector2 position);
-    virtual ~Transform() = default;
+    ~Transform() = default;
 
     [[nodiscard]] const Vector2& GetLocalPosition() const;// TODO rename to GetLocalPosition 
     [[nodiscard]] Vector2& GetLocalPosition(); // TODO Add GetWorldPosisition
@@ -48,6 +38,8 @@ public:
     Matrix33& GetWorldMatrix();
 
     void SetLocked(bool locked);
+
+    friend void RegisterMembers<Transform>(ComponentTraits& traits);
 
 private:
     // World position

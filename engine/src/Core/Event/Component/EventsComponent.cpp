@@ -9,8 +9,6 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(EventsComponent)
-
 EventsComponent::EventsComponent(Entity* entity) : Component(entity)
 {
 }
@@ -58,7 +56,10 @@ void EventsComponent::SendKeyEvent(KeyCodes::Enum key, KeyEventType::Enum type)
     event.key.keysym.scancode = GetKeyboardSDLTranslationMap().at(key);
 
     if (SDL_PushEvent(&event) < 0)
-        RED_LOG_ERROR("Cant push event because : {}", SDL_GetError());
+    {
+        auto err = SDL_GetError();
+        RED_LOG_ERROR("Cant push event because : {}", err);
+    }
 }
 
 bool EventsComponent::QuitRequested() const
