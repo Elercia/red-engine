@@ -49,20 +49,6 @@ void RenderingSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("Update render data", ProfilerCategory::Rendering);
 
-    auto spriteEntities = GetComponents<Sprite>();
-
-    for (auto& comps : spriteEntities)
-    {
-        auto* sprite = std::get<1>(comps);
-        if (!sprite->IsValid())
-            continue;
-
-        sprite->NextFrame();
-
-        // Push this entity to the list of entity to render
-        //m_renderer->Draw(sprite, transform);
-    }
-
     auto renderableEntities = GetComponents<Renderable>();
 
     for (auto& comps : renderableEntities)

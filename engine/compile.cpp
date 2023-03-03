@@ -114,6 +114,7 @@
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Rendering/System/SpriteAnimationSystem.hpp"
 
 #include "RedEngine/Resources/ResourceModule.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
@@ -206,6 +207,7 @@
 #include "Rendering/Resource/Texture2D.cpp"
 #include "Rendering/Resource/TextureResourceLoader.cpp"
 #include "Rendering/System/RenderingSystem.cpp"
+#include "Rendering/System/SpriteAnimationSystem.cpp"
 
 #include "Resources/Resource.cpp"
 #include "Resources/ResourceHolderComponent.cpp"
