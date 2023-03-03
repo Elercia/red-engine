@@ -93,7 +93,7 @@ public:
         }
     }
 
-    static void DebugMenu(DebugComponent* comp)
+    static void DebugMenu(DebugComponent* /*comp*/)
     {
     }
 
