@@ -25,7 +25,7 @@ enum class ComponentStatus
 };
 
 template <typename T>
-void RegisterMembers(ComponentTraits& traits);
+inline void RegisterMembers(ComponentTraits& traits);
 
 class Component : public Uncopyable
 {
