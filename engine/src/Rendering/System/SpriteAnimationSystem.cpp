@@ -30,11 +30,11 @@ void SpriteAnimationSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("Update sprites", ProfilerCategory::Rendering);
 
-    auto spriteEntities = QueryComponents();
+    auto spriteEntities = QueryComponents<0>();
 
     for (auto& comps : spriteEntities)
     {
-        auto sprite = std::get<1>(comps);
+        auto sprite = std::get<0>(comps);
         if (!sprite->IsValid())
             continue;
 

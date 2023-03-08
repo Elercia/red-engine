@@ -48,18 +48,16 @@ void RenderingSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("Update render data", ProfilerCategory::Rendering);
 
-    auto renderableEntities = QueryComponents();
+    auto renderableEntities = QueryComponents<0>();
 
     for (auto& comps : renderableEntities)
     {
-        auto* entity = std::get<0>(comps);
+        auto transform = std::get<0>(comps);
         auto renderable = std::get<1>(comps);
         if (!renderable->IsValid())
             continue;
 
-        auto* transform = entity->GetComponent<Transform>();
-
-        m_renderer->Draw(renderable.Get(), transform);
+        m_renderer->Draw(renderable.Get(), transform.Get());
     }
 
     DrawDebug();

@@ -26,7 +26,7 @@ void PhysicSystem::Init()
 
 void PhysicSystem::Finalize()
 {
-    auto bodies =  QueryComponents();
+    auto bodies =  QueryComponents<0>();
     for (auto& tuple :bodies)
     {
         auto physicBody = std::get<1>( tuple );
@@ -43,11 +43,11 @@ void PhysicSystem::Update()
 
     auto& scheduler = Engine::GetInstance()->GetScheduler();
 
-     auto bodies = QueryComponents();
+     auto bodies = QueryComponents<0>();
 
     for (auto& tuple : bodies)
     {
-        auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
+        auto transform = std::get<0>(tuple);
         auto physicBody = std::get<1>(tuple);
 
         if (physicBody->IsStatic())
@@ -73,7 +73,7 @@ void PhysicSystem::Update()
             for (int i = range.start; i < range.end; i++)
             {
                 auto& tuple = bodies[i];
-                auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
+                auto transform = std::get<0>(tuple);
                 auto physicBody = std::get<1>(tuple);
 
                 if (physicBody->IsStatic())

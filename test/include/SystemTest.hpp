@@ -32,18 +32,18 @@ public:
     }
 };
 
-class MockSystem : public red::System<red::QueryRO<MockComponent1>, red::QueryRO<MockComponent2>>
+class MockSystem : public red::System<red::QueryGroup<red::QueryRO<MockComponent1>, red::QueryRO<MockComponent2>>>
 {
 public:
     explicit MockSystem(red::World* world)
-        : red::System<red::QueryRO<MockComponent1>, red::QueryRO<MockComponent2>>(world)
+        : red::System<red::QueryGroup<red::QueryRO<MockComponent1>, red::QueryRO<MockComponent2>>>(world)
     {
     }
     virtual ~MockSystem() = default;
 
     void Update() override
     {
-        auto components = QueryComponents();
+        auto components = QueryComponents<0>();
 
         m_hasBeenUpdated = true;
 

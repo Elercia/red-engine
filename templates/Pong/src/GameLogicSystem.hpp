@@ -14,7 +14,7 @@ struct WindowInfo;
 
 class BallComponent;
 
-class GameLogicSystem : public red::System<red::QueryRW<ScoreComponent>>
+class GameLogicSystem : public red::System<red::QueryGroup<red::QueryRW<ScoreComponent>>>
 {
 public:
     GameLogicSystem(red::World* world, red::Entity* paddleOne, red::Entity* paddleTwo, red::Entity* ball);

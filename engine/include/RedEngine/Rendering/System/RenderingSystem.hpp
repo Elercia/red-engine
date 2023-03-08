@@ -7,7 +7,7 @@ namespace red
 class CameraComponent;
 class Renderer;
 
-class RenderingSystem : public System<QueryRO<Renderable>>
+class RenderingSystem : public System<QueryGroup<QueryRO<Transform>, QueryRO<Renderable>>>
 {
 public:
     explicit RenderingSystem(World* world);

@@ -8,7 +8,7 @@
 using namespace red;
 
 GameLogicSystem::GameLogicSystem(red::World* world, red::Entity* paddleOne, red::Entity* paddleTwo, red::Entity* ball)
-    : red::System<QueryRW<ScoreComponent>>(world), m_paddleOne(paddleOne), m_paddleTwo(paddleTwo), m_ball(ball)
+    : red::System<red::QueryGroup<QueryRW<ScoreComponent>>>(world), m_paddleOne(paddleOne), m_paddleTwo(paddleTwo), m_ball(ball)
 {
 }
 
@@ -35,13 +35,13 @@ void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
 {
     auto info = m_world->GetWorldComponent<red::WindowComponent>()->GetWindowInfo();
 
-    auto scores = QueryComponents();
+    auto scores = QueryComponents<0>();
     bool scored = false;
 
     if (scores.empty() || scores.size() > 1)
         return;
 
-    auto score = std::get<1>(scores[0]);
+    auto score = std::get<0>(scores[0]);
 
     if (ballPos.x < 0)
     {

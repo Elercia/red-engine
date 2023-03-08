@@ -120,17 +120,19 @@ TEST_CASE("Component", "[ECS]")
 
 namespace EntityDestroyRemoveComp
 {
-class TestSystem : public red::System<red::QueryRO<MockComponent1>>
+class TestSystem : public red::System<red::QueryGroup<red::QueryRO<MockComponent1>>>
 {
 public:
-    explicit TestSystem(red::World* world) : red::System<red::QueryRO<MockComponent1>>(world)
+    explicit TestSystem(red::World* world) : red::System<red::QueryGroup<red::QueryRO<MockComponent1>>>(world)
     {
     }
     virtual ~TestSystem() = default;
 
     void Update() override
     {
-        m_entityCount = QueryComponents().size();
+        auto result = QueryComponents<0>();
+
+        m_entityCount = result.size();
     }
 
     int m_entityCount = 0;

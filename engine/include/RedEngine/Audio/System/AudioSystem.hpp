@@ -9,7 +9,8 @@
 
 namespace red
 {
-class AudioSystem : public System<QueryRW<AudioSource>, QueryRW<AudioListener>>
+class AudioSystem : public System<QueryGroup<QueryRO<Transform>, QueryRW<AudioSource>>,
+                                  QueryGroup<QueryRO<Transform>, QueryRW<AudioListener>>>
 {
 public:
     AudioSystem(World* world);

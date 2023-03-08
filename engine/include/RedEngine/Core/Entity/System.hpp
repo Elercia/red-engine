@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <tuple>
 
 namespace red
 {
@@ -48,6 +49,8 @@ struct QueryRO
 
     struct Result
     {
+        using ComponentType = T;
+
         Result(T* ptr);
 
         bool operator==(const Result& other) const;
@@ -68,6 +71,8 @@ struct QueryRW
 
     struct Result
     {
+        using ComponentType = T;
+
         Result(T* ptr);
 
         bool operator==(const Result& other) const;
@@ -81,13 +86,27 @@ struct QueryRW
     };
 };
 
-template <typename... QueriesT>
+template <typename... Queries>
+struct QueryGroup
+{
+    using ResultTuple = std::tuple<typename Queries::Result...>;
+
+    static const ResultTuple nulltuple;
+};
+
+template <typename... QueriesGroups>
 class System : public BaseSystem
 {
+protected:
+    typedef std::tuple<QueriesGroups...> PossibleQueries;
+
 public:
     System(World* world);
 
-    Array<std::tuple<Entity*, typename QueriesT::Result...>, DoubleLinearArrayAllocator> QueryComponents();
+    template <int QueryGroupIndex>
+    Array<typename std::tuple_element_t<QueryGroupIndex, std::tuple<QueriesGroups...>>::ResultTuple,
+          DoubleLinearArrayAllocator>
+    QueryComponents();
 };
 
 }  // namespace red

@@ -1,6 +1,9 @@
-#include "System.hpp"
 namespace red
 {
+template <typename... Queries>
+const typename QueryGroup<Queries...>::ResultTuple QueryGroup<Queries...>::nulltuple =
+    typename QueryGroup<Queries...>::ResultTuple(typename Queries::Result(nullptr)...);
+
 template <typename T>
 inline QueryRO<T>::Result::Result(T* ptr) : component(ptr)
 {
@@ -64,23 +67,56 @@ inline System<QueriesT...>::System(World* world) : BaseSystem(world)
 {
 }
 
-template <typename... QueriesT>
-Array<std::tuple<Entity*, typename QueriesT::Result...>, DoubleLinearArrayAllocator>
-System<QueriesT...>::QueryComponents()
+template <typename... QueryResultType>
+void FetchComponentTuple(std::tuple<QueryResultType...> tuple, Entity* entityPtr)
+{
+    tuple = std::make_tuple<QueryResultType...>(
+        QueryResultType(entityPtr->GetComponent<typename QueryResultType::ComponentType>())...);
+}
+
+template <typename... QueryResultType>
+bool IsValidComponentTuple(std::tuple<QueryResultType...>& tuple)
+{
+    constexpr auto size = sizeof...(QueryResultType);
+    bool present[] = {std::get<QueryResultType>(tuple).Get() != nullptr...};
+    bool add = true;
+
+    for (int i = 0; i != size; i++)
+    {
+        if (!present[i])
+        {
+            add = false;
+            break;
+        }
+    }
+
+    return add;
+}
+
+template <typename... QueriesGroups>
+template <int QueryGroupIndex>
+Array<typename std::tuple_element_t<QueryGroupIndex, std::tuple<QueriesGroups...>>::ResultTuple,
+      DoubleLinearArrayAllocator>
+System<QueriesGroups...>::QueryComponents()
 {
     PROFILER_EVENT_CATEGORY("System::GetComponents", ProfilerCategory::None)
 
-    // TODO Fist element should be the entity ? Why ? 
-    Array<std::tuple<Entity*, typename QueriesT::Result...>, DoubleLinearArrayAllocator> selectedEntities;
+    static_assert(
+        QueryGroupIndex >= 0 && QueryGroupIndex < std::tuple_size_v<typename System<QueriesGroups...>::PossibleQueries>,
+        "Query index out of bound");
 
-    auto nullTuple = std::make_tuple((Entity*) nullptr, typename QueriesT::Result(nullptr)...);
+    using QueryType = std::tuple_element_t<QueryGroupIndex, typename System<QueriesGroups...>::PossibleQueries>;
+    using ResultTupleType = QueryType::ResultTuple;
+
+    Array<ResultTupleType, DoubleLinearArrayAllocator> selectedEntities;
+
     auto& worldentities = GetEntities();
     for (auto& entityPtr : worldentities)
     {
-        auto tuple = std::make_tuple(
-            entityPtr, typename QueriesT::Result(entityPtr->GetComponent<typename QueriesT::ComponentType>())...);
+        ResultTupleType tuple = QueryType::nulltuple;
+        FetchComponentTuple(tuple, entityPtr);
 
-        if (tuple != nullTuple)
+        if (IsValidComponentTuple(tuple))
             selectedEntities.push_back(tuple);
     }
 

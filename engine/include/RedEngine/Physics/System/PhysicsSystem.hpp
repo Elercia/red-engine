@@ -10,7 +10,7 @@ class PhysicsWorld;
 class PhysicBody;
 struct Collider;
 
-class PhysicSystem : public System<QueryRW<PhysicBody>>
+class PhysicSystem : public System<QueryGroup<QueryRW<Transform>, QueryRW<PhysicBody>>>
 {
 public:
     PhysicSystem(World* world);
