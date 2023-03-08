@@ -9,14 +9,14 @@
 
 namespace red
 {
-class AudioSystem : public System
+class AudioSystem : public System<QueryRW<AudioSource>, QueryRW<AudioListener>>
 {
 public:
     AudioSystem(World* world);
     ~AudioSystem();
 
     virtual void Init() override;
-    virtual void Finalise() override;
+    virtual void Finalize() override;
 
     virtual void Update() override;
 

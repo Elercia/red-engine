@@ -43,7 +43,8 @@ public:
 
     bool IsValid() const;
 
-    friend void RegisterMembers<Sprite>(ComponentTraits& traits);
+    template <typename T>
+    friend void RegisterMembers(ComponentTraits& traits);
 
 private:
     void UpdateRenderData();

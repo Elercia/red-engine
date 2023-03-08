@@ -24,18 +24,17 @@ namespace red
 {
 SpriteAnimationSystem::SpriteAnimationSystem(World* world) : System(world)
 {
-    m_priority = 99;
 }
 
 void SpriteAnimationSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("Update sprites", ProfilerCategory::Rendering);
 
-    auto spriteEntities = GetComponents<Sprite>();
+    auto spriteEntities = QueryComponents();
 
     for (auto& comps : spriteEntities)
     {
-        auto* sprite = std::get<1>(comps);
+        auto sprite = std::get<1>(comps);
         if (!sprite->IsValid())
             continue;
 

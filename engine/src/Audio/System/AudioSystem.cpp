@@ -12,7 +12,8 @@
 
 namespace red
 {
-AudioSystem::AudioSystem(World* world) : System(world), m_studioSystem(nullptr), m_system(nullptr)
+AudioSystem::AudioSystem(World* world)
+    : System(world), m_studioSystem(nullptr), m_system(nullptr)
 {
 }
 
@@ -28,7 +29,7 @@ void AudioSystem::Init()
     FmodUtils::FmodCheck(m_studioSystem->getCoreSystem(&m_system), "Get core system");
 }
 
-void AudioSystem::Finalise()
+void AudioSystem::Finalize()
 {
     FmodUtils::FmodCheck(m_studioSystem->unloadAll(), "Unloading");
     FmodUtils::FmodCheck(m_studioSystem->release(), "Release");
@@ -37,11 +38,12 @@ void AudioSystem::Finalise()
 void AudioSystem::Update()
 {
     // Update listeners
-    auto audioListeners = GetComponents<AudioListener>();
+    auto audioListeners = QueryComponents();
+
     for (auto& audioTuple : audioListeners)
     {
-        auto* audioListener = std::get<1>( audioTuple );
-        auto* audioListenerTransform = std::get<0>( audioTuple )->GetComponent<Transform>();
+        auto audioListener = std::get<2>(audioTuple);
+        auto* audioListenerTransform = std::get<0>(audioTuple)->GetComponent<Transform>();
 
         FMOD_VECTOR oldPos = FmodUtils::Convert(audioListener->m_lastFramePos);
         FMOD_VECTOR currentPos = FmodUtils::Convert(audioListenerTransform->GetLocalPosition());
@@ -72,10 +74,10 @@ void AudioSystem::Update()
     }
 
     // Update audio sources
-    auto audioSources = GetComponents<AudioSource>();
+    auto audioSources = QueryComponents();
     for (auto& sourceTuple : audioSources)
     {
-        auto* audioSource = std::get<1>( sourceTuple );
+        auto audioSource = std::get<1>(sourceTuple);
         auto resource = audioSource->GetResource();
 
         if (resource->GetLoadState() != LoadState::STATE_LOADED)

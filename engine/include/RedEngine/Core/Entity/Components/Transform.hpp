@@ -1,9 +1,8 @@
 #pragma once
 
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Math/Vector.hpp"
-
-#include "Component.hpp"
 
 namespace red
 {
@@ -15,8 +14,8 @@ public:
     Transform(Entity* entity, Vector2 position);
     ~Transform() = default;
 
-    [[nodiscard]] const Vector2& GetLocalPosition() const;// TODO rename to GetLocalPosition 
-    [[nodiscard]] Vector2& GetLocalPosition(); // TODO Add GetWorldPosisition
+    [[nodiscard]] const Vector2& GetLocalPosition() const;  // TODO rename to GetLocalPosition
+    [[nodiscard]] Vector2& GetLocalPosition();              // TODO Add GetWorldPosisition
 
     [[nodiscard]] const Vector2& GetScale() const;
     [[nodiscard]] Vector2& GetScale();
@@ -39,7 +38,8 @@ public:
 
     void SetLocked(bool locked);
 
-    friend void RegisterMembers<Transform>(ComponentTraits& traits);
+    template <typename T>
+    friend void RegisterMembers(ComponentTraits& traits);
 
 private:
     // World position
@@ -51,7 +51,7 @@ private:
     bool m_locked{false};
 
     Matrix33 m_localWorldMatrix;
-    Matrix33 m_worldMatrix; // include parent transforms
+    Matrix33 m_worldMatrix;  // include parent transforms
     bool m_dirtyWorldMatrix{true};
 };
 }  // namespace red

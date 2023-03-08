@@ -1,35 +1,87 @@
-
-#include "RedEngine/Core/Entity/World.hpp"
-
+#include "System.hpp"
 namespace red
 {
-template <class... ComponentTypes>
-Array<std::tuple<Entity*, ComponentTypes*...>, red::DoubleLinearArrayAllocator> System::GetComponents() const
+template <typename T>
+inline QueryRO<T>::Result::Result(T* ptr) : component(ptr)
+{
+}
+
+template <typename T>
+inline bool QueryRO<T>::Result::operator==(const Result& other) const
+{
+    return component == other.component;
+}
+
+template <typename T>
+inline const T* QueryRO<T>::Result::Get()
+{
+    return component;
+}
+
+template <typename T>
+inline const T* QueryRO<T>::Result::operator->()
+{
+    return component;
+}
+
+template <typename T>
+inline const T* QueryRO<T>::Result::operator*()
+{
+    return component;
+}
+
+template <typename T>
+inline QueryRW<T>::Result::Result(T* ptr) : component(ptr)
+{
+}
+
+template <typename T>
+inline bool QueryRW<T>::Result::operator==(const Result& other) const
+{
+    return component == other.component;
+}
+
+template <typename T>
+inline T* QueryRW<T>::Result::Get()
+{
+    return component;
+}
+
+template <typename T>
+inline T* QueryRW<T>::Result::operator->()
+{
+    return component;
+}
+
+template <typename T>
+inline T* QueryRW<T>::Result::operator*()
+{
+    return component;
+}
+
+template <typename... QueriesT>
+inline System<QueriesT...>::System(World* world) : BaseSystem(world)
+{
+}
+
+template <typename... QueriesT>
+Array<std::tuple<Entity*, typename QueriesT::Result...>, DoubleLinearArrayAllocator>
+System<QueriesT...>::QueryComponents()
 {
     PROFILER_EVENT_CATEGORY("System::GetComponents", ProfilerCategory::None)
 
-    Array<std::tuple<Entity*, ComponentTypes*...>, DoubleLinearArrayAllocator> selectedEntities;
+    // TODO Fist element should be the entity ? Why ? 
+    Array<std::tuple<Entity*, typename QueriesT::Result...>, DoubleLinearArrayAllocator> selectedEntities;
 
-    auto& worldentities = GetWorldEntities();
+    auto nullTuple = std::make_tuple((Entity*) nullptr, typename QueriesT::Result(nullptr)...);
+    auto& worldentities = GetEntities();
     for (auto& entityPtr : worldentities)
     {
-        auto tuple = std::make_tuple(entityPtr, entityPtr->GetComponent<ComponentTypes>()...);
+        auto tuple = std::make_tuple(
+            entityPtr, typename QueriesT::Result(entityPtr->GetComponent<typename QueriesT::ComponentType>())...);
 
-        constexpr auto size = std::tuple_size_v<decltype( tuple )>;
-        bool present [] = {std::get<0>( tuple )!=nullptr, std::get<ComponentTypes*>( tuple ) != nullptr ... };
-        bool add = true;
-
-        for( int i = 1; i != size; i++ )
-        {
-            if( !present[i] )
-            {
-                add = false;
-                break;
-            }
-        }
-
-        if( add )
-            selectedEntities.push_back( tuple );
+        if (tuple != nullTuple)
+            selectedEntities.push_back(tuple);
     }
 
     return selectedEntities;

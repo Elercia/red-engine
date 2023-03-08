@@ -54,8 +54,6 @@ public:
     void AddLog(const Logger::LogOoutputInfo& str);
     Array<Entity*>& GetFilteredEntities();
 
-    friend void RegisterMembers<DebugComponent>(ComponentTraits& traits);
-
 private:
 
     std::shared_ptr<ShaderProgram> m_lineShaderProgram;

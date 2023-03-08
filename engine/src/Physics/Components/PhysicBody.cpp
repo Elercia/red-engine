@@ -7,7 +7,7 @@
 namespace red
 {
 template <>
-void RegisterMembers<PhysicBody>(ComponentTraits& /*traits*/)
+inline void RegisterMembers<PhysicBody>(ComponentTraits& /*traits*/)
 {
 }
 
@@ -16,7 +16,7 @@ PhysicBody::PhysicBody(Entity* entity) : Component(entity), m_desc(), m_body(nul
 }
 
 PhysicBody::PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc)
-    : Component(entity), m_desc(desc), m_body(nullptr)
+    : Component(entity), m_desc(desc), m_body(nullptr), m_nextColliderIndex(0)
 {
     entity->GetWorld()->GetPhysicsWorld()->InitPhysicsBody(this, m_desc);
 }

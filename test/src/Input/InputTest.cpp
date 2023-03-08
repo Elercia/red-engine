@@ -24,7 +24,7 @@ TEST_CASE("Raw input handling", "[Input]")
 
     eventsComonent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
 
-    eventSystem->PreUpdate();
+    eventSystem->Update();
 
     REQUIRE(eventsComonent->GetKey(red::KeyCodes::KEY_W));
     REQUIRE(eventsComonent->GetKeyDown(red::KeyCodes::KEY_W));
@@ -32,7 +32,7 @@ TEST_CASE("Raw input handling", "[Input]")
 
     eventsComonent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
 
-    eventSystem->PreUpdate();
+    eventSystem->Update();
 
     REQUIRE(!eventsComonent->GetKey(red::KeyCodes::KEY_W));
     REQUIRE(!eventsComonent->GetKeyDown(red::KeyCodes::KEY_W));

@@ -11,7 +11,9 @@ class MockComponent2;
 class MockComponent1 : public red::Component
 {
 public:
-    explicit MockComponent1(red::Entity* entity) : red::Component(entity) {}
+    explicit MockComponent1(red::Entity* entity) : red::Component(entity)
+    {
+    }
 };
 
 class MockComponent11 : public MockComponent1
@@ -25,20 +27,27 @@ public:
 class MockComponent2 : public red::Component
 {
 public:
-    explicit MockComponent2(red::Entity* entity) : red::Component(entity) {}
+    explicit MockComponent2(red::Entity* entity) : red::Component(entity)
+    {
+    }
 };
 
-class MockSystem : public red::System
+class MockSystem : public red::System<red::QueryRO<MockComponent1>, red::QueryRO<MockComponent2>>
 {
 public:
-    explicit MockSystem(red::World* world) : red::System(world) {}
+    explicit MockSystem(red::World* world)
+        : red::System<red::QueryRO<MockComponent1>, red::QueryRO<MockComponent2>>(world)
+    {
+    }
     virtual ~MockSystem() = default;
 
     void Update() override
     {
+        auto components = QueryComponents();
+
         m_hasBeenUpdated = true;
 
-        m_entityCount += (int)GetComponents<MockComponent1, MockComponent2>().size();
+        m_entityCount += (int) components.size();
     }
 
     int m_entityCount = 0;

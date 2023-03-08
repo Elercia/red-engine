@@ -33,7 +33,8 @@ public:
         return m_sound;
     }
 
-    friend void RegisterMembers<AudioSource>(ComponentTraits& traits);
+    template <typename T>
+    friend void RegisterMembers(ComponentTraits& traits);
 
 private:
     SoundDesc m_desc;

@@ -49,7 +49,8 @@ public:
 
     const Matrix44& GetViewProj() const;
 
-    friend void RegisterMembers<CameraComponent>(ComponentTraits& traits);
+    template <typename T>
+    friend void RegisterMembers(ComponentTraits& traits);
 
 private:
     Entity* m_attachedWindow;

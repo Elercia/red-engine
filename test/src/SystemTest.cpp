@@ -1,10 +1,11 @@
-#include "TestModule.hpp"
+#include "SystemTest.hpp"
 
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 
-#include <SystemTest.hpp>
 #include <catch2/catch.hpp>
 #include <iostream>
+
+#include "TestModule.hpp"
 
 TEST_CASE("System", "[ECS]")
 {
@@ -20,34 +21,21 @@ TEST_CASE("System", "[ECS]")
     size_t baseSystemCount = world.GetSystems().size();
     auto* mockSystemPtr = world.AddSystem<MockSystem>();
 
-    SECTION("Adding mock system")
-    {
-        REQUIRE(world.GetSystems().size() == (baseSystemCount + 1));
-        REQUIRE(mockSystemPtr != nullptr);
-    }
+    REQUIRE(world.GetSystems().size() == (baseSystemCount + 1));
+    REQUIRE(mockSystemPtr != nullptr);
 
-    SECTION("Update world update Systems")
-    {
-        world.Update();
+    auto* e1 = world.CreateWorldEntity("e1");
+    auto* e2 = world.CreateWorldEntity("e2");
+    auto* e3 = world.CreateWorldEntity("e3");
 
-        REQUIRE(mockSystemPtr->m_hasBeenUpdated);
-    }
+    e1->AddComponent<MockComponent1>();
+    e2->AddComponent<MockComponent1>();
 
-    SECTION("System is fetching the right entities")
-    {
-        auto* e1 = world.CreateWorldEntity("e1");
-        auto* e2 = world.CreateWorldEntity("e2");
-        auto* e3 = world.CreateWorldEntity("e3");
+    e2->AddComponent<MockComponent2>();
+    e3->AddComponent<MockComponent2>();
 
-        e1->AddComponent<MockComponent1>();
-        e2->AddComponent<MockComponent1>();
+    world.Update();
 
-        e2->AddComponent<MockComponent2>();
-        e3->AddComponent<MockComponent2>();
-
-        world.Update();
-
-        REQUIRE(mockSystemPtr->m_hasBeenUpdated);
-        REQUIRE(mockSystemPtr->m_entityCount == 1);  // only e2 has the right components types
-    }
+    REQUIRE(mockSystemPtr->m_hasBeenUpdated);
+    REQUIRE(mockSystemPtr->m_entityCount == 1);  // only e2 has the right components types
 }

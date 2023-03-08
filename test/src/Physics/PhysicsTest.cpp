@@ -66,5 +66,5 @@ TEST_CASE("Component binding", "[PHYSICS]")
 
     REQUIRE(size(body->GetBody()->GetFixtureList()) == 3);
 
-    system->Finalise();
+    system->Finalize();
 }

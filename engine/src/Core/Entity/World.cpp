@@ -83,13 +83,9 @@ void World::Init()
 
 void World::InitSystems()
 {
-    std::sort(m_systems.begin(), m_systems.end(),
-              [](const System* s1, const System* s2) { return s1->GetPriority() > s2->GetPriority(); });
-
     for (auto* system : m_systems)
     {
-        if (!system->m_isInit)
-            system->Init();
+        system->Init();
     }
 }
 
@@ -100,7 +96,7 @@ void World::Finalize()
 
     for (auto& system : m_systems)
     {
-        system->Finalise();
+        system->Finalize();
         RED_SAFE_DELETE(system);
     }
 
@@ -134,27 +130,7 @@ bool World::Update()
 
     for (auto& system : m_systems)
     {
-        system->BeginRender();
-    }
-
-    for (auto& system : m_systems)
-    {
-        system->PreUpdate();
-    }
-
-    for (auto& system : m_systems)
-    {
         system->Update();
-    }
-
-    for (auto& system : m_systems)
-    {
-        system->PostUpdate();
-    }
-
-    for (auto& system : m_systems)
-    {
-        system->EndRender();
     }
 
     return true;
@@ -210,7 +186,7 @@ void World::ChangeLevel(Level* newLevel)
     }
 }
 
-const Array<System*>& World::GetSystems() const
+const Array<BaseSystem*>& World::GetSystems() const
 {
     return m_systems;
 }

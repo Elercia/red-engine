@@ -11,7 +11,7 @@
 namespace red
 {
 template <>
-void RegisterMembers<Transform>(ComponentTraits& traits)
+inline void RegisterMembers<Transform>(ComponentTraits& traits)
 {
     traits.AddMember("Position", &Transform::m_localPosition, "The local position of the object", 0);
     traits.AddMember("Scale", &Transform::m_localScale, "The local scale of the object", 0);

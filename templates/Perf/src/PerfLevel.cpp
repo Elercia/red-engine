@@ -26,7 +26,7 @@ using namespace red;
 
 namespace perf
 {
-class CameraManager : public System
+class CameraManager : public System<>
 {
 public:
     CameraManager(red::World* world, Entity* camera) : System(world), m_camera(camera)
@@ -66,7 +66,7 @@ public:
     Entity* m_camera;
 };
 
-class EntityManager : public System
+class EntityManager : public System<>
 {
 public:
     EntityManager(red::World* world) : System(world)
@@ -74,6 +74,8 @@ public:
         m_debugId = 0;
     }
     ~EntityManager() override = default;
+
+    void Update() override {}
 
     void Init() override
     {
@@ -84,7 +86,7 @@ public:
         }
     }
 
-    void Finalise() override
+    void Finalize() override
     {
         auto* debug = m_world->GetWorldComponent<DebugComponent>();
         if (debug != nullptr)

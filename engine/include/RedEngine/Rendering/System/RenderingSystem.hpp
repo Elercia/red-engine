@@ -7,19 +7,16 @@ namespace red
 class CameraComponent;
 class Renderer;
 
-class RenderingSystem : public System
+class RenderingSystem : public System<QueryRO<Renderable>>
 {
 public:
     explicit RenderingSystem(World* world);
     virtual ~RenderingSystem() = default;
 
     virtual void Init() override;
-    virtual void Finalise() override;
+    virtual void Finalize() override;
 
     virtual void Update() override;
-
-    virtual void BeginRender() override;
-    virtual void EndRender() override;
 
     Renderer* GetRenderer();
 

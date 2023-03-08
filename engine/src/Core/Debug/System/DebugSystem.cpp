@@ -22,7 +22,6 @@ namespace red
 {
 DebugSystem::DebugSystem(World* world) : System(world)
 {
-    m_priority = 10;
 }
 
 void ShowImGuiDemo(DebugComponent* /*debug*/)

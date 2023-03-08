@@ -15,7 +15,6 @@ namespace red
 {
 EventSystem::EventSystem(World* world) : System(world)
 {
-    m_priority = 100;
 }
 
 void EventSystem::Init()
@@ -29,7 +28,7 @@ void EventSystem::Init()
     }
 }
 
-void EventSystem::PreUpdate()
+void EventSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("EventSystem::PreUpdate", ProfilerCategory::Input);
 
@@ -167,10 +166,6 @@ void EventSystem::PreUpdate()
             break;
         }
     }
-}
-
-void EventSystem::PostUpdate()
-{
 }
 
 }  // namespace red

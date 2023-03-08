@@ -6,15 +6,13 @@
 
 namespace red
 {
-class EventSystem : public System
+class EventSystem : public System<QueryRW<EventsComponent>>
 {
 public:
     EventSystem(World* world);
     virtual ~EventSystem() = default;
 
     virtual void Init() override;
-
-    virtual void PreUpdate() override;
-    virtual void PostUpdate() override;
+    virtual void Update() override;
 };
 }  // namespace red

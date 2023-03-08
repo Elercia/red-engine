@@ -14,7 +14,6 @@ namespace red
 {
 UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
 {
-    m_priority = 1;
 }
 
 void UserInputSystem::Init()
@@ -37,12 +36,12 @@ void UserInputSystem::Init()
     }
 }
 
-void UserInputSystem::Finalise()
+void UserInputSystem::Finalize()
 {
     SDL_QuitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 }
 
-void UserInputSystem::PreUpdate()
+void UserInputSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("UserInputSystem::PreUpdate", ProfilerCategory::Input);
 

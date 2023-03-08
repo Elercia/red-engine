@@ -10,7 +10,8 @@
 
 namespace red
 {
-PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->GetPhysicsWorld())
+PhysicSystem::PhysicSystem(World* world)
+    : System(world), m_physicsWorld(world->GetPhysicsWorld())
 {
 }
 
@@ -23,14 +24,14 @@ void PhysicSystem::Init()
     System::Init();
 }
 
-void PhysicSystem::Finalise()
+void PhysicSystem::Finalize()
 {
-    auto bodies =  GetComponents<PhysicBody>();
+    auto bodies =  QueryComponents();
     for (auto& tuple :bodies)
     {
-        auto* physicBody = std::get<1>( tuple );
+        auto physicBody = std::get<1>( tuple );
 
-        m_physicsWorld->DestroyPhysicsBody(physicBody);  // Destroying a body will destroy all the fixture attached
+        m_physicsWorld->DestroyPhysicsBody(physicBody.Get());  // Destroying a body will destroy all the fixture attached
     }
 }
 
@@ -42,12 +43,12 @@ void PhysicSystem::Update()
 
     auto& scheduler = Engine::GetInstance()->GetScheduler();
 
-    auto bodies = GetComponents<PhysicBody>();
+     auto bodies = QueryComponents();
 
     for (auto& tuple : bodies)
     {
         auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
-        auto* physicBody = std::get<1>(tuple);
+        auto physicBody = std::get<1>(tuple);
 
         if (physicBody->IsStatic())
         {
@@ -73,7 +74,7 @@ void PhysicSystem::Update()
             {
                 auto& tuple = bodies[i];
                 auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
-                auto* physicBody = std::get<1>(tuple);
+                auto physicBody = std::get<1>(tuple);
 
                 if (physicBody->IsStatic())
                 {

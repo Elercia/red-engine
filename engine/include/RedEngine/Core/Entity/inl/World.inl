@@ -3,12 +3,12 @@ namespace red
 template <class T, class... Args>
 T* World::AddSystem(Args&&... args)
 {
-    static_assert(std::is_base_of<System, T>::value, "World add system template T must be subclass of System");
+    static_assert(std::is_base_of<BaseSystem, T>::value, "World AddSystem template T must be subclass of System");
 
     auto info = TypeInfo<T>();
 
-    auto* ptr = new T(this, std::forward<Args>(args)...);
-    ptr->SetTypeTraits(info);
+    T* ptr = new T(this, std::forward<Args>(args)...);
+    ptr->SetTraits(info);
 
     RED_LOG_INFO("Adding {} system", info.name);
 
@@ -20,15 +20,17 @@ T* World::AddSystem(Args&&... args)
 template <class T>
 bool World::RemoveSystem()
 {
+    static_assert(std::is_base_of<BaseSystem, T>::value, "World RemoveSystem template T must be subclass of System");
+
     auto info = TypeInfo<T>();
     auto systemTypeId = info.typeId;
 
     RED_LOG_INFO("Remove {} system", info.name);
 
-    for (Array<System*>::iterator it = m_systems.begin(), end = m_systems.end(); it != end; ++it)
+    for (Array<BaseSystem*>::iterator it = m_systems.begin(), end = m_systems.end(); it != end; ++it)
     {
-        System* system = (*it);
-        if (system->GetTypeId() == systemTypeId)
+        BaseSystem* system = (*it);
+        if (system->GetTypeTraits().typeId == systemTypeId)
         {
             m_systems.erase(it);
 
@@ -50,10 +52,12 @@ void World::LoadLevel()
 template <class T>
 T* World::GetSystem()
 {
+    static_assert(std::is_base_of<BaseSystem, T>::value, "World GetSystem template T must be subclass of System");
+
     auto systemTypeId = TypeInfo<T>().typeId;
     for (auto* system : m_systems)
     {
-        if (system->GetTypeId() == systemTypeId)
+        if (system->GetTypeTraits().typeId == systemTypeId)
             return static_cast<T*>(system);
     }
 

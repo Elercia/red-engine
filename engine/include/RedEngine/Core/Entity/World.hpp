@@ -54,7 +54,7 @@ public:
 
     void ChangeLevel(Level* newLevel);
 
-    const Array<System*>& GetSystems() const;
+    const Array<BaseSystem*>& GetSystems() const;
 
     ComponentManager* GetComponentManager();
     ComponentRegistry* GetComponentRegistry();
@@ -85,7 +85,7 @@ private:
     Array<Entity*> m_entities;
 
     // Collection of system working on the world
-    Array<System*> m_systems;
+    Array<BaseSystem*> m_systems;
 
     ComponentManager* m_componentManager;
     ComponentRegistry* m_componentRegistry;

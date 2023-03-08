@@ -96,6 +96,9 @@ public:
     OnTriggerSignalType m_triggerSignal;
     OnCollisionSignalType m_collisionSignal;
 
+    template <typename T>
+    friend void RegisterMembers(ComponentTraits& traits);
+
 private:
     int AddCollider(Collider&& collider, const ColliderDesc& desc);
 

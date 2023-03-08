@@ -18,7 +18,7 @@
 namespace red
 {
 template <>
-void RegisterMembers<Sprite>(ComponentTraits& traits)
+inline void RegisterMembers<Sprite>(ComponentTraits& traits)
 {
     traits.AddMember("Layer index", &Sprite::m_layerIndex, "The layer of the object", 0);
     traits.AddMember("Size of the sprite", &Sprite::m_size, "The layer of the object", 0);

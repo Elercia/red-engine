@@ -6,7 +6,7 @@ namespace red
 {
 class DebugComponent;
 
-class DebugSystem : public System
+class DebugSystem : public System<>
 {
 public:
     explicit DebugSystem(World* world);

@@ -5,15 +5,16 @@
 
 namespace red
 {
-class UserInputSystem : public System
+class UserInputSystem : public System<>
 {
 public:
     UserInputSystem(World* world);
     ~UserInputSystem() = default;
 
     void Init() override;
-    void Finalise() override;
-    void PreUpdate() override;
+    void Finalize() override;
+
+    void Update() override;
 
 private:
     KeyState AglomerateKeyStates(const KeyState& oldState, const Array<KeyState>& states);

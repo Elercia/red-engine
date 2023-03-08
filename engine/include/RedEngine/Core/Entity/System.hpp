@@ -1,9 +1,9 @@
 #pragma once
 
 #include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Memory/LinearAllocator.hpp"
-#include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
 
@@ -14,54 +14,82 @@ namespace red
 {
 class World;
 
-class System
+class BaseSystem : private Uncopyable
 {
     friend World;
 
 public:
-    System(World* world);
-    System(System&&) = default;
-    System(const System&) = delete;
-    virtual ~System() = default;
+    BaseSystem(World* world);
+    virtual ~BaseSystem() = default;
 
-    System& operator=(const System&) = delete;
-    System& operator=(System&&) = default;
+    virtual void Update() = 0;
 
-    // Update functions called in this order
-    virtual void PreUpdate(){};
-    virtual void Update(){};
-    virtual void PostUpdate(){};
-    
-    virtual void BeginRender(){};
-    virtual void EndRender(){};
+    virtual void Init()
+    {
+    }
+    virtual void Finalize()
+    {
+    }
 
-    /// Called once the world is initializing to manager system-specific init
-    virtual void Init();
+    TypeTraits GetTypeTraits() const;
 
-    /// Called once the system is shutting down to manage system-specific shutdown
-    virtual void Finalise();
-
-    // TODO Create the same inside world (fallback call to world)
-    template <class... ComponentTypes>
-    Array<std::tuple<Entity*, ComponentTypes*...>, red::DoubleLinearArrayAllocator> GetComponents() const;
-
-    // Utilities functions
-    void DebugDrawLine(const Vector2& from, const Vector2& to);
-
-    void SetTypeTraits(TypeTraits typeTraits);
-    std::size_t GetTypeId() const;
-
-    int GetPriority() const;
-
-    Array<Entity*>& GetWorldEntities();
-    const Array<Entity*>& GetWorldEntities() const;
+    Array<Entity*>& GetEntities();
+    void SetTraits(TypeTraits typeTraits);
 
 protected:
-    bool m_isInit;
     World* m_world;
-    int m_priority;
     TypeTraits m_typeTraits;
 };
+
+template <typename T>
+struct QueryRO
+{
+    using ComponentType = T;
+
+    struct Result
+    {
+        Result(T* ptr);
+
+        bool operator==(const Result& other) const;
+
+        const T* Get();
+        const T* operator->();
+        const T* operator*();
+
+    private:
+        const T* component;
+    };
+};
+
+template <typename T>
+struct QueryRW
+{
+    using ComponentType = T;
+
+    struct Result
+    {
+        Result(T* ptr);
+
+        bool operator==(const Result& other) const;
+
+        T* Get();
+        T* operator->();
+        T* operator*();
+
+    private:
+        T* component;
+    };
+};
+
+template <typename... QueriesT>
+class System : public BaseSystem
+{
+public:
+    System(World* world);
+
+    Array<std::tuple<Entity*, typename QueriesT::Result...>, DoubleLinearArrayAllocator> QueryComponents();
+};
+
 }  // namespace red
 
 #include "inl/System.inl"

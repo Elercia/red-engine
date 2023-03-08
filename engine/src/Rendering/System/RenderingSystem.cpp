@@ -24,7 +24,6 @@ namespace red
 {
 RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
 {
-    m_priority = 100;
 }
 
 void RenderingSystem::Init()
@@ -37,77 +36,74 @@ void RenderingSystem::Init()
     m_renderer->InitRenderer(window);
 }
 
-void RenderingSystem::Finalise()
+void RenderingSystem::Finalize()
 {
     m_renderer->Finalise();
     RED_SAFE_DELETE(m_renderer);
 
-    System::Finalise();
+    System::Finalize();
 }
 
 void RenderingSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("Update render data", ProfilerCategory::Rendering);
 
-    auto renderableEntities = GetComponents<Renderable>();
+    auto renderableEntities = QueryComponents();
 
     for (auto& comps : renderableEntities)
     {
         auto* entity = std::get<0>(comps);
-        auto* renderable = std::get<1>(comps);
+        auto renderable = std::get<1>(comps);
         if (!renderable->IsValid())
             continue;
 
         auto* transform = entity->GetComponent<Transform>();
 
-        m_renderer->Draw(renderable, transform);
+        m_renderer->Draw(renderable.Get(), transform);
     }
 
     DrawDebug();
-}
 
-void RenderingSystem::BeginRender()
-{
-    PROFILER_EVENT_CATEGORY("Begin rendering", ProfilerCategory::Rendering);
-
-    UpdateWindowAsNeeded();
-
-    m_renderer->BeginRenderFrame();
-}
-
-void RenderingSystem::EndRender()
-{
-    PROFILER_EVENT_CATEGORY("Flush rendering", ProfilerCategory::Rendering);
-
-    // Draw frame for each camera
-    auto cameras = GetSortedCameras();
-
-    for (auto& cameraComponent : cameras)
     {
-        m_renderer->BeginCameraRendering(cameraComponent);
+        PROFILER_EVENT_CATEGORY("Begin rendering", ProfilerCategory::Rendering);
 
-        m_renderer->RenderOpaqueQueue(cameraComponent);
-        m_renderer->RenderTransparencyQueue(cameraComponent);
-        
+        UpdateWindowAsNeeded();
 
-#ifdef RED_DEVBUILD
-        auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
-        m_renderer->RenderDebug(cameraComponent, debugComp);
-#endif
-
-        m_renderer->EndCameraRendering(cameraComponent);
+        m_renderer->BeginRenderFrame();
     }
 
-#ifdef RED_DEVBUILD
-    m_renderer->RenderDebugUI();
+    {
+        PROFILER_EVENT_CATEGORY("Flush rendering", ProfilerCategory::Rendering);
 
-    auto* debug = m_world->GetWorldComponent<DebugComponent>();
-    debug->ClearDebug();
+        // Draw frame for each camera
+        auto cameras = GetSortedCameras();
+
+        for (auto& cameraComponent : cameras)
+        {
+            m_renderer->BeginCameraRendering(cameraComponent);
+
+            m_renderer->RenderOpaqueQueue(cameraComponent);
+            m_renderer->RenderTransparencyQueue(cameraComponent);
+
+#ifdef RED_DEVBUILD
+            auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+            m_renderer->RenderDebug(cameraComponent, debugComp);
 #endif
 
-    m_renderer->EndRenderFrame();
-}
+            m_renderer->EndCameraRendering(cameraComponent);
+        }
 
+#ifdef RED_DEVBUILD
+        m_renderer->RenderDebugUI();
+
+        auto* debug = m_world->GetWorldComponent<DebugComponent>();
+        debug->ClearDebug();
+#endif
+
+        m_renderer->EndRenderFrame();
+    }
+   
+}
 Renderer* RenderingSystem::GetRenderer()
 {
     return m_renderer;
@@ -126,35 +122,35 @@ void RenderingSystem::DrawDebug()
 
 void RenderingSystem::UpdateWindowAsNeeded()
 {
-    auto windowEntities = GetComponents<WindowComponent>();
-    auto cameraEntities = GetComponents<CameraComponent>();
-    auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
+    //auto windowEntities = GetComponents<WindowComponent>();
+    //auto cameraEntities = GetComponents<CameraComponent>();
+    //auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
 
-    for (auto& windowTuple : windowEntities)
-    {
-        // TODO what about window cvars ?
-        auto* windowComp = std::get<1>(windowTuple);
+    //for (auto& windowTuple : windowEntities)
+    //{
+    //    // TODO what about window cvars ?
+    //    auto* windowComp = std::get<1>(windowTuple);
 
-        if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
-        {
-            m_renderer->ReCreateWindow(windowComp);
-        }
-    }
+    //    if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
+    //    {
+    //        m_renderer->ReCreateWindow(windowComp);
+    //    }
+    //}
 
-    for (auto& cameras : cameraEntities)
-    {
-        auto* cameraComp = std::get<1>(cameras);
+    //for (auto& cameras : cameraEntities)
+    //{
+    //    auto* cameraComp = std::get<1>(cameras);
 
-        // This is required because the camera could have moved last frame
-        cameraComp->UpdateState();
-    }
+    //    // This is required because the camera could have moved last frame
+    //    cameraComp->UpdateState();
+    //}
 }
 
 Array<CameraComponent*, DoubleLinearArrayAllocator> RenderingSystem::GetSortedCameras()
 {
     PROFILER_EVENT_CATEGORY("RenderingSystem::GetSortedCameras", ProfilerCategory::Rendering)
 
-    auto cameraEntities = GetComponents<CameraComponent>();
+    /*auto cameraEntities = GetComponents<CameraComponent>();
     Array<CameraComponent*, DoubleLinearArrayAllocator> cameras;
     cameras.resize(cameraEntities.size());
     std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(),
@@ -163,7 +159,8 @@ Array<CameraComponent*, DoubleLinearArrayAllocator> RenderingSystem::GetSortedCa
     std::sort(cameras.begin(), cameras.end(),
               [](const CameraComponent* l, const CameraComponent* r) { return l->Depth() < r->Depth(); });
 
-    return cameras;
+    return cameras;*/
+    return {};
 }
 
 }  // namespace red

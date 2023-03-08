@@ -11,7 +11,7 @@
 namespace red
 {
 template <>
-void RegisterMembers<AudioSource>(ComponentTraits& /*traits*/)
+inline void RegisterMembers<AudioSource>(ComponentTraits& /*traits*/)
 {
     //traits.AddMember("Sound instance", &AudioSource::m_sound, "The sound instance to play", 0);
 }

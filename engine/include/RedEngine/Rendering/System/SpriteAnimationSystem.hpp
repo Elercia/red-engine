@@ -7,7 +7,7 @@ namespace red
 class CameraComponent;
 class Renderer;
 
-class SpriteAnimationSystem : public System
+class SpriteAnimationSystem : public System<QueryRW<Sprite>>
 {
 public:
     explicit SpriteAnimationSystem(World* world);

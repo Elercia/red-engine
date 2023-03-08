@@ -3,7 +3,7 @@
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
-class GameControlSystem : public red::System
+class GameControlSystem : public red::System<>
 {
 public:
     GameControlSystem(red::World* world, red::Entity* paddleOne, red::Entity* paddleTwo);
