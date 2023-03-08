@@ -68,7 +68,7 @@ inline System<QueriesT...>::System(World* world) : BaseSystem(world)
 }
 
 template <typename... QueryResultType>
-void FetchComponentTuple(std::tuple<QueryResultType...> tuple, Entity* entityPtr)
+void FetchComponentTuple(std::tuple<QueryResultType...>& tuple, Entity* entityPtr)
 {
     tuple = std::make_tuple<QueryResultType...>(
         QueryResultType(entityPtr->GetComponent<typename QueryResultType::ComponentType>())...);

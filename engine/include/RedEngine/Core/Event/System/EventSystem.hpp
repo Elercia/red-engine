@@ -6,7 +6,7 @@
 
 namespace red
 {
-class EventSystem : public System<QueryRW<EventsComponent>>
+class EventSystem : public System<QueryGroup<QueryRW<EventsComponent>>>
 {
 public:
     EventSystem(World* world);

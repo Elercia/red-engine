@@ -42,8 +42,13 @@ protected:
     TypeTraits m_typeTraits;
 };
 
+struct BaseQuery
+{
+
+};
+
 template <typename T>
-struct QueryRO
+struct QueryRO : public BaseQuery
 {
     using ComponentType = T;
 
@@ -65,7 +70,7 @@ struct QueryRO
 };
 
 template <typename T>
-struct QueryRW
+struct QueryRW : public BaseQuery
 {
     using ComponentType = T;
 
@@ -86,9 +91,17 @@ struct QueryRW
     };
 };
 
-template <typename... Queries>
-struct QueryGroup
+struct BaseQueryGroup
 {
+
+};
+
+template <typename... Queries>
+struct QueryGroup : public BaseQueryGroup
+{
+    static_assert(all_true<std::is_base_of_v<BaseQuery, Queries>...>::value,
+                  "System created with something else than a Query type inside a QueryGroup");
+
     using ResultTuple = std::tuple<typename Queries::Result...>;
 
     static const ResultTuple nulltuple;
@@ -99,6 +112,9 @@ class System : public BaseSystem
 {
 protected:
     typedef std::tuple<QueriesGroups...> PossibleQueries;
+
+    static_assert(all_true<std::is_base_of_v<BaseQueryGroup, QueriesGroups>...>::value,
+                  "System created with something else than a QueryGroup type");
 
 public:
     System(World* world);

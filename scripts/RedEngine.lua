@@ -88,6 +88,11 @@ function RedDefaultProjectOptions()
 		{
 			"RED_LINUX"
 		}
+
+		links
+		{
+			"pthread"
+		}
 	filter {}
 
 	filter { "configurations:Debug" }
