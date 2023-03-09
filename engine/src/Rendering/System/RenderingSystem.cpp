@@ -28,6 +28,9 @@ RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullp
 
 void RenderingSystem::Init()
 {
+    if (m_renderer != nullptr)
+        return;
+
     System::Init();
 
     auto* window = m_world->CreateWorldEntity("Window")->AddComponent<WindowComponent>();
@@ -63,14 +66,6 @@ void RenderingSystem::Update()
     DrawDebug();
 
     {
-        PROFILER_EVENT_CATEGORY("Begin rendering", ProfilerCategory::Rendering);
-
-        UpdateWindowAsNeeded();
-
-        m_renderer->BeginRenderFrame();
-    }
-
-    {
         PROFILER_EVENT_CATEGORY("Flush rendering", ProfilerCategory::Rendering);
 
         // Draw frame for each camera
@@ -94,14 +89,20 @@ void RenderingSystem::Update()
 #ifdef RED_DEVBUILD
         m_renderer->RenderDebugUI();
 
-        auto* debug = m_world->GetWorldComponent<DebugComponent>();
+        auto debug = std::get<0>(QueryComponents<1>()[0]);  // TODO Do something about fetching only one component
         debug->ClearDebug();
 #endif
 
         m_renderer->EndRenderFrame();
     }
-   
 }
+void RenderingSystem::BeginRendering()
+{
+    PROFILER_EVENT_CATEGORY("Begin rendering", ProfilerCategory::Rendering);
+
+    m_renderer->BeginRenderFrame();
+}
+
 Renderer* RenderingSystem::GetRenderer()
 {
     return m_renderer;
@@ -111,54 +112,28 @@ void RenderingSystem::DrawDebug()
 {
     PROFILER_EVENT_CATEGORY("DrawDebug", ProfilerCategory::Rendering);
 
-    auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
-    if (debugComp == nullptr)
-        return;
-
-    m_world->GetPhysicsWorld()->DrawDebug();
-}
-
-void RenderingSystem::UpdateWindowAsNeeded()
-{
-    //auto windowEntities = GetComponents<WindowComponent>();
-    //auto cameraEntities = GetComponents<CameraComponent>();
-    //auto* eventComponent = m_world->GetWorldComponent<EventsComponent>();
-
-    //for (auto& windowTuple : windowEntities)
-    //{
-    //    // TODO what about window cvars ?
-    //    auto* windowComp = std::get<1>(windowTuple);
-
-    //    if (eventComponent->IsWindowResized(windowComp->GetSDLWindow()))
-    //    {
-    //        m_renderer->ReCreateWindow(windowComp);
-    //    }
-    //}
-
-    //for (auto& cameras : cameraEntities)
-    //{
-    //    auto* cameraComp = std::get<1>(cameras);
-
-    //    // This is required because the camera could have moved last frame
-    //    cameraComp->UpdateState();
-    //}
+    m_world->GetPhysicsWorld()->DrawDebug();  // FIXME, should be inside the debug system
 }
 
 Array<CameraComponent*, DoubleLinearArrayAllocator> RenderingSystem::GetSortedCameras()
 {
     PROFILER_EVENT_CATEGORY("RenderingSystem::GetSortedCameras", ProfilerCategory::Rendering)
 
-    /*auto cameraEntities = GetComponents<CameraComponent>();
+    auto cameraEntities = QueryComponents<2>();
     Array<CameraComponent*, DoubleLinearArrayAllocator> cameras;
     cameras.resize(cameraEntities.size());
     std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(),
-                   [](auto& t) { return std::get<1>(t); });
+                   [](auto& t)
+                   {
+                       auto cameraQuery = std::get<0>(t);
+                       cameraQuery->UpdateState();
+                       return cameraQuery.Get();
+                   });
 
     std::sort(cameras.begin(), cameras.end(),
               [](const CameraComponent* l, const CameraComponent* r) { return l->Depth() < r->Depth(); });
 
-    return cameras;*/
-    return {};
+    return cameras;
 }
 
 }  // namespace red

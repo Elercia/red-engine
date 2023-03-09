@@ -185,16 +185,18 @@ bool Engine::Create()
     resourceHolder->RegisterResourceLoader(ResourceType::GEOMETRY, new GeometryResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SHADER_PROGRAM, new ShaderProgramResourceLoader(m_world));
 
-    m_world->AddSystem<RenderingSystem>();
-    m_world->AddSystem<SpriteAnimationSystem>();
-    m_world->AddSystem<PhysicSystem>();
-    m_world->AddSystem<EventSystem>();
     m_world->AddSystem<UserInputSystem>();
+    m_world->AddSystem<EventSystem>();
+    m_world->AddSystem<PhysicSystem>();
+    m_world->AddSystem<SpriteAnimationSystem>();
     m_world->AddSystem<AudioSystem>();
 
 #ifdef RED_DEVBUILD
     m_world->AddSystem<DebugSystem>();
 #endif
+    m_world->AddSystem<RenderingSystem>();
+
+    m_world->GetSystem<RenderingSystem>()->Init(); // FIXME Remove this direct call
 
     m_world->InitSystems();
 

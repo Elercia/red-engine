@@ -83,10 +83,12 @@ void World::Init()
 
 void World::InitSystems()
 {
-    for (auto* system : m_systems)
+    for (auto* system : m_addedSystems)
     {
         system->Init();
     }
+
+    m_addedSystems.clear();
 }
 
 void World::Finalize()
@@ -127,6 +129,8 @@ bool World::Update()
 
         tranform->UpdateWorldMatrixIfNeeded();
     }
+
+    GetSystem<RenderingSystem>()->BeginRendering();// FIXME Remove this direct call
 
     for (auto& system : m_systems)
     {

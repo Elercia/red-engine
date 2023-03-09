@@ -86,6 +86,7 @@ private:
 
     // Collection of system working on the world
     Array<BaseSystem*> m_systems;
+    Array<BaseSystem*> m_addedSystems;
 
     ComponentManager* m_componentManager;
     ComponentRegistry* m_componentRegistry;

@@ -7,7 +7,8 @@ namespace red
 class CameraComponent;
 class Renderer;
 
-class RenderingSystem : public System<QueryGroup<QueryRO<Transform>, QueryRO<Renderable>>>
+class RenderingSystem : public System<QueryGroup<QueryRO<Transform>, QueryRO<Renderable>>,
+                                      QueryGroup<QueryRW<DebugComponent>>, QueryGroup<QueryRW<CameraComponent>>>
 {
 public:
     explicit RenderingSystem(World* world);
@@ -18,11 +19,12 @@ public:
 
     virtual void Update() override;
 
+    void BeginRendering();
+
     Renderer* GetRenderer();
 
 private:
     void DrawDebug();
-    void UpdateWindowAsNeeded();
     Array<CameraComponent*, DoubleLinearArrayAllocator> GetSortedCameras();
 
 private:

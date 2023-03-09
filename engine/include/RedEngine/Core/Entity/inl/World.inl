@@ -13,6 +13,7 @@ T* World::AddSystem(Args&&... args)
     RED_LOG_INFO("Adding {} system", info.name);
 
     m_systems.push_back(ptr);
+    m_addedSystems.push_back(ptr);
 
     return ptr;
 }
