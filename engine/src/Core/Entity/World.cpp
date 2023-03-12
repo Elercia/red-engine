@@ -130,8 +130,6 @@ bool World::Update()
         tranform->UpdateWorldMatrixIfNeeded();
     }
 
-    GetSystem<RenderingSystem>()->BeginRendering();// FIXME Remove this direct call
-
     for (auto& system : m_systems)
     {
         system->Update();

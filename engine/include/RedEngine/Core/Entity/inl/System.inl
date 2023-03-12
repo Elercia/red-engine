@@ -123,4 +123,30 @@ System<QueriesGroups...>::QueryComponents()
     return selectedEntities;
 }
 
+template <typename... QueriesGroups>
+template <int QueryGroupIndex>
+typename std::tuple_element_t<QueryGroupIndex, std::tuple<QueriesGroups...>>::ResultType
+System<QueriesGroups...>::QuerySingletonComponent()
+{
+    PROFILER_EVENT_CATEGORY("System::GetSingletonComponent", ProfilerCategory::None)
+
+    static_assert(
+        QueryGroupIndex >= 0 && QueryGroupIndex < std::tuple_size_v<typename System<QueriesGroups...>::PossibleQueries>,
+        "Query index out of bound");
+
+    using QueryType = std::tuple_element_t<QueryGroupIndex, typename System<QueriesGroups...>::PossibleQueries>;
+    using ResultType = QueryType::ResultType;
+
+    auto& worldentities = GetEntities();
+    for (auto& entityPtr : worldentities)
+    {
+        auto comp = entityPtr->GetComponent<typename ResultType::ComponentType>();
+
+        if (comp != nullptr)
+            return ResultType(comp);
+    }
+
+    return ResultType(nullptr);
+}
+
 }  // namespace red

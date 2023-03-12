@@ -22,36 +22,40 @@
 
 namespace red
 {
-RenderingSystem::RenderingSystem(World* world) : System(world), m_renderer(nullptr)
+
+BeginNextFrameRenderingSystem::BeginNextFrameRenderingSystem(World* world)
+    : System<SinglQuery<QueryRW<RendererComponent>>>(world)
 {
 }
 
-void RenderingSystem::Init()
+void BeginNextFrameRenderingSystem::Init()
 {
-    if (m_renderer != nullptr)
-        return;
-
     System::Init();
 
     auto* window = m_world->CreateWorldEntity("Window")->AddComponent<WindowComponent>();
+    auto* rendererComp = m_world->CreateWorldEntity("Renderer")->AddComponent<RendererComponent>();
 
-    m_renderer = new Renderer;
-    m_renderer->InitRenderer(window);
+    rendererComp->GetRenderer().InitRenderer(window);
 }
 
-void RenderingSystem::Finalize()
+void BeginNextFrameRenderingSystem::Update()
 {
-    m_renderer->Finalise();
-    RED_SAFE_DELETE(m_renderer);
+    PROFILER_EVENT_CATEGORY("BeginNextFrameRenderingSystem::Update", ProfilerCategory::Rendering);
 
-    System::Finalize();
+    QuerySingletonComponent<0>()->GetRenderer().BeginRenderFrame();
 }
 
-void RenderingSystem::Update()
+UpdateRenderableSystem::UpdateRenderableSystem(World* world)
+    : System<QueryGroup<QueryRO<Transform>, QueryRO<Renderable>>, SinglQuery<QueryRW<RendererComponent>>>(world)
 {
-    PROFILER_EVENT_CATEGORY("Update render data", ProfilerCategory::Rendering);
+}
+
+void UpdateRenderableSystem::Update()
+{
+    PROFILER_EVENT_CATEGORY("UpdateRenderableSystem::Update", ProfilerCategory::Rendering);
 
     auto renderableEntities = QueryComponents<0>();
+    auto renderer = QuerySingletonComponent<1>();
 
     for (auto& comps : renderableEntities)
     {
@@ -60,72 +64,30 @@ void RenderingSystem::Update()
         if (!renderable->IsValid())
             continue;
 
-        m_renderer->Draw(renderable.Get(), transform.Get());
-    }
-
-    DrawDebug();
-
-    {
-        PROFILER_EVENT_CATEGORY("Flush rendering", ProfilerCategory::Rendering);
-
-        // Draw frame for each camera
-        auto cameras = GetSortedCameras();
-
-        for (auto& cameraComponent : cameras)
-        {
-            m_renderer->BeginCameraRendering(cameraComponent);
-
-            m_renderer->RenderOpaqueQueue(cameraComponent);
-            m_renderer->RenderTransparencyQueue(cameraComponent);
-
-#ifdef RED_DEVBUILD
-            auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
-            m_renderer->RenderDebug(cameraComponent, debugComp);
-#endif
-
-            m_renderer->EndCameraRendering(cameraComponent);
-        }
-
-#ifdef RED_DEVBUILD
-        m_renderer->RenderDebugUI();
-
-        auto debug = std::get<0>(QueryComponents<1>()[0]);  // TODO Do something about fetching only one component
-        debug->ClearDebug();
-#endif
-
-        m_renderer->EndRenderFrame();
+        renderer->GetRenderer().Draw(renderable.Get(), transform.Get());
     }
 }
-void RenderingSystem::BeginRendering()
-{
-    PROFILER_EVENT_CATEGORY("Begin rendering", ProfilerCategory::Rendering);
 
-    m_renderer->BeginRenderFrame();
+FlushRenderSystem::FlushRenderSystem(World* world)
+    : System<QueryGroup<QueryRO<Transform>, QueryRW<CameraComponent>>, SinglQuery<QueryRW<RendererComponent>>,
+                   SinglQuery<QueryRW<DebugComponent>>>(world)
+{
 }
 
-Renderer* RenderingSystem::GetRenderer()
+void FlushRenderSystem::Update()
 {
-    return m_renderer;
-}
+    PROFILER_EVENT_CATEGORY("FlushRenderSystem::Update", ProfilerCategory::Rendering)
 
-void RenderingSystem::DrawDebug()
-{
-    PROFILER_EVENT_CATEGORY("DrawDebug", ProfilerCategory::Rendering);
+    auto& renderer = QuerySingletonComponent<1>()->GetRenderer();
+    auto debugComponent = QuerySingletonComponent<2>();
 
-    m_world->GetPhysicsWorld()->DrawDebug();  // FIXME, should be inside the debug system
-}
-
-Array<CameraComponent*, DoubleLinearArrayAllocator> RenderingSystem::GetSortedCameras()
-{
-    PROFILER_EVENT_CATEGORY("RenderingSystem::GetSortedCameras", ProfilerCategory::Rendering)
-
-    auto cameraEntities = QueryComponents<2>();
+    auto cameraEntities = QueryComponents<0>();
     Array<CameraComponent*, DoubleLinearArrayAllocator> cameras;
     cameras.resize(cameraEntities.size());
     std::transform(cameraEntities.begin(), cameraEntities.end(), cameras.begin(),
                    [](auto& t)
                    {
-                       auto cameraQuery = std::get<0>(t);
+                       auto cameraQuery = std::get<1>(t);
                        cameraQuery->UpdateState();
                        return cameraQuery.Get();
                    });
@@ -133,7 +95,27 @@ Array<CameraComponent*, DoubleLinearArrayAllocator> RenderingSystem::GetSortedCa
     std::sort(cameras.begin(), cameras.end(),
               [](const CameraComponent* l, const CameraComponent* r) { return l->Depth() < r->Depth(); });
 
-    return cameras;
+    for (auto& cameraComponent : cameras)
+    {
+        renderer.BeginCameraRendering(cameraComponent);
+
+        renderer.RenderOpaqueQueue(cameraComponent);
+        renderer.RenderTransparencyQueue(cameraComponent);
+
+#ifdef RED_DEVBUILD
+        renderer.RenderDebug(cameraComponent, debugComponent.Get());
+#endif
+
+        renderer.EndCameraRendering(cameraComponent);
+    }
+
+#ifdef RED_DEVBUILD
+    renderer.RenderDebugUI();
+
+    debugComponent->ClearDebug();
+#endif
+
+    renderer.EndRenderFrame();
 }
 
 }  // namespace red

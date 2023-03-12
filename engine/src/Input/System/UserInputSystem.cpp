@@ -43,9 +43,9 @@ void UserInputSystem::Finalize()
 
 void UserInputSystem::Update()
 {
-    PROFILER_EVENT_CATEGORY("UserInputSystem::PreUpdate", ProfilerCategory::Input);
+    PROFILER_EVENT_CATEGORY("UserInputSystem::Update", ProfilerCategory::Input);
 
-    auto* eventsSystem = m_world->GetWorldComponent<EventsComponent>();
+    auto eventsSystem = QuerySingletonComponent<0>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)
     {
         const auto& actionName = actionMapping.first;

@@ -222,8 +222,10 @@ void DebugSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("DebugSystem::Update", ProfilerCategory::Debug);
 
-    auto* events = m_world->GetWorldComponent<EventsComponent>();
-    auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+    auto events = QuerySingletonComponent<1>();
+    auto debugComp = QuerySingletonComponent<0>();
+
+    m_world->GetPhysicsWorld()->DrawDebug();
 
     static bool open = true;
     if (ImGui::Begin("Debug menu", &open))
@@ -236,7 +238,7 @@ void DebugSystem::Update()
             {
                 if (ImGui::BeginTabItem(drawer.name.c_str()))
                 {
-                    drawer.callback(debugComp);
+                    drawer.callback(debugComp.Get());
 
                     ImGui::EndTabItem();
                 }

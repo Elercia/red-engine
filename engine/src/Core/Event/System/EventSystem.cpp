@@ -32,7 +32,7 @@ void EventSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("EventSystem::PreUpdate", ProfilerCategory::Input);
 
-    EventsComponent* events = m_world->GetWorldComponent<EventsComponent>();
+    auto events = QuerySingletonComponent<0>();
 
     auto codes = GetKeyCodeReadableDb();
     auto mouseCodes = GetSDLMouseTranslationMap();

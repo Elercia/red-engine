@@ -5,7 +5,7 @@
 
 namespace red
 {
-class UserInputSystem : public System<>
+class UserInputSystem : public System<SinglQuery<QueryRO<EventsComponent>>, SinglQuery<QueryRW<UserInputComponent>>>
 {
 public:
     UserInputSystem(World* world);

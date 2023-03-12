@@ -107,6 +107,15 @@ struct QueryGroup : public BaseQueryGroup
     static const ResultTuple nulltuple;
 };
 
+template <typename Query>
+struct SinglQuery : BaseQueryGroup
+{
+    static_assert(std::is_base_of_v<BaseQuery, Query>,
+                  "System created with something else than a Query type inside a SinglQuery");
+
+    using ResultType = typename Query::Result;
+};
+
 template <typename... QueriesGroups>
 class System : public BaseSystem
 {
@@ -123,6 +132,9 @@ public:
     Array<typename std::tuple_element_t<QueryGroupIndex, std::tuple<QueriesGroups...>>::ResultTuple,
           DoubleLinearArrayAllocator>
     QueryComponents();
+
+    template <int QueryGroupIndex>
+    typename std::tuple_element_t<QueryGroupIndex, std::tuple<QueriesGroups...>>::ResultType QuerySingletonComponent();
 };
 
 }  // namespace red

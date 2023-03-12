@@ -96,6 +96,7 @@
 #include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Color.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/RendererComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
@@ -189,6 +190,7 @@
 #include "Physics/System/PhysicSystem.cpp"
 
 #include "Rendering/Component/CameraComponent.cpp"
+#include "Rendering/Component/RendererComponent.cpp"
 #include "Rendering/Component/Renderable.cpp"
 #include "Rendering/Color.cpp"
 #include "Rendering/Component/Sprite.cpp"

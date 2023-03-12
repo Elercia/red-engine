@@ -5,30 +5,38 @@
 namespace red
 {
 class CameraComponent;
-class Renderer;
+class RendererComponent;
+class Renderable;
+class DebugComponent;
 
-class RenderingSystem : public System<QueryGroup<QueryRO<Transform>, QueryRO<Renderable>>,
-                                      QueryGroup<QueryRW<DebugComponent>>, QueryGroup<QueryRW<CameraComponent>>>
+class BeginNextFrameRenderingSystem : public System<SinglQuery<QueryRW<RendererComponent>>>
 {
 public:
-    explicit RenderingSystem(World* world);
-    virtual ~RenderingSystem() = default;
+    BeginNextFrameRenderingSystem(World* world);
 
     virtual void Init() override;
-    virtual void Finalize() override;
 
     virtual void Update() override;
-
-    void BeginRendering();
-
-    Renderer* GetRenderer();
-
-private:
-    void DrawDebug();
-    Array<CameraComponent*, DoubleLinearArrayAllocator> GetSortedCameras();
-
-private:
-    Renderer* m_renderer;
 };
+
+class UpdateRenderableSystem
+    : public System<QueryGroup<QueryRO<Transform>, QueryRO<Renderable>>, SinglQuery<QueryRW<RendererComponent>>>
+{
+public:
+    UpdateRenderableSystem(World* world);
+
+    virtual void Update() override;
+};
+
+class FlushRenderSystem : public System<QueryGroup<QueryRO<Transform>, QueryRW<CameraComponent>>,
+                                        SinglQuery<QueryRW<RendererComponent>>, SinglQuery<QueryRW<DebugComponent>>>
+{
+public:
+    FlushRenderSystem(World* world);
+
+    virtual void Update() override;
+};
+
+//, QueryGroup<QueryRW<DebugComponent>>, QueryGroup<QueryRW<CameraComponent>>
 
 }  // namespace red
