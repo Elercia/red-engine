@@ -5,6 +5,12 @@ const typename QueryGroup<Queries...>::ResultTuple QueryGroup<Queries...>::nullt
     typename QueryGroup<Queries...>::ResultTuple(typename Queries::Result(nullptr)...);
 
 template <typename T>
+inline TypeTraits QueryRO<T>::GetTypeInfo() const
+{
+    return TypeInfo<T>();
+}
+
+template <typename T>
 inline QueryRO<T>::Result::Result(T* ptr) : component(ptr)
 {
 }
@@ -31,6 +37,12 @@ template <typename T>
 inline const T* QueryRO<T>::Result::operator*()
 {
     return component;
+}
+
+template <typename T>
+inline TypeTraits QueryRW<T>::GetTypeInfo() const
+{
+    return TypeInfo<T>();
 }
 
 template <typename T>
@@ -63,8 +75,58 @@ inline T* QueryRW<T>::Result::operator*()
 }
 
 template <typename... QueriesT>
-inline System<QueriesT...>::System(World* world) : BaseSystem(world)
+inline System<QueriesT...>::System(World* world) : BaseSystem(world), m_ROComponents(nullptr), m_RWComponents(nullptr)
 {
+    auto roCount = GetROComponentCount();
+    if (roCount > 0)
+    {
+        m_ROComponents = new TypeTraits[roCount];
+        int index = 0;
+
+        PossibleQueries queries;
+        for_each(queries,
+                 [&](auto querygroup) constexpr
+                 {
+                     for_each(querygroup.queries,
+                              [&](auto query) constexpr
+                              {
+                                  if (query.IsReadOnly)
+                                  {
+                                      m_ROComponents[index] = query.GetTypeInfo();
+                                      index++;
+                                  }
+                              });
+                 });
+    }
+
+    auto rwCount = GetRWComponentCount();
+    if (rwCount > 0)
+    {
+        m_RWComponents = new TypeTraits[rwCount];
+
+        PossibleQueries queries;
+        int index = 0;
+        for_each(queries,
+                 [&](auto querygroup) constexpr
+                 {
+                     for_each(querygroup.queries,
+                              [&](auto query) constexpr
+                              {
+                                  if (!query.IsReadOnly)
+                                  {
+                                      m_RWComponents[index] = query.GetTypeInfo();
+                                      index++;
+                                  }
+                              });
+                 });
+    }
+}
+
+template <typename... QueriesT>
+inline System<QueriesT...>::~System()
+{
+    delete m_ROComponents;
+    delete m_RWComponents;
 }
 
 template <typename... QueryResultType>
@@ -147,6 +209,56 @@ System<QueriesGroups...>::QuerySingletonComponent()
     }
 
     return ResultType(nullptr);
+}
+
+template <typename... QueriesGroups>
+ArrayView<TypeTraits> System<QueriesGroups...>::GetROComponents() const
+{
+    return ArrayView(m_ROComponents, 0, GetROComponentCount());
+}
+
+template <typename... QueriesGroups>
+ArrayView<TypeTraits> System<QueriesGroups...>::GetRWComponents() const
+{
+    return ArrayView(m_RWComponents, 0, GetRWComponentCount());
+}
+
+template <typename... QueriesGroups>
+consteval int System<QueriesGroups...>::GetROComponentCount()
+{
+    PossibleQueries queries;
+    int RO = 0;
+    for_each(queries,
+             [&](auto querygroup) constexpr
+             {
+                 for_each(querygroup.queries,
+                          [&](auto query) constexpr
+                          {
+                              if (query.IsReadOnly)
+                                  RO++;
+                          });
+             });
+
+    return RO;
+}
+
+template <typename... QueriesGroups>
+consteval int System<QueriesGroups...>::GetRWComponentCount()
+{
+    PossibleQueries queries;
+    int RW = 0;
+    for_each(queries,
+             [&](auto querygroup) constexpr
+             {
+                 for_each(querygroup.queries,
+                          [&](auto query) constexpr
+                          {
+                              if (!query.IsReadOnly)
+                                  RW++;
+                          });
+             });
+
+    return RW;
 }
 
 }  // namespace red

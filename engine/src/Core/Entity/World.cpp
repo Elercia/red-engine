@@ -103,6 +103,7 @@ void World::Finalize()
     }
 
     m_systems.clear();
+    m_addedSystems.clear();
 
     Clean();
 
