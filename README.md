@@ -1,4 +1,4 @@
-![Project build status](https://github.com/Elercia/red-engine/workflows/CI%20Workflow/badge.svg?branch=master)
+![Project build status](https://github.com/Elercia/red-engine/workflows/CI%20Workflow/badge.svg?branch=develop)
 # Red Engine
 
 Welcome to RedEngine my hobby-project to learn and experiment things around C++ and game development. This project has no time limit and is only made on my personal time.
