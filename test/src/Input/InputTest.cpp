@@ -47,8 +47,8 @@ TEST_CASE("User input handling", "[Input]")
     world.RegisterComponentType<UserInputComponent>();
 
     // Add input & event system (responsible of creating UserInputComponent & EventsComponent)
-    world.AddSystem<red::UserInputSystem>();
     world.AddSystem<red::EventSystem>();
+    world.AddSystem<red::UserInputSystem>();
 
     // Update the world to init the systems (could have init individually the systems by calling .Init() on them)
     world.Update();
