@@ -37,8 +37,8 @@ public:
     Array<Entity*>& GetEntities();
     void SetTraits(TypeTraits typeTraits);
 
-    virtual ArrayView<TypeTraits> GetROComponents() const;
-    virtual ArrayView<TypeTraits> GetRWComponents() const;
+    virtual ArrayView<TypeTraits> GetROComponents() const = 0;
+    virtual ArrayView<TypeTraits> GetRWComponents() const = 0;
 
 protected:
     World* m_world;

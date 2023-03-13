@@ -125,8 +125,8 @@ inline System<QueriesT...>::System(World* world) : BaseSystem(world), m_ROCompon
 template <typename... QueriesT>
 inline System<QueriesT...>::~System()
 {
-    delete m_ROComponents;
-    delete m_RWComponents;
+    delete[] m_ROComponents;
+    delete[] m_RWComponents;
 }
 
 template <typename... QueryResultType>
