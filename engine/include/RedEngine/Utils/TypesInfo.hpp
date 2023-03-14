@@ -3,6 +3,7 @@
 #include "RedEngine/Math/Hash.hpp"
 
 #include <string_view>
+#include <tuple>
 
 namespace red
 {
@@ -10,6 +11,19 @@ template <bool...>
 struct bool_pack;
 template <bool... bs>
 using all_true = std::is_same<bool_pack<bs..., true>, bool_pack<true, bs...>>;
+
+template <std::size_t I = 0, typename FuncT, typename... Tp>
+inline constexpr typename std::enable_if<I == sizeof...(Tp), void>::type for_each(
+    std::tuple<Tp...>&, FuncT)  // Unused arguments are given no names.
+{
+}
+
+template <std::size_t I = 0, typename FuncT, typename... Tp>
+    inline constexpr typename std::enable_if < I<sizeof...(Tp), void>::type for_each(std::tuple<Tp...>& t, FuncT f)
+{
+    f(std::get<I>(t));
+    for_each<I + 1, FuncT, Tp...>(t, f);
+}
 
 using TypeTraitsId = uint32;
 

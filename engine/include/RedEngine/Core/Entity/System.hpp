@@ -37,6 +37,9 @@ public:
     Array<Entity*>& GetEntities();
     void SetTraits(TypeTraits typeTraits);
 
+    virtual ArrayView<TypeTraits> GetROComponents() const = 0;
+    virtual ArrayView<TypeTraits> GetRWComponents() const = 0;
+
 protected:
     World* m_world;
     TypeTraits m_typeTraits;
@@ -44,13 +47,15 @@ protected:
 
 struct BaseQuery
 {
-
 };
 
 template <typename T>
 struct QueryRO : public BaseQuery
 {
     using ComponentType = T;
+
+    bool IsReadOnly = true;
+    TypeTraits GetTypeInfo() const;
 
     struct Result
     {
@@ -74,6 +79,10 @@ struct QueryRW : public BaseQuery
 {
     using ComponentType = T;
 
+    bool IsReadOnly = false;
+
+    TypeTraits GetTypeInfo() const;
+
     struct Result
     {
         using ComponentType = T;
@@ -93,7 +102,6 @@ struct QueryRW : public BaseQuery
 
 struct BaseQueryGroup
 {
-
 };
 
 template <typename... Queries>
@@ -103,6 +111,9 @@ struct QueryGroup : public BaseQueryGroup
                   "System created with something else than a Query type inside a QueryGroup");
 
     using ResultTuple = std::tuple<typename Queries::Result...>;
+    using QueriesTuple = std::tuple<Queries...>;
+
+    QueriesTuple queries;
 
     static const ResultTuple nulltuple;
 };
@@ -114,6 +125,9 @@ struct SinglQuery : BaseQueryGroup
                   "System created with something else than a Query type inside a SinglQuery");
 
     using ResultType = typename Query::Result;
+    using QueriesTuple = std::tuple<Query>;
+
+    QueriesTuple queries;
 };
 
 template <typename... QueriesGroups>
@@ -127,6 +141,7 @@ protected:
 
 public:
     System(World* world);
+    ~System();
 
     template <int QueryGroupIndex>
     Array<typename std::tuple_element_t<QueryGroupIndex, std::tuple<QueriesGroups...>>::ResultTuple,
@@ -135,6 +150,16 @@ public:
 
     template <int QueryGroupIndex>
     typename std::tuple_element_t<QueryGroupIndex, std::tuple<QueriesGroups...>>::ResultType QuerySingletonComponent();
+
+    virtual ArrayView<TypeTraits> GetROComponents() const override;
+    virtual ArrayView<TypeTraits> GetRWComponents() const override;
+
+private:
+    static consteval int GetROComponentCount();
+    static consteval int GetRWComponentCount();
+
+    TypeTraits* m_ROComponents; // Array of TypeTraits
+    TypeTraits* m_RWComponents; // Array of TypeTraits
 };
 
 }  // namespace red

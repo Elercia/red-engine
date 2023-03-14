@@ -1,11 +1,11 @@
-#include "TestModule.hpp"
+#include "SystemTest.hpp"
 
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 
-#include "SystemTest.hpp"
-
 #include <catch2/catch.hpp>
 #include <iostream>
+
+#include "TestModule.hpp"
 
 TEST_CASE("System", "[ECS]")
 {
@@ -51,4 +51,42 @@ TEST_CASE("System", "[ECS]")
         REQUIRE(mockSystemPtr->m_hasBeenUpdated);
         REQUIRE(mockSystemPtr->m_entityCount == 1);  // only e2 has the right components types
     }
+}
+
+TEST_CASE("System RO/RW introspection", "[ECS]")
+{
+    using namespace red;
+
+    struct TestSystem : public System<QueryGroup<QueryRO<MockComponent1>>, QueryGroup<QueryRW<MockComponent2>>,
+                                      SinglQuery<QueryRW<MockComponent11>>>
+    {
+        TestSystem(World* world) : System(world)
+        {
+        }
+
+        void Update() override {}
+    };
+
+    red::World world;
+    world.Init();
+    world.RegisterComponentType<MockComponent1>();
+    world.RegisterComponentType<MockComponent2>();
+    world.RegisterComponentType<MockComponent11>();
+
+    auto* testSystemPtr = world.AddSystem<TestSystem>();
+
+    auto roComponents = testSystemPtr->GetROComponents();
+    auto rwComponents = testSystemPtr->GetRWComponents();
+
+    REQUIRE(std::find_if(roComponents.begin(), roComponents.end(),
+                      [](const TypeTraits& type)
+                      { return type.typeId == TypeInfo<MockComponent1>().typeId; }) != roComponents.end());
+
+    REQUIRE(std::find_if(rwComponents.begin(), rwComponents.end(),
+                      [](const TypeTraits& type)
+                      { return type.typeId == TypeInfo<MockComponent2>().typeId; }) != rwComponents.end());
+
+    REQUIRE(std::find_if(rwComponents.begin(), rwComponents.end(),
+                      [](const TypeTraits& type)
+                      { return type.typeId == TypeInfo<MockComponent11>().typeId; }) != rwComponents.end());
 }
