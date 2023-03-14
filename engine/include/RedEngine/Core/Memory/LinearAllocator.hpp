@@ -47,9 +47,9 @@ private:
 
 struct DoubleLinearArrayAllocator
 {
-    static void* Allocate(uint32 size);
-    static void Free(void* ptr);
-    static void* Realloc(void* ptr, uint32 oldSize, uint32 size);
+    void* Allocate(uint32 size);
+    void Free(void* ptr);
+    void* Realloc(void* ptr, uint32 oldSize, uint32 size);
 };
 }  // namespace red
 

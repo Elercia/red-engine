@@ -36,7 +36,7 @@ template <typename T, typename Allocator>
 Array<T, Allocator>::~Array()
 {
     Destroy(begin(), end());
-    Allocator::Free(m_data);
+    m_allocator.Free(m_data);
 }
 
 template <typename T, typename Allocator>
@@ -102,7 +102,7 @@ template <typename T, typename Allocator>
 Array<T, Allocator>& Array<T, Allocator>::operator=(Array<T, Allocator>&& other)
 {
     Destroy(begin(), end());
-    Allocator::Free(m_data);
+    m_allocator.Free(m_data);
 
     m_size = std::move(other.m_size);
     m_capacity = std::move(other.m_capacity);
@@ -237,7 +237,7 @@ template <typename T, typename Allocator>
 void Array<T, Allocator>::clearAndFree()
 {
     Destroy(begin(), end());
-    Allocator::Free(m_data);
+    m_allocator.Free(m_data);
     m_data = nullptr;
     m_size = 0;
     m_capacity = 0;
@@ -273,7 +273,7 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
         uint32 capacitySize = askedCapacity * sizeof(T);
         if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
         {
-            T* tmp = (T*) Allocator::Realloc(m_data, m_capacity * sizeof(T), capacitySize);
+            T* tmp = (T*) m_allocator.Realloc(m_data, m_capacity * sizeof(T), capacitySize);
 
             if (tmp == NULL)
             {
@@ -284,7 +284,7 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
         }
         else
         {
-            T* tmp = (T*) Allocator::Allocate(capacitySize);
+            T* tmp = (T*) m_allocator.Allocate(capacitySize);
 
             if (tmp == NULL)
             {
@@ -298,7 +298,7 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
                 m_data[i].~T();
             }
 
-            Allocator::Free(m_data);
+            m_allocator.Free(m_data);
             m_data = tmp;
         }
     }

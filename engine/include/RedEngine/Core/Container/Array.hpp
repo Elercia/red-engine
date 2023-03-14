@@ -17,9 +17,9 @@ namespace red
 {
 struct DefaultAllocator
 {
-    static inline void* Allocate(uint32 size);
-    static inline void Free(void* ptr);
-    static inline void* Realloc(void* ptr, uint32 oldSize, uint32 size);
+    inline void* Allocate(uint32 size);
+    inline void Free(void* ptr);
+    inline void* Realloc(void* ptr, uint32 oldSize, uint32 size);
 };
 
 template <typename T, typename Allocator = DefaultAllocator>
@@ -118,6 +118,7 @@ private:
     void Destroy(size_type from, size_type to);
     void Destroy(iterator from, iterator to);
 
+    Allocator m_allocator;
     size_type m_size{0};
     size_type m_capacity{0};
     T* m_data{nullptr};
