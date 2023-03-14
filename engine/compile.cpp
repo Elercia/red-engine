@@ -32,6 +32,7 @@
 #include "RedEngine/Utils/SystemInfo.hpp"
 
 #include "RedEngine/Thread/Thread.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
@@ -167,6 +168,7 @@
 #include "Core/Time/Time.cpp"
 
 #include "Thread/Thread.cpp"
+#include "Thread/ExecutionGraph.cpp"
 
 #include "Filesystem/File.cpp"
 #include "Filesystem/Path.cpp"
