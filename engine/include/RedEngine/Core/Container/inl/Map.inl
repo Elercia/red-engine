@@ -207,7 +207,7 @@ std::pair<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator, bool> Map<Ke
     else
     {
         m_size++;
-        bucket.value = value;
+        new (bucket.value) value_type(value);
         bucket.used = true;
         bucket.erased = false;
     }
@@ -231,7 +231,7 @@ std::pair<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator, bool> Map<Ke
     else
     {
         m_size++;
-        bucket.value = std::move(value);
+        new (bucket.value) value_type( std::move(value) );
         bucket.used = true;
         bucket.erased = false;
     }
@@ -299,7 +299,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashO
 
         m_size--;
 
-        bucket.value.~KeyValuePair();
+        ((value_type*) bucket.value)->~KeyValuePair();
     }
 
     return iterator(this, GetNext(index));
@@ -320,7 +320,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::iterator Map<KeyT, ValueT, HashO
 
         m_size--;
 
-        bucket.value.~KeyValuePair();
+        ((value_type*) bucket.value)->~KeyValuePair();
     }
 
     return iterator(this, GetNext(index));
@@ -437,7 +437,9 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::value_type* Map<KeyT, ValueT, Ha
     const Bucket& bucket = m_values[index];
     RedAssert(bucket.used);
 
-    return const_cast<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::value_type*>(&bucket.value);
+    const value_type* val = (const value_type*) bucket.value;
+
+    return const_cast<typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::value_type*>(val);
 }
 
 template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
@@ -457,7 +459,7 @@ typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::size_type Map<KeyT, ValueT, Hash
     auto* bucket = &inside[index];
     while (true)
     {
-        if (!bucket->used || EqualsOpT::Equals(bucket->value.first, key))
+        if (!bucket->used || EqualsOpT::Equals(((value_type*) bucket->value)->first, key))
             break;
 
         if constexpr (forInsertion)
@@ -518,11 +520,12 @@ void Map<KeyT, ValueT, HashOpT, EqualsOpT>::Rehash(
     {
         if (currentBucket.used)
         {
-            auto newIndex = GetIndexOf<true>(currentBucket.value.first, newBuckets);
+            value_type* val = ((value_type*) currentBucket.value);
+            auto newIndex = GetIndexOf<true>(val->first, newBuckets);
 
             Bucket& newBucket = newBuckets[newIndex];
             newBucket.used = true;
-            newBucket.value = std::move(currentBucket.value);
+            new (newBucket.value) value_type(std::move(*val));
         }
     }
 
