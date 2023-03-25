@@ -10,6 +10,22 @@
 
 #include "TestModule.hpp"
 
+static red::CVar<int> s_TestCVar("Test", "TestCat", 10);
+
+TEST_CASE("Cvar value", "[Configuration]")
+{
+    REQUIRE(s_TestCVar == 10);
+
+    auto& manager = red::CVarManager::GetInstance();
+
+    auto cvar = manager.GetFromName<int>("TestCat_Test");
+
+    cvar.ChangeValue(15);
+
+    REQUIRE(cvar.GetValue() == 15);
+    REQUIRE(s_TestCVar == 15);
+}
+
 TEST_CASE("INI file parsing", "[Configuration]")
 {
     auto catKeyValues = red::utils::IniReader::ReadFromFile(red::Path::Resource("config.ini"));
