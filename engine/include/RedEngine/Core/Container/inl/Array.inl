@@ -19,12 +19,15 @@ void* DefaultAllocator::Realloc(void* ptr, uint32 /*oldSize*/, uint32 size)
 }
 
 template <typename T, typename Allocator>
-Array<T, Allocator>::Array()
+Array<T, Allocator>::Array() : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
+    m_size = 0;
+    m_capacity = 0;
+    m_data = nullptr;
 }
 
 template <typename T, typename Allocator>
-Array<T, Allocator>::Array(std::initializer_list<T> list)
+Array<T, Allocator>::Array(std::initializer_list<T> list) : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
     reserve((uint32) list.size());
 
@@ -42,6 +45,7 @@ Array<T, Allocator>::~Array()
 template <typename T, typename Allocator>
 template <typename OtherAllocator>
 Array<T, Allocator>::Array(const Array<T, OtherAllocator>& other)
+    : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
     reserve(other.m_size);
 
@@ -52,7 +56,7 @@ Array<T, Allocator>::Array(const Array<T, OtherAllocator>& other)
 }
 
 template <typename T, typename Allocator>
-Array<T, Allocator>::Array(const Array<T, Allocator>& other)
+Array<T, Allocator>::Array(const Array<T, Allocator>& other) : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
     reserve(other.m_size);
 
@@ -203,8 +207,6 @@ typename Array<T, Allocator>::iterator Array<T, Allocator>::erase(const_iterator
 
     m_size -= valueErased;
 
-    reserve(m_size);
-
     return const_cast<iterator>(first);
 }
 
@@ -271,7 +273,7 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
     if (askedCapacity != 0)
     {
         uint32 capacitySize = askedCapacity * sizeof(T);
-        if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
+        if constexpr (std::is_trivial_v<T>)
         {
             T* tmp = (T*) m_allocator.Realloc(m_data, m_capacity * sizeof(T), capacitySize);
 
@@ -294,7 +296,11 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
             // Copy members from old location to the new one
             for (size_type i = 0; i < m_size; i++)
             {
-                new (tmp + i) T(std::move(m_data[i]));
+                if constexpr ( std::is_move_constructible_v<T>)
+                    new (tmp + i) T(std::move(m_data[i]));
+                else
+                    new (tmp + i) T(m_data[i]);
+
                 m_data[i].~T();
             }
 
@@ -442,7 +448,11 @@ typename Array<T, Allocator>::iterator Array<T, Allocator>::insert(const_iterato
         // move elements from [position;end] to [position+nbElem; end+nbElem]
         for (auto i = positionIndex; i < m_size; ++i)
         {
-            new (m_data + i + nbElem) T(std::move(*(m_data + i)));
+            if constexpr (std::is_move_constructible_v<T>)
+                new (m_data + i + nbElem) T(std::move(*(m_data + i)));
+            else 
+                new (m_data + i + nbElem) T(*(m_data + i));
+
             (m_data + i)->~T();
         }
     }

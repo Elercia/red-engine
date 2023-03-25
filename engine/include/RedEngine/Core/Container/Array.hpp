@@ -119,9 +119,9 @@ private:
     void Destroy(iterator from, iterator to);
 
     Allocator m_allocator;
-    size_type m_size{0};
-    size_type m_capacity{0};
-    T* m_data{nullptr};
+    size_type m_size;
+    size_type m_capacity;
+    T* m_data;
 };
 }  // namespace red
 #else  // RED_USE_ARRAY
