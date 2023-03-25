@@ -63,13 +63,13 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     {
         static ImGuiComboFlags flags = 0;
         LogLevel currentLogLevel = GetRedLogger()->GetLogLevel();
-        if (ImGui::BeginCombo("Log level", Logger::logLevelAsString.at(currentLogLevel).c_str(), flags))
+        if (ImGui::BeginCombo("Log level", Logger::logLevelAsString[(int)currentLogLevel].c_str(), flags))
         {
-            for (auto& item : Logger::logLevelAsString)
+            for (int level = 0; level < 7; level++)
             {
-                const bool is_selected = item.first == currentLogLevel;
-                if (ImGui::Selectable(item.second.c_str(), is_selected))
-                    SetLogLevel(item.first);
+                const bool is_selected = LogLevel(level) == currentLogLevel;
+                if (ImGui::Selectable(Logger::logLevelAsString[level].c_str(), is_selected))
+                    SetLogLevel(LogLevel(level));
 
                 // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
                 if (is_selected)
@@ -84,9 +84,9 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     static uint32 selectedLogLevels = (uint32) -1;
     std::string shownLevels;
     int bit = 1;
-    for (auto& item : Logger::logLevelAsString)
+    for (int level = 0; level < 7; level++)
     {
-        const bool isSelected = ((1 << (uint32) item.first) & selectedLogLevels) != 0;
+        const bool isSelected = ((1 << (uint32) level) & selectedLogLevels) != 0;
         if (isSelected)
         {
             if (bit != 1)
@@ -94,7 +94,7 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
                 shownLevels += "|";
             }
 
-            shownLevels += item.second;
+            shownLevels += Logger::logLevelAsString[level];
         }
 
         bit++;
@@ -106,18 +106,18 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
 
         if (ImGui::BeginCombo("Shown log levels", shownLevels.c_str(), flags))
         {
-            for (auto& item : Logger::logLevelAsString)
+            for (int level = 0; level < 7; level++)
             {
-                const bool isSelected = ((1 << (uint32) item.first) & selectedLogLevels) != 0;
-                if (ImGui::Selectable(item.second.c_str(), isSelected))
+                const bool isSelected = ((1 << (uint32) level) & selectedLogLevels) != 0;
+                if (ImGui::Selectable(Logger::logLevelAsString[level].c_str(), isSelected))
                 {
                     if (isSelected)
                     {
-                        selectedLogLevels &= ~(1 << (uint32) item.first);
+                        selectedLogLevels &= ~(1 << (uint32) level);
                     }
                     else
                     {
-                        selectedLogLevels |= (1 << (uint32) item.first);
+                        selectedLogLevels |= (1 << (uint32) level);
                     }
                 }
             }
