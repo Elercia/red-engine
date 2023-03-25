@@ -1,11 +1,12 @@
-#include "TestModule.hpp"
-
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 
 #include <catch2/catch.hpp>
+
+#include "EngineTest.hpp"
+#include "TestModule.hpp"
 
 int size(b2Fixture* fixture)
 {
