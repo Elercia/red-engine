@@ -137,14 +137,14 @@ void Engine::SetupLogger()
 #ifdef RED_DEVBUILD
     // Always add standard output when debugging
     standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
-#endif // RED_DEVBUILD
+#endif  // RED_DEVBUILD
 
 #if defined(RED_WINDOWS) && defined(RED_DEVBUILD)
     if (IsDebuggerPresent() != 0)
     {
         debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
     }
-#endif // defined(RED_WINDOWS) && defined(RED_DEVBUILD)
+#endif  // defined(RED_WINDOWS) && defined(RED_DEVBUILD)
 
     if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
     {
