@@ -144,7 +144,7 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     using namespace red;
     using namespace EntityDestroyRemoveComp;
 
-    red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
+   auto engine = red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
 
     red::World world;
     world.Init();
@@ -163,4 +163,6 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     world.Update();
 
     REQUIRE(testSystem->m_entityCount == 0);
+
+    engine->Destroy();
 }

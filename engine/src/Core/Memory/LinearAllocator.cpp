@@ -65,11 +65,14 @@ void DoubleLinearAllocator::Reset()
 void DoubleLinearAllocator::Swap()
 {
     m_currentAllocator = (m_currentAllocator + 1) % 2;
+    Reset();
 }
 
 void* DoubleLinearArrayAllocator::Allocate(uint32 size)
 {
-    return Engine::GetInstance()->GetFrameAllocator().Allocate(size);
+    auto threadId = Thread::GetCurrentThread().GetId();
+    auto& allocator = Engine::GetInstance()->GetThreadFrameAllocator(threadId);
+    return allocator.Allocate(size);
 }
 
 void DoubleLinearArrayAllocator::Free(void* /*ptr*/)
@@ -78,7 +81,7 @@ void DoubleLinearArrayAllocator::Free(void* /*ptr*/)
 
 void* DoubleLinearArrayAllocator::Realloc(void* ptr, uint32 oldSize, uint32 size)
 {
-    auto* ret = Engine::GetInstance()->GetFrameAllocator().Allocate(size);
+    auto* ret = Engine::GetInstance()->GetThreadFrameAllocator(Thread::GetCurrentThread().GetId()).Allocate(size);
 
     if (ptr != nullptr && ret != nullptr)
         memcpy(ret, ptr, oldSize);

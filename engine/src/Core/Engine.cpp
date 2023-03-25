@@ -58,7 +58,7 @@ Engine* Engine::GetInstance()
     return s_engine;
 }
 
-Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr), m_frameAllocator(RED_DEFAULT_FRAMEALLOCATOR_SIZE)
+Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr), m_frameAllocator(nullptr)
 {
 }
 
@@ -82,8 +82,10 @@ void Engine::MainLoop()
 
         continueExec = m_world->Update();
 
-        m_frameAllocator.Swap();
-        m_frameAllocator.Reset();
+        for (int i = 0; i < m_scheduler.GetWorkerCount(); i++)
+        {
+            m_frameAllocator[i].Swap();   
+        }
     }
 }
 
@@ -154,6 +156,17 @@ void Engine::SetupLogger()
     RED_LOG_INFO("Setup logger for output {}, debugger {}", standarOutputFuncIndex != -1, debugOutputFuncIndex != -1);
 }
 
+void Engine::InitAllocator()
+{
+    auto workerCount = m_scheduler.GetWorkerCount();
+    m_frameAllocator = (DoubleLinearAllocator*) red_malloc(workerCount * sizeof(DoubleLinearAllocator));
+
+    for (int i = 0; i < workerCount; i++)
+    {
+        new (m_frameAllocator + i) DoubleLinearAllocator(RED_DEFAULT_FRAMEALLOCATOR_SIZE);
+    }
+}
+
 bool Engine::Create()
 {
     PROFILER_EVENT();
@@ -167,6 +180,8 @@ bool Engine::Create()
     InitRandomEngine(42);
 
     m_scheduler.Init();
+
+    InitAllocator();
 
     m_world = new World;
 
@@ -216,6 +231,8 @@ bool Engine::Destroy()
 
     delete m_world;
 
+    red_free(m_frameAllocator);
+
     m_scheduler.Finalize();
 
     PROFILER_SHUTDOWN();
@@ -228,9 +245,9 @@ std::string_view Engine::GetGameName() const
     return "RedEngine";
 }
 
-DoubleLinearAllocator& Engine::GetFrameAllocator()
+DoubleLinearAllocator& Engine::GetThreadFrameAllocator(int threadIndex)
 {
-    return m_frameAllocator;
+    return m_frameAllocator[threadIndex];
 }
 
 ThreadScheduler& Engine::GetScheduler()

@@ -35,8 +35,9 @@ public:
     virtual bool RegisterComponentTypes();
 
     virtual void SetupLogger();
+    void InitAllocator();
 
-    DoubleLinearAllocator& GetFrameAllocator();
+    DoubleLinearAllocator& GetThreadFrameAllocator(int threadIndex);
 
     ThreadScheduler& GetScheduler();
 
@@ -46,7 +47,7 @@ protected:
 
     World* m_world;
 
-    DoubleLinearAllocator m_frameAllocator;
+    DoubleLinearAllocator* m_frameAllocator; // dynamic array initialized when the threading system is init
 
     ThreadScheduler m_scheduler;
 

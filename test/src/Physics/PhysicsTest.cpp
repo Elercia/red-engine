@@ -22,6 +22,9 @@ int size(b2Fixture* fixture)
 TEST_CASE("Component binding", "[PHYSICS]")
 {
     using namespace red;
+
+    auto engine = CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
+
     World w;
     w.Init();
     w.RegisterComponentType<PhysicBody>();
@@ -67,4 +70,6 @@ TEST_CASE("Component binding", "[PHYSICS]")
     REQUIRE(size(body->GetBody()->GetFixtureList()) == 3);
 
     system->Finalize();
+
+    engine->Destroy();
 }

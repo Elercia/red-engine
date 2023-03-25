@@ -33,6 +33,37 @@ TEST_CASE("Array push back", "[Array]")
     REQUIRE(intArray.size() == 0);
 }
 
+TEST_CASE("Array custom allocator", "[Array]")
+{
+    struct TestAllocator
+    {
+        inline void* Allocate(uint32 size)
+        {
+            return malloc(size);
+        }
+        inline void Free(void* ptr)
+        {
+            free(ptr);
+        }
+        inline void* Realloc(void* ptr, uint32 /*oldSize*/, uint32 size)
+        {
+            return realloc(ptr, size);
+        }
+    };
+    Array<std::tuple<int, float>, TestAllocator> intArray;
+    REQUIRE(intArray.empty());
+
+    for (int i = 0; i < 100; i++)
+        intArray.push_back({i, 10.f});
+
+    REQUIRE(intArray.size() == 100);
+    REQUIRE(intArray.capacity() == Math::NextPowerOf2(100));
+
+    intArray.clear();
+
+    REQUIRE(intArray.size() == 0);
+}
+
 TEST_CASE("Array accessors", "[Array]")
 {
     Array<int> arr;
