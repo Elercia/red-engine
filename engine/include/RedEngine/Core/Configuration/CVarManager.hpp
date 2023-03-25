@@ -2,9 +2,10 @@
 
 #include "RedEngine/Core/Configuration/CVarUtils.hpp"
 #include "RedEngine/Core/Container/Map.hpp"
-#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
+#include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <string>
 
@@ -16,16 +17,19 @@ class CVar;
 template <typename Type>
 class CVarValue;
 
-class CVarManager
+class CVarManager : public Uncopyable, public Unmovable
 {
 public:
     static CVarManager& GetInstance();
 
     template <typename T>
     static CVarValue<T>* NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
-                                              const T& defaultValue);
+                                                       const T& defaultValue);
 
     static void LoadConfigFile(const Path& path);
+
+    template <typename T>
+    CVar<T> GetFromName(const std::string& fullName);
 
 public:
     CVarManager();
@@ -36,7 +40,7 @@ private:
 
     template <typename T>
     CVarValue<T>* NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
-                                                 const T& defaultValue);
+                                                        const T& defaultValue);
 
     ICVar* FindCVar(const std::string& fullName);
 

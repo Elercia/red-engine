@@ -16,7 +16,7 @@ class ICVar
 {
 public:
     ICVar(const std::string& name, const std::string& category);
-    ~ICVar() = default;
+    virtual ~ICVar() = default;
 
     [[nodiscard]] std::string GetName() const;
     [[nodiscard]] std::string GetCategory() const;
@@ -43,7 +43,7 @@ public:
     using ValueChangeDelegate = Delegate<CVarValue<T>>;
 
     CVarValue(const std::string& name, const std::string& category, const T& defaultValue);
-    ~CVarValue() = default;
+    virtual ~CVarValue() override = default;
 
     void ChangeValue(const T& newValue);
     void Reset();
@@ -67,6 +67,7 @@ class CVar
 
 public:
     CVar(const std::string& name, const std::string& category, const T& defaultValue);
+    CVar(CVarValue<T>* value);
     ~CVar() = default;
 
     [[nodiscard]] inline T& GetValue();
