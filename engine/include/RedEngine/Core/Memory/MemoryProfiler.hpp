@@ -6,6 +6,7 @@
 #include <cstddef>
 
 #define RED_MEMORY_PROFILER
+
 #ifdef RED_MEMORY_PROFILER
 #define red_malloc(size)       red::MemoryProfiler::Allocate(size, __LINE__, __FILE__)
 #define red_realloc(ptr, size) red::MemoryProfiler::Realloc(ptr, size, __LINE__, __FILE__)
@@ -28,16 +29,15 @@ namespace red
 {
 struct AllocationInfo
 {
-    uint32 start;
-
     std::size_t size;
+    
+#ifdef RED_MEMORY_LEAK_TRACER
     int line;
     const char* file;
+#endif
 
     AllocationInfo* next;
     AllocationInfo* previous;
-
-    uint32 end;
 };
 
 struct MemoryUsageInfo
@@ -64,14 +64,16 @@ public:
 
     static void InitAllocInfo(AllocationInfo* info);
 
-    static const MemoryUsageInfo& GetUsage();
+    static MemoryUsageInfo GetUsage();
     static void ResetUsage();
 
 private:
     MemoryProfiler() = default;
     ~MemoryProfiler() = default;
 
+#ifdef RED_MEMORY_LEAK_TRACER
     static AllocationInfo* s_rootAllocation;
+#endif
     static MemoryUsageInfo s_memoryUsage;
 };
 }  // namespace red
