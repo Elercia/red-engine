@@ -82,7 +82,8 @@ template <typename T>
 bool World::RegisterComponentType()
 {
     static_assert(std::is_base_of<Component, T>::value, "RegisterComponentType called on non component type");
-    static_assert(!std::is_polymorphic<T>::value, "RegisterComponentType called with a component that is virtual. This is not allowed");
+    static_assert(!std::is_polymorphic<T>::value,
+                  "RegisterComponentType called with a component that is virtual. This is not allowed");
 
     auto type = TypeInfo<T>();
     auto [inserted, compData] = m_componentRegistry->CreateNewComponentTraits(type.typeId);
@@ -91,11 +92,20 @@ bool World::RegisterComponentType()
     if (inserted)
     {
         compData->componentTypeTraits = type;
-        compData->creator = [=](Entity* owner)
+        compData->creator = [=](Entity* owner) -> Component*
         {
-            auto comp = new T(owner);
+            auto* memory = red_malloc(sizeof(T));
+            auto comp = new(memory) T(owner);
             comp->m_typeTraits = type;
             return comp;
+        };
+        compData->destroyer = [=](Component* comp) -> void
+        {
+            RedAssert(comp->m_typeTraits.typeId == TypeInfo<T>().typeId);
+
+            T* casted = (T*) comp;
+            casted->~T();
+            red_free(casted);
         };
         RegisterMembers<T>(*compData);
     }

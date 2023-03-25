@@ -17,7 +17,9 @@ ComponentTypeT* ComponentManager::CreateComponent(Entity* owner, Args&&... args)
         return comp;
     }
 
-    auto* createdComponent = new ComponentTypeT(owner, std::forward<Args>(args)...);
+    auto* memory = red_malloc(sizeof(ComponentTypeT));
+
+    auto* createdComponent = new (memory) ComponentTypeT(owner, std::forward<Args>(args)...);
     createdComponent->m_typeTraits = TypeInfo<ComponentTypeT>();
 
     AddComponent(owner, createdComponent);

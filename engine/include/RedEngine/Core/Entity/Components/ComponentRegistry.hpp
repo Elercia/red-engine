@@ -38,6 +38,7 @@ struct ComponentTraits
     TypeTraits componentTypeTraits;
     Map<std::string, ComponentMemberTraits> members;  // member name to Traits
     std::function<Component*(Entity* owner)> creator;
+    std::function<void(Component* comp)> destroyer; // Component are not virtual. This callback is used to call the right destructor
 
     template <typename ComponentTypeT, typename MemberTypeT>
     void AddMember(const std::string& name, MemberTypeT ComponentTypeT::*memberAddr, const std::string& tooltip,
