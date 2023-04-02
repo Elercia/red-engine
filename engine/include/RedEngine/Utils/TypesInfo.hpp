@@ -32,12 +32,12 @@ struct TypeTraits
     std::string_view name;
     TypeTraitsId typeId;
 
-    bool operator==(const TypeTraits& other)
+    bool operator==(const TypeTraits& other) const
     {
         return other.typeId == typeId;
     }
 
-    bool operator!=(const TypeTraits& other)
+    bool operator!=(const TypeTraits& other) const
     {
         return other.typeId != typeId;
     }
