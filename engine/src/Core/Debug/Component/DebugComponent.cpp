@@ -67,7 +67,7 @@ int DebugComponent::AddDebugDrawer(const char* name, DebugMenuDrawerFunc&& callb
 
 void DebugComponent::RemoveDebugDrawer(int id)
 {
-    auto index = m_drawers.Find([=](const DebugDrawer& e) { return e.id == id; });
+    auto index = m_drawers.FindIf([=](const DebugDrawer& e) { return e.id == id; });
     if (index != m_drawers.npos)
     {
         m_drawers.erase(m_drawers.begin() + index);

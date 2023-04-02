@@ -70,6 +70,9 @@ template <typename T, typename Allocator>
 template <typename OtherAllocator>
 Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, OtherAllocator>& other)
 {
+    if (this == &other)
+        return *this;
+
     reserve(other.m_size);
 
     for (auto& it : other)
@@ -83,6 +86,9 @@ Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, OtherAllocato
 template <typename T, typename Allocator>
 Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, Allocator>& other)
 {
+    if (this == &other)
+        return *this;
+
     reserve(other.m_size);
 
     for (auto& it : other)
@@ -105,16 +111,15 @@ Array<T, Allocator>::Array(Array<T, Allocator>&& other)
 template <typename T, typename Allocator>
 Array<T, Allocator>& Array<T, Allocator>::operator=(Array<T, Allocator>&& other)
 {
+    if (this == &other)
+        return *this;
+
     Destroy(begin(), end());
     m_allocator.Free(m_data);
 
-    m_size = std::move(other.m_size);
-    m_capacity = std::move(other.m_capacity);
-    m_data = std::move(other.m_data);
-
-    other.m_size = 0;
-    other.m_capacity = 0;
-    other.m_data = nullptr;
+    m_size = std::exchange(other.m_size, 0);
+    m_capacity = std::exchange(other.m_capacity, 0);
+    m_data = std::exchange(other.m_data, nullptr);
 
     return *this;
 }
@@ -495,12 +500,12 @@ void Array<T, Allocator>::Destroy(iterator from, iterator to)
 template <typename T, typename Allocator>
 typename Array<T, Allocator>::size_type Array<T, Allocator>::Find(const T& toFind) const
 {
-    return Find([&toFind](const T& elem) { return elem == toFind; });
+    return FindIf([&toFind](const T& elem) { return elem == toFind; });
 }
 
 template <typename T, typename Allocator>
 template <typename Predicate>
-typename Array<T, Allocator>::size_type Array<T, Allocator>::Find(Predicate&& pred) const
+typename Array<T, Allocator>::size_type Array<T, Allocator>::FindIf(Predicate&& pred) const
 {
     for(int i = 0, max = size(); i < max; i++)
     {

@@ -111,7 +111,7 @@ public:
     size_type Find(const T& toFind) const;
 
     template <typename Predicate>
-    size_type Find(Predicate&& pred) const;
+    size_type FindIf(Predicate&& pred) const;
 
 private:
     void SetCapacity(size_type askedCapacity);
