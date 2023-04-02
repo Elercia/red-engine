@@ -143,6 +143,9 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::ThisType& Map<KeyT, ValueT, HashOpT, EqualsOpT>::operator=(
     const typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::ThisType& other)
 {
+    if (this == &other)
+        return *this;
+
     m_values = other.m_values;
     m_size = other.m_size;
 
@@ -153,6 +156,9 @@ template <typename KeyT, typename ValueT, typename HashOpT, typename EqualsOpT>
 typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::ThisType& Map<KeyT, ValueT, HashOpT, EqualsOpT>::operator=(
     typename Map<KeyT, ValueT, HashOpT, EqualsOpT>::ThisType&& other)
 {
+    if (this == &other)
+        return *this;
+
     m_values = std::move(other.m_values);
     m_size = std::move(other.m_size);
 
