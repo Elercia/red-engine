@@ -1,12 +1,14 @@
 #include "SystemTest.hpp"
 
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 
 #include <catch2/catch.hpp>
 #include <iostream>
 
-#include "TestModule.hpp"
 #include "EngineTest.hpp"
+#include "TestModule.hpp"
 
 TEST_CASE("System", "[ECS]")
 {
@@ -23,6 +25,10 @@ TEST_CASE("System", "[ECS]")
 
     size_t baseSystemCount = world.GetSystems().size();
     auto* mockSystemPtr = world.AddSystem<MockSystem>();
+
+    ExecutionGraph graph;
+    graph.AddStage(SystemGraphStageBuilder::NewStage(&world).AddSystem<MockSystem>().Build());
+    world.SetExecutionGraph(std::move(graph));
 
     SECTION("Adding mock system")
     {
@@ -69,7 +75,9 @@ TEST_CASE("System RO/RW introspection", "[ECS]")
         {
         }
 
-        void Update() override {}
+        void Update() override
+        {
+        }
     };
 
     auto* engine = CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
@@ -86,16 +94,16 @@ TEST_CASE("System RO/RW introspection", "[ECS]")
     auto rwComponents = testSystemPtr->GetRWComponents();
 
     REQUIRE(std::find_if(roComponents.begin(), roComponents.end(),
-                      [](const TypeTraits& type)
-                      { return type.typeId == TypeInfo<MockComponent1>().typeId; }) != roComponents.end());
+                         [](const TypeTraits& type)
+                         { return type.typeId == TypeInfo<MockComponent1>().typeId; }) != roComponents.end());
 
     REQUIRE(std::find_if(rwComponents.begin(), rwComponents.end(),
-                      [](const TypeTraits& type)
-                      { return type.typeId == TypeInfo<MockComponent2>().typeId; }) != rwComponents.end());
+                         [](const TypeTraits& type)
+                         { return type.typeId == TypeInfo<MockComponent2>().typeId; }) != rwComponents.end());
 
     REQUIRE(std::find_if(rwComponents.begin(), rwComponents.end(),
-                      [](const TypeTraits& type)
-                      { return type.typeId == TypeInfo<MockComponent11>().typeId; }) != rwComponents.end());
+                         [](const TypeTraits& type)
+                         { return type.typeId == TypeInfo<MockComponent11>().typeId; }) != rwComponents.end());
 
     engine->Destroy();
 }

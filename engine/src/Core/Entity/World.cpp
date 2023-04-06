@@ -98,6 +98,11 @@ void World::InitSystems()
     m_addedSystems.clear();
 }
 
+void World::SetExecutionGraph(ExecutionGraph&& graph)
+{
+    m_executionGraph = std::move(graph);
+}
+
 void World::BuildExecutionGraph()
 {
     m_executionGraph.New()

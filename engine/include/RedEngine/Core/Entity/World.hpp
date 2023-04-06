@@ -64,6 +64,7 @@ public:
     void Finalize();
 
     void InitSystems();
+    void SetExecutionGraph(ExecutionGraph&& graph);
     void BuildExecutionGraph();
 
     bool Update();

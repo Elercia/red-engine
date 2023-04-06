@@ -2,6 +2,8 @@
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/SystemInfo.hpp"
 
 #include <catch2/catch.hpp>
@@ -144,7 +146,7 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     using namespace red;
     using namespace EntityDestroyRemoveComp;
 
-   auto engine = red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
+    auto engine = red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
 
     red::World world;
     world.Init();
@@ -155,6 +157,9 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     auto* entityA = world.CreateWorldEntity("a");
     entityA->AddComponent<MockComponent1>();
 
+    ExecutionGraph graph;
+    graph.AddStage(SystemGraphStageBuilder::NewStage(&world).AddSystem<TestSystem>().Build());
+    world.SetExecutionGraph(std::move(graph));
     world.Update();
 
     REQUIRE(testSystem->m_entityCount == 1);

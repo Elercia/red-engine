@@ -8,7 +8,8 @@ using namespace red;
 
 TEST_CASE( "Simple execution graph", "[Thread]" )
 {
-	auto graph = ExecutionGraph::New();
+    ExecutionGraph graph;
+	graph.New();
 
 	int executionOrders[10];
 	int executionIndex = 0;

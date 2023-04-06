@@ -6,24 +6,27 @@
 
 namespace red
 {
-	class ExecutionGraph
-	{
-	public:
-        ExecutionGraph();
-		ExecutionGraph& New();
+class ExecutionGraph
+{
+public:
+    ExecutionGraph();
+    ExecutionGraph& New();
 
-		using StageFunc = std::function<void( void )>;
+    using StageFunc = std::function<void(void)>;
 
-		ExecutionGraph& AddStage( StageFunc&& fn );
+    ExecutionGraph& AddStage(StageFunc&& fn);
 
-		void Clear();
-		void Run();
+    void Clear();
+    void Run();
 
-	private:
-		ExecutionGraph( ExecutionGraph&& ) = delete;
-		ExecutionGraph& operator=( ExecutionGraph&& ) = delete;
+    ExecutionGraph(ExecutionGraph&&) = default;
+    ExecutionGraph& operator=(ExecutionGraph&&) = default;
 
-	private:
-		Array<StageFunc> m_stages;
-	};
-}
+private:
+    ExecutionGraph(const ExecutionGraph&) = delete;
+    ExecutionGraph& operator=(const ExecutionGraph&) = delete;
+
+private:
+    Array<StageFunc> m_stages;
+};
+}  // namespace red
