@@ -6,9 +6,12 @@
 #include <iostream>
 
 #include "TestModule.hpp"
+#include "EngineTest.hpp"
 
 TEST_CASE("System", "[ECS]")
 {
+    auto* engine = CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
+
     red::World world;
     world.Init();
     world.RegisterComponentType<red::EventsComponent>();
@@ -51,6 +54,8 @@ TEST_CASE("System", "[ECS]")
         REQUIRE(mockSystemPtr->m_hasBeenUpdated);
         REQUIRE(mockSystemPtr->m_entityCount == 1);  // only e2 has the right components types
     }
+
+    engine->Destroy();
 }
 
 TEST_CASE("System RO/RW introspection", "[ECS]")
@@ -66,6 +71,8 @@ TEST_CASE("System RO/RW introspection", "[ECS]")
 
         void Update() override {}
     };
+
+    auto* engine = CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
 
     red::World world;
     world.Init();
@@ -89,4 +96,6 @@ TEST_CASE("System RO/RW introspection", "[ECS]")
     REQUIRE(std::find_if(rwComponents.begin(), rwComponents.end(),
                       [](const TypeTraits& type)
                       { return type.typeId == TypeInfo<MockComponent11>().typeId; }) != rwComponents.end());
+
+    engine->Destroy();
 }

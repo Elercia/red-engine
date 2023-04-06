@@ -4,32 +4,33 @@
 
 namespace red
 {
-	ExecutionGraph ExecutionGraph::New()
-	{
-		return ExecutionGraph();
-	}
-
-	ExecutionGraph& ExecutionGraph::AddStage( StageFunc&& fn )
-	{
-		m_stages.push_back( std::move( fn ) ); 
-
-		return *this;
-	}
-
-	void ExecutionGraph::Run()
-	{
-		for( auto& fn : m_stages )
-		{
-			fn();
-		}
-	}
-
-	void ExecutionGraph::Clear()
-	{
-		m_stages.clear();
-	}
-
-	ExecutionGraph::ExecutionGraph() : m_stages()
-	{
-	}
+ExecutionGraph& ExecutionGraph::New()
+{
+    m_stages.clear();
+    return *this;
 }
+
+ExecutionGraph& ExecutionGraph::AddStage(StageFunc&& fn)
+{
+    m_stages.push_back(std::move(fn));
+
+    return *this;
+}
+
+void ExecutionGraph::Run()
+{
+    for (auto& fn : m_stages)
+    {
+        fn();
+    }
+}
+
+void ExecutionGraph::Clear()
+{
+    m_stages.clear();
+}
+
+ExecutionGraph::ExecutionGraph() : m_stages()
+{
+}
+}  // namespace red

@@ -6,21 +6,16 @@
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 #include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
-#include "RedEngine/Audio/System/AudioSystem.hpp"
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
-#include "RedEngine/Core/Event/System/EventSystem.hpp"
 #include "RedEngine/Core/Time/FrameCounter.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
-#include "RedEngine/Input/System/UserInputSystem.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
-#include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
@@ -30,7 +25,6 @@
 #include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
-#include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/Random.hpp"
 
@@ -200,21 +194,8 @@ bool Engine::Create()
     resourceHolder->RegisterResourceLoader(ResourceType::GEOMETRY, new GeometryResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SHADER_PROGRAM, new ShaderProgramResourceLoader(m_world));
 
-    m_world->AddSystem<BeginNextFrameRenderingSystem>();
-    m_world->AddSystem<UserInputSystem>();
-    m_world->AddSystem<EventSystem>();
-    m_world->AddSystem<PhysicSystem>();
-    m_world->AddSystem<SpriteAnimationSystem>();
-    m_world->AddSystem<AudioSystem>();
-    m_world->AddSystem<UpdateRenderableSystem>();
-
-#ifdef RED_DEVBUILD
-    m_world->AddSystem<DebugSystem>();
-#endif
-
-    m_world->AddSystem<FlushRenderSystem>();
-
-    m_world->InitSystems();
+    m_world->BuildExecutionGraph(); 
+    m_world->InitSystems();// TODO Remove this init systems call and find a way to have "InitSystems" resposible 
 
     return true;
 }

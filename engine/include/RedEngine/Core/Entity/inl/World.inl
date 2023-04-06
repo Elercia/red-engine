@@ -7,6 +7,9 @@ T* World::AddSystem(Args&&... args)
 
     auto info = TypeInfo<T>();
 
+    if (auto* alreadyAddedSystem = GetSystem<T>(); alreadyAddedSystem != nullptr)
+        return alreadyAddedSystem;
+
     T* ptr = new T(this, std::forward<Args>(args)...);
     ptr->SetTraits(info);
 

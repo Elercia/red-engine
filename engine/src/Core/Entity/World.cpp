@@ -2,16 +2,24 @@
 
 #include "RedEngine/Core/CoreModule.hpp"
 
+#include "RedEngine/Audio/System/AudioSystem.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
+#include "RedEngine/Core/Event/System/EventSystem.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
+#include "RedEngine/Input/System/UserInputSystem.hpp"
 #include "RedEngine/Level/JsonLevelLoader.hpp"
 #include "RedEngine/Level/Level.hpp"
+#include "RedEngine/Physics/System/PhysicsSystem.hpp"
+#include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/Random.hpp"
 
 #include <algorithm>
@@ -33,7 +41,6 @@ World::World()
 
 World::~World()
 {
-    Finalize();
 }
 
 void World::OnAddEntity(Entity* entity)
@@ -91,6 +98,27 @@ void World::InitSystems()
     m_addedSystems.clear();
 }
 
+void World::BuildExecutionGraph()
+{
+    m_executionGraph.New()
+        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<BeginNextFrameRenderingSystem>().Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<EventSystem>().Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<UserInputSystem>().Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<PhysicSystem>().Build());
+
+    if (m_currentLevel != nullptr)
+        m_currentLevel->AddGameplaySystems(m_executionGraph);
+
+#ifdef RED_DEVBUILD
+    m_executionGraph.AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<DebugSystem>().Build());
+#endif
+
+    m_executionGraph.AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<SpriteAnimationSystem>().Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<AudioSystem>().Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<UpdateRenderableSystem>().Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<FlushRenderSystem>().Build());
+}
+
 void World::Finalize()
 {
     // Delete current level entities
@@ -131,10 +159,7 @@ bool World::Update()
         tranform->UpdateWorldMatrixIfNeeded();
     }
 
-    for (auto& system : m_systems)
-    {
-        system->Update();
-    }
+    m_executionGraph.Run();
 
     return true;
 }
@@ -186,6 +211,8 @@ void World::ChangeLevel(Level* newLevel)
         RED_LOG_INFO("Change level {}", newLevel->GetName());
 
         m_currentLevel->InternInit();
+
+        BuildExecutionGraph();
     }
 }
 

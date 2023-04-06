@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Memory/PoolAllocator.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <string>
@@ -63,6 +64,7 @@ public:
     void Finalize();
 
     void InitSystems();
+    void BuildExecutionGraph();
 
     bool Update();
 
@@ -87,6 +89,7 @@ private:
     // Collection of system working on the world
     Array<BaseSystem*> m_systems;
     Array<BaseSystem*> m_addedSystems;
+    ExecutionGraph m_executionGraph;
 
     ComponentManager* m_componentManager;
     ComponentRegistry* m_componentRegistry;

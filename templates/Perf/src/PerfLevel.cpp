@@ -8,6 +8,7 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Input/System/UserInputSystem.hpp"
@@ -20,6 +21,7 @@
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/Random.hpp"
 
 using namespace red;
@@ -75,7 +77,9 @@ public:
     }
     ~EntityManager() override = default;
 
-    void Update() override {}
+    void Update() override
+    {
+    }
 
     void Init() override
     {
@@ -154,17 +158,21 @@ void PerfLevel::Init()
 
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
 
-    auto* manager = CreateEntity("Camera");
-    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f),
+    m_manager = CreateEntity("Camera");
+    m_manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f),
                                                 red::Vector2{s_worldSizeMax, s_worldSizeMax});
-    manager->GetComponent<Transform>()->SetLocalPosition({0.f, 0.f});
+    m_manager->GetComponent<Transform>()->SetLocalPosition({0.f, 0.f});
 
-    m_world->AddSystem<CameraManager>(manager);
-    m_world->AddSystem<EntityManager>();
 }
 
 void PerfLevel::Finalize()
 {
+}
+
+void PerfLevel::AddGameplaySystems(red::ExecutionGraph& graph)
+{
+    graph.AddStage(SystemGraphStageBuilder::NewStage(m_world).AddSystem<perf::CameraManager>(m_manager).Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(m_world).AddSystem<perf::EntityManager>().Build());
 }
 
 void PerfLevel::AddEntity(const std::string& name, const red::Vector2& position, red::RenderLayerIndex layerIndex,

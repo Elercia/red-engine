@@ -38,6 +38,7 @@
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Configuration/CVar.hpp"
@@ -152,6 +153,7 @@
 #include "Core/Entity/Components/Transform.cpp"
 #include "Core/Entity/Entity.cpp"
 #include "Core/Entity/System.cpp"
+#include "Core/Entity/SystemExecutionGraph.cpp"
 #include "Core/Entity/World.cpp"
 
 #include "Core/Event/Component/EventsComponent.cpp"

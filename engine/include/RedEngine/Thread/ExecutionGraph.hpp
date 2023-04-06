@@ -9,7 +9,8 @@ namespace red
 	class ExecutionGraph
 	{
 	public:
-		static ExecutionGraph New();
+        ExecutionGraph();
+		ExecutionGraph& New();
 
 		using StageFunc = std::function<void( void )>;
 
@@ -19,7 +20,6 @@ namespace red
 		void Run();
 
 	private:
-		ExecutionGraph();
 		ExecutionGraph( ExecutionGraph&& ) = delete;
 		ExecutionGraph& operator=( ExecutionGraph&& ) = delete;
 
