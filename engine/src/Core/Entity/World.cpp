@@ -118,9 +118,12 @@ void World::BuildExecutionGraph()
     m_executionGraph.AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<DebugSystem>().Build());
 #endif
 
-    m_executionGraph.AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<SpriteAnimationSystem>().Build())
-        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<AudioSystem>().Build())
-        .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<UpdateRenderableSystem>().Build())
+    m_executionGraph
+        .AddStage(SystemGraphStageBuilder::NewStage(this)
+                      .AddSystem<SpriteAnimationSystem>()
+                      .AddSystem<AudioSystem>()
+                      .AddSystem<UpdateRenderableSystem>()
+                      .Build())
         .AddStage(SystemGraphStageBuilder::NewStage(this).AddSystem<FlushRenderSystem>().Build());
 }
 

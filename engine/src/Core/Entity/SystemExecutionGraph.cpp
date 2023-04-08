@@ -67,15 +67,37 @@ SystemGraphStageBuilder& SystemGraphStageBuilder::AddSystem(BaseSystem* system)
 
 std::function<void(void)> SystemGraphStageBuilder::Build()
 {
-    // Check dependancies
-
-    return std::move(
-        [cpy = std::move(m_systems)]()
-        {
-            for (auto* s : cpy)
+    if (m_systems.size() == 1)
+    {
+        return std::move(
+            [cpy = std::move(m_systems)]()
             {
-                s->Update();
-            }
-        });
+                for (auto* s : cpy)
+                {
+                    s->Update();
+                }
+            });
+    }
+    else
+    {
+        return std::move(
+            [cpy = std::move(m_systems)]()
+            {
+                auto& scheduler = Engine::GetInstance()->GetScheduler();
+                WaitGroup wg(cpy.size());
+
+                for (auto* s : cpy)
+                {
+                    scheduler.Schedule(
+                        [=]()
+                        {
+                            s->Update();
+                            wg.Done();
+                        });
+                }
+
+                wg.Wait();
+            });
+    }
 }
 }  // namespace red
