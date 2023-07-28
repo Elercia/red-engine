@@ -15,7 +15,7 @@
 
 namespace red
 {
-Level::Level(std::string name, World* world)
+Level::Level(String name, World* world)
     : m_rootEntity(nullptr), m_levelName(std::move(name)), m_world(world), m_state(State::Created)
 {
 }
@@ -48,7 +48,7 @@ void Level::Clean()
 {
 }
 
-const std::string& Level::GetName() const
+const String& Level::GetName() const
 {
     return m_levelName;
 }
@@ -69,7 +69,7 @@ Entity* Level::CreateEntity()
     return e;
 }
 
-Entity* Level::CreateEntity(const std::string& name)
+Entity* Level::CreateEntity(const String& name)
 {
     Entity* e = m_world->CreateEntity(GetRootEntity());
 
@@ -78,7 +78,7 @@ Entity* Level::CreateEntity(const std::string& name)
     return e;
 }
 
-Entity* Level::CreateEntity(const std::string& name, Entity* parent)
+Entity* Level::CreateEntity(const String& name, Entity* parent)
 {
     Entity* e = m_world->CreateEntity(GetRootEntity());
 
@@ -88,7 +88,7 @@ Entity* Level::CreateEntity(const std::string& name, Entity* parent)
     return e;
 }
 
-Entity* Level::CreateEntity(EntityId id, const std::string& name)
+Entity* Level::CreateEntity(EntityId id, const String& name)
 {
     Entity* e = m_world->CreateEntity(GetRootEntity(), id);
 
@@ -98,7 +98,7 @@ Entity* Level::CreateEntity(EntityId id, const std::string& name)
     return e;
 }
 
-Entity* Level::CreateEntity(EntityId id, const std::string& name, Entity* parent)
+Entity* Level::CreateEntity(EntityId id, const String& name, Entity* parent)
 {
     Entity* e = m_world->CreateEntity(GetRootEntity(), id);
 

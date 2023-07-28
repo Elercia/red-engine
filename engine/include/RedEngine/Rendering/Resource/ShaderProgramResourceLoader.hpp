@@ -12,7 +12,7 @@ public:
     ~ShaderProgramResourceLoader();
 
     virtual void FinalizeResource(std::shared_ptr<ShaderProgram> resource) override;
-    virtual bool InitResource(std::shared_ptr<ShaderProgram>& resource, const Path& path, nlohmann::json jsonContent) override;
+    virtual bool InitResource(std::shared_ptr<ShaderProgram>& resource, const Path& path, Json jsonContent) override;
 
 private:
     enum class ShaderType

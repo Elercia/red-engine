@@ -5,7 +5,7 @@
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -37,7 +37,7 @@ public:
     template <typename T, typename... Args>
     T* AddComponent(Args&&... args);
 
-    Component* AddComponent(const std::string& name);
+    Component* AddComponent(const String& name);
 
     template <typename T>
     bool RemoveComponent();
@@ -53,9 +53,9 @@ public:
     [[nodiscard]] EntityId GetId() const;
     void SetId(EntityId id);
 
-    const std::string GetFullName() const;
-    const std::string& GetName() const;
-    void SetName(const std::string& name);
+    const String GetFullName() const;
+    const String& GetName() const;
+    void SetName(const String& name);
 
     EntityState GetState() const;
 
@@ -76,7 +76,7 @@ protected:
     World* m_world{nullptr};
     EntityId m_id{0};
     Transform* m_transform;
-    std::string m_name;
+    String m_name;
 
     Entity* m_parent{nullptr};
     Array<Entity*> m_children;

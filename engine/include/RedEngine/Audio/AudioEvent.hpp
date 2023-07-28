@@ -2,12 +2,12 @@
 
 #include "RedEngine/Audio/AudioModule.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
 struct SoundDesc
 {
-    std::string name;
+    String name;
 };
 }  // namespace red

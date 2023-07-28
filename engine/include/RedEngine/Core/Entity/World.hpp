@@ -9,7 +9,7 @@
 #include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -37,7 +37,7 @@ public:
     const Array<Entity*>& GetEntities() const;
     Array<Entity*>& GetEntities();
 
-    Entity* CreateWorldEntity(const std::string& name);
+    Entity* CreateWorldEntity(const String& name);
     Entity* CreateEntity(Entity* parent);
     Entity* CreateEntity(Entity* parent, EntityId id);
 

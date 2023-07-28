@@ -12,10 +12,10 @@ namespace utils
         static UserActionMapping LoadActionMapping();
 
     private:
-        static KeyMapping GetMappingFromConfigLine(const std::string& valueString);
-        static ModifierKeyBitSet GetModifiersFromConfigLine(const std::string& modifierString);
+        static KeyMapping GetMappingFromConfigLine(const String& valueString);
+        static ModifierKeyBitSet GetModifiersFromConfigLine(const String& modifierString);
 
-        static KeyCodes::Enum GetKeyCode(const std::string& keyString);
+        static KeyCodes::Enum GetKeyCode(const String& keyString);
     };
 }  // namespace utils
 }  // namespace red

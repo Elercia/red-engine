@@ -4,7 +4,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {

@@ -2,7 +2,7 @@
 
 #include "RedEngine/Filesystem/Path.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 #include <tuple>
 #include "RedEngine/Core/Container/Array.hpp"
 
@@ -11,7 +11,7 @@ namespace red
 namespace utils
 {
     // <category, key, value>
-    using iniCatKeyValue = std::tuple<std::string, std::string, std::string>;
+    using iniCatKeyValue = std::tuple<String, String, String>;
 
     class IniReader
     {

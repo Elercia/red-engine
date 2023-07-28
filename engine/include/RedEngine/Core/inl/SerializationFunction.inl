@@ -5,14 +5,14 @@
 namespace red
 {
 /*template <typename T>
-std::string Serialize(const T& value)
+String Serialize(const T& value)
 {
     RedError("Hiting a Serialize function that is not implemented");
     return "not-implemented";
 }
 
 template <typename T>
-bool Deserialize(T& value, const std::string& str)
+bool Deserialize(T& value, const String& str)
 {
     RedError("Hiting a Deserialize function that is not implemented");
     return false;
@@ -20,9 +20,9 @@ bool Deserialize(T& value, const std::string& str)
 
 /*template <>
 template <typename T>
-std::string Serialize(const Array<T>& value)
+String Serialize(const Array<T>& value)
 {
-    using json = nlohmann::json;
+    using json = Json;
     json arrayData;
 
     for (auto& elem : value)
@@ -35,9 +35,9 @@ std::string Serialize(const Array<T>& value)
 
 template <>
 template <typename T>
-bool Deserialize(Array<T>& value, const std::string& str)
+bool Deserialize(Array<T>& value, const String& str)
 {
-    using json = nlohmann::json;
+    using json = Json;
     json arrayData = json::parse(str);
 
     for (auto& elem : arrayData)

@@ -14,7 +14,7 @@ public:
     MaterialResourceLoader(World* world);
     ~MaterialResourceLoader();
 
-    bool InitResource(std::shared_ptr<Material> &resource, const Path &path, nlohmann::json jsonContent) override;
+    bool InitResource(std::shared_ptr<Material> &resource, const Path &path, Json jsonContent) override;
 
     void FinalizeResource(std::shared_ptr<Material> resource) override;
 };

@@ -7,7 +7,7 @@
 #include "RedEngine/Utils/TypesInfo.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -23,13 +23,13 @@ public:
     static CVarManager& GetInstance();
 
     template <typename T>
-    static CVarValue<T>* NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
+    static CVarValue<T>* NewConsoleVariableDeclaration(const String& name, const String& category,
                                                        const T& defaultValue);
 
     static void LoadConfigFile(const Path& path);
 
     template <typename T>
-    CVar<T> GetFromName(const std::string& fullName);
+    CVar<T> GetFromName(const String& fullName);
 
 public:
     CVarManager();
@@ -39,12 +39,12 @@ private:
     void LoadConfigFileInternal(const Path& path);
 
     template <typename T>
-    CVarValue<T>* NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
+    CVarValue<T>* NewConsoleVariableDeclarationInternal(const String& name, const String& category,
                                                         const T& defaultValue);
 
-    ICVar* FindCVar(const std::string& fullName);
+    ICVar* FindCVar(const String& fullName);
 
-    Map<std::string, ICVar*> m_configVariable;
+    Map<String, ICVar*> m_configVariable;
 };
 
 }  // namespace red

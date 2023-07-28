@@ -24,11 +24,11 @@ SoundResourceLoader::~SoundResourceLoader()
 {
 }
 
-bool SoundResourceLoader::InitResource(std::shared_ptr<SoundResource>& resource, const Path& /*path*/, nlohmann::json jsonContent)
+bool SoundResourceLoader::InitResource(std::shared_ptr<SoundResource>& resource, const Path& /*path*/, Json jsonContent)
 {
     auto* fmodSystem = m_world->GetSystem<AudioSystem>()->GetFmodSystem();
 
-    std::string soundPath = jsonContent["sound_path"];
+    String soundPath = jsonContent["sound_path"];
     if (soundPath.empty())
     {
         return false;

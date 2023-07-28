@@ -22,9 +22,9 @@ TextureResourceLoader::~TextureResourceLoader()
 }
 
 bool TextureResourceLoader::InitResource(std::shared_ptr<Texture2D>& resource, const Path& path,
-                                         nlohmann::json jsonContent)
+                                         Json jsonContent)
 {
-    std::string asciiPath = jsonContent["file"];
+    String asciiPath = jsonContent["file"];
 
     Path resourcePath = Path::Resource(asciiPath);
 

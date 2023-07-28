@@ -30,7 +30,7 @@ bool EngineTest::Destroy()
     return true;
 }
 
-std::string_view EngineTest::GetGameName() const
+StringView EngineTest::GetGameName() const
 {
     return "TestEngine";
 }

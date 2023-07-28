@@ -3,7 +3,7 @@
 namespace red
 {
 template <typename T>
-CVarValue<T>* CVarManager::NewConsoleVariableDeclaration(const std::string& name, const std::string& category,
+CVarValue<T>* CVarManager::NewConsoleVariableDeclaration(const String& name, const String& category,
                                                          const T& defaultValue)
 {
     auto& instance = CVarManager::GetInstance();
@@ -12,13 +12,13 @@ CVarValue<T>* CVarManager::NewConsoleVariableDeclaration(const std::string& name
 }
 
 template <typename T>
-CVar<T> CVarManager::GetFromName(const std::string& fullName)
+CVar<T> CVarManager::GetFromName(const String& fullName)
 {
     return CVar<T>((CVarValue<T>*)FindCVar(fullName));
 }
 
 template <typename T>
-CVarValue<T>* CVarManager::NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
+CVarValue<T>* CVarManager::NewConsoleVariableDeclarationInternal(const String& name, const String& category,
                                                                  const T& defaultValue)
 {
     auto fullName = CVarUtils::GetLongName(category, name);

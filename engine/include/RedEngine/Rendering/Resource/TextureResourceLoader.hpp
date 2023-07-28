@@ -14,6 +14,6 @@ public:
     ~TextureResourceLoader();
 
     void FinalizeResource(std::shared_ptr<Texture2D> resource);
-    bool InitResource(std::shared_ptr<Texture2D>& resource, const Path& path, nlohmann::json jsonContent);
+    bool InitResource(std::shared_ptr<Texture2D>& resource, const Path& path, Json jsonContent);
 };
 }  // namespace red

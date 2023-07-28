@@ -29,7 +29,7 @@ ShaderProgramResourceLoader::~ShaderProgramResourceLoader()
 }
 
 
-bool ShaderProgramResourceLoader::InitResource(std::shared_ptr<ShaderProgram>& resource, const Path& path, nlohmann::json jsonContent)
+bool ShaderProgramResourceLoader::InitResource(std::shared_ptr<ShaderProgram>& resource, const Path& path, Json jsonContent)
 {
     if (jsonContent[SHADER_TYPE] == "vertex_pixel")
         resource->m_type = ShaderProgramType::Vertex_Pixel;
@@ -44,8 +44,8 @@ bool ShaderProgramResourceLoader::InitResource(std::shared_ptr<ShaderProgram>& r
     if (resource->m_type == ShaderProgramType::Vertex_Pixel)
     {
         int vertexHandle =
-            CompileShader(ShaderType::Vertex, Path::Resource(std::string(jsonContent[VERTEX_SHADER_PATH])));
-        int pixelHandle = CompileShader(ShaderType::Pixel, Path::Resource(std::string(jsonContent[PIXEL_SHADER_PATH])));
+            CompileShader(ShaderType::Vertex, Path::Resource(String(jsonContent[VERTEX_SHADER_PATH])));
+        int pixelHandle = CompileShader(ShaderType::Pixel, Path::Resource(String(jsonContent[PIXEL_SHADER_PATH])));
 
         if (vertexHandle == -1 || pixelHandle == -1)
         {
@@ -109,7 +109,7 @@ void ShaderProgramResourceLoader::FinalizeResource(std::shared_ptr<ShaderProgram
 
 int ShaderProgramResourceLoader::CompileShader(ShaderType type, const Path& path)
 {
-    const std::string shaderCode = ReadFile(path);
+    const String shaderCode = ReadFile(path);
 
     static const GLuint openglTypes[] = {GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER};
 

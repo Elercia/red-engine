@@ -3,37 +3,37 @@
 #include "RedEngine/Core/SerializationFunction.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
 template <>
-std::string Serialize(const Vector2& value);
+String Serialize(const Vector2& value);
 template <>
-bool Deserialize(Vector2& value, const std::string& str);
+bool Deserialize(Vector2& value, const String& str);
 
 template <>
-std::string Serialize(const Vector2i& value);
+String Serialize(const Vector2i& value);
 template <>
-bool Deserialize(Vector2i& value, const std::string& str);
+bool Deserialize(Vector2i& value, const String& str);
 
 template <>
-std::string Serialize(const Vector3& value);
+String Serialize(const Vector3& value);
 template <>
-bool Deserialize(Vector3& value, const std::string& str);
+bool Deserialize(Vector3& value, const String& str);
 
 template <>
-std::string Serialize(const Vector3i& value);
+String Serialize(const Vector3i& value);
 template <>
-bool Deserialize(Vector3i& value, const std::string& str);
+bool Deserialize(Vector3i& value, const String& str);
 
 template <>
-std::string Serialize(const Vector4& value);
+String Serialize(const Vector4& value);
 template <>
-bool Deserialize(Vector4& value, const std::string& str);
+bool Deserialize(Vector4& value, const String& str);
 
 template <>
-std::string Serialize(const Vector4i& value);
+String Serialize(const Vector4i& value);
 template <>
-bool Deserialize(Vector4i& value, const std::string& str);
+bool Deserialize(Vector4i& value, const String& str);
 }  // namespace red

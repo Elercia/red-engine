@@ -11,7 +11,7 @@
 
 namespace red
 {
-CVar<std::string> WindowComponent::s_title{"title", "window", "RedEngine"};
+CVar<String> WindowComponent::s_title{"title", "window", "RedEngine"};
 CVar<int> WindowComponent::s_height{"height", "window", 600};
 CVar<int> WindowComponent::s_width{"width", "window", 800};
 CVar<FullScreenMode::Enum> WindowComponent::s_fullscreen{"fullscreen_mode", "window", FullScreenMode::WINDOWED};
@@ -121,7 +121,7 @@ SDL_Window *WindowComponent::GetSDLWindow()
 }
 
 template <>
-std::string Serialize(const FullScreenMode::Enum &typeValue)
+String Serialize(const FullScreenMode::Enum &typeValue)
 {
     switch (typeValue)
     {
@@ -135,7 +135,7 @@ std::string Serialize(const FullScreenMode::Enum &typeValue)
 }
 
 template <>
-bool Deserialize(FullScreenMode::Enum &typeValue, const std::string &stringValue)
+bool Deserialize(FullScreenMode::Enum &typeValue, const String &stringValue)
 {
     if (stringValue == "0")
     {

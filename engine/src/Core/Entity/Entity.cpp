@@ -27,7 +27,7 @@ void Entity::Destroy()
     }
 }
 
-Component* Entity::AddComponent(const std::string& name)
+Component* Entity::AddComponent(const String& name)
 {
     auto* componentManager = GetComponentManager();
 
@@ -59,17 +59,17 @@ void Entity::SetId(EntityId id)
     m_id = id;
 }
 
-const std::string Entity::GetFullName() const
+const String Entity::GetFullName() const
 {
     return m_parent != nullptr ? m_parent->GetFullName() + "." + GetName() : GetName();
 }
 
-const std::string& Entity::GetName() const
+const String& Entity::GetName() const
 {
     return m_name;
 }
 
-void Entity::SetName(const std::string& name)
+void Entity::SetName(const String& name)
 {
     m_name = name;
 }

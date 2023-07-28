@@ -14,7 +14,7 @@ public:
     ~SpriteResourceLoader();
 
     void FinalizeResource(std::shared_ptr<SpriteResource> resource);
-    bool InitResource(std::shared_ptr<SpriteResource>& resource, const Path& path, nlohmann::json jsonContent);
+    bool InitResource(std::shared_ptr<SpriteResource>& resource, const Path& path, Json jsonContent);
 };
 
 }  // namespace red

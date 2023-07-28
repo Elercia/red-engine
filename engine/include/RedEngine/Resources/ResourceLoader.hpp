@@ -1,19 +1,23 @@
 #pragma once
 
 #include "RedEngine/Core/Container/Map.hpp"
+#include "RedEngine/Core/Container/String.hpp"
+#include "RedEngine/Core/Container/Map.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"
 #include "RedEngine/Utils/TypesInfo.hpp"
-#include "RedEngine/Core/Debug/Logger/Logger.hpp"
 
 #include <memory>
 #include <nlohmann/json.hpp>
-#include <string>
 
 namespace red
 {
 class World;
+
+using Json = nlohmann::basic_json<Map, Array, String, bool, int64, uint64, double, std::allocator, nlohmann::adl_serializer,
+                                  Array<uint8>>;
 
 class IResourceLoader
 {
@@ -48,7 +52,7 @@ public:
     std::shared_ptr<Type> LoadResource(const Path& path);
 
     virtual void FinalizeResource(std::shared_ptr<Type> resource) = 0;
-    virtual bool InitResource(std::shared_ptr<Type>& resource, const Path& path, nlohmann::json jsonContent) = 0;
+    virtual bool InitResource(std::shared_ptr<Type>& resource, const Path& path, Json jsonContent) = 0;
 
     std::shared_ptr<Type> GetFromCache(const Path& path);
     std::shared_ptr<Type> GetOrCreateFromCache(const Path& path);

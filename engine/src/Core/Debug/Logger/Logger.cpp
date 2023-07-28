@@ -6,7 +6,7 @@
 
 namespace red
 {
-const std::string Logger::logLevelAsString[] = {
+const String Logger::logLevelAsString[] = {
     "CUSTOM", "TRACE", "DEBUG", "INFO", "WARNING", "ERROR", "FATAL",
 };
 
@@ -46,13 +46,13 @@ void Logger::LogToStandardOutputFun(const LogOoutputInfo& out)
 }
 
 template <>
-std::string Serialize(const LogLevel& value)
+String Serialize(const LogLevel& value)
 {
     return Logger::logLevelAsString[(int)value];
 }
 
 template <>
-bool Deserialize(LogLevel& value, const std::string& str)
+bool Deserialize(LogLevel& value, const String& str)
 {
     for (int i = 0; i < 7; i++)
     {

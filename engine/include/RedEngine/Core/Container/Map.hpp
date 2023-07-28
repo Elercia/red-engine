@@ -52,6 +52,7 @@ public:
     using size_type = uint32;
     using value_type = KeyValuePair;
     using ThisType = Map<KeyT, ValueT, HashOpT, EqualsOpT>;
+    using key_type = KeyT;
 
     class const_iterator;
 

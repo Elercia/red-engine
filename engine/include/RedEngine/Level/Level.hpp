@@ -4,7 +4,7 @@
 #include "RedEngine/Resources/Resource.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -24,7 +24,7 @@ public:
     friend class ILevelSerializer;
     friend class JsonLevelSerializer;
 
-    explicit Level(std::string name, World* world);
+    explicit Level(String name, World* world);
     virtual ~Level();
 
     void InternInit();
@@ -37,16 +37,16 @@ public:
 
     void Clean();
 
-    const std::string& GetName() const;
+    const String& GetName() const;
     World* GetWorld();
 
     Entity* GetRootEntity() const;
 
     Entity* CreateEntity();
-    Entity* CreateEntity(EntityId id, const std::string& name);
-    Entity* CreateEntity(EntityId id, const std::string& name, Entity* parent);
-    Entity* CreateEntity(const std::string& name);
-    Entity* CreateEntity(const std::string& name, Entity* parent);
+    Entity* CreateEntity(EntityId id, const String& name);
+    Entity* CreateEntity(EntityId id, const String& name, Entity* parent);
+    Entity* CreateEntity(const String& name);
+    Entity* CreateEntity(const String& name, Entity* parent);
 
     void Serialize(const Path& path) const;
 
@@ -54,7 +54,7 @@ public:
 
 protected:
     Entity* m_rootEntity;
-    std::string m_levelName;
+    String m_levelName;
 
     World* m_world;
 

@@ -4,27 +4,27 @@
 #include "RedEngine/Core/Container/Map.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
 struct KeyValue
 {
-    std::string key;
-    std::string value;
+    String key;
+    String value;
 };
 
 struct ComponentData
 {
     Array<KeyValue> m_serializedMembers;
-    std::string m_name;
+    String m_name;
 };
 
 struct EntityData
 {
     Array<EntityData> m_children;
-    Map<std::string, ComponentData> m_components;
-    std::string m_name;
+    Map<String, ComponentData> m_components;
+    String m_name;
     EntityId m_id;
 };
 

@@ -9,7 +9,7 @@
 
 namespace red::utils
 {
-std::string& Trim(std::string& str)
+String& Trim(String& str)
 {
     if (str.empty())
         return str;
@@ -32,11 +32,11 @@ std::string& Trim(std::string& str)
     return str;
 }
 
-Array<std::string> Split(const std::string& str, const char delim)
+Array<String> Split(const String& str, const char delim)
 {
-    std::string tmp;
-    std::stringstream stream;
-    Array<std::string> ret;
+    String tmp;
+    Stringstream stream;
+    Array<String> ret;
 
     stream << str;
     while (std::getline(stream, tmp, delim))
@@ -47,7 +47,7 @@ Array<std::string> Split(const std::string& str, const char delim)
     return ret;
 }
 
-std::wstring ToUnicodeString(const std::string_view str)
+std::wstring ToUnicodeString(const StringView str)
 {
     if (str.empty())
         return L"";
@@ -58,11 +58,11 @@ std::wstring ToUnicodeString(const std::string_view str)
     return unicodeStr;
 }
 
-std::string::size_type Find(const std::string_view& in, const std::string_view& toFind,
+String::size_type Find(const StringView& in, const StringView& toFind,
                             bool caseInsensitive /*= false*/)
 {
     if (in.size() < toFind.size())
-        return std::string::npos;
+        return String::npos;
 
     for (size_t i = 0; i < in.size() - toFind.size(); i++)
     {
@@ -81,10 +81,10 @@ std::string::size_type Find(const std::string_view& in, const std::string_view& 
             return i;
     }
 
-    return std::string::npos;
+    return String::npos;
 }
 
-void ToLowerCase(std::string& str)
+void ToLowerCase(String& str)
 {
     std::for_each(str.begin(), str.end(), [](char& c) { c = (char) std::tolower(c); });
 }
@@ -94,7 +94,7 @@ void ToLowerCase(std::wstring& str)
     std::for_each(str.begin(), str.end(), [](wchar_t& c) { c = (char) std::tolower(c); });
 }
 
-void ToUpperCase(std::string& str)
+void ToUpperCase(String& str)
 {
     std::for_each(str.begin(), str.end(), [](char& c) { c = (char) std::toupper(c); });
 }

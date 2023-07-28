@@ -3,8 +3,7 @@
 #include "RedEngine/Utils/Types.hpp"
 #include "RedEngine/Math/Hash.hpp"
 
-#include <string>
-#include <string_view>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -20,8 +19,8 @@ public:
     static Path Resource(const std::wstring& path);
 
     // c-string like creators
-    static Path Resource(const std::string& path);
-    static Path User(const std::string& path);
+    static Path Resource(const String& path);
+    static Path User(const String& path);
 
 private:
     static std::wstring GetUserBasePath();
@@ -32,8 +31,8 @@ public:
     explicit Path(std::wstring path);
     ~Path();
 
-    std::wstring_view GetPath() const;
-    std::string GetAscciiPath() const;
+    WStringView GetPath() const;
+    String GetAscciiPath() const;
 
     bool Exist() const;
     bool IsDirectory() const;

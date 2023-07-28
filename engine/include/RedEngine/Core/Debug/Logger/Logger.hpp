@@ -3,7 +3,7 @@
 #include "RedEngine/Core/Event/Delegate.hpp"
 #include "RedEngine/Core/SerializationFunction.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -20,9 +20,9 @@ enum class LogLevel
 };
 
 template <>
-std::string Serialize(const LogLevel& value);
+String Serialize(const LogLevel& value);
 template <>
-bool Deserialize(LogLevel& value, const std::string& str);
+bool Deserialize(LogLevel& value, const String& str);
 
 void SetLogLevel(LogLevel level);
 
@@ -31,11 +31,11 @@ class Logger
 public:
     struct LogOoutputInfo
     {
-        std::string str;
+        String str;
         LogLevel level;
     };
 
-    static const std::string logLevelAsString[7];
+    static const String logLevelAsString[7];
 
     using OutputDelegate = Delegate<const LogOoutputInfo&>;
 
@@ -46,7 +46,7 @@ public:
     LogLevel GetLogLevel() const;
 
     template <typename... Args>
-    void LogInternal(LogLevel level, int line, const char* file, const std::string& format, Args... args);
+    void LogInternal(LogLevel level, int line, const char* file, const String& format, Args... args);
 
     void Out(const LogOoutputInfo& data);
 

@@ -7,20 +7,20 @@
 namespace red
 {
 template <typename ComponentTypeT, typename MemberTypeT>
-void ComponentTraits::AddMember(const std::string& name, MemberTypeT ComponentTypeT::*memberAddr,
-                              const std::string& tooltip, uint32 flags)
+void ComponentTraits::AddMember(const String& name, MemberTypeT ComponentTypeT::*memberAddr,
+                              const String& tooltip, uint32 flags)
 {
     ComponentMemberTraits member;
     member.name = name;
     member.tooltip = tooltip;
     member.flags = flags;
 
-    member.serializationFunction = [=](const Component* comp) -> std::string {
+    member.serializationFunction = [=](const Component* comp) -> String {
         // return value serialized as a string
         return Serialize(static_cast<const ComponentTypeT*>(comp)->*memberAddr /*value*/);
     };
 
-    member.deserializationFunction = [=](Component* comp, const std::string& str) -> bool {
+    member.deserializationFunction = [=](Component* comp, const String& str) -> bool {
         // deserialize str into value and return true on success, false otherwise
         return Deserialize(static_cast<ComponentTypeT*>(comp)->*memberAddr /*value*/, str);
     };

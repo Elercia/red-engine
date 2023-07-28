@@ -7,7 +7,7 @@
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
 
 #include <memory>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -28,7 +28,7 @@ public:
     /// name : The animation name
     ///
     /// Return true if the animation is found false otherwise
-    bool StartAnimation(const std::string& name);
+    bool StartAnimation(const String& name);
 
     const Array<AnimationDesc>& GetAnimations() const;
 

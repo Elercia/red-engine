@@ -1,16 +1,15 @@
 #pragma once
 
-#include <RedEngine/Utils/Types.hpp>
-
-#include <string_view>
+#include "RedEngine/Utils/Types.hpp"
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
-constexpr uint32 fnv1a32(const std::string_view& s, sizet count);
-constexpr uint32 fnv1a32(const std::string_view& s);
+constexpr uint32 fnv1a32(const StringView& s, StringView::size_type count);
+constexpr uint32 fnv1a32(const StringView& s);
 
-constexpr uint32 wfnv1a32(const std::wstring_view& s, sizet count);
-constexpr uint32 wfnv1a32(const std::wstring_view& s);
+constexpr uint32 wfnv1a32(const WStringView& s, WStringView::size_type count);
+constexpr uint32 wfnv1a32(const WStringView& s);
 
 template <typename T>
 uint64 Hash(const T& value);
@@ -38,7 +37,7 @@ uint64 Hash(const int64& value);
 
 // Common object hahing
 template<>
-uint64 Hash(const std::string& value);
+uint64 Hash(const String& value);
 
 }  // namespace red
 

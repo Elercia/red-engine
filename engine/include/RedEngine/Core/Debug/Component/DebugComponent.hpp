@@ -23,7 +23,7 @@ using DebugMenuDrawerFunc = void(*)(DebugComponent*);
 struct DebugDrawer
 {
     int id;
-    std::string name;
+    String name;
     DebugMenuDrawerFunc callback;
 };
 
@@ -50,7 +50,7 @@ public:
 
     void ClearLogs();
     const Array<Logger::LogOoutputInfo>& GetLogBuffer() const;
-    void HandleCommand(const std::string& str);
+    void HandleCommand(const String& str);
     void AddLog(const Logger::LogOoutputInfo& str);
     Array<Entity*>& GetFilteredEntities();
 

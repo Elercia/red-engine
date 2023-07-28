@@ -7,10 +7,10 @@
 
 namespace red
 {
-std::string ReadFile(const Path& fullPath)
+String ReadFile(const Path& fullPath)
 {
     std::ifstream in;
-    std::string asciiString = fullPath.GetAscciiPath();
+    String asciiString = fullPath.GetAscciiPath();
 
     in.open(asciiString);
 

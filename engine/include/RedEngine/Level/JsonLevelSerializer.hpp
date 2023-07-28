@@ -11,12 +11,12 @@ class Entity;
 
 class JsonLevelSerializer : public ILevelSerializer
 {
-    using json = nlohmann::json;
+    using json = Json;
 
 public:
     explicit JsonLevelSerializer(const Level* level);
 
-    virtual std::string SerializeData(const LevelData& levelData) override;
+    virtual String SerializeData(const LevelData& levelData) override;
 
 private:
     json SerializeEntity(const EntityData& entityData);

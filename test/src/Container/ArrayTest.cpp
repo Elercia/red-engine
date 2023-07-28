@@ -306,9 +306,9 @@ TEST_CASE("Array emplace", "[Array]")
     REQUIRE(s_destructedCount == 100);
 }
 
-Array<std::string> GetArray()
+Array<String> GetArray()
 {
-    Array<std::string> ar;
+    Array<String> ar;
 
     ar.push_back("Test1");
     ar.emplace_back("TEST2");
@@ -318,7 +318,7 @@ Array<std::string> GetArray()
 
 TEST_CASE("Array copy", "[Array]")
 {
-    Array<std::string> ar = GetArray();
+    Array<String> ar = GetArray();
 
     SECTION("equals")
     {
@@ -328,7 +328,7 @@ TEST_CASE("Array copy", "[Array]")
 
     SECTION("move")
     {
-        Array<std::string> ar2 = std::move(ar);
+        Array<String> ar2 = std::move(ar);
 
         REQUIRE(ar2[0] == "Test1");
         REQUIRE(ar2[1] == "TEST2");
@@ -337,8 +337,8 @@ TEST_CASE("Array copy", "[Array]")
 
 TEST_CASE("Array insert", "[Array]")
 {
-    Array<std::string> ar;
-    Array<std::string> ar2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
+    Array<String> ar;
+    Array<String> ar2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
 
     ar.insert(ar.begin(), ar2.begin(), ar2.end());
 

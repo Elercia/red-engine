@@ -68,7 +68,7 @@ uint64 Hash(const int64& value)
 }
 
 template <>
-uint64 Hash(const std::string& value)
+uint64 Hash(const String& value)
 {
     return fnv1a32(value);
 }

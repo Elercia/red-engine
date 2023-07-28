@@ -20,7 +20,7 @@ LevelData JsonLevelLoader::ReadLevelData(const Path& path)
 {
     LevelData levelData;
 
-    std::string str = ReadFile(path);
+    String str = ReadFile(path);
     json jsonLevel = json::parse(str);
 
     for (auto& jsonEntityData : jsonLevel[JsonNames::LEVEL_ENTITIES])
@@ -33,7 +33,7 @@ LevelData JsonLevelLoader::ReadLevelData(const Path& path)
     return levelData;
 }
 
-ComponentData JsonLevelLoader::ParseComponent(const std::string& componentName, json componentJson)
+ComponentData JsonLevelLoader::ParseComponent(const String& componentName, json componentJson)
 {
     ComponentData componentData;
     componentData.m_name = componentName;

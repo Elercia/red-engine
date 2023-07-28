@@ -48,6 +48,7 @@
 #include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Container/Map.hpp"
+#include "RedEngine/Core/Container/String.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"

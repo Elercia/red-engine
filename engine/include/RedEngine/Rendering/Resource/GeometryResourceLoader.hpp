@@ -15,6 +15,6 @@ public:
     
     virtual void FinalizeResource(std::shared_ptr<GeometryResourceWrapper> resource) override;
     virtual bool InitResource(std::shared_ptr<GeometryResourceWrapper>& resource, const Path& path,
-                              nlohmann::json jsonContent) override;
+                              Json jsonContent) override;
 };
 }  // namespace red

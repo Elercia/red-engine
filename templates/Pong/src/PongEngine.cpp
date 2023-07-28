@@ -22,7 +22,7 @@ bool PongEngine::Destroy()
     return true;
 }
 
-std::string_view PongEngine::GetGameName() const
+StringView PongEngine::GetGameName() const
 {
     return "Pong Template";
 }

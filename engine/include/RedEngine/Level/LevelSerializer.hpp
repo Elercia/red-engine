@@ -4,7 +4,7 @@
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Level/LevelData.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -16,9 +16,9 @@ public:
     explicit ILevelSerializer(const Level* level);
 
     bool Serialize(const Path& path);
-    bool WriteToFile(const Path& path, const std::string& str);
+    bool WriteToFile(const Path& path, const String& str);
 
-    virtual std::string SerializeData(const LevelData& levelData) = 0;
+    virtual String SerializeData(const LevelData& levelData) = 0;
 
 private:
     LevelData GenerateLevelData(bool& success);

@@ -152,7 +152,7 @@ void PerfLevel::Init()
     {
         const Vector2 position = {RandomFloatRange(boundMin, boundMax), RandomFloatRange(boundMin, boundMax)};
 
-        std::string name = "Ball";
+        String name = "Ball";
         AddEntity(name, position, (RenderLayerIndex) RandomRange(0, 31), colors);
     }
 
@@ -175,7 +175,7 @@ void PerfLevel::AddGameplaySystems(red::ExecutionGraph& graph)
         .AddStage(SystemGraphStageBuilder::NewStage(m_world).AddSystem<perf::EntityManager>().Build());
 }
 
-void PerfLevel::AddEntity(const std::string& name, const red::Vector2& position, red::RenderLayerIndex layerIndex,
+void PerfLevel::AddEntity(const String& name, const red::Vector2& position, red::RenderLayerIndex layerIndex,
                           red::Color* colors)
 {
     const float scale = RandomFloatRange(1.f, 1.f);

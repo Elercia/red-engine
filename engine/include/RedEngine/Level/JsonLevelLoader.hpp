@@ -7,7 +7,7 @@
 namespace red
 {
 class Level;
-using json = nlohmann::json;
+using json = Json;
 
 class JsonLevelLoader : public LevelLoader
 {
@@ -18,7 +18,7 @@ public:
     virtual LevelData ReadLevelData(const Path& path) override;
 
 private:
-    ComponentData ParseComponent(const std::string& componentName, json componentJson);
+    ComponentData ParseComponent(const String& componentName, json componentJson);
     EntityData ParseEntity(json jsonEntityData);
 };
 }  // namespace red

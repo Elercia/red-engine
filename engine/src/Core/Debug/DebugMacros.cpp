@@ -6,7 +6,7 @@
 
 namespace red
 {
-void LogAssert(const char* filename, int line, const std::string& s)
+void LogAssert(const char* filename, int line, const String& s)
 {
     GetRedLogger()->LogInternal(LogLevel::LEVEL_ERROR, line, filename, s);
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -9,8 +9,8 @@ class ICVar;
 class CVarUtils
 {
 public:
-    static std::string GetLongName(const std::string& category, const std::string& key);
-    static std::string GetLongName(const ICVar* cvar);
+    static String GetLongName(const String& category, const String& key);
+    static String GetLongName(const ICVar* cvar);
 
 private:
     CVarUtils() = delete;

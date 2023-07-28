@@ -50,7 +50,7 @@ Path Path::User(const std::wstring& path)
     return Path(GetUserBasePath() + path);
 }
 
-Path Path::User(const std::string& path)
+Path Path::User(const String& path)
 {
     return User(utils::ToUnicodeString(path));
 }
@@ -60,7 +60,7 @@ Path Path::Resource(const std::wstring& path)
     return Path(GetResourceBasePath() + path);
 }
 
-Path Path::Resource(const std::string& path)
+Path Path::Resource(const String& path)
 {
     return Resource(utils::ToUnicodeString(path));
 }
@@ -82,14 +82,14 @@ Path::~Path()
 {
 }
 
-std::wstring_view Path::GetPath() const
+WStringView Path::GetPath() const
 {
     return m_unicodePath;
 }
 
-std::string Path::GetAscciiPath() const
+String Path::GetAscciiPath() const
 {
-    std::string str;
+    String str;
     std::transform(m_unicodePath.begin(), m_unicodePath.end(), std::back_inserter(str),
                    [](wchar_t c) { return (char) c; });
 

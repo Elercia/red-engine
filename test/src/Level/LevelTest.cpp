@@ -85,7 +85,7 @@ TEST_CASE("Level serialisation", "[LEVEL]")
     JsonLevelSerializer serializer(&level);
     REQUIRE(serializer.Serialize(p));
 
-    using json = nlohmann::json;
+    using json = Json;
     json j = json::parse(red::ReadFile(p));
 
     REQUIRE(j[JsonNames::LEVEL_ENTITIES].size() == 2);

@@ -10,7 +10,7 @@ JsonLevelSerializer::JsonLevelSerializer(const Level* level) : ILevelSerializer(
 {
 }
 
-std::string JsonLevelSerializer::SerializeData(const LevelData& levelData)
+String JsonLevelSerializer::SerializeData(const LevelData& levelData)
 {
     json levelJson;
 

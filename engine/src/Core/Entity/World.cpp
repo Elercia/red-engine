@@ -239,7 +239,7 @@ Array<Entity*>& World::GetEntities()
     return m_entities;
 }
 
-Entity* World::CreateWorldEntity(const std::string& name)
+Entity* World::CreateWorldEntity(const String& name)
 {
     Entity* e = m_entityAllocator.Allocate<Entity>(this, GetNewEntityId());
 

@@ -28,7 +28,7 @@ struct WindowInfo
 class WindowComponent : public Component
 {
 public:
-    static CVar<std::string> s_title;
+    static CVar<String> s_title;
     static CVar<int> s_height;
     static CVar<int> s_width;
     static CVar<FullScreenMode::Enum> s_fullscreen;
@@ -47,8 +47,8 @@ private:
 };
 
 template <>
-std::string Serialize(const FullScreenMode::Enum& typeValue);
+String Serialize(const FullScreenMode::Enum& typeValue);
 
 template <>
-bool Deserialize(FullScreenMode::Enum& typeValue, const std::string& stringValue);
+bool Deserialize(FullScreenMode::Enum& typeValue, const String& stringValue);
 }  // namespace red

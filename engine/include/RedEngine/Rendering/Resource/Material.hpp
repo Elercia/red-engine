@@ -5,7 +5,6 @@
 #include "RedEngine/Resources/Resource.hpp"
 
 #include <memory>
-#include <string_view>
 
 namespace red
 {

@@ -25,14 +25,14 @@ bool ILevelSerializer::Serialize(const Path& path)
         return false;
     }
 
-    std::string serializedData = SerializeData(levelData);
+    String serializedData = SerializeData(levelData);
 
     success = WriteToFile(path, serializedData);
 
     return success;
 }
 
-bool ILevelSerializer::WriteToFile(const Path& path, const std::string& str)
+bool ILevelSerializer::WriteToFile(const Path& path, const String& str)
 {
     File file(path, OpenMode::READ_WRITE_TC);
 

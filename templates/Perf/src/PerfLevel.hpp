@@ -27,7 +27,7 @@ public:
     virtual void AddGameplaySystems(red::ExecutionGraph& graph) override;
 
 private:
-    void AddEntity(const std::string& name, const red::Vector2& v, red::RenderLayerIndex i, red::Color* colors);
+    void AddEntity(const String& name, const red::Vector2& v, red::RenderLayerIndex i, red::Color* colors);
 
     red::Entity* m_manager;
 };

@@ -13,7 +13,7 @@ public:
     virtual bool Create() override;
     virtual bool Destroy() override;
 
-    virtual std::string_view GetGameName() const override;
+    virtual StringView GetGameName() const override;
 
     virtual bool RegisterComponentTypes() override;
 

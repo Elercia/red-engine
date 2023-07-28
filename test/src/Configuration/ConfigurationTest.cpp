@@ -6,7 +6,7 @@
 
 #include <catch2/catch.hpp>
 #include <iostream>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 #include "TestModule.hpp"
 
@@ -50,7 +50,7 @@ TEST_CASE("Config variable are loaded when declared before", "[Configuration]")
     red::CVar<bool> testBool2{"bool2", "cat1", false};
     red::CVar<double> double1{"double1", "cat1", 0.0};
     red::CVar<int> intVar{"int", "cat1", 1};
-    red::CVar<std::string> str{"str", "cat1", "non"};
+    red::CVar<String> str{"str", "cat1", "non"};
 
     red::CVarManager::LoadConfigFile(red::Path::Resource("config.ini"));
 
@@ -70,7 +70,7 @@ enum class TestEnumCVar
 namespace red
 {
 template <>
-bool Deserialize(TestEnumCVar &value, const std::string &str)
+bool Deserialize(TestEnumCVar &value, const String &str)
 {
     if (str == "ONE")
     {
@@ -87,7 +87,7 @@ bool Deserialize(TestEnumCVar &value, const std::string &str)
 }
 
 template <>
-std::string Serialize(const TestEnumCVar &value)
+String Serialize(const TestEnumCVar &value)
 {
     return value == TestEnumCVar::ONE ? "ONE" : "TWO";
 }

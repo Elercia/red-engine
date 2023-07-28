@@ -10,7 +10,7 @@
 #include <GL/gl3w.h>
 #include <filesystem>
 #include <nlohmann/json.hpp>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -24,7 +24,7 @@ GeometryResourceLoader::~GeometryResourceLoader()
 }
 
 bool GeometryResourceLoader::InitResource(std::shared_ptr<GeometryResourceWrapper>& resource, const Path& /*path*/,
-                              nlohmann::json jsonContent) 
+                              Json jsonContent) 
 {
     // FIXME : Use Array class 
     auto jsonVertex = jsonContent["vertices"].get<std::vector<float>>();

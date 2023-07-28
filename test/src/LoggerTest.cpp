@@ -10,7 +10,7 @@ TEST_CASE("Logger", "[Debug]")
 
     Logger logger;
 
-    std::string lastLog;
+    String lastLog;
 
     auto outFunction = [&](const Logger::LogOoutputInfo& out){
         lastLog = out.str;
@@ -24,7 +24,7 @@ TEST_CASE("Logger", "[Debug]")
         logger.LogInternal(red::LogLevel::LEVEL_TRACE, 10, "LoggerTest.cpp", "Doing stuff with {}, {} times",
                            "my bicycle", 10);
 
-        REQUIRE(lastLog.find("Doing stuff with my bicycle, 10 times") != std::string::npos);
-        REQUIRE(lastLog.find("TRACE") != std::string::npos);
+        REQUIRE(lastLog.find("Doing stuff with my bicycle, 10 times") != String::npos);
+        REQUIRE(lastLog.find("TRACE") != String::npos);
     }
 }

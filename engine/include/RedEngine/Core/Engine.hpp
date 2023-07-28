@@ -4,7 +4,6 @@
 #include "RedEngine/Core/Memory/LinearAllocator.hpp"
 #include "RedEngine/Thread/Thread.hpp"
 
-#include <string_view>
 #include <type_traits>
 
 namespace red
@@ -30,7 +29,7 @@ public:
     virtual bool Create();
     virtual bool Destroy();
 
-    virtual std::string_view GetGameName() const;
+    virtual StringView GetGameName() const;
 
     virtual bool RegisterComponentTypes();
 

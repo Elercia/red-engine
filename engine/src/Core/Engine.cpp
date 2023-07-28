@@ -221,7 +221,7 @@ bool Engine::Destroy()
     return true;
 }
 
-std::string_view Engine::GetGameName() const
+StringView Engine::GetGameName() const
 {
     return "RedEngine";
 }

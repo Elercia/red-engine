@@ -10,13 +10,13 @@ using namespace red::utils;  // StringReader
 namespace red
 {
 template <>
-std::string Serialize(const Vector2& value)
+String Serialize(const Vector2& value)
 {
     return fmt::format("{};{}", value.x, value.y);
 }
 
 template <>
-bool Deserialize(Vector2& value, const std::string& str)
+bool Deserialize(Vector2& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -29,13 +29,13 @@ bool Deserialize(Vector2& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const Vector2i& value)
+String Serialize(const Vector2i& value)
 {
     return fmt::format("{};{}", value.x, value.y);
 }
 
 template <>
-bool Deserialize(Vector2i& value, const std::string& str)
+bool Deserialize(Vector2i& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -48,13 +48,13 @@ bool Deserialize(Vector2i& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const Vector3& value)
+String Serialize(const Vector3& value)
 {
     return fmt::format("{};{};{}", value.x, value.y, value.z);
 }
 
 template <>
-bool Deserialize(Vector3& value, const std::string& str)
+bool Deserialize(Vector3& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -69,13 +69,13 @@ bool Deserialize(Vector3& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const Vector3i& value)
+String Serialize(const Vector3i& value)
 {
     return fmt::format("{};{};{}", value.x, value.y, value.z);
 }
 
 template <>
-bool Deserialize(Vector3i& value, const std::string& str)
+bool Deserialize(Vector3i& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -90,13 +90,13 @@ bool Deserialize(Vector3i& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const Vector4& value)
+String Serialize(const Vector4& value)
 {
     return fmt::format("{};{};{};{}", value.x, value.y, value.z, value.w);
 }
 
 template <>
-bool Deserialize(Vector4& value, const std::string& str)
+bool Deserialize(Vector4& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -113,13 +113,13 @@ bool Deserialize(Vector4& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const Vector4i& value)
+String Serialize(const Vector4i& value)
 {
     return fmt::format("{};{};{};{}", value.x, value.y, value.z, value.w);
 }
 
 template <>
-bool Deserialize(Vector4i& value, const std::string& str)
+bool Deserialize(Vector4i& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;

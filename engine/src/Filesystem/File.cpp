@@ -25,7 +25,7 @@ bool File::Open()
     if (!m_path.IsFile() && (!m_path.Exist() && !HasBit(m_openModes, OpenMode::CREATE)))
         return false;
 
-    std::string openModeStr;
+    String openModeStr;
     if ((HasBit(m_openModes, OpenMode::READ) && HasBit(m_openModes, OpenMode::WRITE)) ||
         HasBit(m_openModes, OpenMode::TRUNCATE))
     {
@@ -80,7 +80,7 @@ bool File::IsOpen() const
     return m_file != nullptr;
 }
 
-bool File::Write(const std::string& str)
+bool File::Write(const String& str)
 {
     if (m_file == nullptr)
         return false;

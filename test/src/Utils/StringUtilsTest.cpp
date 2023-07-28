@@ -8,7 +8,7 @@
 
 TEST_CASE("Trim", "[StringUtils]")
 {
-    std::string s = "    OUI  ddede  OUI      ";
+    String s = "    OUI  ddede  OUI      ";
     red::utils::Trim(s);
     REQUIRE(s == "OUI  ddede  OUI");
 
@@ -35,7 +35,7 @@ TEST_CASE("Trim", "[StringUtils]")
 
 TEST_CASE("Split", "[StringUtils]")
 {
-    std::string myStr = "bla-bli-blo-blu\nbly-blv-blw";
+    String myStr = "bla-bli-blo-blu\nbly-blv-blw";
     auto splited = red::utils::Split(myStr, '-');
 
     REQUIRE(std::find(splited.begin(), splited.end(), "bla") != splited.end());
@@ -55,7 +55,7 @@ TEST_CASE("StringParser", "[StringUtils]")
 {
     using namespace red::utils;
 
-    std::string str = "[0.5;1.6;2.7;-1]";
+    String str = "[0.5;1.6;2.7;-1]";
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
 

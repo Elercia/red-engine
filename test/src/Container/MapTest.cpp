@@ -13,7 +13,7 @@ using namespace red;
 
 TEST_CASE("Map Set / Get", "[Map]")
 {
-    Map<std::string, int> m;
+    Map<String, int> m;
 
     REQUIRE(m.size() == 0);
     REQUIRE(m.empty());
@@ -39,7 +39,7 @@ TEST_CASE("Map Set / Get", "[Map]")
 
 TEST_CASE("Map Initializer list", "[Map]")
 {
-    Map<std::string, int> m({{"ONE", 1}, {"TWO", 2}, {"THREE", 3}});
+    Map<String, int> m({{"ONE", 1}, {"TWO", 2}, {"THREE", 3}});
 
     REQUIRE(m.size() == 3);
     REQUIRE(m["ONE"] == 1);
@@ -84,11 +84,11 @@ TEST_CASE("Map a lot of keys", "[Map]")
 
 TEST_CASE("Map colisions", "[Map]")
 {
-    Map<std::string, int> m;
+    Map<String, int> m;
 
     for (int i = 0; i < 3000; i++)
     {
-        std::string s = fmt::format("{}", i);
+        String s = fmt::format("{}", i);
         m.insert({s, i});
     }
 
@@ -96,7 +96,7 @@ TEST_CASE("Map colisions", "[Map]")
 
     for (auto& p : m)
     {
-        std::string s = fmt::format("{}", p.second);
+        String s = fmt::format("{}", p.second);
         REQUIRE(s == p.first);
     }
 }
@@ -187,23 +187,23 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
     {
         DurationRAII profiler(counterRed);
 
-        Map<std::string, int> m;
+        Map<String, int> m;
 
         for (int i = 0; i < iterationCount; i++)
         {
-            std::string s = fmt::format("{}", i);
+            String s = fmt::format("{}", i);
             m.insert({std::move(s), i});
         }
 
         for (auto& p : m)
         {
-            std::string s = fmt::format("{}", p.second);
+            String s = fmt::format("{}", p.second);
             REQUIRE(s == p.first);
         }
 
         for (int i = 0; i < iterationCount; i++)
         {
-            std::string s = fmt::format("{}", i);
+            String s = fmt::format("{}", i);
             m.erase(s);
         }
     }
@@ -211,23 +211,23 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
     {
         DurationRAII profiler(counterStd);
 
-        std::map<std::string, int> m;
+        std::map<String, int> m;
 
         for (int i = 0; i < iterationCount; i++)
         {
-            std::string s = fmt::format("{}", i);
+            String s = fmt::format("{}", i);
             m.insert({std::move(s), i});
         }
 
         for (auto& p : m)
         {
-            std::string s = fmt::format("{}", p.second);
+            String s = fmt::format("{}", p.second);
             REQUIRE(s == p.first);
         }
 
         for (int i = 0; i < iterationCount; i++)
         {
-            std::string s = fmt::format("{}", i);
+            String s = fmt::format("{}", i);
             m.erase(s);
         }
     }
@@ -235,23 +235,23 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
     {
         DurationRAII profiler(counterStdUnordered);
 
-        std::unordered_map<std::string, int> m;
+        std::unordered_map<String, int> m;
 
         for (int i = 0; i < iterationCount; i++)
         {
-            std::string s = fmt::format("{}", i);
+            String s = fmt::format("{}", i);
             m.insert({std::move(s), i});
         }
 
         for (auto& p : m)
         {
-            std::string s = fmt::format("{}", p.second);
+            String s = fmt::format("{}", p.second);
             REQUIRE(s == p.first);
         }
 
         for (int i = 0; i < iterationCount; i++)
         {
-            std::string s = fmt::format("{}", i);
+            String s = fmt::format("{}", i);
             m.erase(s);
         }
     }

@@ -27,8 +27,8 @@ namespace utils
 
         Array<iniCatKeyValue> iniKeyCatValues;
 
-        std::string lineBuffer;
-        std::string currentCategory = "default";
+        String lineBuffer;
+        String currentCategory = "default";
 
         while (std::getline(stream, lineBuffer))
         {
@@ -41,7 +41,7 @@ namespace utils
             {
                 // start of a new category
                 auto endChar = lineBuffer.find_first_of(']');
-                if (endChar == std::string::npos)
+                if (endChar == String::npos)
                 {
                     RED_LOG_WARNING("IniReader invalid category : {}", lineBuffer);
                     continue;

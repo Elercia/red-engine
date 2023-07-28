@@ -1,8 +1,8 @@
 #pragma once
 
 #include "RedEngine/Math/Hash.hpp"
+#include "RedEngine/Core/Container/String.hpp"
 
-#include <string_view>
 #include <tuple>
 
 namespace red
@@ -29,7 +29,7 @@ using TypeTraitsId = uint32;
 
 struct TypeTraits
 {
-    std::string_view name;
+    StringView name;
     TypeTraitsId typeId;
 
     bool operator==(const TypeTraits& other) const
@@ -70,7 +70,7 @@ constexpr TypeTraits EmptyTypeTraits{"invalid", (uint32) -1};
 template <typename T>
 constexpr TypeTraits TypeInfo();
 
-inline TypeTraits GetTypeInfoFromTypeName(std::string_view name);
+inline TypeTraits GetTypeInfoFromTypeName(StringView name);
 }  // namespace red
 
 #include "inl/TypesInfo.inl"

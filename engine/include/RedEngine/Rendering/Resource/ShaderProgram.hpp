@@ -2,7 +2,7 @@
 
 #include "RedEngine/Resources/Resource.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {

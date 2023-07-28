@@ -71,7 +71,7 @@ std::shared_ptr<red::IResource> ResourceLoader<Type>::LoadAbstractResource(const
 template <typename Type>
 std::shared_ptr<Type> ResourceLoader<Type>::LoadResource(const Path& path)
 {
-    using json = nlohmann::json;
+    using json = Json;
 
     Path activePath = path;
     activePath.Append(L".json");

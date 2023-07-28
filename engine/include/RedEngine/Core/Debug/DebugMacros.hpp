@@ -2,20 +2,20 @@
 
 #include <debugbreak.h>
 #include <fmt/format.h>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
-void LogAssert(const char* filename, int line, const std::string& s);
+void LogAssert(const char* filename, int line, const String& s);
 
 template <typename... Args>
-bool HandleAssert(bool expr, std::string_view exprStr, const char* filename, int line, const std::string& message = "",
+bool HandleAssert(bool expr, StringView exprStr, const char* filename, int line, const String& message = "",
                   Args... args)
 {
     if (expr)
         return false;
 
-    std::string logString = fmt::format("Assertion failed {}", exprStr);
+    String logString = fmt::format("Assertion failed {}", exprStr);
 
     if (!message.empty())
     {

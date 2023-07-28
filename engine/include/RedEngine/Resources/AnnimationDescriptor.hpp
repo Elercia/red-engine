@@ -3,7 +3,7 @@
 #include "RedEngine/Math/Vector.hpp"
 
 #include <memory>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 #include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
@@ -23,7 +23,7 @@ struct AnimationFrameDesc
 
 struct AnimationDesc
 {
-    std::string name;
+    String name;
     bool loop{false};
     std::shared_ptr<Texture2D> texture;  ///< The animation spritesheet
     std::shared_ptr<Material> material;  ///< The animation spritesheet

@@ -82,7 +82,7 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     ImGui::SameLine();
 
     static uint32 selectedLogLevels = (uint32) -1;
-    std::string shownLevels;
+    String shownLevels;
     int bit = 1;
     for (int level = 0; level < 7; level++)
     {
@@ -309,7 +309,7 @@ void ShowEntityList(DebugComponent* debug)
         {
             for (auto e : entities)
             {
-                if (utils::Find(e->GetName(), searchStr, caseInsensitive) != std::string::npos)
+                if (utils::Find(e->GetName(), searchStr, caseInsensitive) != String::npos)
                 {
                     filteredEntities.push_back(e);
                 }

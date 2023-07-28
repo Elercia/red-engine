@@ -28,12 +28,12 @@ MaterialResourceLoader::~MaterialResourceLoader()
 }
 
 bool MaterialResourceLoader::InitResource(std::shared_ptr<Material>& resource, const Path& /*path*/,
-                                          nlohmann::json jsonContent)
+                                          Json jsonContent)
 {
     auto* shaderResourceLoader =
         m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<ShaderProgramResourceLoader>();
 
-    std::string shaderPathStr = jsonContent["shader_program"];
+    String shaderPathStr = jsonContent["shader_program"];
     Path shaderPath = Path::Resource(shaderPathStr);
     resource->m_shaderProgram = shaderResourceLoader->LoadResource(shaderPath);
 
@@ -43,7 +43,7 @@ bool MaterialResourceLoader::InitResource(std::shared_ptr<Material>& resource, c
 
     for (auto& uniform : defaultUniforms)
     {
-        std::string type = uniform["type"];
+        String type = uniform["type"];
         int layoutIndex = uniform["binding_index"];
 
         auto& newParam = resource->m_defaultBindings.bindings[layoutIndex];

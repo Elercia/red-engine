@@ -5,7 +5,7 @@
 #include "RedEngine/Resources/Resource.hpp"
 
 #include <SDL2/SDL_render.h>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {

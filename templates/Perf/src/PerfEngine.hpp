@@ -10,6 +10,6 @@ public:
 	bool Create() override;
 	bool Destroy() override;
 
-	std::string_view GetGameName() const override;
+	StringView GetGameName() const override;
 };
 }  // namespace pong

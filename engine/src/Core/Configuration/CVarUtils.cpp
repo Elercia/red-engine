@@ -8,12 +8,12 @@
 
 namespace red
 {
-std::string CVarUtils::GetLongName(const std::string& category, const std::string& key)
+String CVarUtils::GetLongName(const String& category, const String& key)
 {
     return category + "_" + key;
 }
 
-std::string CVarUtils::GetLongName(const ICVar* cVar)
+String CVarUtils::GetLongName(const ICVar* cVar)
 {
     return GetLongName(cVar->GetCategory(), cVar->GetName());
 }

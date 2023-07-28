@@ -1,28 +1,26 @@
 #pragma once
 
-#include "RedEngine/Utils/Types.hpp"
-
-#include <string>
-#include <string_view>
 #include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Container/String.hpp"
+#include "RedEngine/Utils/Types.hpp"
 
 namespace red
 {
 namespace utils
 {
-    std::string& Trim(std::string& str);
+    String& Trim(String& str);
 
-    Array<std::string> Split(const std::string& str, char delim);
+    Array<String> Split(const String& str, char delim);
 
-    std::wstring ToUnicodeString(const std::string_view str);
+    std::wstring ToUnicodeString(const StringView str);
 
-    void ToLowerCase(std::string& str);
+    void ToLowerCase(String& str);
     void ToLowerCase(std::wstring& str);
 
-    void ToUpperCase(std::string& str);
+    void ToUpperCase(String& str);
     void ToUpperCase(std::wstring& str);
 
-    std::string::size_type Find(const std::string_view& in, const std::string_view& toFind, bool caseInsensitive = false);
+    String::size_type Find(const StringView& in, const StringView& toFind, bool caseInsensitive = false);
 
     namespace StringParser
     {

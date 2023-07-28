@@ -85,7 +85,7 @@ void Sprite::NextFrame()
     UpdateRenderData();
 }
 
-bool Sprite::StartAnimation(const std::string& name)
+bool Sprite::StartAnimation(const String& name)
 {
     if (!m_spriteResource)
         return false;

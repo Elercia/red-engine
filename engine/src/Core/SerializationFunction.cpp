@@ -9,13 +9,13 @@ using namespace red::utils;  // StringReader
 namespace red
 {
 template <>
-std::string Serialize(const bool& value)
+String Serialize(const bool& value)
 {
     return value ? "1" : "0";
 }
 
 template <>
-bool Deserialize(bool& value, const std::string& str)
+bool Deserialize(bool& value, const String& str)
 {
     value = false;
 
@@ -26,13 +26,13 @@ bool Deserialize(bool& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const double& value)
+String Serialize(const double& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(double& value, const std::string& str)
+bool Deserialize(double& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -43,13 +43,13 @@ bool Deserialize(double& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const float& value)
+String Serialize(const float& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(float& value, const std::string& str)
+bool Deserialize(float& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -60,13 +60,13 @@ bool Deserialize(float& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const int8& value)
+String Serialize(const int8& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(int8& value, const std::string& str)
+bool Deserialize(int8& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -79,13 +79,13 @@ bool Deserialize(int8& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const int16& value)
+String Serialize(const int16& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(int16& value, const std::string& str)
+bool Deserialize(int16& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -98,13 +98,13 @@ bool Deserialize(int16& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const int32& value)
+String Serialize(const int32& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(int32& value, const std::string& str)
+bool Deserialize(int32& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -117,13 +117,13 @@ bool Deserialize(int32& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const int64& value)
+String Serialize(const int64& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(int64& value, const std::string& str)
+bool Deserialize(int64& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -134,13 +134,13 @@ bool Deserialize(int64& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const uint8& value)
+String Serialize(const uint8& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(uint8& value, const std::string& str)
+bool Deserialize(uint8& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -153,13 +153,13 @@ bool Deserialize(uint8& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const uint16& value)
+String Serialize(const uint16& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(uint16& value, const std::string& str)
+bool Deserialize(uint16& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -172,13 +172,13 @@ bool Deserialize(uint16& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const uint32& value)
+String Serialize(const uint32& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(uint32& value, const std::string& str)
+bool Deserialize(uint32& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -191,13 +191,13 @@ bool Deserialize(uint32& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const uint64& value)
+String Serialize(const uint64& value)
 {
     return std::to_string(value);
 }
 
 template <>
-bool Deserialize(uint64& value, const std::string& str)
+bool Deserialize(uint64& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;
@@ -208,13 +208,13 @@ bool Deserialize(uint64& value, const std::string& str)
 }
 
 template <>
-std::string Serialize(const std::string& value)
+String Serialize(const String& value)
 {
     return value;
 }
 
 template <>
-bool Deserialize(std::string& value, const std::string& str)
+bool Deserialize(String& value, const String& str)
 {
     value = str;
     return true;

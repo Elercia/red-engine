@@ -30,7 +30,7 @@ public:
 
     bool IsOpen() const;
 
-    bool Write(const std::string& str);
+    bool Write(const String& str);
     bool Write(const uint8* data, sizet size);
 
     sizet Size();  // file size in bytes

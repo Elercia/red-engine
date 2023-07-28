@@ -7,13 +7,13 @@
 namespace red
 {
 template <>
-std::string Serialize(const Color& value)
+String Serialize(const Color& value)
 {
     return fmt::format("{};{};{};{}", value.r, value.g, value.b, value.a);
 }
 
 template <>
-bool Deserialize(Color& value, const std::string& str)
+bool Deserialize(Color& value, const String& str)
 {
     const char* it = str.data();
     const char* end = (&str.back()) + 1;

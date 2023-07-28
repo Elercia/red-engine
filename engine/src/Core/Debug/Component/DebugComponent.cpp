@@ -99,7 +99,7 @@ const Array<Logger::LogOoutputInfo>& DebugComponent::GetLogBuffer() const
     return m_logs;
 }
 
-void DebugComponent::HandleCommand(const std::string& str)
+void DebugComponent::HandleCommand(const String& str)
 {
     Logger::LogOoutputInfo info;
     info.str = str;

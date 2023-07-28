@@ -3,14 +3,14 @@
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
 template <typename T>
-std::string Serialize(const T& value);
+String Serialize(const T& value);
 template <typename T>
-bool Deserialize(T& value, const std::string& str);
+bool Deserialize(T& value, const String& str);
 }  // namespace red
 
 #include "inl/SerializationFunction.inl"

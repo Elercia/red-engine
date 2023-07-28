@@ -21,7 +21,7 @@ bool PerfEngine::Destroy()
     return true;
 }
 
-std::string_view PerfEngine::GetGameName() const
+StringView PerfEngine::GetGameName() const
 {
     return "Perf Template";
 }

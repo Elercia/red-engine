@@ -6,7 +6,7 @@
 #include "RedEngine/Core/Event/Delegate.hpp"
 
 #include <functional>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 #include <type_traits>
 
 namespace red
@@ -15,20 +15,20 @@ namespace red
 class ICVar
 {
 public:
-    ICVar(const std::string& name, const std::string& category);
+    ICVar(const String& name, const String& category);
     virtual ~ICVar() = default;
 
-    [[nodiscard]] std::string GetName() const;
-    [[nodiscard]] std::string GetCategory() const;
-    [[nodiscard]] std::string GetLongName() const;
+    [[nodiscard]] String GetName() const;
+    [[nodiscard]] String GetCategory() const;
+    [[nodiscard]] String GetLongName() const;
 
-    void ChangeValueFromString(const std::string& str);
+    void ChangeValueFromString(const String& str);
 
 protected:
-    std::string m_name;
-    std::string m_category;
+    String m_name;
+    String m_category;
 
-    std::function<bool(const std::string&)> m_deserializationFunction;
+    std::function<bool(const String&)> m_deserializationFunction;
 };
 
 // Shared CVar value managed by CVarManager
@@ -42,7 +42,7 @@ class CVarValue : public ICVar
 public:
     using ValueChangeDelegate = Delegate<CVarValue<T>>;
 
-    CVarValue(const std::string& name, const std::string& category, const T& defaultValue);
+    CVarValue(const String& name, const String& category, const T& defaultValue);
     virtual ~CVarValue() override = default;
 
     void ChangeValue(const T& newValue);
@@ -66,7 +66,7 @@ class CVar
     friend class CVarManager;
 
 public:
-    CVar(const std::string& name, const std::string& category, const T& defaultValue);
+    CVar(const String& name, const String& category, const T& defaultValue);
     CVar(CVarValue<T>* value);
     ~CVar() = default;
 

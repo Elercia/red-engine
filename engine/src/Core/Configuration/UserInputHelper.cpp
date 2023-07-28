@@ -8,7 +8,7 @@
 #include "RedEngine/Filesystem/Path.hpp"
 
 #include <filesystem>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 
 namespace red
 {
@@ -44,13 +44,13 @@ namespace utils
         return mappings;
     }
 
-    KeyMapping UserInputHelper::GetMappingFromConfigLine(const std::string& valueString)
+    KeyMapping UserInputHelper::GetMappingFromConfigLine(const String& valueString)
     {
         KeyMapping m;
 
         auto indexOfSemicolon = valueString.find_first_of(';');
-        std::string keyString = valueString.substr(0, indexOfSemicolon);
-        std::string modifierString = valueString.substr(indexOfSemicolon + 1, valueString.length());
+        String keyString = valueString.substr(0, indexOfSemicolon);
+        String modifierString = valueString.substr(indexOfSemicolon + 1, valueString.length());
 
         m.modifiers = GetModifiersFromConfigLine(modifierString);
 
@@ -64,33 +64,33 @@ namespace utils
         return m;
     }
 
-    ModifierKeyBitSet UserInputHelper::GetModifiersFromConfigLine(const std::string& modifierString)
+    ModifierKeyBitSet UserInputHelper::GetModifiersFromConfigLine(const String& modifierString)
     {
         ModifierKeyBitSet modifiers;
 
-        if (modifierString.find("lctrl+") != std::string::npos)
+        if (modifierString.find("lctrl+") != String::npos)
         {
             modifiers.set(ModifierKey::LCTRL);
         }
-        if (modifierString.find("rctrl+") != std::string::npos)
+        if (modifierString.find("rctrl+") != String::npos)
         {
             modifiers.set(ModifierKey::RCTRL);
         }
 
-        if (modifierString.find("lalt+") != std::string::npos)
+        if (modifierString.find("lalt+") != String::npos)
         {
             modifiers.set(ModifierKey::LALT);
         }
-        if (modifierString.find("ralt+") != std::string::npos)
+        if (modifierString.find("ralt+") != String::npos)
         {
             modifiers.set(ModifierKey::RALT);
         }
 
-        if (modifierString.find("lshift+") != std::string::npos)
+        if (modifierString.find("lshift+") != String::npos)
         {
             modifiers.set(ModifierKey::LSHIFT);
         }
-        if (modifierString.find("rshift+") != std::string::npos)
+        if (modifierString.find("rshift+") != String::npos)
         {
             modifiers.set(ModifierKey::RSHIFT);
         }
@@ -98,7 +98,7 @@ namespace utils
         return modifiers;
     }
 
-    KeyCodes::Enum UserInputHelper::GetKeyCode(const std::string& keyString)
+    KeyCodes::Enum UserInputHelper::GetKeyCode(const String& keyString)
     {
         auto codes = GetKeyCodeReadableDb();
 

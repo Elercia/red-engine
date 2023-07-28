@@ -14,7 +14,7 @@ public:
     ~SoundResourceLoader();
 
     void FinalizeResource(std::shared_ptr<SoundResource> resource);
-    bool InitResource(std::shared_ptr<SoundResource>& resource, const Path& path, nlohmann::json jsonContent);
+    bool InitResource(std::shared_ptr<SoundResource>& resource, const Path& path, Json jsonContent);
 };
 
 }  // namespace red

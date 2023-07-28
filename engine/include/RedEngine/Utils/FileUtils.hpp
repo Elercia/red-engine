@@ -4,5 +4,5 @@
 
 namespace red
 {
-std::string ReadFile(const Path& fullPath);
+String ReadFile(const Path& fullPath);
 }

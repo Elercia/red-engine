@@ -6,27 +6,27 @@
 
 namespace red
 {
-std::string ICVar::GetName() const
+String ICVar::GetName() const
 {
     return m_name;
 }
 
-std::string ICVar::GetCategory() const
+String ICVar::GetCategory() const
 {
     return m_category;
 }
 
-std::string ICVar::GetLongName() const
+String ICVar::GetLongName() const
 {
     return CVarUtils::GetLongName(m_category, m_name);
 }
 
-ICVar::ICVar(const std::string& name, const std::string& category)
+ICVar::ICVar(const String& name, const String& category)
     : m_name(name), m_category(category)
 {
 }
 
-void ICVar::ChangeValueFromString(const std::string& str)
+void ICVar::ChangeValueFromString(const String& str)
 {
     m_deserializationFunction(str);
 }

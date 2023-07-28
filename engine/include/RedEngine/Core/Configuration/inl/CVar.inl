@@ -8,7 +8,7 @@ namespace red
 //////// CVar
 ////////////////////////////////////////////////
 template <class T>
-CVar<T>::CVar(const std::string& name, const std::string& category, const T& defaultValue)
+CVar<T>::CVar(const String& name, const String& category, const T& defaultValue)
 {
     m_value = CVarManager::NewConsoleVariableDeclaration(name, category, defaultValue);
 }
@@ -47,11 +47,11 @@ void CVar<T>::ChangeValue(const T& value)
 //////// CVarValue
 ////////////////////////////////////////////////
 template <class T>
-CVarValue<T>::CVarValue(const std::string& name, const std::string& category, const T& defaultValue) : ICVar(name, category)
+CVarValue<T>::CVarValue(const String& name, const String& category, const T& defaultValue) : ICVar(name, category)
     , m_defaultValue(defaultValue) 
     , m_currentValue(defaultValue)
 {
-    m_deserializationFunction = [this](const std::string& strValue){
+    m_deserializationFunction = [this](const String& strValue){
         return Deserialize(m_currentValue, strValue);
     };
 }

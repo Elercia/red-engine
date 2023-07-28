@@ -26,7 +26,7 @@ SpriteResourceLoader::~SpriteResourceLoader()
 }
 
 bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resource, const Path& path,
-                                        nlohmann::json jsonContent)
+                                        Json jsonContent)
 {
     auto* textureResourceLoader =
         m_world->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<TextureResourceLoader>();
@@ -38,7 +38,7 @@ bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resourc
     {
         AnimationDesc animationDesc;
 
-        std::string animationName = animationJson["name"];
+        String animationName = animationJson["name"];
         animationDesc.name = animationName;
 
         auto spriteSheetJson = animationJson.find("spritesheet");
@@ -47,11 +47,11 @@ bool SpriteResourceLoader::InitResource(std::shared_ptr<SpriteResource>& resourc
             RED_LOG_WARNING("Path {} has no spritesheet attribute", path.GetAscciiPath());
         }
 
-        std::string spriteSheetPathStr = spriteSheetJson.value();
+        String spriteSheetPathStr = spriteSheetJson.value();
         animationDesc.texture =
             textureResourceLoader->LoadResource(Path::Resource(utils::ToUnicodeString(spriteSheetPathStr)));
 
-        std::string materialName = animationJson["material"];
+        String materialName = animationJson["material"];
         animationDesc.material = materialLoader->LoadResource(Path::Resource(utils::ToUnicodeString(materialName)));
 
         auto framesJson = animationJson.find("frames");

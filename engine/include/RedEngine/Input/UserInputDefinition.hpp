@@ -50,9 +50,9 @@ struct KeyMapping
     ModifierKeyBitSet modifiers{};
 };
 
-using ActionKey = std::string;
+using ActionKey = String;
 using UserActionMapping = Map<ActionKey, KeyMapping>;
 using UserActionState = Map<ActionKey, KeyState>;
 
-using AxisKey = std::string;
+using AxisKey = String;
 }  // namespace red

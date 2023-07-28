@@ -7,7 +7,7 @@
 #include "RedEngine/Core/Engine.hpp"
 
 #include <filesystem>
-#include <string>
+#include "RedEngine/Core/Container/String.hpp"
 #include <utility>
 
 namespace red
@@ -63,7 +63,7 @@ void CVarManager::LoadConfigFile(const Path& path)
     CVarManager::GetInstance().LoadConfigFileInternal(path);
 }
 
-ICVar* CVarManager::FindCVar(const std::string& fullName)
+ICVar* CVarManager::FindCVar(const String& fullName)
 {
     auto it = m_configVariable.find(fullName);
 
