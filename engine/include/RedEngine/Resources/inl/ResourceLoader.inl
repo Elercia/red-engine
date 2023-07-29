@@ -74,7 +74,8 @@ std::shared_ptr<Type> ResourceLoader<Type>::LoadResource(const Path& path)
     using json = nlohmann::json;
 
     Path activePath = path;
-    activePath.Append(L".json");
+    activePath.Append(L".");
+    activePath.Append(Type::GetFileExtension());
 
     auto cachedResource = GetOrCreateFromCache(activePath);
 

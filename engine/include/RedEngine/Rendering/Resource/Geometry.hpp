@@ -47,7 +47,7 @@ class GeometryResourceWrapper : public IResource
     friend class GeometryResourceLoader;
 
 public:
-    RED_RESOURCE(ResourceType::GEOMETRY);
+    RED_RESOURCE(ResourceType::GEOMETRY, L"geometry");
 
     GeometryResourceWrapper(const Path& resourceId);
     ~GeometryResourceWrapper();

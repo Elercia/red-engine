@@ -12,7 +12,7 @@ namespace red
 class SoundResource : public IResource
 {
 public:
-    RED_RESOURCE(ResourceType::SOUND);
+    RED_RESOURCE(ResourceType::SOUND, L"sound");
 
     SoundResource(const Path& path);
     ~SoundResource();

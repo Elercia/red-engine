@@ -20,7 +20,7 @@ class ShaderProgram : public IResource
     friend class Material;
 
 public:
-    RED_RESOURCE(ResourceType::SHADER_PROGRAM);
+    RED_RESOURCE(ResourceType::SHADER_PROGRAM, L"shader");
 
 public:
     ShaderProgram(const Path& resourceId);
