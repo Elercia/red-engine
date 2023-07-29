@@ -1,5 +1,6 @@
 #include "RedEngine/Physics/PhysicsModule.hpp"
 
+#include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
@@ -10,8 +11,7 @@
 
 namespace red
 {
-PhysicSystem::PhysicSystem(World* world)
-    : System(world), m_physicsWorld(world->GetPhysicsWorld())
+PhysicSystem::PhysicSystem(World* world) : System(world), m_physicsWorld(world->GetPhysicsWorld())
 {
 }
 
@@ -26,12 +26,13 @@ void PhysicSystem::Init()
 
 void PhysicSystem::Finalize()
 {
-    auto bodies =  QueryComponents<0>();
-    for (auto& tuple :bodies)
+    auto bodies = QueryComponents<0>();
+    for (auto& tuple : bodies)
     {
-        auto physicBody = std::get<1>( tuple );
+        auto physicBody = std::get<1>(tuple);
 
-        m_physicsWorld->DestroyPhysicsBody(physicBody.Get());  // Destroying a body will destroy all the fixture attached
+        m_physicsWorld->DestroyPhysicsBody(
+            physicBody.Get());  // Destroying a body will destroy all the fixture attached
     }
 }
 
@@ -43,7 +44,7 @@ void PhysicSystem::Update()
 
     auto& scheduler = Engine::GetInstance()->GetScheduler();
 
-     auto bodies = QueryComponents<0>();
+    auto bodies = QueryComponents<0>();
 
     for (auto& tuple : bodies)
     {

@@ -1,12 +1,15 @@
 #pragma once
 
 #include "RedEngine/Core/Container/Array.hpp"
+#include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
+#include "RedEngine/Core/Memory/LinearAllocator.hpp"
 #include "RedEngine/Math/AABB.hpp"
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Rendering/Color.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/FrameBuffer.hpp"
 #include "RedEngine/Rendering/GPUBuffer.hpp"
 #include "RedEngine/Rendering/Resource/Geometry.hpp"
@@ -108,7 +111,7 @@ private:
 
     // Tmp data used per camera
     Array<RenderingData, DoubleLinearArrayAllocator> m_culledAndSortedRenderingData;
-    ArrayView<RenderingData> m_renderingDataPerQueue[(int)RenderEntityType::Count];
+    ArrayView<RenderingData> m_renderingDataPerQueue[(int) RenderEntityType::Count];
 
     // Rendering data sent to GPU
     GPUBuffer m_perInstanceData;

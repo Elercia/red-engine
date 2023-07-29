@@ -19,6 +19,7 @@
 #include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Rendering/System/SpriteAnimationSystem.hpp"
 #include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/Random.hpp"
 

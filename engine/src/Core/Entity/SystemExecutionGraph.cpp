@@ -1,6 +1,8 @@
 #include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 
+#include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Thread/Thread.hpp"
 
 namespace red
 {

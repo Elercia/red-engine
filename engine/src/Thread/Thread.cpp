@@ -1,5 +1,6 @@
 #include "RedEngine/Thread/Thread.hpp"
 
+#include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 
 #include <algorithm>
@@ -46,7 +47,7 @@ ThreadScheduler::ThreadScheduler() : m_scheduler(nullptr)
 void ThreadScheduler::Init()
 {
     auto config = marl::Scheduler::Config::allCores();
-    if(s_wantedThreadCount.GetValue() != -1)
+    if (s_wantedThreadCount.GetValue() != -1)
     {
         config.setWorkerThreadCount(s_wantedThreadCount);
     }

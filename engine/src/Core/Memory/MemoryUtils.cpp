@@ -1,8 +1,12 @@
 #include "RedEngine/Core/Memory/MemoryUtils.hpp"
 
+#include "RedEngine/Core/Debug/DebugMacros.hpp"
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Utils/SystemInfo.hpp"
+
 #ifdef RED_WINDOWS
 #define NOMINMAX 1
-#include <memoryapi.h>
+#include <windows.h>
 #endif
 
 #ifdef RED_LINUX
@@ -14,7 +18,7 @@ namespace red
 PageAllocation VirtualAlloc(uint32 size, const PageAllocation* previousAlloc)
 {
 #ifdef RED_WINDOWS
-    auto& systemInfo = GetSystemInfo();
+    auto& systemInfo = red::GetSystemInfo();
 
     auto unusedMemory = size % systemInfo.pageSize;
     if (unusedMemory != 0)

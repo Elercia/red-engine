@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 #include <cstdint>

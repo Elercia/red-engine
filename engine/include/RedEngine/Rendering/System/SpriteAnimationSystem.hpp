@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Rendering/Component/Sprite.hpp"
 
 namespace red
 {

@@ -1,5 +1,10 @@
 #include "RedEngine/Core/Memory/LinearAllocator.hpp"
 
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Memory/MemoryProfiler.hpp"
+#include "RedEngine/Thread/Thread.hpp"
+
 namespace red
 {
 LinearAllocator::LinearAllocator(uint32 size) : m_startPtr(nullptr), m_size(size), m_stackOffset(0)

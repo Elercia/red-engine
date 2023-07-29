@@ -3,6 +3,12 @@
 #include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+
+#include <box2d/b2_shape.h>
+#include <box2d/b2_circle_shape.h>
+#include <box2d/b2_edge_shape.h>
+#include <box2d/b2_polygon_shape.h>
 
 namespace red
 {

@@ -13,6 +13,7 @@
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/RendererComponent.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Renderer.hpp"
@@ -70,7 +71,7 @@ void UpdateRenderableSystem::Update()
 
 FlushRenderSystem::FlushRenderSystem(World* world)
     : System<QueryGroup<QueryRO<Transform>, QueryRW<CameraComponent>>, SinglQuery<QueryRW<RendererComponent>>,
-                   SinglQuery<QueryRW<DebugComponent>>>(world)
+             SinglQuery<QueryRW<DebugComponent>>>(world)
 {
 }
 

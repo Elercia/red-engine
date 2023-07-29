@@ -27,11 +27,11 @@
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/Random.hpp"
+#include "RedEngine/Utils/SystemInfo.hpp"
 
 #ifdef RED_WINDOWS
 #define NOMINMAX 1
-#include <debugapi.h>
-#include <windows.h>  // For some reason, some include above define some macros that break everything with a #error "No Target Architecture"
+#include <windows.h>
 #endif
 
 namespace red
@@ -78,7 +78,7 @@ void Engine::MainLoop()
 
         for (int i = 0; i < m_scheduler.GetWorkerCount(); i++)
         {
-            m_frameAllocator[i].Swap();   
+            m_frameAllocator[i].Swap();
         }
     }
 }
@@ -194,8 +194,8 @@ bool Engine::Create()
     resourceHolder->RegisterResourceLoader(ResourceType::GEOMETRY, new GeometryResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SHADER_PROGRAM, new ShaderProgramResourceLoader(m_world));
 
-    m_world->BuildExecutionGraph(); 
-    m_world->InitSystems();// TODO Remove this init systems call and find a way to have "InitSystems" resposible 
+    m_world->BuildExecutionGraph();
+    m_world->InitSystems();  // TODO Remove this init systems call and find a way to have "InitSystems" resposible
 
     return true;
 }

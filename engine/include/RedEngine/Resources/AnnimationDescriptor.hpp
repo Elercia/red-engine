@@ -1,10 +1,12 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Math/Vector.hpp"
+#include "RedEngine/Rendering/Resource/Material.hpp"
+#include "RedEngine/Rendering/Resource/Texture2D.hpp"
 
 #include <memory>
 #include <string>
-#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {

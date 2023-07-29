@@ -6,12 +6,14 @@
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Level/Level.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Utils/StringUtils.hpp"
 
 #include <SDL2/SDL_clipboard.h>
 #include <box2d/b2_draw.h>
@@ -29,7 +31,7 @@ void ShowImGuiDemo(DebugComponent* /*debug*/)
     static bool demoOpen = false;
     ImGui::Checkbox("Show ImGui demo", &demoOpen);
 
-    if(demoOpen)
+    if (demoOpen)
     {
         ImGui::ShowDemoWindow(&demoOpen);
     }
@@ -63,7 +65,7 @@ void DebugSystem::RenderConsole(DebugComponent* debug)
     {
         static ImGuiComboFlags flags = 0;
         LogLevel currentLogLevel = GetRedLogger()->GetLogLevel();
-        if (ImGui::BeginCombo("Log level", Logger::logLevelAsString[(int)currentLogLevel].c_str(), flags))
+        if (ImGui::BeginCombo("Log level", Logger::logLevelAsString[(int) currentLogLevel].c_str(), flags))
         {
             for (int level = 0; level < 7; level++)
             {

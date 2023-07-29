@@ -3,6 +3,10 @@
 #include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
 namespace red
 {

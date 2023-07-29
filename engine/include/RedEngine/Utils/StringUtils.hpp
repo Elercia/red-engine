@@ -1,10 +1,10 @@
 #pragma once
 
+#include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 #include <string>
 #include <string_view>
-#include "RedEngine/Core/Container/Array.hpp"
 
 namespace red
 {
@@ -22,7 +22,8 @@ namespace utils
     void ToUpperCase(std::string& str);
     void ToUpperCase(std::wstring& str);
 
-    std::string::size_type Find(const std::string_view& in, const std::string_view& toFind, bool caseInsensitive = false);
+    std::string::size_type Find(const std::string_view& in, const std::string_view& toFind,
+                                bool caseInsensitive = false);
 
     namespace StringParser
     {

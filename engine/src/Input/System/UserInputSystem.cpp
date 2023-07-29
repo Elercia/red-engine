@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 
 #include <SDL2/SDL.h>

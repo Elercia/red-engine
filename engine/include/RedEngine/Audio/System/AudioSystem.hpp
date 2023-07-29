@@ -3,6 +3,8 @@
 #include "RedEngine/Audio/AudioModule.hpp"
 
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Audio/Component/AudioSource.hpp"
+#include "RedEngine/Audio/Component/AudioListener.hpp"
 
 #include <fmod.hpp>
 #include <fmod_studio.hpp>

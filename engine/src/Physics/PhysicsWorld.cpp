@@ -3,6 +3,7 @@
 #include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Memory/Macros.hpp"
 
 #include <box2d/b2_contact.h>
@@ -11,7 +12,7 @@
 
 namespace red
 {
- constexpr float s_physicDistanceFactor = 0.01f;
+constexpr float s_physicDistanceFactor = 0.01f;
 // constexpr float s_physicDistanceFactor = 1.f;
 
 float ConvertToPhysicsDistance(float f)

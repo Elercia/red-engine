@@ -3,6 +3,7 @@
 #include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Input/InputDefinitionTranslationUnit.hpp"
 

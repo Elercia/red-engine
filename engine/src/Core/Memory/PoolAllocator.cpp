@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Memory/PoolAllocator.hpp"
 
+#include "RedEngine/Core/Debug/Logger/Logger.hpp"
+
 namespace red
 {
 VirtualPoolAllocator::VirtualPoolAllocator(uint32 sizeOfElement, int initialCapacity)
@@ -31,7 +33,7 @@ void VirtualPoolAllocator::Realloc(uint32 newCapacity)
     // Utility function to have a ptr from a index
     auto GetFreeblock = [this](uint32 index) -> FreeBlock*
     {
-        auto offset = index * ( sizeof(FreeBlock) + m_blockSize);
+        auto offset = index * (sizeof(FreeBlock) + m_blockSize);
         return (FreeBlock*) ((uint8*) (m_pageAlloc.ptr) + offset);
     };
 

@@ -2,7 +2,7 @@
 
 #ifdef RED_WINDOWS
 #define NOMINMAX 1
-#include <sysinfoapi.h>
+#include <windows.h>
 #endif
 
 #ifdef RED_LINUX

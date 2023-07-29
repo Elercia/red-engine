@@ -7,6 +7,7 @@
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
+#include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/FileUtils.hpp"

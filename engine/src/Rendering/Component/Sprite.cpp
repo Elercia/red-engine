@@ -4,6 +4,7 @@
 
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
@@ -22,7 +23,7 @@ inline void RegisterMembers<Sprite>(ComponentTraits& traits)
 {
     traits.AddMember("Layer index", &Sprite::m_layerIndex, "The layer of the object", 0);
     traits.AddMember("Size of the sprite", &Sprite::m_size, "The layer of the object", 0);
-    //traits.AddMember("Sprite resource", &Sprite::m_spriteResource, "The layer of the object", 0);
+    // traits.AddMember("Sprite resource", &Sprite::m_spriteResource, "The layer of the object", 0);
 }
 
 Sprite::Sprite(Entity* entity) : Component(entity), m_spriteResource(nullptr)

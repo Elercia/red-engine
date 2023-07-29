@@ -1,5 +1,7 @@
 #include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 
+#include "RedEngine/Math/Math.hpp"
+
 #include <iostream>
 
 namespace red
@@ -23,7 +25,6 @@ void* MemoryProfiler::Allocate(sizet size, [[maybe_unused]] int line, [[maybe_un
     InitAllocInfo(allocInfo);
     allocInfo->size = size;
 
-    
 #ifdef RED_MEMORY_LEAK_TRACER
     allocInfo->previous = nullptr;
 
@@ -114,7 +115,7 @@ void MemoryProfiler::Free(void* ptr)
 {
     if (ptr == nullptr)
         return;
-    
+
     AllocationInfo* allocInfo = &((AllocationInfo*) ptr)[-1];
 
 #ifdef RED_MEMORY_LEAK_TRACER
