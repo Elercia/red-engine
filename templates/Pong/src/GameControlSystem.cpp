@@ -1,20 +1,21 @@
 #include "GameControlSystem.hpp"
 
-#include "box2d/b2_body.h"
-
-#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
+#include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
-#include "RedEngine/Math/Vector.hpp"
+
+#include "box2d/b2_body.h"
 
 using namespace red;
 
 GameControlSystem::GameControlSystem(red::World* world, red::Entity* paddleOne, red::Entity* paddleTwo)
-    : red::System(world), m_paddleOne(paddleOne), m_paddleTwo(paddleTwo)
+    : red::System<>(world), m_paddleOne(paddleOne), m_paddleTwo(paddleTwo)
 {
 }
 

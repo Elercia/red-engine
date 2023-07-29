@@ -10,8 +10,6 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(DebugComponent)
-
 class ShaderProgram;
 
 struct DebugLinePoint
@@ -35,11 +33,8 @@ class DebugComponent : public Component
     friend class RenderingSystem;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(DebugComponent, Component)
-    RED_END_COMPONENT_REGISTER()
-
     explicit DebugComponent(Entity* entity);
-    ~DebugComponent() override = default;
+    ~DebugComponent() = default;
 
     void AddLine(const Vector2& from, const Vector2& to, const Color& c = ColorConstant::BLACK);
     void AddCircle(const Vector2& center, float radius, const Color& c = ColorConstant::BLACK);

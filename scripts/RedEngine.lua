@@ -53,7 +53,7 @@ function RedDefaultProjectOptions()
 	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
 	objdir (rootPath .. "/output/obj/" .. outputDirSementic)
 
-	filter { "options:asan" }
+	filter { "options:asan", "configurations:Debug or ReleaseWithDebugInfo" }
 		sanitize { "Address" }
 		defines{"_DISABLE_VECTOR_ANNOTATION", "_DISABLE_STRING_ANNOTATION"}
 	filter {}
@@ -87,6 +87,11 @@ function RedDefaultProjectOptions()
 		defines
 		{
 			"RED_LINUX"
+		}
+
+		links
+		{
+			"pthread"
 		}
 	filter {}
 

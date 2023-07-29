@@ -32,8 +32,8 @@ public:
     int GetVertexCount() const;
 
 private:
-    uint32 m_gpuBufferHandle{(uint32)-1};// Vao handle
-    uint32 m_gpuIndexBuffer{(uint32)-1}; // IBO Handle
+    uint32 m_gpuBufferHandle{(uint32) -1};  // Vao handle
+    uint32 m_gpuIndexBuffer{(uint32) -1};   // IBO Handle
 
     int m_indexCount{0};
     int m_vertexCount{0};
@@ -47,7 +47,7 @@ class GeometryResourceWrapper : public IResource
     friend class GeometryResourceLoader;
 
 public:
-    RED_RESOURCE(ResourceType::GEOMETRY);
+    RED_RESOURCE(ResourceType::GEOMETRY, L"geometry");
 
     GeometryResourceWrapper(const Path& resourceId);
     ~GeometryResourceWrapper();

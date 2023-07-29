@@ -1,5 +1,6 @@
 #include "RedEngine/Physics/PhysicsModule.hpp"
 
+#include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
@@ -23,14 +24,15 @@ void PhysicSystem::Init()
     System::Init();
 }
 
-void PhysicSystem::Finalise()
+void PhysicSystem::Finalize()
 {
-    auto bodies =  GetComponents<PhysicBody>();
-    for (auto& tuple :bodies)
+    auto bodies = QueryComponents<0>();
+    for (auto& tuple : bodies)
     {
-        auto* physicBody = std::get<1>( tuple );
+        auto physicBody = std::get<1>(tuple);
 
-        m_physicsWorld->DestroyPhysicsBody(physicBody);  // Destroying a body will destroy all the fixture attached
+        m_physicsWorld->DestroyPhysicsBody(
+            physicBody.Get());  // Destroying a body will destroy all the fixture attached
     }
 }
 
@@ -42,12 +44,12 @@ void PhysicSystem::Update()
 
     auto& scheduler = Engine::GetInstance()->GetScheduler();
 
-    auto bodies = GetComponents<PhysicBody>();
+    auto bodies = QueryComponents<0>();
 
     for (auto& tuple : bodies)
     {
-        auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
-        auto* physicBody = std::get<1>(tuple);
+        auto transform = std::get<0>(tuple);
+        auto physicBody = std::get<1>(tuple);
 
         if (physicBody->IsStatic())
         {
@@ -72,8 +74,8 @@ void PhysicSystem::Update()
             for (int i = range.start; i < range.end; i++)
             {
                 auto& tuple = bodies[i];
-                auto* transform = std::get<0>(tuple)->GetComponent<Transform>();
-                auto* physicBody = std::get<1>(tuple);
+                auto transform = std::get<0>(tuple);
+                auto physicBody = std::get<1>(tuple);
 
                 if (physicBody->IsStatic())
                 {

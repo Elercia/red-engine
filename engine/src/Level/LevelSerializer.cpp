@@ -64,15 +64,14 @@ ComponentData ILevelSerializer::SerializeComponent(bool& success, const Componen
 {
     ComponentData componentData;
 
-    componentData.m_name = component->GetComponentTraits().name;
+    componentData.m_name = component->GetTypeTraits().name;
 
     const auto* compRegistry = component->GetWorld()->GetComponentRegistry();
-    const auto* compTypeTraits = compRegistry->GetComponentTraits(component->GetComponentTraits().typeId);
+    const auto* compTypeTraits = compRegistry->GetComponentTraits(component->GetTypeTraits().typeId);
 
     if (compTypeTraits == nullptr)
     {
-        RED_LOG_ERROR("Failed to serialize component {}. You forgot to register it",
-                      component->GetComponentTraits().name);
+        RED_LOG_ERROR("Failed to serialize component {}. You forgot to register it", component->GetTypeTraits().name);
 
         success = false;
 

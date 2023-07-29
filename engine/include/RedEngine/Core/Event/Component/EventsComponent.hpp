@@ -9,16 +9,11 @@ struct SDL_Window;
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(EventsComponent)
-
 class EventsComponent : public Component
 {
     friend class EventSystem;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(EventsComponent, Component)
-    RED_END_COMPONENT_REGISTER()
-
     EventsComponent(Entity* entity);
     ~EventsComponent();
 

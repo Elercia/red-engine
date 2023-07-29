@@ -116,9 +116,9 @@ uint64 Path::GetHash() const
     return m_hash;
 }
 
-Path& Path::Append(const std::wstring& str)
+Path& Path::Append(const std::wstring_view& str)
 {
-    SetUnicodePath(m_unicodePath += str);
+    SetUnicodePath(m_unicodePath + str.data());
     ForceRefreshStatus();
 
     return *this;

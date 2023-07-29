@@ -12,6 +12,12 @@ CVarValue<T>* CVarManager::NewConsoleVariableDeclaration(const std::string& name
 }
 
 template <typename T>
+CVar<T> CVarManager::GetFromName(const std::string& fullName)
+{
+    return CVar<T>((CVarValue<T>*)FindCVar(fullName));
+}
+
+template <typename T>
 CVarValue<T>* CVarManager::NewConsoleVariableDeclarationInternal(const std::string& name, const std::string& category,
                                                                  const T& defaultValue)
 {

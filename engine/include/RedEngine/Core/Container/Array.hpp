@@ -17,9 +17,9 @@ namespace red
 {
 struct DefaultAllocator
 {
-    static inline void* Allocate(uint32 size);
-    static inline void Free(void* ptr);
-    static inline void* Realloc(void* ptr, uint32 oldSize, uint32 size);
+    inline void* Allocate(uint32 size);
+    inline void Free(void* ptr);
+    inline void* Realloc(void* ptr, uint32 oldSize, uint32 size);
 };
 
 template <typename T, typename Allocator = DefaultAllocator>
@@ -111,16 +111,17 @@ public:
     size_type Find(const T& toFind) const;
 
     template <typename Predicate>
-    size_type Find(Predicate&& pred) const;
+    size_type FindIf(Predicate&& pred) const;
 
 private:
     void SetCapacity(size_type askedCapacity);
     void Destroy(size_type from, size_type to);
     void Destroy(iterator from, iterator to);
 
-    size_type m_size{0};
-    size_type m_capacity{0};
-    T* m_data{nullptr};
+    Allocator m_allocator;
+    size_type m_size;
+    size_type m_capacity;
+    T* m_data;
 };
 }  // namespace red
 #else  // RED_USE_ARRAY

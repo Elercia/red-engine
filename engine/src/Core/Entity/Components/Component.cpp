@@ -7,8 +7,6 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(Component);
-
 Component::Component(Entity* entity) : m_owner(entity), m_status()
 {
 }
@@ -16,6 +14,11 @@ Component::Component(Entity* entity) : m_owner(entity), m_status()
 Entity* Component::GetOwner() const
 {
     return m_owner;
+}
+
+TypeTraits Component::GetTypeTraits() const
+{
+    return m_typeTraits;
 }
 
 World* Component::GetWorld() const

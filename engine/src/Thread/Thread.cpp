@@ -1,5 +1,6 @@
 #include "RedEngine/Thread/Thread.hpp"
 
+#include "RedEngine/Core/Configuration/CVar.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 
 #include <algorithm>
@@ -8,6 +9,8 @@ namespace red
 {
 thread_local Thread sl_thread;
 int Thread::s_nextThreadId = 0;
+
+static CVar<int> s_wantedThreadCount("ThreadCount", "Engine_Thread", -1);
 
 const Thread &Thread::GetCurrentThread()
 {
@@ -44,6 +47,11 @@ ThreadScheduler::ThreadScheduler() : m_scheduler(nullptr)
 void ThreadScheduler::Init()
 {
     auto config = marl::Scheduler::Config::allCores();
+    if (s_wantedThreadCount.GetValue() != -1)
+    {
+        config.setWorkerThreadCount(s_wantedThreadCount);
+    }
+
     // config.setAllocator(&m_allocator);
     config.workerThread.initializer = [](int /*workerId*/)
     {
@@ -62,6 +70,7 @@ void ThreadScheduler::Init()
 void ThreadScheduler::Finalize()
 {
     m_scheduler->unbind();
+    Thread::s_nextThreadId = 0;
 }
 
 int ThreadScheduler::GetWorkerCount() const

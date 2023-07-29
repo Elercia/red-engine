@@ -1,13 +1,17 @@
 #include "RedEngine/Core/Memory/MemoryProfiler.hpp"
 
+#include "RedEngine/Math/Math.hpp"
+
 #include <iostream>
 
 namespace red
 {
+#ifdef RED_MEMORY_LEAK_TRACER
 AllocationInfo* MemoryProfiler::s_rootAllocation = nullptr;
+#endif
 MemoryUsageInfo MemoryProfiler::s_memoryUsage;
 
-void* MemoryProfiler::Allocate(sizet size, int line, const char* file)
+void* MemoryProfiler::Allocate(sizet size, [[maybe_unused]] int line, [[maybe_unused]] const char* file)
 {
     if (size == 0)
     {
@@ -19,12 +23,14 @@ void* MemoryProfiler::Allocate(sizet size, int line, const char* file)
 
     AllocationInfo* allocInfo = (AllocationInfo*) ptr;
     InitAllocInfo(allocInfo);
-    allocInfo->file = file;
-    allocInfo->line = line;
     allocInfo->size = size;
 
-    allocInfo->next = s_rootAllocation;
+#ifdef RED_MEMORY_LEAK_TRACER
     allocInfo->previous = nullptr;
+
+    allocInfo->file = file;
+    allocInfo->line = line;
+    allocInfo->next = s_rootAllocation;
 
     if (s_rootAllocation != nullptr)
     {
@@ -33,6 +39,7 @@ void* MemoryProfiler::Allocate(sizet size, int line, const char* file)
     }
 
     s_rootAllocation = allocInfo;
+#endif
 
     s_memoryUsage.currentAllocationCount++;
     s_memoryUsage.currentlyAllocated += size;
@@ -58,25 +65,26 @@ void* MemoryProfiler::Realloc(void* ptr, sizet size, int line, const char* file)
 
     s_memoryUsage.currentlyAllocated -= allocInfo->size;
 
+    const sizet realSize = sizeof(AllocationInfo) + size;
+    AllocationInfo* newAlloc = (AllocationInfo*) std::realloc(allocInfo, realSize);
+    InitAllocInfo(newAlloc);
+    newAlloc->size = size;
+
+    s_memoryUsage.currentlyAllocated += newAlloc->size;
+    s_memoryUsage.peekAllocated = Math::Max(s_memoryUsage.peekAllocated, s_memoryUsage.currentlyAllocated);
+
+#ifdef RED_MEMORY_LEAK_TRACER
     RedAssert(allocInfo->start == MemoryGuard);
     RedAssert(allocInfo->end == MemoryGuard);
 
     AllocationInfo* next = allocInfo->next;
     AllocationInfo* previous = allocInfo->previous;
 
-    const sizet realSize = sizeof(AllocationInfo) + size;
-    AllocationInfo* newAlloc = (AllocationInfo*) std::realloc(allocInfo, realSize);
-    InitAllocInfo(newAlloc);
-
     newAlloc->next = next;
     newAlloc->previous = previous;
 
-    newAlloc->size = size;
     newAlloc->file = file;
     newAlloc->line = line;
-
-    s_memoryUsage.currentlyAllocated += newAlloc->size;
-    s_memoryUsage.peekAllocated = Math::Max(s_memoryUsage.peekAllocated, s_memoryUsage.currentlyAllocated);
 
     RedAssert(newAlloc->start == MemoryGuard);
     RedAssert(newAlloc->end == MemoryGuard);
@@ -98,6 +106,7 @@ void* MemoryProfiler::Realloc(void* ptr, sizet size, int line, const char* file)
         // the only without previous is the root
         s_rootAllocation = newAlloc;
     }
+#endif
 
     return (void*) (&newAlloc[1]);
 }
@@ -108,6 +117,8 @@ void MemoryProfiler::Free(void* ptr)
         return;
 
     AllocationInfo* allocInfo = &((AllocationInfo*) ptr)[-1];
+
+#ifdef RED_MEMORY_LEAK_TRACER
 
     RedAssert(allocInfo->start == MemoryGuard);
     RedAssert(allocInfo->end == MemoryGuard);
@@ -129,6 +140,7 @@ void MemoryProfiler::Free(void* ptr)
         // the only without previous is the root
         s_rootAllocation = allocInfo->next;
     }
+#endif
 
     s_memoryUsage.currentAllocationCount--;
     s_memoryUsage.currentlyAllocated -= allocInfo->size;
@@ -136,7 +148,7 @@ void MemoryProfiler::Free(void* ptr)
     std::free(allocInfo);
 }
 
-const MemoryUsageInfo& MemoryProfiler::GetUsage()
+MemoryUsageInfo MemoryProfiler::GetUsage()
 {
     return s_memoryUsage;
 }
@@ -148,12 +160,12 @@ void MemoryProfiler::ResetUsage()
 
 void MemoryProfiler::InitAllocInfo(AllocationInfo* info)
 {
-    info->start = MemoryGuard;
-    info->end = MemoryGuard;
-
     info->size = 0;
+
+#ifdef RED_MEMORY_LEAK_TRACER
     info->line = 0;
     info->file = "";
+#endif
 
     info->next = nullptr;
     info->previous = nullptr;

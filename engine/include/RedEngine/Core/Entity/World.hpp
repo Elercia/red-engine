@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Memory/PoolAllocator.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Physics/PhysicsWorld.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/Uncopyable.hpp"
 
 #include <string>
@@ -54,7 +55,7 @@ public:
 
     void ChangeLevel(Level* newLevel);
 
-    const Array<System*>& GetSystems() const;
+    const Array<BaseSystem*>& GetSystems() const;
 
     ComponentManager* GetComponentManager();
     ComponentRegistry* GetComponentRegistry();
@@ -63,6 +64,8 @@ public:
     void Finalize();
 
     void InitSystems();
+    void SetExecutionGraph(ExecutionGraph&& graph);
+    void BuildExecutionGraph();
 
     bool Update();
 
@@ -85,7 +88,9 @@ private:
     Array<Entity*> m_entities;
 
     // Collection of system working on the world
-    Array<System*> m_systems;
+    Array<BaseSystem*> m_systems;
+    Array<BaseSystem*> m_addedSystems;
+    ExecutionGraph m_executionGraph;
 
     ComponentManager* m_componentManager;
     ComponentRegistry* m_componentRegistry;

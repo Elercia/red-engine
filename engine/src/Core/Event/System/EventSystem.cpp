@@ -3,6 +3,7 @@
 #include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Input/InputDefinitionTranslationUnit.hpp"
 
@@ -15,7 +16,6 @@ namespace red
 {
 EventSystem::EventSystem(World* world) : System(world)
 {
-    m_priority = 100;
 }
 
 void EventSystem::Init()
@@ -29,11 +29,11 @@ void EventSystem::Init()
     }
 }
 
-void EventSystem::PreUpdate()
+void EventSystem::Update()
 {
     PROFILER_EVENT_CATEGORY("EventSystem::PreUpdate", ProfilerCategory::Input);
 
-    EventsComponent* events = m_world->GetWorldComponent<EventsComponent>();
+    auto events = QuerySingletonComponent<0>();
 
     auto codes = GetKeyCodeReadableDb();
     auto mouseCodes = GetSDLMouseTranslationMap();
@@ -167,10 +167,6 @@ void EventSystem::PreUpdate()
             break;
         }
     }
-}
-
-void EventSystem::PostUpdate()
-{
 }
 
 }  // namespace red

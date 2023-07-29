@@ -1,32 +1,21 @@
 #pragma once
 
+#include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Math/Vector.hpp"
 
-#include "Component.hpp"
-
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Transform)
-
 class Transform : public Component
 {
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(Transform, Component)
-    RED_MEMBER("position", m_localPosition, "The local position of the entity", 0);
-    RED_MEMBER("scale", m_localScale, "The local scale of the entity", 0);
-    RED_MEMBER("rotation", m_localRotation, "The local rotation of the entity", 0);
-    RED_MEMBER("rotationAnchor", m_localRotationAnchor, "The local rotation anchor ", 0);
-    //RED_MEMBER("depth", m_localDepth, "The local rotation of the entity", 0);
-    RED_END_COMPONENT_REGISTER()
-
     Transform(Entity* entity);
     Transform(Entity* entity, float x, float y);
     Transform(Entity* entity, Vector2 position);
-    virtual ~Transform() = default;
+    ~Transform() = default;
 
-    [[nodiscard]] const Vector2& GetLocalPosition() const;// TODO rename to GetLocalPosition 
-    [[nodiscard]] Vector2& GetLocalPosition(); // TODO Add GetWorldPosisition
+    [[nodiscard]] const Vector2& GetLocalPosition() const;  // TODO rename to GetLocalPosition
+    [[nodiscard]] Vector2& GetLocalPosition();              // TODO Add GetWorldPosisition
 
     [[nodiscard]] const Vector2& GetScale() const;
     [[nodiscard]] Vector2& GetScale();
@@ -49,6 +38,9 @@ public:
 
     void SetLocked(bool locked);
 
+    template <typename T>
+    friend void RegisterMembers(ComponentTraits& traits);
+
 private:
     // World position
     Vector2 m_localPosition{0.f, 0.f};
@@ -59,7 +51,7 @@ private:
     bool m_locked{false};
 
     Matrix33 m_localWorldMatrix;
-    Matrix33 m_worldMatrix; // include parent transforms
+    Matrix33 m_worldMatrix;  // include parent transforms
     bool m_dirtyWorldMatrix{true};
 };
 }  // namespace red

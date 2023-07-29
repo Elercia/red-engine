@@ -1,5 +1,7 @@
 #pragma once
 
+namespace red
+{
 class Uncopyable
 {
 public:
@@ -7,8 +9,16 @@ public:
     ~Uncopyable() = default;
 
     Uncopyable(const Uncopyable& other) = delete;
-    Uncopyable(Uncopyable&& other) = default;
-
     const Uncopyable& operator=(const Uncopyable& other) = delete;
-    Uncopyable& operator=(Uncopyable&& other) = default;
 };
+
+class Unmovable
+{
+public:
+    Unmovable() = default;
+    ~Unmovable() = default;
+
+    Unmovable(Uncopyable&& other) = delete;
+    Unmovable& operator=(Uncopyable&& other) = delete;
+};
+}  // namespace red

@@ -10,7 +10,11 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(AudioSource)
+template <>
+inline void RegisterMembers<AudioSource>(ComponentTraits& /*traits*/)
+{
+    //traits.AddMember("Sound instance", &AudioSource::m_sound, "The sound instance to play", 0);
+}
 
 AudioSource::AudioSource(Entity* owner) : Component(owner), m_desc(), m_currentChannel(nullptr)
 {

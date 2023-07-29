@@ -4,6 +4,7 @@
 
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
@@ -17,14 +18,23 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(Sprite)
-
-Sprite::Sprite(Entity* entity) : Renderable(entity), m_spriteResource(nullptr)
+template <>
+inline void RegisterMembers<Sprite>(ComponentTraits& traits)
 {
+    traits.AddMember("Layer index", &Sprite::m_layerIndex, "The layer of the object", 0);
+    traits.AddMember("Size of the sprite", &Sprite::m_size, "The layer of the object", 0);
+    // traits.AddMember("Sprite resource", &Sprite::m_spriteResource, "The layer of the object", 0);
 }
 
-Sprite::Sprite(Entity* entity, const Path& resourceId) : Renderable(entity)
+Sprite::Sprite(Entity* entity) : Component(entity), m_spriteResource(nullptr)
 {
+    m_owner->AddComponent<Renderable>();
+}
+
+Sprite::Sprite(Entity* entity, const Path& resourceId) : Component(entity)
+{
+    m_owner->AddComponent<Renderable>();
+
     m_spriteResource = m_owner->GetWorld()
                            ->GetWorldComponent<ResourceHolderComponent>()
                            ->GetResourceLoader<SpriteResourceLoader>()
@@ -124,6 +134,39 @@ void Sprite::UpdateRenderData()
     m_size = Vector2((float) sizei.x, (float) sizei.y) * GetOwner()->GetComponent<Transform>()->GetScale();
 
     m_aabb = AABB(GetOwner()->GetComponent<Transform>()->GetLocalPosition(), m_size);  // * scale
+
+    auto* renderable = m_owner->GetComponent<Renderable>();
+
+    renderable->SetRenderLayerIndex(m_layerIndex);
+    renderable->SetSize(m_size);
+    renderable->SetAABB(m_aabb);
+    renderable->SetGeometry(m_geometry);
+    renderable->SetMaterialInstance(m_material);
+}
+
+MaterialInstance& Sprite::GetMaterial()
+{
+    return m_material;
+}
+
+const MaterialInstance& Sprite::GetMaterial() const
+{
+    return m_material;
+}
+
+std::shared_ptr<GeometryResourceWrapper> Sprite::GetGeometry()
+{
+    return m_geometry;
+}
+
+void Sprite::SetRenderLayerIndex(RenderLayerIndex layerIndex)
+{
+    m_layerIndex = layerIndex;
+}
+
+RenderLayerIndex Sprite::GetRenderLayerIndex() const
+{
+    return m_layerIndex;
 }
 
 }  // namespace red

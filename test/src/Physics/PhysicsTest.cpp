@@ -1,11 +1,12 @@
-#include "TestModule.hpp"
-
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Physics/System/PhysicsSystem.hpp"
 
 #include <catch2/catch.hpp>
+
+#include "EngineTest.hpp"
+#include "TestModule.hpp"
 
 int size(b2Fixture* fixture)
 {
@@ -22,6 +23,9 @@ int size(b2Fixture* fixture)
 TEST_CASE("Component binding", "[PHYSICS]")
 {
     using namespace red;
+
+    auto engine = CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
+
     World w;
     w.Init();
     w.RegisterComponentType<PhysicBody>();
@@ -66,5 +70,7 @@ TEST_CASE("Component binding", "[PHYSICS]")
 
     REQUIRE(size(body->GetBody()->GetFixtureList()) == 3);
 
-    system->Finalise();
+    system->Finalize();
+
+    engine->Destroy();
 }

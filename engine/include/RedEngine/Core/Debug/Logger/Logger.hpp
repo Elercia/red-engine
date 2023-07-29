@@ -35,7 +35,7 @@ public:
         LogLevel level;
     };
 
-    static const Map<LogLevel, std::string> logLevelAsString;
+    static const std::string logLevelAsString[7];
 
     using OutputDelegate = Delegate<const LogOoutputInfo&>;
 

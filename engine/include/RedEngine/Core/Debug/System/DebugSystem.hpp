@@ -5,8 +5,10 @@
 namespace red
 {
 class DebugComponent;
+class EventsComponent;
 
-class DebugSystem : public System
+class DebugSystem : public System<SinglQuery<QueryRW<DebugComponent>>, SinglQuery<QueryRO<EventsComponent>>,
+                                  QueryGroup<QueryRO<Transform>>>
 {
 public:
     explicit DebugSystem(World* world);

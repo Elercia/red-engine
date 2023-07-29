@@ -66,7 +66,7 @@ class Material : public IResource
     friend class Renderer;
 
 public:
-    RED_RESOURCE(ResourceType::MATERIAL);
+    RED_RESOURCE(ResourceType::MATERIAL, L"material");
 
     Material(const Path& resourceId);
     ~Material();

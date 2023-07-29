@@ -121,7 +121,7 @@ public:
     {
         bool used = false;
         bool erased = false;
-        value_type value;
+        uint8 value[sizeof(value_type)];
     };
 
     Map();

@@ -11,7 +11,7 @@ namespace red
 {
 class World;
 
-constexpr uint32 RED_DEFAULT_FRAMEALLOCATOR_SIZE = 10 * 1024 * 1024; // 10 Mo
+constexpr uint32 RED_DEFAULT_FRAMEALLOCATOR_SIZE = 50 * 1024 * 1024; // 10 Mo
 
 class Engine
 {
@@ -35,8 +35,9 @@ public:
     virtual bool RegisterComponentTypes();
 
     virtual void SetupLogger();
+    void InitAllocator();
 
-    DoubleLinearAllocator& GetFrameAllocator();
+    DoubleLinearAllocator& GetThreadFrameAllocator(int threadIndex);
 
     ThreadScheduler& GetScheduler();
 
@@ -46,7 +47,7 @@ protected:
 
     World* m_world;
 
-    DoubleLinearAllocator m_frameAllocator;
+    DoubleLinearAllocator* m_frameAllocator; // dynamic array initialized when the threading system is init
 
     ThreadScheduler m_scheduler;
 

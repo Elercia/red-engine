@@ -3,16 +3,20 @@ namespace red
 template <class T, class... Args>
 T* World::AddSystem(Args&&... args)
 {
-    static_assert(std::is_base_of<System, T>::value, "World add system template T must be subclass of System");
+    static_assert(std::is_base_of<BaseSystem, T>::value, "World AddSystem template T must be subclass of System");
 
     auto info = TypeInfo<T>();
 
-    auto* ptr = new T(this, std::forward<Args>(args)...);
-    ptr->SetTypeTraits(info);
+    if (auto* alreadyAddedSystem = GetSystem<T>(); alreadyAddedSystem != nullptr)
+        return alreadyAddedSystem;
+
+    T* ptr = new T(this, std::forward<Args>(args)...);
+    ptr->SetTraits(info);
 
     RED_LOG_INFO("Adding {} system", info.name);
 
     m_systems.push_back(ptr);
+    m_addedSystems.push_back(ptr);
 
     return ptr;
 }
@@ -20,15 +24,17 @@ T* World::AddSystem(Args&&... args)
 template <class T>
 bool World::RemoveSystem()
 {
+    static_assert(std::is_base_of<BaseSystem, T>::value, "World RemoveSystem template T must be subclass of System");
+
     auto info = TypeInfo<T>();
     auto systemTypeId = info.typeId;
 
     RED_LOG_INFO("Remove {} system", info.name);
 
-    for (Array<System*>::iterator it = m_systems.begin(), end = m_systems.end(); it != end; ++it)
+    for (Array<BaseSystem*>::iterator it = m_systems.begin(), end = m_systems.end(); it != end; ++it)
     {
-        System* system = (*it);
-        if (system->GetTypeId() == systemTypeId)
+        BaseSystem* system = (*it);
+        if (system->GetTypeTraits().typeId == systemTypeId)
         {
             m_systems.erase(it);
 
@@ -50,10 +56,12 @@ void World::LoadLevel()
 template <class T>
 T* World::GetSystem()
 {
+    static_assert(std::is_base_of<BaseSystem, T>::value, "World GetSystem template T must be subclass of System");
+
     auto systemTypeId = TypeInfo<T>().typeId;
     for (auto* system : m_systems)
     {
-        if (system->GetTypeId() == systemTypeId)
+        if (system->GetTypeTraits().typeId == systemTypeId)
             return static_cast<T*>(system);
     }
 
@@ -77,30 +85,32 @@ template <typename T>
 bool World::RegisterComponentType()
 {
     static_assert(std::is_base_of<Component, T>::value, "RegisterComponentType called on non component type");
+    static_assert(!std::is_polymorphic<T>::value,
+                  "RegisterComponentType called with a component that is virtual. This is not allowed");
 
-    auto [inserted, compData] = m_componentRegistry->CreateNewComponentTraits(TypeInfo<T>().typeId);
+    auto type = TypeInfo<T>();
+    auto [inserted, compData] = m_componentRegistry->CreateNewComponentTraits(type.typeId);
 
     // component may have been already registered
     if (inserted)
     {
-        T::RegisterComponentTypeTraits(compData);
-
-        if (compData->inheritedComponentTraits != EmptyTypeTraits &&
-            compData->inheritedComponentTraits.name != "red::Component")
+        compData->componentTypeTraits = type;
+        compData->creator = [=](Entity* owner) -> Component*
         {
-            auto* inheritedCompTraits =
-                m_componentRegistry->GetComponentTraitsInternal(compData->inheritedComponentTraits.typeId);
+            auto* memory = red_malloc(sizeof(T));
+            auto comp = new(memory) T(owner);
+            comp->m_typeTraits = type;
+            return comp;
+        };
+        compData->destroyer = [=](Component* comp) -> void
+        {
+            RedAssert(comp->m_typeTraits.typeId == TypeInfo<T>().typeId);
 
-            if (inheritedCompTraits == nullptr)
-            {
-                RED_LOG_ERROR("Failed to find inherited component {}. Please make sure to register {} before {}",
-                              compData->inheritedComponentTraits.name, compData->inheritedComponentTraits.name,
-                              TypeInfo<T>().name);
-                return false;
-            }
-
-            inheritedCompTraits->childComponentTraits.push_back(compData);
-        }
+            T* casted = (T*) comp;
+            casted->~T();
+            red_free(casted);
+        };
+        RegisterMembers<T>(*compData);
     }
 
     return true;

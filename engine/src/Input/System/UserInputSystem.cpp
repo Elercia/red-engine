@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Configuration/UserInputHelper.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 
 #include <SDL2/SDL.h>
@@ -14,7 +15,6 @@ namespace red
 {
 UserInputSystem::UserInputSystem(World* world) : System(world), m_inputComponent{nullptr}
 {
-    m_priority = 1;
 }
 
 void UserInputSystem::Init()
@@ -37,16 +37,16 @@ void UserInputSystem::Init()
     }
 }
 
-void UserInputSystem::Finalise()
+void UserInputSystem::Finalize()
 {
     SDL_QuitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 }
 
-void UserInputSystem::PreUpdate()
+void UserInputSystem::Update()
 {
-    PROFILER_EVENT_CATEGORY("UserInputSystem::PreUpdate", ProfilerCategory::Input);
+    PROFILER_EVENT_CATEGORY("UserInputSystem::Update", ProfilerCategory::Input);
 
-    auto* eventsSystem = m_world->GetWorldComponent<EventsComponent>();
+    auto eventsSystem = QuerySingletonComponent<0>();
     for (auto& actionMapping : m_inputComponent->m_actionMapping)
     {
         const auto& actionName = actionMapping.first;

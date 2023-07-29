@@ -19,12 +19,15 @@ void* DefaultAllocator::Realloc(void* ptr, uint32 /*oldSize*/, uint32 size)
 }
 
 template <typename T, typename Allocator>
-Array<T, Allocator>::Array()
+Array<T, Allocator>::Array() : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
+    m_size = 0;
+    m_capacity = 0;
+    m_data = nullptr;
 }
 
 template <typename T, typename Allocator>
-Array<T, Allocator>::Array(std::initializer_list<T> list)
+Array<T, Allocator>::Array(std::initializer_list<T> list) : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
     reserve((uint32) list.size());
 
@@ -36,12 +39,13 @@ template <typename T, typename Allocator>
 Array<T, Allocator>::~Array()
 {
     Destroy(begin(), end());
-    Allocator::Free(m_data);
+    m_allocator.Free(m_data);
 }
 
 template <typename T, typename Allocator>
 template <typename OtherAllocator>
 Array<T, Allocator>::Array(const Array<T, OtherAllocator>& other)
+    : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
     reserve(other.m_size);
 
@@ -52,7 +56,7 @@ Array<T, Allocator>::Array(const Array<T, OtherAllocator>& other)
 }
 
 template <typename T, typename Allocator>
-Array<T, Allocator>::Array(const Array<T, Allocator>& other)
+Array<T, Allocator>::Array(const Array<T, Allocator>& other) : m_allocator(), m_size(0), m_capacity(0), m_data(nullptr)
 {
     reserve(other.m_size);
 
@@ -66,6 +70,9 @@ template <typename T, typename Allocator>
 template <typename OtherAllocator>
 Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, OtherAllocator>& other)
 {
+    if (this == &other)
+        return *this;
+
     reserve(other.m_size);
 
     for (auto& it : other)
@@ -79,6 +86,9 @@ Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, OtherAllocato
 template <typename T, typename Allocator>
 Array<T, Allocator>& Array<T, Allocator>::operator=(const Array<T, Allocator>& other)
 {
+    if (this == &other)
+        return *this;
+
     reserve(other.m_size);
 
     for (auto& it : other)
@@ -101,16 +111,15 @@ Array<T, Allocator>::Array(Array<T, Allocator>&& other)
 template <typename T, typename Allocator>
 Array<T, Allocator>& Array<T, Allocator>::operator=(Array<T, Allocator>&& other)
 {
+    if (this == &other)
+        return *this;
+
     Destroy(begin(), end());
-    Allocator::Free(m_data);
+    m_allocator.Free(m_data);
 
-    m_size = std::move(other.m_size);
-    m_capacity = std::move(other.m_capacity);
-    m_data = std::move(other.m_data);
-
-    other.m_size = 0;
-    other.m_capacity = 0;
-    other.m_data = nullptr;
+    m_size = std::exchange(other.m_size, 0);
+    m_capacity = std::exchange(other.m_capacity, 0);
+    m_data = std::exchange(other.m_data, nullptr);
 
     return *this;
 }
@@ -203,8 +212,6 @@ typename Array<T, Allocator>::iterator Array<T, Allocator>::erase(const_iterator
 
     m_size -= valueErased;
 
-    reserve(m_size);
-
     return const_cast<iterator>(first);
 }
 
@@ -237,7 +244,7 @@ template <typename T, typename Allocator>
 void Array<T, Allocator>::clearAndFree()
 {
     Destroy(begin(), end());
-    Allocator::Free(m_data);
+    m_allocator.Free(m_data);
     m_data = nullptr;
     m_size = 0;
     m_capacity = 0;
@@ -271,9 +278,9 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
     if (askedCapacity != 0)
     {
         uint32 capacitySize = askedCapacity * sizeof(T);
-        if constexpr (std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T>)
+        if constexpr (std::is_trivial_v<T>)
         {
-            T* tmp = (T*) Allocator::Realloc(m_data, m_capacity * sizeof(T), capacitySize);
+            T* tmp = (T*) m_allocator.Realloc(m_data, m_capacity * sizeof(T), capacitySize);
 
             if (tmp == NULL)
             {
@@ -284,7 +291,7 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
         }
         else
         {
-            T* tmp = (T*) Allocator::Allocate(capacitySize);
+            T* tmp = (T*) m_allocator.Allocate(capacitySize);
 
             if (tmp == NULL)
             {
@@ -294,11 +301,15 @@ void Array<T, Allocator>::SetCapacity(size_type askedCapacity)
             // Copy members from old location to the new one
             for (size_type i = 0; i < m_size; i++)
             {
-                new (tmp + i) T(std::move(m_data[i]));
+                if constexpr ( std::is_move_constructible_v<T>)
+                    new (tmp + i) T(std::move(m_data[i]));
+                else
+                    new (tmp + i) T(m_data[i]);
+
                 m_data[i].~T();
             }
 
-            Allocator::Free(m_data);
+            m_allocator.Free(m_data);
             m_data = tmp;
         }
     }
@@ -442,7 +453,11 @@ typename Array<T, Allocator>::iterator Array<T, Allocator>::insert(const_iterato
         // move elements from [position;end] to [position+nbElem; end+nbElem]
         for (auto i = positionIndex; i < m_size; ++i)
         {
-            new (m_data + i + nbElem) T(std::move(*(m_data + i)));
+            if constexpr (std::is_move_constructible_v<T>)
+                new (m_data + i + nbElem) T(std::move(*(m_data + i)));
+            else 
+                new (m_data + i + nbElem) T(*(m_data + i));
+
             (m_data + i)->~T();
         }
     }
@@ -485,12 +500,12 @@ void Array<T, Allocator>::Destroy(iterator from, iterator to)
 template <typename T, typename Allocator>
 typename Array<T, Allocator>::size_type Array<T, Allocator>::Find(const T& toFind) const
 {
-    return Find([&toFind](const T& elem) { return elem == toFind; });
+    return FindIf([&toFind](const T& elem) { return elem == toFind; });
 }
 
 template <typename T, typename Allocator>
 template <typename Predicate>
-typename Array<T, Allocator>::size_type Array<T, Allocator>::Find(Predicate&& pred) const
+typename Array<T, Allocator>::size_type Array<T, Allocator>::FindIf(Predicate&& pred) const
 {
     for(int i = 0, max = size(); i < max; i++)
     {

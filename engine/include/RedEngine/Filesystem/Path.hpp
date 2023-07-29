@@ -41,7 +41,7 @@ public:
 
     uint64 GetHash() const;
 
-    Path& Append(const std::wstring& str);
+    Path& Append(const std::wstring_view& str);
 
     void ForceRefreshStatus();  // Force the refresh of the path
 

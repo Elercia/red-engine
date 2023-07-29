@@ -14,6 +14,12 @@ CVar<T>::CVar(const std::string& name, const std::string& category, const T& def
 }
 
 template <class T>
+CVar<T>::CVar(CVarValue<T>* value) : m_value(value)
+{
+}
+
+
+template <class T>
 T& CVar<T>::GetValue()
 {
     return m_value->m_currentValue;

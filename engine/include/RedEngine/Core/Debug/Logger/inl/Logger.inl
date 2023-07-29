@@ -13,7 +13,7 @@ void Logger::LogInternal(LogLevel level, int line, const char* file, const std::
 {
     if (level >= m_logLevel)
     {
-        std::string levelAsString = logLevelAsString.at(level);
+        std::string levelAsString = logLevelAsString[(int)level];
         std::string fileFormat = std::string(file);
         fileFormat = fileFormat.substr(fileFormat.find_last_of(std::filesystem::path::preferred_separator) + 1);
         std::string levelFormat =

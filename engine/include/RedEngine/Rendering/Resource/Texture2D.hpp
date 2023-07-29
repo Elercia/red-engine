@@ -15,7 +15,7 @@ class Texture2D : public IResource
     friend class Renderer;
 
 public:
-    RED_RESOURCE(ResourceType::TEXTURE2D);
+    RED_RESOURCE(ResourceType::TEXTURE2D, L"texture");
 
     explicit Texture2D(const Path& resourceId);
     ~Texture2D() override = default;

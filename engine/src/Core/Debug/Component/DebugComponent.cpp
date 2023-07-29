@@ -3,11 +3,13 @@
 #include "RedEngine/Core/CoreModule.hpp"
 
 #include "RedEngine/Core/Debug/DebugDraw/PhysicsDebugDraw.hpp"
+#include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+#include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(DebugComponent)
-
 DebugComponent::DebugComponent(Entity* entity)
     : Component(entity), m_lineShaderProgram(nullptr), m_physicsDebugDrawer(nullptr)
 {
@@ -69,7 +71,7 @@ int DebugComponent::AddDebugDrawer(const char* name, DebugMenuDrawerFunc&& callb
 
 void DebugComponent::RemoveDebugDrawer(int id)
 {
-    auto index = m_drawers.Find([=](const DebugDrawer& e) { return e.id == id; });
+    auto index = m_drawers.FindIf([=](const DebugDrawer& e) { return e.id == id; });
     if (index != m_drawers.npos)
     {
         m_drawers.erase(m_drawers.begin() + index);

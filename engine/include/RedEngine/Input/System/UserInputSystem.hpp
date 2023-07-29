@@ -1,19 +1,21 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 
 namespace red
 {
-class UserInputSystem : public System
+class UserInputSystem : public System<SinglQuery<QueryRO<EventsComponent>>, SinglQuery<QueryRW<UserInputComponent>>>
 {
 public:
     UserInputSystem(World* world);
     ~UserInputSystem() = default;
 
     void Init() override;
-    void Finalise() override;
-    void PreUpdate() override;
+    void Finalize() override;
+
+    void Update() override;
 
 private:
     KeyState AglomerateKeyStates(const KeyState& oldState, const Array<KeyState>& states);

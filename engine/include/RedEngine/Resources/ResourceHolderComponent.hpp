@@ -10,14 +10,9 @@
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(ResourceHolderComponent)
-
 class ResourceHolderComponent : public Component
 {
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(ResourceHolderComponent, Component)
-    RED_END_COMPONENT_REGISTER()
-
     ResourceHolderComponent(Entity* owner);
     ~ResourceHolderComponent();
 

@@ -6,9 +6,8 @@
 
 namespace red
 {
-const Map<LogLevel, std::string> Logger::logLevelAsString{
-    {LogLevel::LEVEL_CUSTOM, "CUSTOM"}, {LogLevel::LEVEL_TRACE, "TRACE"},     {LogLevel::LEVEL_DEBUG, "DEBUG"}, {LogLevel::LEVEL_INFO, "INFO"},
-    {LogLevel::LEVEL_WARNING, "WARNING"}, {LogLevel::LEVEL_ERROR, "ERROR"}, {LogLevel::LEVEL_FATAL, "FATAL"},
+const std::string Logger::logLevelAsString[] = {
+    "CUSTOM", "TRACE", "DEBUG", "INFO", "WARNING", "ERROR", "FATAL",
 };
 
 void SetLogLevel(LogLevel level)
@@ -49,23 +48,17 @@ void Logger::LogToStandardOutputFun(const LogOoutputInfo& out)
 template <>
 std::string Serialize(const LogLevel& value)
 {
-    for (const auto& pair : Logger::logLevelAsString)
-    {
-        if (pair.first == value)
-            return pair.second;
-    }
-
-    return "UNKNOWN";
+    return Logger::logLevelAsString[(int)value];
 }
 
 template <>
 bool Deserialize(LogLevel& value, const std::string& str)
 {
-    for (auto& pair : Logger::logLevelAsString)
+    for (int i = 0; i < 7; i++)
     {
-        if (pair.second == str)
+        if (Logger::logLevelAsString[i] == str)
         {
-            value = pair.first;
+            value = LogLevel(i);
             return true;
         }
     }

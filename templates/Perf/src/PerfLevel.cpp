@@ -8,6 +8,7 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Filesystem/Path.hpp"
 #include "RedEngine/Input/System/UserInputSystem.hpp"
@@ -20,13 +21,14 @@
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/Random.hpp"
 
 using namespace red;
 
 namespace perf
 {
-class CameraManager : public System
+class CameraManager : public System<>
 {
 public:
     CameraManager(red::World* world, Entity* camera) : System(world), m_camera(camera)
@@ -66,7 +68,7 @@ public:
     Entity* m_camera;
 };
 
-class EntityManager : public System
+class EntityManager : public System<>
 {
 public:
     EntityManager(red::World* world) : System(world)
@@ -74,6 +76,10 @@ public:
         m_debugId = 0;
     }
     ~EntityManager() override = default;
+
+    void Update() override
+    {
+    }
 
     void Init() override
     {
@@ -84,7 +90,7 @@ public:
         }
     }
 
-    void Finalise() override
+    void Finalize() override
     {
         auto* debug = m_world->GetWorldComponent<DebugComponent>();
         if (debug != nullptr)
@@ -93,7 +99,7 @@ public:
         }
     }
 
-    static void DebugMenu(DebugComponent* comp)
+    static void DebugMenu(DebugComponent* /*comp*/)
     {
     }
 
@@ -101,7 +107,7 @@ public:
 };
 
 const float s_worldSizeMin = 0.f;
-const float s_worldSizeMax = 2000.f;
+const float s_worldSizeMax = 5000.f;
 
 void PerfLevel::Init()
 {
@@ -142,7 +148,7 @@ void PerfLevel::Init()
     float boundMin = s_worldSizeMin + 60;
     float boundMax = s_worldSizeMax - 60;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 5000; i++)
     {
         const Vector2 position = {RandomFloatRange(boundMin, boundMax), RandomFloatRange(boundMin, boundMax)};
 
@@ -152,17 +158,21 @@ void PerfLevel::Init()
 
     auto* window = m_world->GetWorldComponent<red::WindowComponent>();
 
-    auto* manager = CreateEntity("Camera");
-    manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f),
+    m_manager = CreateEntity("Camera");
+    m_manager->AddComponent<red::CameraComponent>(window, red::Vector4(0.f, 0.f, 1.f, 1.f),
                                                 red::Vector2{s_worldSizeMax, s_worldSizeMax});
-    manager->GetComponent<Transform>()->SetLocalPosition({0.f, 0.f});
+    m_manager->GetComponent<Transform>()->SetLocalPosition({0.f, 0.f});
 
-    m_world->AddSystem<CameraManager>(manager);
-    m_world->AddSystem<EntityManager>();
 }
 
 void PerfLevel::Finalize()
 {
+}
+
+void PerfLevel::AddGameplaySystems(red::ExecutionGraph& graph)
+{
+    graph.AddStage(SystemGraphStageBuilder::NewStage(m_world).AddSystem<perf::CameraManager>(m_manager).Build())
+        .AddStage(SystemGraphStageBuilder::NewStage(m_world).AddSystem<perf::EntityManager>().Build());
 }
 
 void PerfLevel::AddEntity(const std::string& name, const red::Vector2& position, red::RenderLayerIndex layerIndex,

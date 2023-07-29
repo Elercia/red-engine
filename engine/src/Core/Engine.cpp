@@ -6,21 +6,16 @@
 #include "RedEngine/Audio/Component/AudioListener.hpp"
 #include "RedEngine/Audio/Component/AudioSource.hpp"
 #include "RedEngine/Audio/Resource/SoundResourceLoader.hpp"
-#include "RedEngine/Audio/System/AudioSystem.hpp"
 #include "RedEngine/Core/Configuration/CVarManager.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
-#include "RedEngine/Core/Debug/System/DebugSystem.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
-#include "RedEngine/Core/Event/System/EventSystem.hpp"
 #include "RedEngine/Core/Time/FrameCounter.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
-#include "RedEngine/Input/System/UserInputSystem.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
-#include "RedEngine/Physics/System/PhysicsSystem.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
@@ -30,14 +25,13 @@
 #include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/SpriteResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
-#include "RedEngine/Rendering/System/RenderingSystem.hpp"
 #include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/Random.hpp"
+#include "RedEngine/Utils/SystemInfo.hpp"
 
 #ifdef RED_WINDOWS
 #define NOMINMAX 1
-#include <debugapi.h>
-#include <windows.h>  // For some reason, some include above define some macros that break everything with a #error "No Target Architecture"
+#include <windows.h>
 #endif
 
 namespace red
@@ -58,7 +52,7 @@ Engine* Engine::GetInstance()
     return s_engine;
 }
 
-Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr), m_frameAllocator(RED_DEFAULT_FRAMEALLOCATOR_SIZE)
+Engine::Engine() : m_argc(0), m_argv(nullptr), m_world(nullptr), m_frameAllocator(nullptr)
 {
 }
 
@@ -82,8 +76,10 @@ void Engine::MainLoop()
 
         continueExec = m_world->Update();
 
-        m_frameAllocator.Swap();
-        m_frameAllocator.Reset();
+        for (int i = 0; i < m_scheduler.GetWorkerCount(); i++)
+        {
+            m_frameAllocator[i].Swap();
+        }
     }
 }
 
@@ -135,14 +131,14 @@ void Engine::SetupLogger()
 #ifdef RED_DEVBUILD
     // Always add standard output when debugging
     standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
-#endif // RED_DEVBUILD
+#endif  // RED_DEVBUILD
 
 #if defined(RED_WINDOWS) && defined(RED_DEVBUILD)
     if (IsDebuggerPresent() != 0)
     {
         debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
     }
-#endif // defined(RED_WINDOWS) && defined(RED_DEVBUILD)
+#endif  // defined(RED_WINDOWS) && defined(RED_DEVBUILD)
 
     if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
     {
@@ -152,6 +148,17 @@ void Engine::SetupLogger()
     SetLogLevel(s_logLevel);
 
     RED_LOG_INFO("Setup logger for output {}, debugger {}", standarOutputFuncIndex != -1, debugOutputFuncIndex != -1);
+}
+
+void Engine::InitAllocator()
+{
+    auto workerCount = m_scheduler.GetWorkerCount();
+    m_frameAllocator = (DoubleLinearAllocator*) red_malloc(workerCount * sizeof(DoubleLinearAllocator));
+
+    for (int i = 0; i < workerCount; i++)
+    {
+        new (m_frameAllocator + i) DoubleLinearAllocator(RED_DEFAULT_FRAMEALLOCATOR_SIZE);
+    }
 }
 
 bool Engine::Create()
@@ -167,6 +174,8 @@ bool Engine::Create()
     InitRandomEngine(42);
 
     m_scheduler.Init();
+
+    InitAllocator();
 
     m_world = new World;
 
@@ -185,17 +194,8 @@ bool Engine::Create()
     resourceHolder->RegisterResourceLoader(ResourceType::GEOMETRY, new GeometryResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SHADER_PROGRAM, new ShaderProgramResourceLoader(m_world));
 
-    m_world->AddSystem<RenderingSystem>();
-    m_world->AddSystem<PhysicSystem>();
-    m_world->AddSystem<EventSystem>();
-    m_world->AddSystem<UserInputSystem>();
-    m_world->AddSystem<AudioSystem>();
-
-#ifdef RED_DEVBUILD
-    m_world->AddSystem<DebugSystem>();
-#endif
-
-    m_world->InitSystems();
+    m_world->BuildExecutionGraph();
+    m_world->InitSystems();  // TODO Remove this init systems call and find a way to have "InitSystems" resposible
 
     return true;
 }
@@ -212,6 +212,8 @@ bool Engine::Destroy()
 
     delete m_world;
 
+    red_free(m_frameAllocator);
+
     m_scheduler.Finalize();
 
     PROFILER_SHUTDOWN();
@@ -224,9 +226,9 @@ std::string_view Engine::GetGameName() const
     return "RedEngine";
 }
 
-DoubleLinearAllocator& Engine::GetFrameAllocator()
+DoubleLinearAllocator& Engine::GetThreadFrameAllocator(int threadIndex)
 {
-    return m_frameAllocator;
+    return m_frameAllocator[threadIndex];
 }
 
 ThreadScheduler& Engine::GetScheduler()

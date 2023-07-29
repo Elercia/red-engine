@@ -169,6 +169,8 @@ void Renderer::BeginRenderFrame()
 
 void Renderer::EndRenderFrame()
 {
+    PROFILER_EVENT_CATEGORY("Renderer::EndRenderFrame", ProfilerCategory::Rendering);
+
     m_renderingData.clear();
 
     SDL_GL_SwapWindow(m_window->GetSDLWindow());
@@ -189,6 +191,8 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
 
 void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
 {
+    PROFILER_EVENT_CATEGORY("Renderer::EndCameraRendering", ProfilerCategory::Rendering);
+
 #ifdef RED_DEBUG
     for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
     {
@@ -296,6 +300,7 @@ void Renderer::RenderDebug(CameraComponent* camera, DebugComponent* debug)
         return;
 
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug lines");
+    PROFILER_EVENT_CATEGORY("Renderer::RenderDebug", ProfilerCategory::Rendering);
 
     glDisable(GL_DEPTH_TEST);
 
@@ -318,6 +323,7 @@ void Renderer::RenderDebug(CameraComponent* camera, DebugComponent* debug)
 void Renderer::RenderDebugUI()
 {
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug UI");
+    PROFILER_EVENT_CATEGORY("Renderer::RenderDebugUI", ProfilerCategory::Rendering);
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

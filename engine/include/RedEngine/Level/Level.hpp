@@ -8,6 +8,8 @@
 
 namespace red
 {
+class ExecutionGraph;
+
 class Level : Uncopyable
 {
 public:
@@ -30,6 +32,8 @@ public:
 
     virtual void Init(){};
     virtual void Finalize(){};
+
+    virtual void AddGameplaySystems(ExecutionGraph& /*graph*/){};
 
     void Clean();
 

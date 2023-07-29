@@ -10,14 +10,14 @@ class PhysicsWorld;
 class PhysicBody;
 struct Collider;
 
-class PhysicSystem : public System
+class PhysicSystem : public System<QueryGroup<QueryRW<Transform>, QueryRW<PhysicBody>>>
 {
 public:
     PhysicSystem(World* world);
     ~PhysicSystem();
 
     void Init() override;
-    void Finalise() override;
+    void Finalize() override;
 
     void Update() override;
 

@@ -5,6 +5,8 @@
 #include "RedEngine/Math/Vector.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 
+#include "ScoreComponent.hpp"
+
 namespace red
 {
 struct WindowInfo;
@@ -12,7 +14,7 @@ struct WindowInfo;
 
 class BallComponent;
 
-class GameLogicSystem : public red::System
+class GameLogicSystem : public red::System<red::QueryGroup<red::QueryRW<ScoreComponent>>>
 {
 public:
     GameLogicSystem(red::World* world, red::Entity* paddleOne, red::Entity* paddleTwo, red::Entity* ball);

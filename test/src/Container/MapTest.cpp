@@ -145,6 +145,33 @@ TEST_CASE("Map erase", "[Map]")
     }
 }
 
+TEST_CASE("Map struct", "[Map]")
+{
+    struct TestStruct
+    {
+        int m_i;
+        explicit TestStruct(int i) : m_i(i) {}
+        TestStruct(const TestStruct& other) :m_i(other.m_i) {}
+        TestStruct(TestStruct&& other) :m_i(std::exchange(other.m_i, -1)) {}
+
+        TestStruct& operator=(const TestStruct& other) { m_i = other.m_i; return *this; }
+        TestStruct& operator=(TestStruct&& other) { m_i = std::exchange(other.m_i, -1); return *this; }
+    };
+
+    Map<int, TestStruct> m;
+
+    for (int i = 0; i < 3000; i++)
+    {
+        m.insert({i, TestStruct(i)});
+    }
+    REQUIRE(m.size() == 3000);
+
+    for(auto p : m)
+    {
+        REQUIRE(p.first == p.second.m_i);
+    }
+}
+
 //#define RED_TEST_BENCHMARK
 #ifdef RED_TEST_BENCHMARK
 #include <unordered_map>
@@ -155,15 +182,17 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
     DurationCounter counterStd;
     DurationCounter counterStdUnordered;
 
+    const int iterationCount = 10'000'000;
+
     {
         DurationRAII profiler(counterRed);
 
         Map<std::string, int> m;
 
-        for (int i = 0; i < 60000; i++)
+        for (int i = 0; i < iterationCount; i++)
         {
             std::string s = fmt::format("{}", i);
-            m.insert({s, i});
+            m.insert({std::move(s), i});
         }
 
         for (auto& p : m)
@@ -172,7 +201,7 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
             REQUIRE(s == p.first);
         }
 
-        for (int i = 0; i < 60000; i++)
+        for (int i = 0; i < iterationCount; i++)
         {
             std::string s = fmt::format("{}", i);
             m.erase(s);
@@ -184,10 +213,10 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
 
         std::map<std::string, int> m;
 
-        for (int i = 0; i < 60000; i++)
+        for (int i = 0; i < iterationCount; i++)
         {
             std::string s = fmt::format("{}", i);
-            m.insert({s, i});
+            m.insert({std::move(s), i});
         }
 
         for (auto& p : m)
@@ -196,7 +225,7 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
             REQUIRE(s == p.first);
         }
 
-        for (int i = 0; i < 60000; i++)
+        for (int i = 0; i < iterationCount; i++)
         {
             std::string s = fmt::format("{}", i);
             m.erase(s);
@@ -208,10 +237,10 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
 
         std::unordered_map<std::string, int> m;
 
-        for (int i = 0; i < 60000; i++)
+        for (int i = 0; i < iterationCount; i++)
         {
             std::string s = fmt::format("{}", i);
-            m.insert({s, i});
+            m.insert({std::move(s), i});
         }
 
         for (auto& p : m)
@@ -220,7 +249,7 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
             REQUIRE(s == p.first);
         }
 
-        for (int i = 0; i < 60000; i++)
+        for (int i = 0; i < iterationCount; i++)
         {
             std::string s = fmt::format("{}", i);
             m.erase(s);

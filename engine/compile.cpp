@@ -32,11 +32,13 @@
 #include "RedEngine/Utils/SystemInfo.hpp"
 
 #include "RedEngine/Thread/Thread.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Entity/CommonEntityTypes.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Entity/Components/Component.hpp"
 #include "RedEngine/Core/Configuration/CVar.hpp"
@@ -53,7 +55,6 @@
 #include "RedEngine/Core/Engine.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentManager.hpp"
 #include "RedEngine/Core/Entity/Components/ComponentRegistry.hpp"
-#include "RedEngine/Core/Entity/Components/ComponentRegistryFunction.hpp"
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Event/Delegate.hpp"
@@ -97,6 +98,7 @@
 #include "RedEngine/Rendering/RenderingModule.hpp"
 #include "RedEngine/Rendering/Color.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
+#include "RedEngine/Rendering/Component/RendererComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
@@ -115,6 +117,7 @@
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
 #include "RedEngine/Rendering/Resource/TextureResourceLoader.hpp"
 #include "RedEngine/Rendering/System/RenderingSystem.hpp"
+#include "RedEngine/Rendering/System/SpriteAnimationSystem.hpp"
 
 #include "RedEngine/Resources/ResourceModule.hpp"
 #include "RedEngine/Resources/AnnimationDescriptor.hpp"
@@ -147,10 +150,10 @@
 #include "Core/Entity/Components/Component.cpp"
 #include "Core/Entity/Components/ComponentManager.cpp"
 #include "Core/Entity/Components/ComponentRegistry.cpp"
-#include "Core/Entity/Components/ComponentRegistryFunction.cpp"
 #include "Core/Entity/Components/Transform.cpp"
 #include "Core/Entity/Entity.cpp"
 #include "Core/Entity/System.cpp"
+#include "Core/Entity/SystemExecutionGraph.cpp"
 #include "Core/Entity/World.cpp"
 
 #include "Core/Event/Component/EventsComponent.cpp"
@@ -167,6 +170,7 @@
 #include "Core/Time/Time.cpp"
 
 #include "Thread/Thread.cpp"
+#include "Thread/ExecutionGraph.cpp"
 
 #include "Filesystem/File.cpp"
 #include "Filesystem/Path.cpp"
@@ -190,7 +194,9 @@
 #include "Physics/System/PhysicSystem.cpp"
 
 #include "Rendering/Component/CameraComponent.cpp"
+#include "Rendering/Component/RendererComponent.cpp"
 #include "Rendering/Component/Renderable.cpp"
+#include "Rendering/Color.cpp"
 #include "Rendering/Component/Sprite.cpp"
 #include "Rendering/Component/WindowComponent.cpp"
 #include "Rendering/FrameBuffer.cpp"
@@ -207,6 +213,7 @@
 #include "Rendering/Resource/Texture2D.cpp"
 #include "Rendering/Resource/TextureResourceLoader.cpp"
 #include "Rendering/System/RenderingSystem.cpp"
+#include "Rendering/System/SpriteAnimationSystem.cpp"
 
 #include "Resources/Resource.cpp"
 #include "Resources/ResourceHolderComponent.cpp"

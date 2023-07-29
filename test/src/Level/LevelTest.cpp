@@ -101,8 +101,8 @@ TEST_CASE("Level serialisation", "[LEVEL]")
     REQUIRE(e1json[JsonNames::ENTITY_COMPONENTS].size() == 1);
     REQUIRE(e2json[JsonNames::ENTITY_COMPONENTS].size() == 1);
 
-    REQUIRE(e1json[JsonNames::ENTITY_COMPONENTS]["red::Transform"]["position"] == Serialize(Vector2(0.f, 10.f)));
-    REQUIRE(e2json[JsonNames::ENTITY_COMPONENTS]["red::Transform"]["position"] == Serialize(Vector2(10.f, 0.f)));
+    REQUIRE(e1json[JsonNames::ENTITY_COMPONENTS]["red::Transform"]["Position"] == Serialize(Vector2(0.f, 10.f)));
+    REQUIRE(e2json[JsonNames::ENTITY_COMPONENTS]["red::Transform"]["Position"] == Serialize(Vector2(10.f, 0.f)));
 
     REQUIRE(e1json[JsonNames::ENTITY_CHILDREN].size() == 1);
     REQUIRE(e2json[JsonNames::ENTITY_CHILDREN].empty());

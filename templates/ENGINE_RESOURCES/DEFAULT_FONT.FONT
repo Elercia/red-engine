@@ -1,0 +1,17 @@
+{
+	"faces": 
+	[
+		{
+			"type": "REGULAR",
+			"file": "ENGINE_RESOURCES/ROBOTO-REGULAR.TTF"
+		},
+		{
+			"type": "ITALIC",
+			"file": "ENGINE_RESOURCES/CARBONBLOCK-ITALIC.TTF"
+		},
+		{
+			"type": "BOLD",
+			"file": "ENGINE_RESOURCES/CARBONBLOCK-BOLD.TTF"
+		}
+	]
+}

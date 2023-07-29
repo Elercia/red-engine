@@ -1,15 +1,14 @@
 #include "GameLogicSystem.hpp"
 
-#include "ScoreComponent.hpp"
-
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Physics/Components/PhysicBody.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
 
 using namespace red;
 
 GameLogicSystem::GameLogicSystem(red::World* world, red::Entity* paddleOne, red::Entity* paddleTwo, red::Entity* ball)
-    : red::System(world), m_paddleOne(paddleOne), m_paddleTwo(paddleTwo), m_ball(ball)
+    : red::System<red::QueryGroup<QueryRW<ScoreComponent>>>(world), m_paddleOne(paddleOne), m_paddleTwo(paddleTwo), m_ball(ball)
 {
 }
 
@@ -36,13 +35,13 @@ void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
 {
     auto info = m_world->GetWorldComponent<red::WindowComponent>()->GetWindowInfo();
 
-    auto scores = GetComponents<ScoreComponent>();
+    auto scores = QueryComponents<0>();
     bool scored = false;
 
     if (scores.empty() || scores.size() > 1)
         return;
 
-    auto* score = std::get<1>(scores[0]);
+    auto score = std::get<0>(scores[0]);
 
     if (ballPos.x < 0)
     {
@@ -57,6 +56,6 @@ void GameLogicSystem::CheckPoints(red::Vector2& ballPos)
 
     if (scored)
     {
-        ballPos = {(float)info.width / 2.f, (float)info.height / 2.f};
+        ballPos = {(float) info.width / 2.f, (float) info.height / 2.f};
     }
 }

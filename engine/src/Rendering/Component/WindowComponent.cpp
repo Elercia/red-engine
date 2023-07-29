@@ -16,8 +16,6 @@ CVar<int> WindowComponent::s_height{"height", "window", 600};
 CVar<int> WindowComponent::s_width{"width", "window", 800};
 CVar<FullScreenMode::Enum> WindowComponent::s_fullscreen{"fullscreen_mode", "window", FullScreenMode::WINDOWED};
 
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(WindowComponent)
-
 WindowComponent::WindowComponent(Entity *owner) : Component(owner)
 {
 }

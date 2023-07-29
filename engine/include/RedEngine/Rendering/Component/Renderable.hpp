@@ -1,15 +1,13 @@
 #pragma once
 
 #include "RedEngine/Core/Entity/Components/Component.hpp"
+#include "RedEngine/Math/AABB.hpp"
 #include "RedEngine/Rendering/Resource/Geometry.hpp"
 #include "RedEngine/Rendering/Resource/Material.hpp"
-#include "RedEngine/Math/AABB.hpp"
 
 namespace red
 {
 class Renderable;
-
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(Renderable)
 
 using RenderLayerIndex = uint32;
 
@@ -18,21 +16,27 @@ class Renderable : public Component
     friend class Renderer;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(Renderable, Component)
-    //TODO add geom & material
-    RED_END_COMPONENT_REGISTER()
-
-public:
     Renderable(Entity* owner);
     Renderable(Entity* owner, RenderLayerIndex layerIndex);
     ~Renderable();
 
     MaterialInstance& GetMaterial();
     const MaterialInstance& GetMaterial() const;
+    void SetMaterialInstance(const MaterialInstance& instance);
+
     std::shared_ptr<GeometryResourceWrapper> GetGeometry();
+    void SetGeometry(std::shared_ptr<GeometryResourceWrapper> geom);
+
+    AABB& GetAABB();
+    void SetAABB(const AABB& aabb);
+
+    Vector2& GetSize();
+    void SetSize(const Vector2& size);
 
     void SetRenderLayerIndex(RenderLayerIndex layerIndex);
     RenderLayerIndex GetRenderLayerIndex() const;
+
+    bool IsValid() const;
 
 protected:
     RenderLayerIndex m_layerIndex;

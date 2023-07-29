@@ -63,8 +63,6 @@ struct PhysicBodyCreationDesc
     float gravityScale{1.f};
 };
 
-RED_COMPONENT_BASIC_FUNCTIONS_DECLARATION(PhysicBody)
-
 // TODO Collision layers
 class PhysicBody : public Component
 {
@@ -72,9 +70,6 @@ class PhysicBody : public Component
     friend class PhysicsWorld;
 
 public:
-    RED_START_COMPONENT_REGISTER_INHERITHED(PhysicBody, Component)
-    RED_END_COMPONENT_REGISTER()
-
     using OnCollisionSignalType = Signal<const CollisionInfo&>;
     using OnTriggerSignalType = Signal<const TriggerInfo&>;
 
@@ -100,6 +95,9 @@ public:
 
     OnTriggerSignalType m_triggerSignal;
     OnCollisionSignalType m_collisionSignal;
+
+    template <typename T>
+    friend void RegisterMembers(ComponentTraits& traits);
 
 private:
     int AddCollider(Collider&& collider, const ColliderDesc& desc);

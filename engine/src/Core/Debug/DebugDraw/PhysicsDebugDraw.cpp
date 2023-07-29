@@ -4,6 +4,8 @@
 
 #include "RedEngine/Core/Container/Array.hpp"
 #include "RedEngine/Core/Debug/Component/DebugComponent.hpp"
+#include "RedEngine/Core/Memory/LinearAllocator.hpp"
+#include "RedEngine/Physics/PhysicsWorld.hpp"
 
 namespace red
 {

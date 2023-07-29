@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <Type Name="red::Array&lt;*&gt;">
+        <DisplayString>{{ size={m_size} capacity={m_capacity} }}</DisplayString>
+        <Expand>
+            <Item Name="[size]" ExcludeView="simple">m_size</Item>
+            <Item Name="[capacity]" ExcludeView="simple">m_capacity</Item>
+            <ArrayItems>
+                <Size>m_size</Size>
+                <ValuePointer>m_data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+    <Type Name="red::Map&lt;*,*&gt;">
+        <DisplayString>{{ size={m_size} capacity={m_values.m_capacity} }}</DisplayString>
+        <Expand>
+            <CustomListItems MaxItemsPerView="500">
+                <Variable Name="iBucket" InitialValue="0" />
+                <Variable Name="pBucket" InitialValue="(Bucket*)nullptr" />
+
+                <Size>m_values.m_size</Size>
+                <Loop>
+                    <Exec>pBucket = m_values.m_data + iBucket</Exec>
+                    <Exec>iBucket++</Exec>
+                    <If Condition="pBucket->used">
+                        <Item>(KeyValuePair*)pBucket->value</Item>
+                    </If>
+                    <Break Condition="iBucket == m_values.m_size" />
+                </Loop>
+            </CustomListItems>
+        </Expand>
+    </Type>
+</AutoVisualizer>

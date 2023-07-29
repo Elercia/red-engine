@@ -28,10 +28,14 @@ enum class ResourceType
     AUDIO,
 };
 
-#define RED_RESOURCE(Type)                \
-    static ResourceType GetResourceType() \
-    {                                     \
-        return Type;                      \
+#define RED_RESOURCE(Type, EXT)                 \
+    static ResourceType GetResourceType()       \
+    {                                           \
+        return Type;                            \
+    }                                           \
+    static std::wstring_view GetFileExtension() \
+    {                                           \
+        return EXT;                             \
     }
 
 class IResource

@@ -13,7 +13,7 @@ class SpriteResource : public IResource
     friend class SpriteResourceLoader;
 
 public:
-    RED_RESOURCE(ResourceType::SPRITE);
+    RED_RESOURCE(ResourceType::SPRITE, L"sprite");
 
     SpriteResource(const Path& path);
     ~SpriteResource() = default;

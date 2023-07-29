@@ -1,30 +1,48 @@
 group "RedEngine"
-project "RedEngineLib"
-	kind("StaticLib")
-	language("C++")
-	cppdialect(cppDialect)
 
-	RedDefaultProjectOptions()
-	
+function RedEngineLib( name )
+	project(name)
+		kind("StaticLib")
+		language("C++")
+		cppdialect(cppDialect)
+
+		RedDefaultProjectOptions()
+		
+		includedirs
+		{
+			enginePath .. "/include/",
+			enginePath .. "/src/",
+			ExternalIncludeDirs,
+		}
+
+		links
+		{
+			libsToLink
+		}
+
+		libdirs
+		{
+			ExternalLibDirs
+		}
+end
+
+RedEngineLib("RedEngineLib")
 	files
 	{
 		enginePath .. "/compile.cpp",
 		
 	}
 
-	includedirs
+-- Project used to reference all the files of the engine projet so IDE are not lost
+RedEngineLib("RedEngineLib_AllFiles")
+	files
 	{
-		enginePath .. "/include/",
-		enginePath .. "/src/",
-		ExternalIncludeDirs,
+		enginePath .. "/include/**.hpp",
+		enginePath .. "/src/**.cpp",
 	}
 
-	links
+	removefiles
 	{
-		libsToLink
+		enginePath .. "/compile.cpp",
 	}
 
-	libdirs
-	{
-		ExternalLibDirs
-	}

@@ -1,9 +1,11 @@
 #include "RedEngine/Core/Engine.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
 #include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Event/System/EventSystem.hpp"
 #include "RedEngine/Input/Component/UserInput.hpp"
 #include "RedEngine/Input/System/UserInputSystem.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 
 #include <catch2/catch.hpp>
 
@@ -24,7 +26,7 @@ TEST_CASE("Raw input handling", "[Input]")
 
     eventsComonent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_DOWN);
 
-    eventSystem->PreUpdate();
+    eventSystem->Update();
 
     REQUIRE(eventsComonent->GetKey(red::KeyCodes::KEY_W));
     REQUIRE(eventsComonent->GetKeyDown(red::KeyCodes::KEY_W));
@@ -32,7 +34,7 @@ TEST_CASE("Raw input handling", "[Input]")
 
     eventsComonent->SendKeyEvent(red::KeyCodes::KEY_W, red::KeyEventType::KEY_UP);
 
-    eventSystem->PreUpdate();
+    eventSystem->Update();
 
     REQUIRE(!eventsComonent->GetKey(red::KeyCodes::KEY_W));
     REQUIRE(!eventsComonent->GetKeyDown(red::KeyCodes::KEY_W));
@@ -47,8 +49,13 @@ TEST_CASE("User input handling", "[Input]")
     world.RegisterComponentType<UserInputComponent>();
 
     // Add input & event system (responsible of creating UserInputComponent & EventsComponent)
-    world.AddSystem<red::UserInputSystem>();
     world.AddSystem<red::EventSystem>();
+    world.AddSystem<red::UserInputSystem>();
+
+    ExecutionGraph graph;
+    graph.AddStage(SystemGraphStageBuilder::NewStage(&world).AddSystem<EventSystem>().Build());
+    graph.AddStage(SystemGraphStageBuilder::NewStage(&world).AddSystem<UserInputSystem>().Build());
+    world.SetExecutionGraph(std::move(graph));
 
     // Update the world to init the systems (could have init individually the systems by calling .Init() on them)
     world.Update();

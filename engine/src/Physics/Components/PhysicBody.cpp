@@ -3,17 +3,26 @@
 #include "RedEngine/Physics/PhysicsModule.hpp"
 
 #include "RedEngine/Core/Entity/Entity.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
+
+#include <box2d/b2_shape.h>
+#include <box2d/b2_circle_shape.h>
+#include <box2d/b2_edge_shape.h>
+#include <box2d/b2_polygon_shape.h>
 
 namespace red
 {
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(PhysicBody)
+template <>
+inline void RegisterMembers<PhysicBody>(ComponentTraits& /*traits*/)
+{
+}
 
 PhysicBody::PhysicBody(Entity* entity) : Component(entity), m_desc(), m_body(nullptr), m_nextColliderIndex(0)
 {
 }
 
 PhysicBody::PhysicBody(Entity* entity, const PhysicBodyCreationDesc& desc)
-    : Component(entity), m_desc(desc), m_body(nullptr)
+    : Component(entity), m_desc(desc), m_body(nullptr), m_nextColliderIndex(0)
 {
     entity->GetWorld()->GetPhysicsWorld()->InitPhysicsBody(this, m_desc);
 }

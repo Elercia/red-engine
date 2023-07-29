@@ -2,6 +2,8 @@
 #include "RedEngine/Core/Entity/Components/Transform.hpp"
 #include "RedEngine/Core/Entity/Entity.hpp"
 #include "RedEngine/Core/Entity/System.hpp"
+#include "RedEngine/Core/Entity/SystemExecutionGraph.hpp"
+#include "RedEngine/Thread/ExecutionGraph.hpp"
 #include "RedEngine/Utils/SystemInfo.hpp"
 
 #include <catch2/catch.hpp>
@@ -10,10 +12,6 @@
 #include "EngineTest.hpp"
 #include "SystemTest.hpp"
 #include "TestModule.hpp"
-
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent1)
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent11)
-RED_COMPONENT_BASIC_FUNCTIONS_IMPL(MockComponent2)
 
 TEST_CASE("Component", "[ECS]")
 {
@@ -122,57 +120,21 @@ TEST_CASE("Component", "[ECS]")
     }
 }
 
-TEST_CASE("Component inheritance", "[ECS]")
-{
-    red::World world;
-    world.Init();
-
-    world.RegisterComponentType<MockComponent1>();
-    world.RegisterComponentType<MockComponent11>();
-
-    auto* entityA = world.CreateWorldEntity("a");
-    REQUIRE(entityA != nullptr);
-
-    SECTION("Hierarchy working")
-    {
-        auto* componentAddedA = entityA->AddComponent<MockComponent11>();
-        REQUIRE(componentAddedA != nullptr);
-
-        auto* componentGettedA = entityA->GetComponent<MockComponent1>();
-        REQUIRE(componentAddedA == componentGettedA);
-
-        REQUIRE(entityA->RemoveComponent<MockComponent1>());
-        REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
-    }
-
-    SECTION("Inverse hierarchy not working")
-    {
-        auto* componentAddedA = entityA->AddComponent<MockComponent1>();
-        REQUIRE(componentAddedA != nullptr);
-
-        auto* mock11 = entityA->GetComponent<MockComponent11>();
-        REQUIRE(mock11 == nullptr);
-
-        REQUIRE(entityA->RemoveComponent<MockComponent11>() == false);
-        REQUIRE(entityA->GetComponent<MockComponent1>() != nullptr);
-        REQUIRE(entityA->RemoveComponent<MockComponent1>());
-        REQUIRE(entityA->GetComponent<MockComponent1>() == nullptr);
-    }
-}
-
 namespace EntityDestroyRemoveComp
 {
-class TestSystem : public red::System
+class TestSystem : public red::System<red::QueryGroup<red::QueryRO<MockComponent1>>>
 {
 public:
-    explicit TestSystem(red::World* world) : red::System(world)
+    explicit TestSystem(red::World* world) : red::System<red::QueryGroup<red::QueryRO<MockComponent1>>>(world)
     {
     }
     virtual ~TestSystem() = default;
 
     void Update() override
     {
-        m_entityCount = (int) GetComponents<MockComponent1>().size();
+        auto result = QueryComponents<0>();
+
+        m_entityCount = result.size();
     }
 
     int m_entityCount = 0;
@@ -184,7 +146,7 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     using namespace red;
     using namespace EntityDestroyRemoveComp;
 
-    red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
+    auto engine = red::CreateEngineFrom<EngineTest>(0, nullptr);  // For double allocator
 
     red::World world;
     world.Init();
@@ -195,6 +157,9 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     auto* entityA = world.CreateWorldEntity("a");
     entityA->AddComponent<MockComponent1>();
 
+    ExecutionGraph graph;
+    graph.AddStage(SystemGraphStageBuilder::NewStage(&world).AddSystem<TestSystem>().Build());
+    world.SetExecutionGraph(std::move(graph));
     world.Update();
 
     REQUIRE(testSystem->m_entityCount == 1);
@@ -203,4 +168,6 @@ TEST_CASE("Entity destroy remove components", "[ECS]")
     world.Update();
 
     REQUIRE(testSystem->m_entityCount == 0);
+
+    engine->Destroy();
 }

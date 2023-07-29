@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RedEngine/Utils/Types.hpp"
+
 namespace red
 {
 struct PageAllocation
