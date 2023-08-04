@@ -51,10 +51,7 @@ struct WaitGroup
     WaitGroup(int taskCount);
 
     WaitGroup(const WaitGroup& other) = default;
-    WaitGroup& operator=(const WaitGroup& other) = default;
-
     WaitGroup(WaitGroup&& other) = default;
-    WaitGroup& operator=(WaitGroup&& other) = default;
 
     void Done() const;
     void Wait() const;

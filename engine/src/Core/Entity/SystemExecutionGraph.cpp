@@ -71,18 +71,18 @@ std::function<void(void)> SystemGraphStageBuilder::Build()
 {
     if (m_systems.size() == 1)
     {
-        return std::move(
+        return 
             [cpy = std::move(m_systems)]()
             {
                 for (auto* s : cpy)
                 {
                     s->Update();
                 }
-            });
+            };
     }
     else
     {
-        return std::move(
+        return 
             [cpy = std::move(m_systems)]()
             {
                 auto& scheduler = Engine::GetInstance()->GetScheduler();
@@ -99,7 +99,7 @@ std::function<void(void)> SystemGraphStageBuilder::Build()
                 }
 
                 wg.Wait();
-            });
+            };
     }
 }
 }  // namespace red

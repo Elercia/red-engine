@@ -84,19 +84,17 @@ inline System<QueriesT...>::System(World* world) : BaseSystem(world), m_ROCompon
         int index = 0;
 
         PossibleQueries queries;
-        for_each(queries,
-                 [&](auto querygroup) constexpr
-                 {
-                     for_each(querygroup.queries,
-                              [&](auto query) constexpr
-                              {
-                                  if (query.IsReadOnly)
-                                  {
-                                      m_ROComponents[index] = query.GetTypeInfo();
-                                      index++;
-                                  }
-                              });
-                 });
+        red::for_each(
+            queries, [&](auto querygroup) constexpr {
+                red::for_each(
+                    querygroup.queries, [&](auto query) constexpr {
+                        if (query.IsReadOnly)
+                        {
+                            m_ROComponents[index] = query.GetTypeInfo();
+                            index++;
+                        }
+                    });
+            });
     }
 
     auto rwCount = GetRWComponentCount();
@@ -106,19 +104,17 @@ inline System<QueriesT...>::System(World* world) : BaseSystem(world), m_ROCompon
 
         PossibleQueries queries;
         int index = 0;
-        for_each(queries,
-                 [&](auto querygroup) constexpr
-                 {
-                     for_each(querygroup.queries,
-                              [&](auto query) constexpr
-                              {
-                                  if (!query.IsReadOnly)
-                                  {
-                                      m_RWComponents[index] = query.GetTypeInfo();
-                                      index++;
-                                  }
-                              });
-                 });
+        red::for_each(
+            queries, [&](auto querygroup) constexpr {
+                red::for_each(
+                    querygroup.queries, [&](auto query) constexpr {
+                        if (!query.IsReadOnly)
+                        {
+                            m_RWComponents[index] = query.GetTypeInfo();
+                            index++;
+                        }
+                    });
+            });
     }
 }
 
@@ -202,7 +198,7 @@ System<QueriesGroups...>::QuerySingletonComponent()
     auto& worldentities = GetEntities();
     for (auto& entityPtr : worldentities)
     {
-        auto comp = entityPtr->GetComponent<typename ResultType::ComponentType>();
+        auto comp = entityPtr->template GetComponent<typename ResultType::ComponentType>();
 
         if (comp != nullptr)
             return ResultType(comp);
@@ -228,16 +224,14 @@ consteval int System<QueriesGroups...>::GetROComponentCount()
 {
     PossibleQueries queries;
     int RO = 0;
-    for_each(queries,
-             [&](auto querygroup) constexpr
-             {
-                 for_each(querygroup.queries,
-                          [&](auto query) constexpr
-                          {
-                              if (query.IsReadOnly)
-                                  RO++;
-                          });
-             });
+    for_each(
+        queries, [&](auto querygroup) constexpr {
+            for_each(
+                querygroup.queries, [&](auto query) constexpr {
+                    if (query.IsReadOnly)
+                        RO++;
+                });
+        });
 
     return RO;
 }
@@ -247,16 +241,14 @@ consteval int System<QueriesGroups...>::GetRWComponentCount()
 {
     PossibleQueries queries;
     int RW = 0;
-    for_each(queries,
-             [&](auto querygroup) constexpr
-             {
-                 for_each(querygroup.queries,
-                          [&](auto query) constexpr
-                          {
-                              if (!query.IsReadOnly)
-                                  RW++;
-                          });
-             });
+    for_each(
+        queries, [&](auto querygroup) constexpr {
+            for_each(
+                querygroup.queries, [&](auto query) constexpr {
+                    if (!query.IsReadOnly)
+                        RW++;
+                });
+        });
 
     return RW;
 }
