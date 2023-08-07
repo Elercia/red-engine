@@ -31,6 +31,7 @@ struct BindingIndex
     {
         Diffuse = 0,
         Color = 1,
+        FontSize = 2,
         Max = 16,
     };
 };

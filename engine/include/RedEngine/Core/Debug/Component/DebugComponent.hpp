@@ -11,6 +11,7 @@
 namespace red
 {
 class ShaderProgram;
+class Text;
 
 struct DebugLinePoint
 {
@@ -64,5 +65,7 @@ private:
     Array<Logger::LogOoutputInfo> m_logs;
     Array<DebugDrawer> m_drawers;
     Array<Entity*> m_filteredEntities;
+
+    Text* m_fpsText;
 };
 }  // namespace red

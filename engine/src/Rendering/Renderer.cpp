@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
@@ -14,6 +15,7 @@
 #include "RedEngine/Rendering/Resource/Material.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgram.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
+#include "RedEngine/Rendering/Text.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 // clang-format off
@@ -24,6 +26,8 @@
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl.h>
+#include <RedEngine/Resources/ResourceHolderComponent.hpp>
+#include <RedEngine/Rendering/Resource/MaterialResourceLoader.hpp>
 // clang-format on
 
 #define CheckGLReturnValue(expr, ...) \
@@ -129,6 +133,11 @@ void Renderer::InitRenderer(WindowComponent* window)
 
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (4 * sizeof(float)));
+
+    m_textMaterial = m_window->GetWorld()
+                         ->GetWorldComponent<ResourceHolderComponent>()
+                         ->GetResourceLoader<MaterialResourceLoader>()
+                         ->LoadResource(Path::Resource("ENGINE_RESOURCES/FONT_MATERIAL"));
 }
 
 void Renderer::ReCreateWindow(WindowComponent* /*window*/)
@@ -202,6 +211,33 @@ void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
 #endif
 
     m_culledAndSortedRenderingData.clearAndFree();
+}
+
+void Renderer::Draw(Text* text, const Transform* transform)
+{
+    if (text->m_dirty)
+        CreateText(text);
+
+    text->m_material.material = m_textMaterial;
+    BindingValue& bindingAtlas = text->m_material.overriddenBindings.bindings[BindingIndex::Diffuse];
+    bindingAtlas.type = BindingType::Texture;
+    bindingAtlas.texture = text->m_font->m_atlas.get();
+
+    BindingValue& bindingFontSize = text->m_material.overriddenBindings.bindings[BindingIndex::FontSize];
+    bindingFontSize.type = BindingType::Vector4;
+    bindingFontSize.floats[0] = (text->m_fontSize / text->m_font->size) * (float) text->m_font->m_pixelRange;
+
+    RenderingData data;
+    data.geometry = &text->m_geometry;
+    data.materialInstance = text->m_material;
+    data.worldMatrix = transform->GetWorldMatrix();
+    data.aabb = AABB(Vector2(-1000, -1000), Vector2(100000, 100000));  // TODO
+    data.size = Vector2(text->m_fontSize, text->m_fontSize);
+    data.renderLayerIndex = text->m_layerIndex;
+    data.type = text->m_material.material->GetRenderType();
+    data.hasBeenRendered = false;
+
+    m_renderingData.push_back(std::move(data));
 }
 
 void Renderer::Draw(const Renderable* renderable, const Transform* transform)
@@ -349,6 +385,87 @@ void Renderer::FillEntityBuffer(const RenderingData& data)
     glNamedBufferSubData(m_perInstanceData.m_gpuBufferHandle, 0, sizeof(PerInstanceData), &instanceData);
 }
 
+void Renderer::CreateText(Text* text)
+{
+    // Reset the text rendering data
+    text->m_geometry.Destroy();
+    text->m_dirty = false;
+
+    // There is no text to render
+    if (text->m_textStr.empty() || text->m_font->GetLoadState() != LoadState::STATE_LOADED)
+    {
+        return;
+    }
+
+    // We need one quad for each letter. We can't share vertices per quads so indices count is vertices count
+    const uint32 indicesVerticesCount = 4 * (uint32) text->m_textStr.size();
+    Array<float, DoubleLinearArrayAllocator> vertices;
+    vertices.reserve(indicesVerticesCount);
+    Array<float, DoubleLinearArrayAllocator> uvs;
+    uvs.reserve(indicesVerticesCount);
+    Array<int, DoubleLinearArrayAllocator> indices;
+    indices.reserve(indicesVerticesCount);
+
+    uint32 index = 0;
+    float originX = 0.f;
+
+    // Go through all the chars from the text and create the vertices and indices
+    for (char c : text->m_textStr)
+    {
+        GlyphMap::const_iterator glyphIt = text->m_font->m_glyphs.find(c);
+        if (glyphIt == text->m_font->m_glyphs.end())
+        {
+            // Push the quad indices
+            indices.push_back(index++);
+            indices.push_back(index++);
+            indices.push_back(index++);
+            indices.push_back(index++);
+
+            // Push the quad vertices positions
+            vertices.push_back(originX);
+            vertices.push_back(originX + 16);
+            vertices.push_back(0 + 0);
+            vertices.push_back(0);
+
+            // Push the quad uvs
+            uvs.push_back(0.f);
+            uvs.push_back(0.f);
+            uvs.push_back(0.f);
+            uvs.push_back(0.f);
+            continue;
+        }
+
+        const Glyph& glyph = glyphIt->second;
+
+        const float top = glyph.planeBounds.x;
+        const float left = glyph.planeBounds.y;
+        const float bottom = glyph.planeBounds.z;
+        const float right = glyph.planeBounds.w;
+
+        // Push the quad indices
+        indices.push_back(index++);
+        indices.push_back(index++);
+        indices.push_back(index++);
+        indices.push_back(index++);
+
+        // Push the quad vertices positions
+        vertices.push_back(originX - left);
+        vertices.push_back(originX + right);
+        vertices.push_back(0 + top);
+        vertices.push_back(0 + bottom);
+
+        // Push the quad uvs
+        uvs.push_back(glyph.atlasBounds.x);
+        uvs.push_back(glyph.atlasBounds.y);
+        uvs.push_back(glyph.atlasBounds.z);
+        uvs.push_back(glyph.atlasBounds.w);
+
+        originX += glyph.advance;
+    }
+    text->m_geometry.Create(indicesVerticesCount, vertices.data(), uvs.data(), indicesVerticesCount, indices.data(),
+                            PrimitiveType::QUAD);
+}
+
 void Renderer::UseMaterial(const MaterialInstance& materialInstance)
 {
     const auto& material = materialInstance.material;
@@ -394,9 +511,9 @@ void Renderer::UseGeometry(const Geometry* geom)
 {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-    glBindVertexArray(geom->m_gpuBufferHandle);
+    glBindVertexArray(geom->m_vaoHandle);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_gpuIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_iboHandle);
 }
 
 void Renderer::CullRenderDataForCamera(CameraComponent* camera)
@@ -431,14 +548,14 @@ void Renderer::CullRenderDataForCamera(CameraComponent* camera)
 
     uint32 i = 0;
     uint32 start = 0;
-    for (int type = 0; type < (int)RenderEntityType::Count; type++)
+    for (int type = 0; type < (int) RenderEntityType::Count; type++)
     {
         while (i < m_culledAndSortedRenderingData.size() &&
                m_culledAndSortedRenderingData[i].type == (RenderEntityType) type)
         {
             i++;
         }
-        
+
         m_renderingDataPerQueue[type] = ArrayView<RenderingData>(m_culledAndSortedRenderingData, start, i);
         start = i;
     }

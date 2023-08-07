@@ -20,6 +20,7 @@
 #include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/Resource/FontResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/GeometryResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
@@ -192,6 +193,7 @@ bool Engine::Create()
     resourceHolder->RegisterResourceLoader(ResourceType::SOUND, new SoundResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::MATERIAL, new MaterialResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::GEOMETRY, new GeometryResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::FONT, new FontResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SHADER_PROGRAM, new ShaderProgramResourceLoader(m_world));
 
     m_world->BuildExecutionGraph();

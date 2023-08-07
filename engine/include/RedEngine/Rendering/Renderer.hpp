@@ -23,6 +23,7 @@ namespace red
 class WindowComponent;
 class Renderable;
 class CameraComponent;
+class Text;
 
 using OpenGlContext = void*;
 
@@ -73,6 +74,7 @@ public:
     void EndRenderFrame();
 
     // Push the renderable to the corresponding render queue
+    void Draw(Text* text, const Transform* transform); // Will compute the required data for text to be rendered
     void Draw(const Renderable* renderable, const Transform* transform);
 
     // Draw passes
@@ -102,6 +104,8 @@ private:
     void FillCameraBuffer(const CameraComponent& camera);
     void FillEntityBuffer(const RenderingData& data);
 
+    void CreateText(Text* text);
+
 private:
     OpenGlContext m_glContext;
     WindowComponent* m_window;
@@ -119,6 +123,8 @@ private:
 
     uint32 m_lineVertexColorVBO;
     uint32 m_lineVAO;
+
+    std::shared_ptr<Material> m_textMaterial;
 };
 
 }  // namespace red

@@ -6,6 +6,9 @@
 
 namespace red
 {
+GPUBuffer::GPUBuffer() : mappedData(nullptr), m_nbElements(0), m_elementSize(0), m_gpuBufferHandle(0)
+{
+}
 
 GPUBuffer::GPUBuffer(uint32 nbElements, uint32 elementSize)
     : mappedData(nullptr), m_nbElements(nbElements), m_elementSize(elementSize), m_gpuBufferHandle(0)

@@ -12,7 +12,12 @@
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Level/Level.hpp"
+#include "RedEngine/Rendering/Component/RendererComponent.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/Renderer.hpp"
+#include "RedEngine/Rendering/Resource/FontResourceLoader.hpp"
+#include "RedEngine/Rendering/Text.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/StringUtils.hpp"
 
 #include <SDL2/SDL_clipboard.h>
@@ -48,6 +53,11 @@ void DebugSystem::Init()
     debugComp->AddDebugDrawer("Entities", &DebugSystem::RenderEntityTree);
     debugComp->AddDebugDrawer("Physics", &DebugSystem::RenderDebugPhysicsControls);
     debugComp->AddDebugDrawer("Misc", &ShowImGuiDemo);
+
+    debugComp->m_fpsText = new Text;
+    auto* fontLoader =
+        debugComp->GetWorld()->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<FontResourceLoader>();
+    debugComp->m_fpsText->SetFont(fontLoader->LoadResource(Path::Resource(L"ENGINE_RESOURCES/ROBOTO_REGULAR")));
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
@@ -226,8 +236,13 @@ void DebugSystem::Update()
 
     auto events = QuerySingletonComponent<1>();
     auto debugComp = QuerySingletonComponent<0>();
+    auto rendererComp = QuerySingletonComponent<3>();
 
     m_world->GetPhysicsWorld()->DrawDebug();
+
+    std::string fps = "FPS : " + std::to_string(1000.f / Time::DeltaTime(false));
+    debugComp->m_fpsText->SetText(fps);
+    rendererComp->GetRenderer().Draw(debugComp->m_fpsText, debugComp->GetOwner()->GetComponent<Transform>());
 
     static bool open = true;
     if (ImGui::Begin("Debug menu", &open))
