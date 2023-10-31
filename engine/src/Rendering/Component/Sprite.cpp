@@ -45,7 +45,7 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Component(entity)
                      ->GetResourceLoader<GeometryResourceLoader>()
                      ->LoadResource(Path::Resource("ENGINE_RESOURCES/SPRITE_GEOMETRY"));
 
-    if (m_spriteResource)
+    if (m_spriteResource->GetLoadState() == LoadState::STATE_LOADED)
     {
         m_currentAnimationInfo.currentAnimation = m_spriteResource->m_animations.begin();
         m_currentAnimationInfo.currentAnimationFrame = m_spriteResource->m_animations[0].frames.begin();
@@ -57,6 +57,9 @@ Sprite::Sprite(Entity* entity, const Path& resourceId) : Component(entity)
 
 void Sprite::NextFrame()
 {
+    if (m_spriteResource->GetLoadState() != LoadState::STATE_LOADED)
+        return;
+
     m_currentAnimationInfo.deltaTimeAccumulator += Time::DeltaTime();
 
     auto duration = m_currentAnimationInfo.currentAnimationFrame->duration;
@@ -88,8 +91,13 @@ void Sprite::NextFrame()
 
 bool Sprite::StartAnimation(const std::string& name)
 {
-    if (!m_spriteResource)
+    if (m_spriteResource->GetLoadState() != LoadState::STATE_LOADED)
+    {
+        auto* renderable = m_owner->GetComponent<Renderable>();
+        renderable->Hide();
+
         return false;
+    }
 
     for (auto it = m_spriteResource->m_animations.begin(); it != m_spriteResource->m_animations.end(); it++)
     {
@@ -137,6 +145,7 @@ void Sprite::UpdateRenderData()
 
     auto* renderable = m_owner->GetComponent<Renderable>();
 
+    renderable->Show();
     renderable->SetRenderLayerIndex(m_layerIndex);
     renderable->SetSize(m_size);
     renderable->SetAABB(m_aabb);

@@ -33,6 +33,9 @@ typename Delegate<Args...>::FuncIndex Delegate<Args...>::Add(typename Delegate<A
 template <typename... Args>
 void Delegate<Args...>::Remove(typename Delegate<Args...>::FuncIndex index)
 {
-    m_functions.erase(index);
+    if (index != (FuncIndex)-1)
+    {
+        m_functions.erase(index);
+    }
 }
 }  // namespace red

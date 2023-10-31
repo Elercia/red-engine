@@ -80,15 +80,23 @@ TEST_CASE("Map a lot of keys", "[Map]")
     {
         REQUIRE(keyValue.second == (keyValue.first + 3000));
     }
+
+    auto other = std::move(m);
+
+    for (int i = 3000; i < 6000; i++)
+    {
+        REQUIRE(other.find(i) == other.end());
+    }
 }
 
 TEST_CASE("Map colisions", "[Map]")
 {
     Map<std::string, int> m;
+    std::string s;
 
     for (int i = 0; i < 3000; i++)
     {
-        std::string s = fmt::format("{}", i);
+        s = fmt::format("{}", i);
         m.insert({s, i});
     }
 
@@ -96,8 +104,25 @@ TEST_CASE("Map colisions", "[Map]")
 
     for (auto& p : m)
     {
-        std::string s = fmt::format("{}", p.second);
+        s = fmt::format("{}", p.second);
         REQUIRE(s == p.first);
+    }
+
+    for (int i = 0; i < 3000; i++)
+    {
+        s = fmt::format("{}", i);
+
+        auto it = m.find(s);
+        REQUIRE(it != m.end());
+        REQUIRE(it->second == i);
+    }
+
+    for (int i = 3000; i < 60000; i++)
+    {
+        s = fmt::format("{}", i);
+
+        auto it = m.find(s);
+        REQUIRE(it == m.end());
     }
 }
 
@@ -150,12 +175,26 @@ TEST_CASE("Map struct", "[Map]")
     struct TestStruct
     {
         int m_i;
-        explicit TestStruct(int i) : m_i(i) {}
-        TestStruct(const TestStruct& other) :m_i(other.m_i) {}
-        TestStruct(TestStruct&& other) :m_i(std::exchange(other.m_i, -1)) {}
+        explicit TestStruct(int i) : m_i(i)
+        {
+        }
+        TestStruct(const TestStruct& other) : m_i(other.m_i)
+        {
+        }
+        TestStruct(TestStruct&& other) : m_i(std::exchange(other.m_i, -1))
+        {
+        }
 
-        TestStruct& operator=(const TestStruct& other) { m_i = other.m_i; return *this; }
-        TestStruct& operator=(TestStruct&& other) { m_i = std::exchange(other.m_i, -1); return *this; }
+        TestStruct& operator=(const TestStruct& other)
+        {
+            m_i = other.m_i;
+            return *this;
+        }
+        TestStruct& operator=(TestStruct&& other)
+        {
+            m_i = std::exchange(other.m_i, -1);
+            return *this;
+        }
     };
 
     Map<int, TestStruct> m;
@@ -166,7 +205,7 @@ TEST_CASE("Map struct", "[Map]")
     }
     REQUIRE(m.size() == 3000);
 
-    for(auto p : m)
+    for (auto p : m)
     {
         REQUIRE(p.first == p.second.m_i);
     }
@@ -182,7 +221,7 @@ TEST_CASE("Map benchmark", "[Map_Benchmark]")
     DurationCounter counterStd;
     DurationCounter counterStdUnordered;
 
-    const int iterationCount = 10'000'000;
+    const int iterationCount = 64;
 
     {
         DurationRAII profiler(counterRed);

@@ -64,8 +64,15 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 	cppdialect(cppDialect)
 
 	staticruntime("Off")
+	editandcontinue("Off")
 
 	warnings("Off")
+
+	if enableExceptions then
+		exceptionhandling("On")
+	else
+		exceptionhandling("Off")
+	end
 
 	if IsStaticLib ~= nil then
 		if IsStaticLib then
@@ -85,17 +92,37 @@ function ExternalLibs(Name, IsStaticLib, IncludeDirectory)
 	table.insert(ExternalIncludeDirs, ThisLibFullExternalIncludeDir)
 	includedirs {ThisLibFullExternalIncludeDir}
 
-	filter "configurations:Debug"
-		defines {"RED_DEBUG", "RED_BREAK_ON_ASSERT" }
+	filter { "configurations:Debug" }
+		defines 
+		{
+			"RED_DEBUG", 
+			"RED_DEVBUILD", 
+			"RED_BREAK_ON_ASSERT",
+			"RED_USE_PROFILER" 
+		}
+
 		runtime "Debug"
-		symbols "on"
+		symbols "Full"
 	filter {}
 
-	filter "configurations:Release"
+	filter { "configurations:ReleaseWithDebugInfo" }
+		defines 
+		{
+			"RED_DEBUG_RELEASE",
+			"RED_DEVBUILD",
+			"RED_USE_PROFILER"
+		}
+
+		runtime "Release"
+		optimize "on"
+		symbols "Full"
+	filter {}
+
+	filter { "configurations:Release" }
 		defines "RED_RELEASE"
 		runtime "Release"
 		optimize "on"
-		symbols "on"
+		symbols "Off"
 	filter {}
 
 end
@@ -171,7 +198,7 @@ ExternalLibs("STBI", true, "/stbi/include")
 ExternalLibs("ImGui", true, "/imgui/")
 	files
 	{
-		externalDirectoryPath .. "/imgui/backends/imgui_impl_sdl.cpp",
+		externalDirectoryPath .. "/imgui/backends/imgui_impl_sdl2.cpp",
 		externalDirectoryPath .. "/imgui/backends/imgui_impl_opengl3.cpp",
 		externalDirectoryPath .. "/imgui/imgui*.cpp",
 	}

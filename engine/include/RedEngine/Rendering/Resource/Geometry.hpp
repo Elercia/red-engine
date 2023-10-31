@@ -8,7 +8,6 @@ namespace red
 enum class PrimitiveType
 {
     TRIANGLE,
-    QUAD,
     LINES,
     POINTS,
     // GL_LINE_LOOP,
@@ -31,13 +30,18 @@ public:
     int GetIndexeCount() const;
     int GetVertexCount() const;
 
-private:
-    uint32 m_gpuBufferHandle{(uint32) -1};  // Vao handle
-    uint32 m_gpuIndexBuffer{(uint32) -1};   // IBO Handle
+    void Create(int vertexCount, float* vertexData, float* uvData, int indexCount, int* indexData, PrimitiveType type);
+    void Destroy();
 
-    int m_indexCount{0};
-    int m_vertexCount{0};
-    PrimitiveType m_primitiveType{PrimitiveType::TRIANGLE};
+private:
+    uint32 m_vaoHandle;
+    uint32 m_iboHandle;
+    uint32 m_vboHandle;
+    uint32 m_uvHandle;
+
+    int m_indexCount;
+    int m_vertexCount;
+    PrimitiveType m_primitiveType;
 };
 
 // Wrapper class to handle resources as a geometry (to not duplicated geometry from resources) but that keep Geomtry

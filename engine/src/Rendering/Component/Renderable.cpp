@@ -8,10 +8,12 @@ namespace red
 {
 Renderable::Renderable(Entity* owner) : Component(owner), m_layerIndex(0)
 {
+    m_visible = false;
 }
 
 Renderable::Renderable(Entity* owner, RenderLayerIndex layerIndex) : Component(owner), m_layerIndex(layerIndex)
 {
+    m_visible = false;
 }
 
 Renderable::~Renderable()
@@ -50,7 +52,17 @@ RenderLayerIndex Renderable::GetRenderLayerIndex() const
 
 bool Renderable::IsValid() const
 {
-    return m_size.x != 0 && m_size.y != 0 && m_geometry != nullptr && m_material.material != nullptr;
+    return m_visible && m_size.x != 0 && m_size.y != 0 && m_geometry != nullptr && m_material.material != nullptr;
+}
+
+void Renderable::Hide()
+{
+    m_visible = false;
+}
+
+void Renderable::Show()
+{
+    m_visible = true;
 }
 
 void Renderable::SetGeometry(std::shared_ptr<GeometryResourceWrapper> geom)

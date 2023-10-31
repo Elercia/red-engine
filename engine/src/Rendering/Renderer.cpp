@@ -6,6 +6,7 @@
 #include "RedEngine/Core/Debug/DebugMacros.hpp"
 #include "RedEngine/Core/Debug/Logger/Logger.hpp"
 #include "RedEngine/Core/Debug/Profiler.hpp"
+#include "RedEngine/Core/Entity/World.hpp"
 #include "RedEngine/Math/Matrix.hpp"
 #include "RedEngine/Rendering/Component/CameraComponent.hpp"
 #include "RedEngine/Rendering/Component/Renderable.hpp"
@@ -14,6 +15,7 @@
 #include "RedEngine/Rendering/Resource/Material.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgram.hpp"
 #include "RedEngine/Rendering/Resource/Texture2D.hpp"
+#include "RedEngine/Rendering/Text.hpp"
 #include "RedEngine/Utils/Types.hpp"
 
 // clang-format off
@@ -23,7 +25,9 @@
 
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
-#include <imgui_impl_sdl.h>
+#include <imgui_impl_sdl2.h>
+#include <RedEngine/Resources/ResourceHolderComponent.hpp>
+#include <RedEngine/Rendering/Resource/MaterialResourceLoader.hpp>
 // clang-format on
 
 #define CheckGLReturnValue(expr, ...) \
@@ -34,9 +38,22 @@
 
 namespace red
 {
-const int PrimitiveTypesAsGLTypes[] = {
-    GL_TRIANGLES, GL_QUADS, GL_LINES, GL_POINTS, GL_LINE_LOOP, GL_LINE_STRIP, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN,
-};
+GLenum PrimitiveTypesAsGLTypes(PrimitiveType type)
+{
+    switch (type)
+    {
+        case PrimitiveType::TRIANGLE:
+            return GL_TRIANGLES;
+        case PrimitiveType::LINES:
+            return GL_LINES;
+        case PrimitiveType::POINTS:
+            return GL_POINTS;
+    }
+
+    RedAssertNotReached();
+
+    return GL_TRIANGLES;
+}
 
 CVar<bool> s_enableCulling("EnableCulling", "Rendering", true);
 
@@ -129,6 +146,11 @@ void Renderer::InitRenderer(WindowComponent* window)
 
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (4 * sizeof(float)));
+
+    m_textMaterial = m_window->GetWorld()
+                         ->GetWorldComponent<ResourceHolderComponent>()
+                         ->GetResourceLoader<MaterialResourceLoader>()
+                         ->LoadResource(Path::Resource("ENGINE_RESOURCES/FONT_MATERIAL"));
 }
 
 void Renderer::ReCreateWindow(WindowComponent* /*window*/)
@@ -189,19 +211,31 @@ void Renderer::BeginCameraRendering(CameraComponent* cameraComponent)
     CullRenderDataForCamera(cameraComponent);
 }
 
-void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
+void Renderer::Draw(Text* text, const Transform* transform)
 {
-    PROFILER_EVENT_CATEGORY("Renderer::EndCameraRendering", ProfilerCategory::Rendering);
+    if (text->m_dirty)
+        CreateText(text);
 
-#ifdef RED_DEBUG
-    for (uint32 i = 0; i < m_culledAndSortedRenderingData.size(); i++)
-    {
-        auto& r = m_culledAndSortedRenderingData[i];
-        RedAssert(r.hasBeenRendered);
-    }
-#endif
+    text->m_material.material = m_textMaterial;
+    BindingValue& bindingAtlas = text->m_material.overriddenBindings.bindings[BindingIndex::Diffuse];
+    bindingAtlas.type = BindingType::Texture;
+    bindingAtlas.texture = text->m_font->m_atlas.get();
 
-    m_culledAndSortedRenderingData.clearAndFree();
+    BindingValue& bindingFontSize = text->m_material.overriddenBindings.bindings[BindingIndex::FontSize];
+    bindingFontSize.type = BindingType::Vector4;
+    bindingFontSize.floats[0] =
+        ((float) text->m_fontSize / (float) text->m_font->m_size) * (float) text->m_font->m_pixelRange;
+
+    RenderingData data;
+    data.geometry = &text->m_geometry;
+    data.materialInstance = text->m_material;
+    data.worldMatrix = transform->GetWorldMatrix();
+    data.aabb = AABB(Vector2(-1000, -1000), Vector2(100000, 100000));  // TODO
+    data.size = Vector2(text->m_fontSize, text->m_fontSize);
+    data.renderLayerIndex = text->m_layerIndex;
+    data.type = text->m_material.material->GetRenderType();
+
+    m_renderingData.push_back(std::move(data));
 }
 
 void Renderer::Draw(const Renderable* renderable, const Transform* transform)
@@ -214,64 +248,27 @@ void Renderer::Draw(const Renderable* renderable, const Transform* transform)
     data.size = renderable->m_size;
     data.renderLayerIndex = renderable->m_layerIndex;
     data.type = renderable->m_material.material->GetRenderType();
-    data.hasBeenRendered = false;
 
     m_renderingData.push_back(std::move(data));
 }
 
-void Renderer::RenderOpaqueQueue(CameraComponent* camera)
+void Renderer::RenderSprites(CameraComponent* camera)
 {
-    RenderPassDesc desc;
-    desc.alphaBlending = false;
-    desc.name = "opaque";
-    desc.renderType = RenderEntityType::Opaque;
-
-    RenderPass(camera, desc);
-}
-
-void Renderer::RenderTransparencyQueue(CameraComponent* camera)
-{
-    RenderPassDesc desc;
-    desc.alphaBlending = true;
-    desc.name = "transparency";
-    desc.renderType = RenderEntityType::Transparency;
-
-    RenderPass(camera, desc);
-}
-
-void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
-{
-    auto& toRender = m_renderingDataPerQueue[(int) desc.renderType];
-
-    if (toRender.empty())
+    if (m_cameraRenderingData.empty())
         return;
 
-    PROFILER_EVENT_CATEGORY(desc.name, ProfilerCategory::Rendering);
+    PROFILER_EVENT_CATEGORY("RenderSprites", ProfilerCategory::Rendering);
 
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, desc.name);
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "RenderSprites");
 
+    // TODO ?
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    /*if (desc.alphaBlending)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-    }
-    else
-    {
-        glDisable(GL_BLEND);
-    }*/
-
     // Do the actual render calls to the camera render target
-    for (uint32 i = 0; i < toRender.size(); i++)
+    for (uint32 i = 0; i < m_cameraRenderingData.size(); i++)
     {
-        auto& renderData = toRender[i];
-
-        RedAssert(desc.renderType == renderData.type);
-
-        RedAssert(!renderData.hasBeenRendered);
-        renderData.hasBeenRendered = true;
+        auto& renderData = m_cameraRenderingData[i];
 
         UseMaterial(renderData.materialInstance);
         UseGeometry(renderData.geometry);
@@ -283,9 +280,8 @@ void Renderer::RenderPass(CameraComponent* camera, const RenderPassDesc& desc)
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_perInstanceData.m_gpuBufferHandle);
 
         auto primitiveType = renderData.geometry->GetPrimitiveType();
-
-        glDrawElements(PrimitiveTypesAsGLTypes[(int) primitiveType], renderData.geometry->GetIndexeCount(),
-                       GL_UNSIGNED_INT, nullptr);
+        glDrawElements(PrimitiveTypesAsGLTypes(primitiveType), renderData.geometry->GetIndexeCount(), GL_UNSIGNED_INT,
+                       nullptr);
     }
 
     glPopDebugGroup();
@@ -320,7 +316,7 @@ void Renderer::RenderDebug(CameraComponent* camera, DebugComponent* debug)
     glPopDebugGroup();
 }
 
-void Renderer::RenderDebugUI()
+void Renderer::RenderFullScreenDebugUI()
 {
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Render debug UI");
     PROFILER_EVENT_CATEGORY("Renderer::RenderDebugUI", ProfilerCategory::Rendering);
@@ -347,6 +343,118 @@ void Renderer::FillEntityBuffer(const RenderingData& data)
     instanceData.renderLayer = (float) data.renderLayerIndex;
 
     glNamedBufferSubData(m_perInstanceData.m_gpuBufferHandle, 0, sizeof(PerInstanceData), &instanceData);
+}
+
+void Renderer::CreateText(Text* text)
+{
+    // Reset the text rendering data
+    text->m_geometry.Destroy();
+    text->m_dirty = false;
+
+    // There is no text to render
+    if (text->m_textStr.empty() || text->m_font->GetLoadState() != LoadState::STATE_LOADED)
+    {
+        return;
+    }
+
+    // We need one quad for each letter. We can't share vertices per quads so indices count is vertices count
+    const uint32 vertexCount = 4 * (uint32) text->m_textStr.size();
+    const uint32 indexCount = 6 * (uint32) text->m_textStr.size();
+
+    Array<Vector3, DoubleLinearArrayAllocator> vertices;  // TODO Vector2
+    vertices.reserve(vertexCount);
+    Array<Vector2, DoubleLinearArrayAllocator> uvs;
+    uvs.reserve(vertexCount);
+    Array<int, DoubleLinearArrayAllocator> indices;
+    indices.reserve(indexCount);
+
+    float originX = 0.f;
+
+    // Go through all the chars from the text and create the vertices and indices
+    for (char c : text->m_textStr)
+    {
+        GlyphMap::const_iterator glyphIt = text->m_font->m_glyphs.find(c);
+
+        {
+            auto topLeft = 0;
+            auto topRight = 1;
+            auto bottomLeft = 2;
+            auto bottomRight = 3;
+
+            // First triangle
+            indices.push_back(vertices.size() + topLeft);
+            indices.push_back(vertices.size() + topRight);
+            indices.push_back(vertices.size() + bottomLeft);
+
+            // Second triangle
+            indices.push_back(vertices.size() + topRight);
+            indices.push_back(vertices.size() + bottomRight);
+            indices.push_back(vertices.size() + bottomLeft);
+        }
+
+        if (glyphIt == text->m_font->m_glyphs.end())
+        {
+            const Vector3 topLeft = {originX + 0.f, -text->m_fontSize / 2.f, 0.f};
+            const Vector3 topRight = {originX + text->m_fontSize, -text->m_fontSize / 2.f, 0.f};
+            const Vector3 bottomLeft = {originX + 0.f, text->m_fontSize / 2.f, 0.f};
+            const Vector3 bottomRight = {originX + text->m_fontSize, text->m_fontSize / 2.f, 0.f};
+
+            // Push the quad vertices positions
+            vertices.push_back(topLeft);
+            vertices.push_back(topRight);
+            vertices.push_back(bottomLeft);
+            vertices.push_back(bottomRight);
+
+            // Push the quad uvs
+            uvs.push_back({0.f, 0.f});
+            uvs.push_back({0.f, 0.f});
+            uvs.push_back({0.f, 0.f});
+            uvs.push_back({0.f, 0.f});
+            continue;
+        }
+
+        const Glyph& glyph = glyphIt->second;
+
+        {
+            const float bottom = glyph.planeBounds.x;
+            const float left = glyph.planeBounds.y;
+            const float top = glyph.planeBounds.z;
+            const float right = glyph.planeBounds.w;
+
+            const Vector3 topLeft = Vector3(originX + left, -top, 0.f) * (float) text->m_font->m_size;
+            const Vector3 topRight = Vector3(originX + right, -top, 0.f) * (float) text->m_font->m_size;
+            const Vector3 bottomLeft = Vector3(originX + left, -bottom, 0.f) * (float) text->m_font->m_size;
+            const Vector3 bottomRight = Vector3(originX + right, -bottom, 0.f) * (float) text->m_font->m_size;
+
+            // Push the quad vertices positions
+            vertices.push_back(topLeft);
+            vertices.push_back(topRight);
+            vertices.push_back(bottomLeft);
+            vertices.push_back(bottomRight);
+        }
+
+        {
+            const float top = glyph.atlasBounds.x;
+            const float left = glyph.atlasBounds.y;
+            const float bottom = glyph.atlasBounds.z;
+            const float right = glyph.atlasBounds.w;
+
+            const Vector2 topLeft = {top, left};
+            const Vector2 topRight = {top, right};
+            const Vector2 bottomLeft = {bottom, left};
+            const Vector2 bottomRight = {bottom, right};
+
+            // Push the quad uvs positions
+            uvs.push_back(topLeft);
+            uvs.push_back(topRight);
+            uvs.push_back(bottomLeft);
+            uvs.push_back(bottomRight);
+        }
+
+        originX += glyph.advance;
+    }
+    text->m_geometry.Create(vertexCount, (float*) vertices.data(), (float*) uvs.data(), indexCount, indices.data(),
+                            PrimitiveType::TRIANGLE);
 }
 
 void Renderer::UseMaterial(const MaterialInstance& materialInstance)
@@ -394,54 +502,40 @@ void Renderer::UseGeometry(const Geometry* geom)
 {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-    glBindVertexArray(geom->m_gpuBufferHandle);
+    glBindVertexArray(geom->m_vaoHandle);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_gpuIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->m_iboHandle);
 }
 
 void Renderer::CullRenderDataForCamera(CameraComponent* camera)
 {
     PROFILER_EVENT_CATEGORY("Renderer::CullRenderDataForCamera", ProfilerCategory::Rendering);
-    RedAssert(m_culledAndSortedRenderingData.empty(),
+    RedAssert(m_cameraRenderingData.empty(),
               "The camera data is not empty. Maybe EndCameraRendering has not been called");
 
-    for (RenderingData& data : m_renderingData)
+    if (s_enableCulling)
     {
-        if (!s_enableCulling || camera->IsVisibleFrom(data.aabb))
+        for (RenderingData& data : m_renderingData)
         {
-            m_culledAndSortedRenderingData.push_back(data);
+            if (camera->IsVisibleFrom(data.aabb))
+            {
+                m_cameraRenderingData.push_back(data);
+            }
         }
     }
-
-    // Reset the rendering data
-    for (auto& queue : m_renderingDataPerQueue)
+    else
     {
-        queue = ArrayView<RenderingData>();
-    }
-
-    // Sort the culled data
-    std::sort(m_culledAndSortedRenderingData.begin(), m_culledAndSortedRenderingData.end(),
-              [](auto& l, auto& r)
-              {
-                  if (l.type < r.type)
-                      return true;
-
-                  return false;
-              });
-
-    uint32 i = 0;
-    uint32 start = 0;
-    for (int type = 0; type < (int)RenderEntityType::Count; type++)
-    {
-        while (i < m_culledAndSortedRenderingData.size() &&
-               m_culledAndSortedRenderingData[i].type == (RenderEntityType) type)
+        for (RenderingData& data : m_renderingData)
         {
-            i++;
+            m_cameraRenderingData.push_back(data);
         }
-        
-        m_renderingDataPerQueue[type] = ArrayView<RenderingData>(m_culledAndSortedRenderingData, start, i);
-        start = i;
     }
+}
+
+void Renderer::EndCameraRendering(CameraComponent* /*camera*/)
+{
+    PROFILER_EVENT_CATEGORY("Renderer::EndCameraRendering", ProfilerCategory::Rendering);
+    m_cameraRenderingData.clearAndFree();
 }
 
 }  // namespace red

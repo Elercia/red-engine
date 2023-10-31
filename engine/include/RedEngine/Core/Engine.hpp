@@ -11,7 +11,7 @@ namespace red
 {
 class World;
 
-constexpr uint32 RED_DEFAULT_FRAMEALLOCATOR_SIZE = 50 * 1024 * 1024; // 10 Mo
+constexpr uint32 RED_DEFAULT_FRAMEALLOCATOR_SIZE = 50 * 1024 * 1024;  // 10 Mo
 
 class Engine
 {
@@ -47,9 +47,12 @@ protected:
 
     World* m_world;
 
-    DoubleLinearAllocator* m_frameAllocator; // dynamic array initialized when the threading system is init
+    DoubleLinearAllocator* m_frameAllocator;  // dynamic array initialized when the threading system is init
 
     ThreadScheduler m_scheduler;
+
+    Logger::OutputDelegate::FuncIndex m_standarOutputFuncIndex;
+    Logger::OutputDelegate::FuncIndex m_debugOutputFuncIndex;
 
 private:
     static Engine* s_engine;

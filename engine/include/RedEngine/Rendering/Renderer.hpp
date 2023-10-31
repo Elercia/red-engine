@@ -23,6 +23,7 @@ namespace red
 class WindowComponent;
 class Renderable;
 class CameraComponent;
+class Text;
 
 using OpenGlContext = void*;
 
@@ -36,8 +37,6 @@ struct RenderingData
     MaterialInstance materialInstance;
     AABB aabb;
     Vector2 size;
-
-    bool hasBeenRendered;
 };
 
 struct PerCameraData
@@ -52,40 +51,27 @@ struct PerInstanceData
     float renderLayer;
 };
 
-using RenderDataArrayPerType = std::array<Array<RenderingData>, (uint8) RenderEntityType::Count>;
-using RenderDataPerLayer = std::array<RenderDataArrayPerType, 32>;
-
 class Renderer
 {
-private:
-    struct RenderPassDesc
-    {
-        bool alphaBlending = false;
-        const char* name = "Unknown";
-        RenderEntityType renderType = RenderEntityType::Opaque;
-    };
-
 public:
     Renderer();
     ~Renderer();
 
     void BeginRenderFrame();
-    void EndRenderFrame();
+    void EndRenderFrame(); // Flip
 
     // Push the renderable to the corresponding render queue
+    void Draw(Text* text, const Transform* transform); // Will compute the required data for text to be rendered
     void Draw(const Renderable* renderable, const Transform* transform);
 
-    // Draw passes
+    // Flush commands
     void BeginCameraRendering(CameraComponent* camera);
     void EndCameraRendering(CameraComponent* camera);
 
-    void RenderOpaqueQueue(CameraComponent* camera);
-    void RenderTransparencyQueue(CameraComponent* camera);
-
     void RenderDebug(CameraComponent* camera, DebugComponent* debug);
-    void RenderDebugUI();
+    void RenderFullScreenDebugUI();
 
-    void RenderPass(CameraComponent* camera, const RenderPassDesc& desc);
+    void RenderSprites(CameraComponent* camera);
 
     // Rendering resource management
     void InitRenderer(WindowComponent* window);
@@ -102,16 +88,17 @@ private:
     void FillCameraBuffer(const CameraComponent& camera);
     void FillEntityBuffer(const RenderingData& data);
 
+    void CreateText(Text* text);
+
 private:
     OpenGlContext m_glContext;
     WindowComponent* m_window;
 
-    // Complex drawed sprites
+    // Pushed sprites data
     Array<RenderingData> m_renderingData;
 
     // Tmp data used per camera
-    Array<RenderingData, DoubleLinearArrayAllocator> m_culledAndSortedRenderingData;
-    ArrayView<RenderingData> m_renderingDataPerQueue[(int) RenderEntityType::Count];
+    Array<RenderingData, DoubleLinearArrayAllocator> m_cameraRenderingData;
 
     // Rendering data sent to GPU
     GPUBuffer m_perInstanceData;
@@ -119,6 +106,8 @@ private:
 
     uint32 m_lineVertexColorVBO;
     uint32 m_lineVAO;
+
+    std::shared_ptr<Material> m_textMaterial;
 };
 
 }  // namespace red

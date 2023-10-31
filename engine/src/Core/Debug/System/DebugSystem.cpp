@@ -12,7 +12,12 @@
 #include "RedEngine/Core/Event/Component/EventsComponent.hpp"
 #include "RedEngine/Core/Time/Time.hpp"
 #include "RedEngine/Level/Level.hpp"
+#include "RedEngine/Rendering/Component/RendererComponent.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/Renderer.hpp"
+#include "RedEngine/Rendering/Resource/FontResourceLoader.hpp"
+#include "RedEngine/Rendering/Text.hpp"
+#include "RedEngine/Resources/ResourceHolderComponent.hpp"
 #include "RedEngine/Utils/StringUtils.hpp"
 
 #include <SDL2/SDL_clipboard.h>
@@ -42,12 +47,25 @@ void DebugSystem::Init()
     System::Init();
     auto* debugComp = m_world->CreateWorldEntity("DebugSystemEntity")->AddComponent<DebugComponent>();
 
-    GetRedLogger()->AddOutput([=](const Logger::LogOoutputInfo& out) { debugComp->AddLog(out); });
+    debugComp->m_outputFuncIndex =
+        GetRedLogger()->AddOutput([=](const Logger::LogOoutputInfo& out) { debugComp->AddLog(out); });
 
     debugComp->AddDebugDrawer("Console", &DebugSystem::RenderConsole);
     debugComp->AddDebugDrawer("Entities", &DebugSystem::RenderEntityTree);
     debugComp->AddDebugDrawer("Physics", &DebugSystem::RenderDebugPhysicsControls);
     debugComp->AddDebugDrawer("Misc", &ShowImGuiDemo);
+
+    debugComp->m_fpsText = new Text;
+    auto* fontLoader =
+        debugComp->GetWorld()->GetWorldComponent<ResourceHolderComponent>()->GetResourceLoader<FontResourceLoader>();
+    debugComp->m_fpsText->SetFont(fontLoader->LoadResource(Path::Resource(L"ENGINE_RESOURCES/ROBOTO_REGULAR")));
+}
+
+void DebugSystem::Finalize()
+{
+    auto* debugComp = m_world->GetWorldComponent<DebugComponent>();
+
+    GetRedLogger()->RemoveOutput(debugComp->m_outputFuncIndex);
 }
 
 void DebugSystem::RenderConsole(DebugComponent* debug)
@@ -226,8 +244,16 @@ void DebugSystem::Update()
 
     auto events = QuerySingletonComponent<1>();
     auto debugComp = QuerySingletonComponent<0>();
+    auto rendererComp = QuerySingletonComponent<3>();
 
     m_world->GetPhysicsWorld()->DrawDebug();
+
+    debugComp->GetOwner()->GetComponent<Transform>()->SetLocalPosition(20.f, 100.f);
+
+    auto fps = 1000.f / Time::DeltaTime(false);
+    auto fpsStr = fmt::format("FPS {:.0}", fps);
+    debugComp->m_fpsText->SetText(fpsStr);
+    rendererComp->GetRenderer().Draw(debugComp->m_fpsText, debugComp->GetOwner()->GetComponent<Transform>());
 
     static bool open = true;
     if (ImGui::Begin("Debug menu", &open))

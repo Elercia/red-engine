@@ -5,7 +5,8 @@ newoption {
 
 include "Helpers.lua"
 
-outputDirSementic = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}-" .. _ACTION .. "/%{prj.name}"
+outputDirSementic 	= "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}-" .. _ACTION .. "/%{prj.name}"
+enableExceptions 	= true
 
 rootPath 				= os.getcwd() .. "/../"
 enginePath 				= rootPath .. "engine/"
@@ -44,10 +45,15 @@ function RedDefaultProjectOptions()
 	cppdialect(cppDialect)
 
 	rtti("Off")
-	exceptionhandling("Off")
+	if enableExceptions then
+		exceptionhandling("On")
+	else
+		exceptionhandling("Off")
+	end
 	warnings("Extra")
 	flags("NoPCH")
 	staticruntime("Off")
+	editandcontinue("Off")
 
 	location(projectsFilesLocation)
 	targetdir(rootPath .. "/output/bin/" .. outputDirSementic)
@@ -125,6 +131,7 @@ function RedDefaultProjectOptions()
 		defines "RED_RELEASE"
 		runtime "Release"
 		optimize "on"
+		symbols "Off"
 	filter {}
 
 	defines

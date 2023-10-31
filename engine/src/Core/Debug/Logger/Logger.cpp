@@ -39,6 +39,11 @@ Logger::OutputDelegate::FuncIndex Logger::AddOutput(OutputDelegate::FuncType out
     return m_delegates.Add(std::move(output));
 }
 
+void Logger::RemoveOutput(Logger::OutputDelegate::FuncIndex index)
+{
+    m_delegates.Remove(index);
+}
+
 void Logger::LogToStandardOutputFun(const LogOoutputInfo& out)
 {
     fmt::print(out.str);

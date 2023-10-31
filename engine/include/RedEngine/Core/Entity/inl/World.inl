@@ -104,7 +104,8 @@ bool World::RegisterComponentType()
         };
         compData->destroyer = [=](Component* comp) -> void
         {
-            RedAssert(comp->m_typeTraits.typeId == TypeInfo<T>().typeId);
+            auto templateTypeInfo = TypeInfo<T>();
+            RedAssert(comp->m_typeTraits.typeId == templateTypeInfo.typeId);
 
             T* casted = (T*) comp;
             casted->~T();

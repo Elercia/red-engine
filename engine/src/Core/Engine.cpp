@@ -20,6 +20,7 @@
 #include "RedEngine/Rendering/Component/Renderable.hpp"
 #include "RedEngine/Rendering/Component/Sprite.hpp"
 #include "RedEngine/Rendering/Component/WindowComponent.hpp"
+#include "RedEngine/Rendering/Resource/FontResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/GeometryResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/MaterialResourceLoader.hpp"
 #include "RedEngine/Rendering/Resource/ShaderProgramResourceLoader.hpp"
@@ -98,7 +99,7 @@ bool Engine::RegisterComponentTypes()
 
     // Inputs
     CheckReturn(m_world->RegisterComponentType<EventsComponent>());
-    CheckReturn(m_world->RegisterComponentType<UserInputComponent>());
+    CheckReturn(m_world->RegisterComponentType<UserInputComponent>()); // TODO Add a register for singleton component (allow faster lookups and more checks)
 
     // Physics
     CheckReturn(m_world->RegisterComponentType<PhysicBody>());
@@ -125,29 +126,27 @@ void Engine::SetupLogger()
 {
     PROFILER_EVENT();
 
-    int standarOutputFuncIndex = -1;
-    int debugOutputFuncIndex = -1;
-
 #ifdef RED_DEVBUILD
     // Always add standard output when debugging
-    standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+    m_standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
 #endif  // RED_DEVBUILD
 
 #if defined(RED_WINDOWS) && defined(RED_DEVBUILD)
     if (IsDebuggerPresent() != 0)
     {
-        debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
+        m_debugOutputFuncIndex = GetRedLogger()->AddOutput(LogToDebugger);
     }
 #endif  // defined(RED_WINDOWS) && defined(RED_DEVBUILD)
 
-    if (standarOutputFuncIndex == -1 && s_addStandardOutputLog)
+    if (m_standarOutputFuncIndex == -1 && s_addStandardOutputLog)
     {
-        standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
+        m_standarOutputFuncIndex = GetRedLogger()->AddOutput(Logger::LogToStandardOutputFun);
     }
 
     SetLogLevel(s_logLevel);
 
-    RED_LOG_INFO("Setup logger for output {}, debugger {}", standarOutputFuncIndex != -1, debugOutputFuncIndex != -1);
+    RED_LOG_INFO("Setup logger for output {}, debugger {}", m_standarOutputFuncIndex != -1,
+                 m_debugOutputFuncIndex != -1);
 }
 
 void Engine::InitAllocator()
@@ -192,6 +191,7 @@ bool Engine::Create()
     resourceHolder->RegisterResourceLoader(ResourceType::SOUND, new SoundResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::MATERIAL, new MaterialResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::GEOMETRY, new GeometryResourceLoader(m_world));
+    resourceHolder->RegisterResourceLoader(ResourceType::FONT, new FontResourceLoader(m_world));
     resourceHolder->RegisterResourceLoader(ResourceType::SHADER_PROGRAM, new ShaderProgramResourceLoader(m_world));
 
     m_world->BuildExecutionGraph();
@@ -217,6 +217,9 @@ bool Engine::Destroy()
     m_scheduler.Finalize();
 
     PROFILER_SHUTDOWN();
+
+    GetRedLogger()->RemoveOutput(m_standarOutputFuncIndex);
+    GetRedLogger()->RemoveOutput(m_debugOutputFuncIndex);
 
     return true;
 }

@@ -1,0 +1,10 @@
+{
+	"shader_program": "ENGINE_RESOURCES/FONT",
+	"rendering_type": 0,
+	"pixel_uniforms": [
+		{
+			"type": "texture",
+			"binding_index": 0
+		}
+	]
+}

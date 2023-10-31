@@ -26,6 +26,7 @@ enum class ResourceType
     GEOMETRY,
     MATERIAL,
     AUDIO,
+    FONT,
 };
 
 #define RED_RESOURCE(Type, EXT)                 \

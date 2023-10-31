@@ -18,6 +18,7 @@ class GPUBuffer
     friend class Renderer;
 
 public:
+    GPUBuffer();
     GPUBuffer(uint32 nbElements, uint32 elementSize);
     ~GPUBuffer();
 

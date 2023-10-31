@@ -52,7 +52,7 @@ CameraComponent::~CameraComponent()
 
 bool CameraComponent::IsVisibleFrom(const AABB& aabb) const
 {
-    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetLocalPosition(),
+    AABB thisAabb(GetOwner()->GetComponent<Transform>()->GetLocalPosition(), // TODO get world pos
                   {m_size.x, m_size.y});  // TODO put it in camera cached state
 
     return thisAabb.Intersect(aabb);

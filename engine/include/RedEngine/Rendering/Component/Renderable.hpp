@@ -38,7 +38,11 @@ public:
 
     bool IsValid() const;
 
+    void Hide();
+    void Show();
+
 protected:
+    bool m_visible;
     RenderLayerIndex m_layerIndex;
     Vector2 m_size;
     AABB m_aabb;

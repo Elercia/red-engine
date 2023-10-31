@@ -16,8 +16,8 @@ float FrameCounter::Update()
 {
     auto currentTime = Clock::now();
 
-    // Store the delta time in seconds
-    std::chrono::duration<float> diff = currentTime - _lastFrameTimePoint;
+    // Store the delta time in milliseconds
+    std::chrono::duration<float, std::milli> diff = currentTime - _lastFrameTimePoint;
 
     float deltaTime = diff.count();
 

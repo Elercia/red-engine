@@ -98,10 +98,9 @@ void FlushRenderSystem::Update()
 
     for (auto& cameraComponent : cameras)
     {
-        renderer.BeginCameraRendering(cameraComponent);
+        renderer.BeginCameraRendering(cameraComponent); // TODO should be externalized ?
 
-        renderer.RenderOpaqueQueue(cameraComponent);
-        renderer.RenderTransparencyQueue(cameraComponent);
+        renderer.RenderSprites(cameraComponent);
 
 #ifdef RED_DEVBUILD
         renderer.RenderDebug(cameraComponent, debugComponent.Get());
@@ -111,7 +110,7 @@ void FlushRenderSystem::Update()
     }
 
 #ifdef RED_DEVBUILD
-    renderer.RenderDebugUI();
+    renderer.RenderFullScreenDebugUI();
 
     debugComponent->ClearDebug();
 #endif

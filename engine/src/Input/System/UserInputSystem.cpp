@@ -23,12 +23,12 @@ void UserInputSystem::Init()
 
     PROFILER_EVENT_CATEGORY("Input Init", ProfilerCategory::Input);
 
-    // TODO move this to the event system
-    // TODO add a call to SDL_QuitSubSystem to clean memory (or make sure SDL_Quit is called in every cases)
+    // TODO Init subsystems inside the engine
     SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK);
 
-    m_inputComponent = m_world->CreateWorldEntity("UserInputSystemEntity")->AddComponent<UserInputComponent>();
+    auto* entity = m_world->CreateWorldEntity("UserInputSystemEntity");
 
+    m_inputComponent = entity->AddComponent<UserInputComponent>();
     m_inputComponent->m_actionMapping = utils::UserInputHelper::LoadActionMapping();
 
     for (auto& mapping : m_inputComponent->m_actionMapping)

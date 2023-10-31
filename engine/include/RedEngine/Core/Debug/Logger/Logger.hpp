@@ -51,6 +51,7 @@ public:
     void Out(const LogOoutputInfo& data);
 
     OutputDelegate::FuncIndex AddOutput(OutputDelegate::FuncType output);
+    void RemoveOutput(OutputDelegate::FuncIndex index);
 
     static void LogToStandardOutputFun(const LogOoutputInfo& out);
 
